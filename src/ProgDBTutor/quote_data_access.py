@@ -12,19 +12,19 @@ class DBConnection:
         except:
             print('ERROR: Unable to connect to database')
             raise
-        
+
     def close(self):
         self.conn.close()
-        
+
     def get_connection(self):
         return self.conn
-    
+
     def get_cursor(self):
         return self.conn.cursor()
-    
+
     def commit(self):
         return self.conn.commit()
-    
+
     def rollback(self):
         return self.conn.rollback()
 
@@ -34,7 +34,7 @@ class Quote:
         self.id = iden
         self.text = text
         self.author = author
-        
+
     def to_dct(self):
         return {'id': self.id, 'text': self.text, 'author': self.author}
 
@@ -42,24 +42,24 @@ class Quote:
 class QuoteDataAccess:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
-       
+
     def get_quotes(self):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT id, text, author FROM Quote')  
+        cursor.execute('SELECT id, text, author FROM Quote')
         quote_objects = list()
         for row in cursor:
-            quote_obj = Quote(row[0],row[1],row[2]) 
+            quote_obj = Quote(row[0],row[1],row[2])
             quote_objects.append(quote_obj)
         return quote_objects
-    
+
     def get_quote(self, iden):
         cursor = self.dbconnect.get_cursor()
         # See also SO: https://stackoverflow.com/questions/45128902/psycopg2-and-sql-injection-security
         cursor.execute('SELECT id, text, author FROM Quote WHERE id=%s', (iden,))
-        row = cursor.fetchone()   
+        row = cursor.fetchone()
         return Quote(row[0], row[1], row[2])
-     
-    def add_quote(self, quote_obj): 
+
+    def add_quote(self, quote_obj):
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO Quote(text,author) VALUES(%s,%s)', (quote_obj.text, quote_obj.author,))

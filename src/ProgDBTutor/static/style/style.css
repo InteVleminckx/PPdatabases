@@ -1,0 +1,77 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Kumbh Sans', sans-serif;
+    scroll-behavior: smooth;
+    overflow: hidden;
+}
+
+/*   Header section   */
+.header {
+    /*background-color: #1b1e21;*/
+    background-image: url("../images/Header_background.jpeg");
+    /*background-size: 100%;*/
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    height: 8rem;
+}
+
+.header h1{
+    background: #9fafca;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #9fafca 55%, rgba(66, 255, 243, 0.50));  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, #9fafca 55%, rgba(66, 255, 243, 0.50)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+    font-size: 4.5rem;
+}
+
+.navbar{
+    background-color: rgb(0, 32, 63);
+    height: 3.5rem;
+    justify-content: space-between;
+    text-align: center;
+    display: flex;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.navbar li {
+    float: left;
+}
+
+.navbar li:last-child {
+    border-right: none;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+
+    padding: 0 25px;
+    text-decoration: none;
+}
+
+.navbar li a:hover:not(.navbar_btn) {
+}
+
+.navbar .navbar_btn {
+}
+
+.navbar_btn:hover  {
+}
