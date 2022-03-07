@@ -6,15 +6,16 @@
     
 	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
-    
+
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
 </head>
-<body>	
-	{% include 'header.html' %}
+<body>
 
-    {% include 'home.html' %}
-    <!-- 
+	{% block content %}{% endblock %}
+	{% block footer %}{% endblock %}
+
+    <!--
         Bootstrap has a grid system for aligning elements in a responsive layout.
 
         The outer element is a container, which contains rows and columns.
@@ -28,14 +29,6 @@
         More information can be found using the following URL:
             https://getbootstrap.com/docs/4.0/layout/grid/
     -->
-
-<!--    {% include 'about.html' %}-->
-
-<!--    {% include 'algorithms.html' %}-->
-
-<!--    {% include 'contact.html' %}-->
-
-<!--    {% include 'footer.html' %}-->
 
 <!--    <script src="../static/style/app1.js"></script>-->
 </body>
