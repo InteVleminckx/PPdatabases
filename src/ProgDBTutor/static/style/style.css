@@ -654,6 +654,110 @@
     }
 }
 
+
+/* Contact Section */
+
+.contact {
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    /*margin: 25px;*/
+}
+
+.contact h1{
+    background-color: #ff8177;
+    background-image: linear-gradient(to right, #343434 0%, #454545 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 3rem;
+    text-align: center;
+}
+
+.contact p{
+    background-color: #ff8177;
+    background-image: linear-gradient(to right, #343434 0%, #454545 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.contact__container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-content: left;
+    margin-bottom: 51px; /* 11px + 40px */
+    height: 90%;
+    z-index: 1;
+    width: 100%;
+    max-width: 650px;
+    padding: 0 0;
+}
+
+.contact__content {
+    margin: 0;
+    height: 350px;
+    width: 600px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #000000;
+    background-image: linear-gradient(to right, #a5fced, #2dc096 100%);
+}
+
+.contact_btn {
+    font-size: 1.8rem;
+    /*background: #833ab4;*/
+    /*background: -webkit-linear-gradient(to right, #fcb045, #fd1d1d, #833ab4);*/
+    /*background: linear-gradient(to right, #fcb045, #fd1d1d, #833ab4);*/
+    background: #d3cc50;
+    background: -webkit-linear-gradient(to right, #50cc55, #568ee8);
+    background: linear-gradient(to right, #50cc55, #568ee8);
+    padding: 20px 60px;
+    border: none;
+    border-radius: 4px;
+    margin-top: 2rem;
+    cursor: pointer;
+    position: relative;
+    width: 400px;
+    margin-left: 100px;
+    margin-bottom: 20px;
+    transition: all 0.35s;
+}
+
+.contact_btn a {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    text-decoration: none;
+}
+
+.contact_btn:after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: #917dd9;
+    transition: all 0.35s;
+    border-radius: 4px;
+}
+
+.contact_btn:hover {
+    color: #fff;
+}
+
+.contact_btn:hover:after {
+    width: 100%;
+}
+
 /* Footer CSS */
 
 .footer__container {

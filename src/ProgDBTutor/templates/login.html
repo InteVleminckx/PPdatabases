@@ -1,4 +1,139 @@
+<html>
+<head>
+<!--	<title>{{app_data['app_name']}}</title>-->
 
+<!--    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">-->
+
+<!--	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">-->
+<!--	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">-->
+
+<!--	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>-->
+<!--	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>-->
+
+<style>
+
+  /* Login */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../static/images/Pngtree_simple_technology_cut.jpg");
+    height: 100%;
+    /*margin: 0;*/
+    background-size: cover;
+    background-position: center;
+    /*background-repeat: no-repeat;*/
+}
+.login_page {
+    width: 360px;
+    padding: 10% 0 0;
+    margin: auto;
+}
+.form {
+    position: relative;
+    z-index: 1;
+    background: rgba(7, 40, 195, 0.8);
+    max-width: 360px;
+    margin: 0 auto 100px;
+    padding: 45px;
+    text-align: center;
+}
+.form input{
+    font-family: 'Kumbh Sans', sans-serif;
+    outline: 1px;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.form button{
+    font-family: 'Kumbh Sans', sans-serif;
+    outline: 0;
+    background: #fdbf01;
+    background: -webkit-linear-gradient(to right, #009fa6, #568ee8, #d3cc50);
+    background: linear-gradient(to right, #009fa6, #568ee8, #d3cc50);
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.form button:hover, .form button:active{
+    background: #43a047;
+}
+.form .message{
+    margin: 15px 0 0;
+    color: aliceblue;
+    font-size: 12px;
+}
+.form .message a{
+    color: #4caf50;
+    text-decoration: none;
+}
+.form .register_form{
+    display: none;
+}
+</style>
+</head>
+<body>
+
+    <div class="login_page">
+        <div class="form">
+
+            <form class="register_form" id="register_form">
+                <input type="text" placeholder="username" required />
+                <input type="email" placeholder="email" required/>
+                <input type="password" placeholder="password" required/>
+                <button> Create </button>
+                <p class="message">Already registered? <a href="#login_form">Login</a></p>
+            </form>
+
+            <form class="login_form" id="login_form">
+                <input type="email" placeholder="email" required/>
+                <input type="password" placeholder="password" required/>
+                <button> Login </button>
+                <p class="message">Not registered? <a href="#register_form">Register</a></p>
+            </form>
+
+        </div>
+    </div>
+
+    <script src="../static/jquery-3.2.1.js">
+    </script>
+    <script>
+        $('.message a').click(function(){
+        $('form').animate({height:"toggle", opacity: "toggle"}, "slow");
+        });
+    </script>
+
+<!--   <h2>Login Form</h2>-->
+
+<!--    <form action="/action_page.php" method="post">-->
+
+<!--      <div class="container">-->
+<!--        <label for="uname"><b>Username</b></label>-->
+<!--        <input type="text" placeholder="Enter Username" name="uname" required>-->
+
+<!--        <label for="psw"><b>Password</b></label>-->
+<!--        <input type="password" placeholder="Enter Password" name="psw" required>-->
+
+<!--        <button type="submit">Login</button>-->
+<!--        <label>-->
+<!--          <input type="checkbox" checked="checked" name="remember"> Remember me-->
+<!--        </label>-->
+<!--      </div>-->
+
+<!--      <div class="container" style="background-color:#f1f1f1">-->
+<!--        <button type="button" class="cancelbtn">Cancel</button>-->
+<!--        <span class="psw">Forgot <a href="#">password?</a></span>-->
+<!--      </div>-->
+<!--    </form>-->
+
+
+
+
+</body>
+</html>
 
 
 
