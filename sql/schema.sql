@@ -1,4 +1,5 @@
-CREATE TABLE Quote(
+-- Test class
+CREATE TABLE Quote (
 	id SERIAL PRIMARY KEY,
 	text VARCHAR(256) UNIQUE NOT NULL,
 	author VARCHAR(128)
@@ -15,28 +16,69 @@ INSERT INTO Quote(text,author) VALUES('One must have enough self-confidence and 
 INSERT INTO Quote(text,author) VALUES('Everyone you meet is fighting a battle you know nothing about. Be kind. Always.', 'Robin Williams');
 INSERT INTO Quote(text,author) VALUES('[...] it is usual to have the polite convention that everyone thinks.', 'Alan Turing');
 
-CREATE TABLE Users(
-    user_id int PRIMARY KEY
-    email text UNIQUE NOT NULL,
-    firstname text NOT NULL,
-    Lastname text NOT NULL,
-    username text UNIQUE NOT NULL,
+-- This is a customer that buys items
+CREATE TABLE Customer (
+    customer_id INT PRIMARY KEY,
+    FN BOOLEAN,
+    Active BOOLEAN,
+    club_member_status TEXT,
+    fashion_news_frequency TEXT,
+    age INT,
+    postal_code TEXT
 );
 
-
-CREATE TABLE Item(
-    item_id PRIMARY KEY,
-    price int,
-
+-- This is the data scientist that can login in the application
+CREATE TABLE DataScientist (
+   ds_id INT PRIMARY KEY,
+   email TEXT UNIQUE NOT NULL,
+   firstname TEXT NOT NULL,
+   lastname TEXT NOT NULL,
+   username TEXT UNIQUE NOT NULL
 );
 
-CREATE TABLE Interaction(
-    user_id int REFERENCES Users(user_id),
-    item_id int references Item(item_id),
-    t_stamp time,
-    price int
+-- "Admin" data scientist who is able to add datasets
+CREATE TABLE Admin (
+    ds_id INT PRIMARY KEY REFERENCES DataScientist(ds_id)
 );
 
-CREATE TABLE Metadata(
+-- Item that can be bought by customers
+CREATE TABLE Item (
+    item_id TEXT NOT NULL,
+    product_code INT NOT NULL,
+    product_name TEXT NOT NULL,
+    product_type_no INT NOT NULL,
+    product_type_name TEXT NOT NULL,
+    product_group_name TEXT NOT NULL,
+    graphical_appearance_no INT NOT NULL,
+    graphical_appearance_name TEXT NOT NULL,
+    colour_group_code INT NOT NULL,
+    colour_group_name TEXT NOT NULL,
+    perceived_colour_value_id INT NOT NULL,
+    perceived_colour_value_name TEXT NOT NULL,
+    perceived_colour_master_id INT NOT NULL,
+    perceived_colour_master_name TEXT NOT NULL,
+    department_no INT NOT NULL,
+    department_name TEXT NOT NULL,
+    index_code CHAR NOT NULL,
+    index_name TEXT NOT NULL,
+    index_group_no INT NOT NULL,
+    index_group_name TEXT NOT NULL,
+    section_no INT NOT NULL,
+    section_name TEXT NOT NULL,
+    garment_group_no INT NOT NULL,
+    garment_group_name TEXT NOT NULL,
+    detail_desc TEXT NOT NULL,
+    PRIMARY KEY (item_id, product_code, product_name, product_type_no, product_type_name, product_group_name, graphical_appearance_no,
+                graphical_appearance_name, colour_group_code, colour_group_name, perceived_colour_value_id, perceived_colour_value_name,
+                perceived_colour_master_id, perceived_colour_master_name, department_no, department_name, index_code, index_name,
+                index_group_no, index_group_name, section_no, section_name, garment_group_no, garment_group_name, detail_desc)
+);
 
-)
+-- Table to keep track of the purchases of users for specific items
+CREATE TABLE Interaction (
+    customer_id INT REFERENCES Customer(customer_id),
+    item_id TEXT REFERENCES Item(item_id),
+    t_dat TIME,
+    price INT NOT NULL,
+    PRIMARY KEY (customer_id, item_id)
+);
