@@ -433,6 +433,11 @@
     position: relative;
     transition: all 0.35s;
     outline: none;
+
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
 }
 
 .main__btn a {
@@ -907,6 +912,7 @@
     }
 
 }
+
 
 
 
