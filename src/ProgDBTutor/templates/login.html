@@ -2,7 +2,7 @@
 <head>
 <!--	<title>{{app_data['app_name']}}</title>-->
 
-<!--    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">-->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 
 <!--	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">-->
 <!--	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">-->
@@ -81,16 +81,16 @@ body {
         <div class="form">
 
             <form class="register_form" id="register_form">
-                <input type="text" placeholder="username" required />
-                <input type="email" placeholder="email" required/>
-                <input type="password" placeholder="password" required/>
+                <input type="text" autofocus placeholder="Username" required />
+                <input type="email" placeholder="Email" required/>
+                <input type="password" placeholder="Password" required/>
                 <button> Create </button>
                 <p class="message">Already registered? <a href="#login_form">Login</a></p>
             </form>
 
             <form class="login_form" id="login_form">
-                <input type="email" placeholder="email" required/>
-                <input type="password" placeholder="password" required/>
+                <input type="email" autofocus placeholder="Email" required/>
+                <input type="password" placeholder="Password" required/>
                 <button> Login </button>
                 <p class="message">Not registered? <a href="#register_form">Register</a></p>
             </form>

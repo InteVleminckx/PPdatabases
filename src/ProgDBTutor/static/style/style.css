@@ -918,7 +918,6 @@
     }
 
 }
-
 @media screen and (max-width: 768px) {
     .footer-info{
         font-size: 0.6rem;
@@ -926,6 +925,42 @@
 
 }
 
-
+.tooltip{
+position: relative;
+background: rgba(0,0,0,0.3);
+padding: 5px 12px;
+border-radius: 100%;
+font-size: 20px;
+cursor: help;
+}
+.tooltip::before, .tooltip::after{
+position: absolute;
+left: 50%;
+opacity: 0;
+transition: all ease 0.3s;
+}
+.tooltip::before{
+content: "";
+border-width: 10px 8px 08px;
+border-style: solid;
+border-color: rgba(0,0,0,0.3) transparent transparent transparent;
+top: -20px;
+margin-left: -8px;
+}
+.tooltip::after{
+content: attr(data-tooltip);
+background: rgba(0,0,0,0.3);
+top: -20px;
+transform: translateY(-100%);
+font-size: 14px;
+margin-left: -150px;
+width: 300px;
+border-radius: 10px;
+color: #fff;
+padding: 14px;
+}
+.tooltip:hover::before.tooltip:hover::after{
+Opacity:1;
+}
 
 
