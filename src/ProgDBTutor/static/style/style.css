@@ -179,7 +179,7 @@
     /*background: #424040;*/
     /*background: linear-gradient(to bottom, #424040, #161616);*/
     background: white;
-
+    height: 100vh;
     padding: 20px 0;
 }
 
@@ -456,8 +456,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    padding: 10rem 0;
+    min-height: 100vh;
 }
 
 .services h1{
@@ -468,7 +467,7 @@
     /*-moz-background-clip: text;*/
     -webkit-text-fill-color: transparent;
     /*-moz-text-fill-color: transparent;*/
-    margin-bottom: 5rem;
+    /*margin-bottom: 5rem;*/
     font-size: 2.5rem;
 }
 
@@ -542,9 +541,14 @@
 }
 
 @media screen and (max-width: 1300px) {
+    .services{
+        padding: 10rem;
+    }
+
     .services__wrapper{
         grid-template-columns: 1fr 1fr;
     }
+
 }
 
 @media screen and (max-width: 768px) {
