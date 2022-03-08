@@ -43,7 +43,7 @@ CREATE TABLE Admin (
 
 -- Item that can be bought by customers
 CREATE TABLE Item (
-    item_id TEXT PRIMARY KEY,
+    item_id TEXT NOT NULL,
     product_code INT NOT NULL,
     product_name TEXT NOT NULL,
     product_type_no INT NOT NULL,
@@ -67,7 +67,11 @@ CREATE TABLE Item (
     section_name TEXT NOT NULL,
     garment_group_no INT NOT NULL,
     garment_group_name TEXT NOT NULL,
-    detail_desc TEXT NOT NULL
+    detail_desc TEXT NOT NULL,
+    PRIMARY KEY (item_id, product_code, product_name, product_type_no, product_type_name, product_group_name, graphical_appearance_no,
+                graphical_appearance_name, colour_group_code, colour_group_name, perceived_colour_value_id, perceived_colour_value_name,
+                perceived_colour_master_id, perceived_colour_master_name, department_no, department_name, index_code, index_name,
+                index_group_no, index_group_name, section_no, section_name, garment_group_no, garment_group_name, detail_desc)
 );
 
 -- Table to keep track of the purchases of users for specific items
