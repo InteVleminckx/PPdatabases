@@ -29,16 +29,21 @@ CREATE TABLE Customer (
 
 -- This is the data scientist that can login in the application
 CREATE TABLE DataScientist (
-   ds_id INT PRIMARY KEY,
+   username TEXT PRIMARY KEY REFERENCES Authentication(username),
    email TEXT UNIQUE NOT NULL,
    firstname TEXT NOT NULL,
-   lastname TEXT NOT NULL,
-   username TEXT UNIQUE NOT NULL
+   lastname TEXT NOT NULL
+);
+
+-- Authentication table which contains the passwords of the users
+CREATE TABLE Authentication (
+    username TEXT PRIMARY KEY,
+    password TEXT NOT NULL
 );
 
 -- "Admin" data scientist who is able to add datasets
 CREATE TABLE Admin (
-    ds_id INT PRIMARY KEY REFERENCES DataScientist(ds_id)
+    username TEXT PRIMARY KEY REFERENCES DataScientist(username)
 );
 
 -- Item that can be bought by customers
