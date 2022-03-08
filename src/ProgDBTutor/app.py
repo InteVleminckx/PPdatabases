@@ -56,6 +56,14 @@ HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
 def main():
     return render_template('home.html', app_data=app_data)
 
+@app.route("/login")
+def login():
+    return render_template('login.html', app_data=app_data)
+
+@app.route("/contact")
+def contact():
+    return render_template('contact.html', app_data=app_data)
+
 
 # @app.route("/show_quotes")
 # def show_quotes():

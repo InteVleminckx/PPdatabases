@@ -11,35 +11,35 @@
     <p>Welcome to the hub for datascientists</p>
 </div>
 
-
-<!--    Navbar section-->
-<nav class="navbar">
-    <ul class="navbar_items">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-    </ul>
-    <ul class="navbar_btn">
-        <li style="float:right">
-            <button class="btn-1" role="button">
-                <span>Sign Up</span>
-            </button>
-        </li>
-        <li style="float:right">
-            <button class="btn-1" role="button">
-                <span>Login</span>
-            </button>
-        </li>
-    </ul>
-</nav>
+    <nav class="navbar">
+        <div class="navbar_container">
+            <div class="navbar_toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar_menu">
+                <li class="navbar_items"><a class="navbar_links" id="home-page" href="#home">Home</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="services-page" href="#services">Services</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="about-page" href="#about">About</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="contact-page" href="#contact">Contact</a></li>
+                <li class="navbar_btn">
+                    <button class="btn-1" role="button">
+                        <a class="navbar_bt" href="login">Login</a>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     <!-- Home section-->
     <div class="hero" id="home">
         <div class="hero__container">
             <h1 class="hero__heading">An application that makes researching, evaluating and comparing recommendation algorithms easy</h1>
             <p class="hero__description">Focus on implicit feedback collaborative filtering recommendation algorithms</p>
-            <button class="main__btn"><a href="#services">Explore</a></button>
+            <button class="main__btn" role="button">
+                <a href="#services">Explore</a>
+            </button>
         </div>
     </div>
 
@@ -100,16 +100,10 @@
             <div class="contact__container">
                 <div class="contact__content">
                     <h1>Join Our Team</h1>
-                    <h2>Sign up today!</h2>
+                    <h1>Sign up today!</h1>
                     <p>See what makes us different.</p>
-                    <button class="main__btn"><a href="">Sign Up</a></button>
+                    <button class="contact_btn"><a href="contact">Contact Us</a></button>
                 </div>
-{#                <div class="main__image--container">#}
-{#                    <div class="main__image--card">#}
-{#                        ICON#}
-{#                    </div>#}
-{#                </div>#}
-
             </div>
         </div>
 
