@@ -2,107 +2,116 @@
 
 {% block content %}
 
-    <div class="header__">
-        <h1>
-            <span>
-                {{app_data['app_name']}}
-            </span>
-        </h1>
-        <p>Welcome to the hub for datascientists</p>
-    </div>
+<div class="header__">
+    <h1>
+        <span>
+            {{app_data['app_name']}}
+        </span>
+    </h1>
+    <p>Welcome to the hub for datascientists</p>
+</div>
 
 
-    <!--    Navbar section-->
-    <nav class="navbar">
-        <ul class="navbar_items">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-        <ul class="navbar_btn">
-            <li style="float:right">
-                <button class="btn-1" role="button">
-                    <span>Sign Up</span>
-                </button>
-            </li>
-            <li style="float:right">
-                <button class="btn-1" role="button">
-                    <span>Login</span>
-                </button>
-            </li>
-        </ul>
-    </nav>
+<!--    Navbar section-->
+<nav class="navbar">
+    <ul class="navbar_items">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <ul class="navbar_btn">
+        <li style="float:right">
+            <button class="btn-1" role="button">
+                <span>Sign Up</span>
+            </button>
+        </li>
+        <li style="float:right">
+            <button class="btn-1" role="button">
+                <span>Login</span>
+            </button>
+        </li>
+    </ul>
+</nav>
 
-
-<!-- About Section-->
-    <div class="main" id="about">
-        <div class="main__container">
-            <div class="main__image--container">
-                <div class="main__image--card">
-                    ICON
-                </div>
-            </div>
-            <div class="main__content">
-                <h1>What do we do?</h1>
-                <h2>We help businesses scale</h2>
-                <p>Schedule a call to learn more about our services.</p>
-                <button class="main__btn"><a href="">Schedule Call</a></button>
-            </div>
+    <!-- Home section-->
+    <div class="hero" id="home">
+        <div class="hero__container">
+            <h1 class="hero__heading">An application that makes researching, evaluating and comparing recommendation algorithms easy</h1>
+            <p class="hero__description">Focus on implicit feedback collaborative filtering recommendation algorithms</p>
+            <button class="main__btn"><a href="#services">Explore</a></button>
         </div>
     </div>
 
-<!-- Services Section-->
-    <div class="services" id="services">
-        <h1>Our Services</h1>
-        <div class="services__wrapper">
-            <div class="services__card">
-                <h2>Costum Colorways</h2>
-                <p>AI Powered Technology</p>
-                <div class="services__btn">
-                    <button>Get Started</button>
+    <!-- Services Section-->
+        <div class="services" id="services">
+            <h1>Our Services</h1>
+            <div class="services__wrapper">
+                <div class="services__card">
+                    <h2>Costum Colorways</h2>
+                    <p>AI Powered Technology</p>
+                    <div class="services__btn">
+                        <button>Start Setup</button>
+                    </div>
                 </div>
-            </div>
-            <div class="services__card">
-                <h2>Are you Ready?</h2>
-                <p>Take the lepa</p>
-                <div class="services__btn">
-                    <button>Get Started</button>
+                <div class="services__card">
+                    <h2>Are you Ready?</h2>
+                    <p>Take the lepa</p>
+                    <div class="services__btn">
+                        <button>Start Setup</button>
+                    </div>
                 </div>
-            </div>
-            <div class="services__card">
-                <h2>Full Gradients</h2>
-                <p>100 Combinations</p>
-                <div class="services__btn">
-                    <button>Get Started</button>
+                <div class="services__card">
+                    <h2>Full Gradients</h2>
+                    <p>100 Combinations</p>
+                    <div class="services__btn">
+                        <button>Start Setup</button>
+                    </div>
                 </div>
-            </div>
-            <div class="services__card">
-                <h2>Infinite Choices</h2>
-                <p>1000's of colors</p>
-                <div class="services__btn">
-                    <button>Get Started</button>
+                <div class="services__card">
+                    <h2>Infinite Choices</h2>
+                    <p>1000's of colors</p>
+                    <div class="services__btn">
+                        <button>Start Setup</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-<!-- Feature section-->
-    <div class="main" id="sign-up">
-        <div class="main__container">
-            <div class="main__content">
-                <h1>Join Our Team</h1>
-                <h2>Sign up today!</h2>
-                <p>See what makes us different.</p>
-                <button class="main__btn"><a href="">Sign Up</a></button>
-            </div>
-            <div class="main__image--container">
-                <div class="main__image--card">
-                    ICON
+    <!-- About Section-->
+        <div class="main" id="about">
+            <div class="main__container">
+                <div class="main__image--container">
+                    <div class="main__image--card">
+                        ICON
+                    </div>
+                </div>
+                <div class="main__content">
+                    <h1>What do we do?</h1>
+                    <h2>We help businesses scale</h2>
+                    <p>Schedule a call to learn more about our services.</p>
+                    <button class="main__btn"><a href="">Schedule Call</a></button>
                 </div>
             </div>
-
         </div>
-    </div>
+
+    <!-- Contact section-->
+        <div class="main" id="contact">
+            <div class="main__container">
+                <div class="main__content">
+                    <h1>Join Our Team</h1>
+                    <h2>Sign up today!</h2>
+                    <p>See what makes us different.</p>
+                    <button class="main__btn"><a href="">Sign Up</a></button>
+                </div>
+                <div class="main__image--container">
+                    <div class="main__image--card">
+                        ICON
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
 {% endblock %}
 

@@ -75,8 +75,6 @@
     display: flex;
 }
 
-
-
 .navbar li {
     float: left;
 }
@@ -172,6 +170,90 @@
     background: linear-gradient(to right, #fcb045, #fd1d1d, #833ab4);
     color: #fff;
     transition: all 0.3s ease;
+}
+
+/* Hero Section */
+.hero {
+    /*background: #000000;*/
+    /*background: linear-gradient(to right, #161616, #000000);*/
+    /*background: #424040;*/
+    /*background: linear-gradient(to bottom, #424040, #161616);*/
+    background: white;
+
+    padding: 20px 0;
+}
+
+.hero__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 90%;
+    text-align: center;
+    padding: 30px;
+}
+
+.hero__heading {
+    font-size: 45px;
+    margin-bottom: 50px;
+    color: #000000;
+    font-weight: bold;
+
+}
+
+/*.hero__heading span {*/
+/*    background: #ee0979; !* fallback for old browsers *!*/
+/*    background: -webkit-linear-gradient(*/
+/*            to right,*/
+/*            #ff6a00,*/
+/*            #ee0979*/
+/*    ); !* Chrome 10-25, Safari 5.1-6 *!*/
+/*    background: linear-gradient(*/
+/*            to right,*/
+/*            #ff6a00,*/
+/*            #ee0979*/
+/*    ); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
+/*    background-size: 100%;*/
+/*    -webkit-background-clip: text;*/
+/*    !*-moz-background-clip: text;*!*/
+/*    -webkit-text-fill-color: transparent;*/
+/*    !*-mo-text-fill-color: transparent;*!*/
+/*}*/
+
+.hero__description {
+    font-size: 30px;
+    background: #da22ff; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+            to right,
+            #9114ff,
+            #da22ff
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+            to right,
+            #8f0eff,
+            #da22ff
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background-size: 100%;
+    -webkit-background-clip: text;
+    /*-moz-background-clip: text;*/
+    -webkit-text-fill-color: transparent;
+    /*-moz-text-fill-color: transparent;*/
+}
+
+.highlight {
+    border-bottom: 4px solid rgb(132, 0, 255);
+}
+
+@media screen and (max-width: 768px) {
+    .hero__heading {
+        font-size: 60px;
+    }
+
+    .hero__description {
+        font-size: 40px;
+    }
 }
 
 
@@ -366,7 +448,7 @@
 /* Services section */
 
 .services{
-    background: #131313;
+    background-color: #131313;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -471,7 +553,7 @@
 /* Footer CSS */
 
 .footer__container {
-    background-color: #131313;
+    background-color: white;
     padding: 5rem 0;
     display: flex;
     flex-direction: column;
