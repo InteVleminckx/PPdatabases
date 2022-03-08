@@ -11,28 +11,26 @@
     <p>Welcome to the hub for datascientists</p>
 </div>
 
-
-<!--    Navbar section-->
-<nav class="navbar">
-    <ul class="navbar_items">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-    </ul>
-    <ul class="navbar_btn">
-        <li style="float:right">
-            <button class="btn-1" role="button">
-                <span>Sign Up</span>
-            </button>
-        </li>
-        <li style="float:right">
-            <button class="btn-1" role="button">
-                <span>Login</span>
-            </button>
-        </li>
-    </ul>
-</nav>
+    <nav class="navbar">
+        <div class="navbar_container">
+            <div class="navbar_toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar_menu">
+                <li class="navbar_items"><a class="navbar_links" id="home-page" href="#home">Home</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="services-page" href="#services">Services</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="about-page" href="#about">About</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="contact-page" href="#contact">Contact</a></li>
+                <li class="navbar_btn">
+                    <button class="btn-1" role="button">
+                        <a class="navbar_bt" href="login">Login</a>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     <!-- Home section-->
     <div class="hero" id="home">
