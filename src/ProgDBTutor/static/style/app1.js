@@ -6,6 +6,17 @@ const menuLinks = document.querySelector(".navbar_menu")
 const mobileMenu = () => {
     menu.classList.toggle('is-active');
     menuLinks.classList.toggle('active');
+
+    const homeMenu = document.querySelector("#home-page")
+    const aboutMenu = document.querySelector("#about-page")
+    const servicesMenu = document.querySelector("#services-page")
+    const contactMenu = document.querySelector("#contact-page")
+
+    homeMenu.classList.remove('highlight')
+    servicesMenu.classList.remove('highlight')
+    aboutMenu.classList.remove('highlight')
+    contactMenu.classList.remove('highlight')
+
 }
 
 menu.addEventListener('click', mobileMenu);
@@ -18,39 +29,47 @@ const highlightMenu = () => {
     const servicesMenu = document.querySelector("#services-page")
     const contactMenu = document.querySelector("#contact-page")
 
+    const headerHeight = document.querySelector("#header").offsetHeight
+    const navbarHeight = document.querySelector("#navbar").offsetHeight
+    const homeHeight = document.querySelector("#home").offsetHeight + headerHeight + navbarHeight
+    const servicesHeight = document.querySelector("#services").offsetHeight + homeHeight
+    const aboutHeight = document.querySelector("#about").offsetHeight + servicesHeight
+    const contactHeight = document.querySelector("#contact").offsetHeight
+    const footerHeight = document.querySelector("#footer").offsetHeight
+
     let scrollPos = this.scrollY;
-    console.log(scrollPos)
 
-    let home = [488,1417]
-    let services = [1417,2346]
-    let about = [2346,3046]
-    let contact = 3046
+    console.log(scrollPos + " " + homeHeight + " " + servicesHeight + " " + aboutHeight + " " + contactHeight + " " + footerHeight + " " + (aboutHeight - contactHeight - footerHeight))
 
-    if (window.innerWidth > 1100 && scrollPos >= home[0] && scrollPos < home[1]){
+
+    if (window.innerWidth > 1100 && scrollPos < homeHeight){
         homeMenu.classList.add('highlight')
         servicesMenu.classList.remove('highlight')
         return;
     }
-    
-    else if (window.innerWidth > 1100 && scrollPos >= services[0] && scrollPos < services[1]){
+
+    else if (window.innerWidth > 1100 && scrollPos < servicesHeight){
         homeMenu.classList.remove('highlight')
         servicesMenu.classList.add('highlight')
         aboutMenu.classList.remove('highlight')
         return;
     }
 
-    else if (window.innerWidth > 1100 && scrollPos >= about[0] && scrollPos < about[1]){
+    else if (window.innerWidth > 1100 && scrollPos < (aboutHeight - contactHeight - footerHeight)){
         servicesMenu.classList.remove('highlight')
         aboutMenu.classList.add('highlight')
         contactMenu.classList.remove('highlight')
         return;
     }
 
-    else if (window.innerWidth > 1100 && scrollPos >= contact){
+    else if (window.innerWidth > 1100 && scrollPos >= (aboutHeight - contactHeight - footerHeight) ){
         aboutMenu.classList.remove('highlight')
         contactMenu.classList.add('highlight')
         return;
     }
+
+
+
 
 }
 

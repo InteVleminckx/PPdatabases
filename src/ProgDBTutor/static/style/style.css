@@ -132,13 +132,15 @@
 /*Veranderd navbar hier naar een knop*/
 @media screen and (max-width: 1100px) {
 
+    .navbar {
+        width: 100%;
+    }
+
     .navbar_container {
         display: flex;
         justify-content: space-between;
         height: 4.5rem;
         z-index: 1;
-        width: 100%;
-        max-width: 1100px;
         padding: 0;
     }
 
@@ -146,7 +148,6 @@
         display: grid;
         grid-template-columns: auto;
         margin: 0;
-        width: 100%;
         position: absolute;
         top: -1000px;
         opacity: 1;
@@ -154,9 +155,21 @@
         z-index: -1;
     }
 
+    .navbar_items:nth-last-child(2) {
+        margin-right: 0;
+    }
+
+    .btn-1{
+        padding: 0;
+        margin-left: 25px;
+
+    }
+
     .navbar_menu.active {
+
         background: #131313;
         top: 100%;
+        width: 100%;
         opacity: 1;
         transition: all 0.5s ease;
         z-index: 99;
