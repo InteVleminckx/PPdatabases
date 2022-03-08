@@ -14,3 +14,29 @@ INSERT INTO Quote(text,author) VALUES('Not everyone will understand your journey
 INSERT INTO Quote(text,author) VALUES('One must have enough self-confidence and immunity to peer pressure to break the grip of standard paradigms.', 'Marvin Minsky');
 INSERT INTO Quote(text,author) VALUES('Everyone you meet is fighting a battle you know nothing about. Be kind. Always.', 'Robin Williams');
 INSERT INTO Quote(text,author) VALUES('[...] it is usual to have the polite convention that everyone thinks.', 'Alan Turing');
+
+CREATE TABLE Users(
+    user_id int PRIMARY KEY
+    email text UNIQUE NOT NULL,
+    firstname text NOT NULL,
+    Lastname text NOT NULL,
+    username text UNIQUE NOT NULL,
+);
+
+
+CREATE TABLE Item(
+    item_id PRIMARY KEY,
+    price int,
+
+);
+
+CREATE TABLE Interaction(
+    user_id int REFERENCES Users(user_id),
+    item_id int references Item(item_id),
+    t_stamp time,
+    price int
+);
+
+CREATE TABLE Metadata(
+
+)
