@@ -3,6 +3,8 @@
 
 {% block content %}
 
+
+
 <div class="header__" id="header">
     <h1>
         <span>
@@ -37,7 +39,7 @@
     <div class="hero" id="home">
         <div class="hero__container">
             <h1 class="hero__heading">An application that makes researching, evaluating and comparing recommendation algorithms easy</h1>
-            <p class="hero__description">Focus on implicit feedback collaborative filtering recommendation algorithms</p>
+            <p class="hero__description">Implicit feedback collaborative filtering recommendation algorithms</p>
             <button class="main__btn" role="button">
                 <a href="#services">Explore</a>
             </button>
@@ -51,21 +53,39 @@
             <div class="services__wrapper">
 
                 <div class="services__card">
-                    <span class="tooltip" data-tooltip="Password must contain at least 1 uppercase letter,
-                    1 lowercase letter, a special character and minimum 8 characters">?</span>
 
-                    <h2>Popularity</h2>
-                    <p></p>
+                    <h2>Popularity </h2>
+                    <br><br><br><br>
+                    <div class="tooltip_btn"> <img src="../static/images/infoButton.png" alt="Info icon">
+                        <span class="tooltiptext">
+                            This algorithm doesn't give personal recommendations.
+                            Every user gets the top-k most popular items of that moment recommended.
+                            The parameters are: window size (for popularity calculation) and retrain interval (to decide when the top-k is recalculated again).
+                        </span> </div>
+
 
                 </div>
                 <div class="services__card">
                     <h2>Recency</h2>
-                    <p></p>
+                    <br><br><br><br>
+                    <div class="tooltip_btn"> <img src="../static/images/infoButton.png" alt="Info icon">
+                        <span class="tooltiptext">
+                            Like the popularity algorithm, the same list is shown to all users, but now based
+                            on the most recent items. Recency is based on the first interaction with an item (to estimate when the item was introduced). Parameter: retrain interval.
+                        </span> </div>
 
                 </div>
                 <div class="services__card">
                     <h2>ItemKNN</h2>
-                    <p></p>
+                    <br><br><br><br>
+                    <div class="tooltip_btn"> <img src="../static/images/infoButton.png" alt="Info icon">
+                        <span class="tooltiptext">
+                            The item K-nearest-neighbours algorithm uses a heuristic to
+                            determine the "similarity" between items. Next, a personalized recommendation list
+                            gets put together for each user based on items that are the most
+                            similar to the items in the user's history. Parameters: K,
+                            window, normalize and retrain interval.
+                        </span> </div>
 
                 </div>
                 <div class="services__card">
@@ -75,7 +95,7 @@
                 </div>
             </div>
             <button class="main__btn" role="button">
-                <a href="#services">Setup</a>
+                <a href="services">Setup</a>
             </button>
         </div>
 
