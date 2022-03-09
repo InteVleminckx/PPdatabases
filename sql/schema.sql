@@ -79,7 +79,7 @@ CREATE TABLE Item (
                 index_group_no, index_group_name, section_no, section_name, garment_group_no, garment_group_name, detail_desc)
 );
 
--- Table to keep track of the purchases of users for specific items
+-- Table to keep track of the purchases of users for specific items.
 CREATE TABLE Interaction (
     customer_id INT REFERENCES Customer(customer_id),
     item_id TEXT REFERENCES Item(item_id),
