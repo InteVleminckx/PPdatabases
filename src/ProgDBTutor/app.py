@@ -60,9 +60,15 @@ def main():
 def contact():
     return render_template('contact.html', app_data=app_data)
 
+<<<<<<< HEAD
 #@app.route("/login")
 #def login():
 #    return render_template('login.html', app_data=app_data)
+=======
+# @app.route("/login")
+# def login():
+#     return render_template('login.html', app_data=app_data)
+>>>>>>> 0083acc85e106d64f99a7a2d08515b64ba15680f
 
 @app.route("/services")
 def services():
