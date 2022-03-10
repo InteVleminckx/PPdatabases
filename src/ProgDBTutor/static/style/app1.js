@@ -34,12 +34,13 @@ const highlightMenu = () => {
     const homeHeight = document.querySelector("#home").offsetHeight + headerHeight + navbarHeight
     const servicesHeight = document.querySelector("#services").offsetHeight + homeHeight
     const aboutHeight = document.querySelector("#about").offsetHeight + servicesHeight
-    const contactHeight = document.querySelector("#contact").offsetHeight
     const footerHeight = document.querySelector("#footer").offsetHeight
+    const windowHeight = window.innerHeight;
+    const contactHeight = document.querySelector("#contact").offsetHeight + footerHeight + aboutHeight - windowHeight
 
     let scrollPos = this.scrollY;
 
-    console.log(scrollPos + " " + homeHeight + " " + servicesHeight + " " + aboutHeight + " " + contactHeight + " " + footerHeight + " " + (aboutHeight - contactHeight - footerHeight))
+    console.log("Scrollpos: " + scrollPos + "\nHomeheight: " + homeHeight + "\nservicesHeight: " + servicesHeight + "\naboutHeight: " + aboutHeight + "\ncontactHeight: " + contactHeight)
 
 
     if (window.innerWidth > 1100 && scrollPos < homeHeight){
@@ -55,14 +56,14 @@ const highlightMenu = () => {
         return;
     }
 
-    else if (window.innerWidth > 1100 && scrollPos < (aboutHeight - contactHeight - footerHeight)){
+    else if (window.innerWidth > 1100 && scrollPos < contactHeight){
         servicesMenu.classList.remove('highlight')
         aboutMenu.classList.add('highlight')
         contactMenu.classList.remove('highlight')
         return;
     }
 
-    else if (window.innerWidth > 1100 && scrollPos >= (aboutHeight - contactHeight - footerHeight) ){
+    else if (window.innerWidth > 1100 && scrollPos >= contactHeight ){
         aboutMenu.classList.remove('highlight')
         contactMenu.classList.add('highlight')
         return;
