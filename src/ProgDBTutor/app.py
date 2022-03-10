@@ -60,9 +60,9 @@ def main():
 def contact():
     return render_template('contact.html', app_data=app_data)
 
-@app.route("/login")
-def login():
-    return render_template('login.html', app_data=app_data)
+#@app.route("/login")
+#def login():
+#    return render_template('login.html', app_data=app_data)
 
 @app.route("/services")
 def services():
@@ -74,7 +74,7 @@ def services():
 def login():
 
     user_objects = user_data_access.get_users()
-    return jsonify([obj.to_dct() for obj in user_objects])
+    return render_template('login.html', app_data=app_data)
 
 
 @app.route("/login/<string:email>", methods=['GET'])
@@ -94,7 +94,7 @@ def add_user():
     user_obj = User(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=user_password)
     print('Adding {}'.format(user_obj.to_dct()))
     user_obj = user_data_access.add_user(user_obj)
-    return jsonify(user_obj.to_dct())
+    return render_template('login.html', app_data=app_data)
 
 
 

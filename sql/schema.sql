@@ -88,7 +88,7 @@
 --     PRIMARY KEY (customer_id, item_id)
 -- );
 
-CREATE TABLE Users(
+CREATE TABLE IF NOT EXISTS Users(
     firstname VARCHAR(256) NOT NULL,
     lastname VARCHAR(256) NOT NULL,
     username VARCHAR(256) NOT NULL,
