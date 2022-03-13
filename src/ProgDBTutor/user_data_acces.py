@@ -1,4 +1,4 @@
-import pandas
+# import pandas
 
 class DataScientist:
     def __init__(self, firstname, lastname, username, email, password):
@@ -17,8 +17,8 @@ class UserDataAcces:
         self.dbconnect = dbconnect
 
         # Hier database maken ==> CREATE TABLE Item()
-        df = pandas.read_csv('/CSVFiles/articles.csv')
-        print(df)
+#         df = pandas.read_csv('/CSVFiles/articles.csv')
+#         print(df)
 
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
