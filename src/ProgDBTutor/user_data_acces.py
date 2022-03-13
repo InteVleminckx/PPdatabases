@@ -1,5 +1,5 @@
-class User:
-    def __init__(self, firstname, lastname, username,email, password):
+class DataScientist:
+    def __init__(self, firstname, lastname, username, email, password):
         self.firstname = firstname
         self.lastname = lastname
         self.username = username
@@ -24,7 +24,7 @@ class UserDataAcces:
 
         return user_objects
 
-    def get_user(self, email):
+    def get_user(self, username):
         cursor = self.dbconnect.get_cursor()
         #Zoekt een user op zijn email
         cursor.execute('SELECT firstname, lastname, username, email, password FROM Users WHERE email=%s', (email,))
