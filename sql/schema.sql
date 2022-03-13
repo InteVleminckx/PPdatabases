@@ -95,7 +95,3 @@ CREATE TABLE IF NOT EXISTS Users(
     email VARCHAR(256) PRIMARY KEY,
     password VARCHAR(256) NOT NULL
 )
-<<<<<<< HEAD
-=======
-
->>>>>>> 0083acc85e106d64f99a7a2d08515b64ba15680f
