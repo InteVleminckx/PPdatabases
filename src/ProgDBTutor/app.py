@@ -5,7 +5,7 @@ from flask.templating import render_template
 
 from config import config_data
 from db_connection import DBConnection
-from user_data_acces import User, UserDataAcces
+from user_data_acces import DataScientist, UserDataAcces
 
 # INITIALIZE SINGLETON SERVICES
 app = Flask('Tutorial ')
@@ -78,8 +78,8 @@ def login():
 
 
 @app.route("/login/<string:email>", methods=['GET'])
-def get_user(email):
-    user_object = user_data_access.get_user(email)
+def get_user(username):
+    user_object = user_data_access.get_user(username)
     return jsonify([user_object.to_dct()])
 
 
@@ -91,7 +91,7 @@ def add_user():
     user_email = request.form.get('email')
     user_password = request.form.get('password')
 
-    user_obj = User(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=user_password)
+    user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=user_password)
     print('Adding {}'.format(user_obj.to_dct()))
     user_obj = user_data_access.add_user(user_obj)
     return render_template('login.html', app_data=app_data)
