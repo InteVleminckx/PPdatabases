@@ -13,6 +13,23 @@ class DataScientist:
 class UserDataAcces:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
+#         # Hier database maken ==> CREATE TABLE Item()
+#
+#         createTableQuery = "CREATE TABLE Item ()"
+#
+#         with open('employee_birthday.txt') as csv_file:
+#             csv_reader = csv.reader(csv_file, delimiter=',')
+#             line_count = 0
+#             for row in csv_reader:
+#                 if line_count == 0:
+#                     print(f'Column names are {", ".join(row)}')
+#                     line_count += 1
+#                 else:
+#                     print(f'\t{row[0]} works in the {row[1]} department, and was born in {row[2]}.')
+#                     line_count += 1
+#             print(f'Processed {line_count} lines.')
+
+
 
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
@@ -26,7 +43,7 @@ class UserDataAcces:
 
     def get_user(self, username):
         cursor = self.dbconnect.get_cursor()
-        #Zoekt een user op zijn email
+        #Zoekt een user op zijn username
         cursor.execute('SELECT d.username, d.email, d.firstname, d.lastname, a.password  FROM DataScientist d, Authentication a WHERE d.username == a.username AND d.username=%s', (username))
         row = cursor.fetchone()
         return DataScientist(row[0], row[1], row[2], row[3], row[4])
@@ -44,4 +61,3 @@ class UserDataAcces:
         except:
             self.dbconnect.rollback()
             raise Exception("Unable to save the user!")
-
