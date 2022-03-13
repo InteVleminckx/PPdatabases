@@ -1,4 +1,4 @@
-import csv
+import pandas
 
 class DataScientist:
     def __init__(self, firstname, lastname, username, email, password):
@@ -15,23 +15,10 @@ class DataScientist:
 class UserDataAcces:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
-#         # Hier database maken ==> CREATE TABLE Item()
-#
-#         createTableQuery = "CREATE TABLE Item ()"
-#
-#         with open('employee_birthday.txt') as csv_file:
-#             csv_reader = csv.reader(csv_file, delimiter=',')
-#             line_count = 0
-#             for row in csv_reader:
-#                 if line_count == 0:
-#                     print(f'Column names are {", ".join(row)}')
-#                     line_count += 1
-#                 else:
-#                     print(f'\t{row[0]} works in the {row[1]} department, and was born in {row[2]}.')
-#                     line_count += 1
-#             print(f'Processed {line_count} lines.')
 
-
+        # Hier database maken ==> CREATE TABLE Item()
+        df = pandas.read_csv('/CSVFiles/articles.csv')
+        print(df)
 
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
