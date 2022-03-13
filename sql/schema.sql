@@ -44,14 +44,6 @@ CREATE TABLE DataScientist (
     lastname TEXT NOT NULL
     );
 
-CREATE TABLE IF NOT EXISTS Users (
-    firstname VARCHAR(256) NOT NULL,
-    lastname VARCHAR(256) NOT NULL,
-    username VARCHAR(256) NOT NULL,
-    email VARCHAR(256) PRIMARY KEY,
-    password VARCHAR(256) NOT NULL
-);
-
 -- "Admin" data scientist who is able to add datasets
 CREATE TABLE Admin (
     username TEXT PRIMARY KEY REFERENCES DataScientist(username) ON UPDATE CASCADE ON DELETE CASCADE
