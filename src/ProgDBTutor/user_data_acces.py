@@ -35,7 +35,7 @@ class UserDataAcces:
 
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute('SELECT  d.firstname, d.lastname, d.username, d.email, a.password  FROM DataScientist d, Authentication a WHERE d.username == a.username') #Haalt uit de database
+        cursor.execute('SELECT d.firstname, d.lastname, d.username, d.email, a.password FROM DataScientist d, Authentication a WHERE d.username = a.username') #Haalt uit de database
         user_objects = list()
         for row in cursor:
             user_object = DataScientist(row[0], row[1], row[2], row[3], row[4])
