@@ -44,7 +44,6 @@ CREATE TABLE DataScientist (
     lastname TEXT NOT NULL
     );
 
-<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS Users(
     firstname VARCHAR(256) NOT NULL,
     lastname VARCHAR(256) NOT NULL,
@@ -52,7 +51,7 @@ CREATE TABLE IF NOT EXISTS Users(
     email VARCHAR(256) PRIMARY KEY,
     password VARCHAR(256) NOT NULL
 )
-=======
+
 -- "Admin" data scientist who is able to add datasets
 CREATE TABLE Admin (
     username TEXT PRIMARY KEY REFERENCES DataScientist(username) ON UPDATE CASCADE ON DELETE CASCADE
@@ -60,7 +59,7 @@ CREATE TABLE Admin (
 
 -- Item that can be bought by customers
 CREATE TABLE Item (
-    item_id TEXT,
+    item_id TEXT PRIMARY KEY ,
     product_code INT NOT NULL,
     product_name TEXT NOT NULL,
     product_type_no INT NOT NULL,
@@ -84,8 +83,7 @@ CREATE TABLE Item (
     section_name TEXT NOT NULL,
     garment_group_no INT NOT NULL,
     garment_group_name TEXT NOT NULL,
-    detail_desc TEXT NOT NULL,
-    PRIMARY KEY (item_id)
+    detail_desc TEXT NOT NULL
 );
 
 -- Table to keep track of the purchases of users for specific items.
@@ -103,5 +101,3 @@ CREATE TABLE Interaction (
 --     username VARCHAR(256) NOT NULL,
 --     email VARCHAR(256) PRIMARY KEY
 -- );
-
->>>>>>> 8313a730e89e570ba488133b290e0cbefad49db2
