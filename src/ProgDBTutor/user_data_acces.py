@@ -1,4 +1,4 @@
-# import pandas
+import pandas
 
 class DataScientist:
     def __init__(self, firstname, lastname, username, email, password):
@@ -17,8 +17,8 @@ class UserDataAcces:
         self.dbconnect = dbconnect
 
         # Hier database maken ==> CREATE TABLE Item()
-#         df = pandas.read_csv('/CSVFiles/articles.csv')
-#         print(df)
+        df = pandas.read_csv('/CSVFiles/articles.csv')
+        print(df)
 
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
@@ -32,7 +32,7 @@ class UserDataAcces:
 
     def get_user(self, username):
         cursor = self.dbconnect.get_cursor()
-        #Zoekt een user op zijn username
+        # Zoekt een user op zijn username
         cursor.execute('SELECT d.firstname, d.lastname, d.username, d.email, a.password  FROM DataScientist d, Authentication a WHERE d.username == a.username AND d.username=%s', (username))
         row = cursor.fetchone()
         return DataScientist(row[0], row[1], row[2], row[3], row[4])
