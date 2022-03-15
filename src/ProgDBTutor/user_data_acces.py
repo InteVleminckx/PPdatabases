@@ -1,4 +1,5 @@
-import pandas
+import pandas as pd
+print(pd.show_versions())
 
 class DataScientist:
     def __init__(self, firstname, lastname, username, email, password):
