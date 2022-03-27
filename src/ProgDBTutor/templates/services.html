@@ -10,15 +10,80 @@
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
 
 <style>
-
-
+.dropdown {
+    display: inline-block;
+    position: relative;
+    margin-bottom: 40px;
+}
+.dropbtn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border:none;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    width: 100%;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown-content a {
+    display: block;
+    color: #000000;
+    padding: 12px 16px;
+    text-decoration: none;
+}
+.dropdown-content a:hover {
+    color: #FFFFFF;
+    background-color: #00A4BD;
+}
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
 
 </style>
 </head>
 <body>
 
+<nav class="navbar" id="navbar">
+        <div class="navbar_container">
+            <div class="navbar_toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar_menu">
+                <li class="navbar_items"><a class="navbar_links" id="home-page" href="#home">Home</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="services-page" href="#services">Services</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="about-page" href="#about">About</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="contact-page" href="#contact">Contact</a></li>
+                <li class="navbar_btn">
+                    <button class="btn-1" role="button">
+                        <a class="navbar_bt" href="login">Login</a>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
 <!-- Services Section-->
     <div class="services" id="services">
+
+        <div class="dropdown">
+        <button class="dropbtn"> Choose Dataset </button>
+        <div class="dropdown-content">
+            <a href=""> option 1 </a>
+            <a href=""> option 2 </a>
+        </div>
+        </div>
+
         <h1>Recommendation algorithms</h1>
         <div class="services__wrapper">
             <div class="services__card">
