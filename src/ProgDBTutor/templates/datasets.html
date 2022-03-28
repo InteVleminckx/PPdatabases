@@ -5,111 +5,11 @@
 
 	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">
 
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
 
-<style>
-
-.dataset{
-    background-color: #131313;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-
-.dataset h1{
-    margin-bottom: 50px;
-    padding-top: 60px;
-    background-color: #ff8177;
-    background-image: linear-gradient(to right, #ff0844 0%, #e15226 100%);
-    background-size: 100%;
-    -webkit-background-clip: text;
-    /*-moz-background-clip: text;*/
-    -webkit-text-fill-color: transparent;
-    /*-moz-text-fill-color: transparent;*/
-    /*margin-bottom: 5rem;*/
-    font-size: 2.5rem;
-}
-
-
-{#.dataset__wrapper {#}
-    {#display: grid;#}
-{#    grid-template-columns: 1fr 1fr 1fr 1fr;#}
-{#    grid-template-rows: 1fr;#}
-{##}
-{#}#}
-
-.dataset__card{
-    margin: 25px;
-    height: 425px;
-    width: 800px;
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: white;
-    {#background-image: linear-gradient(to right, #00dbde 0%, #fc00ff 100%);#}
-    background-color: #bfbbbb;
-    {#transition: 0.3s ease-in;#}
-}
-
-.dataset__card h2 {
-    text-align: center;
-}
-
-.dataset__card p {
-    text-align: center;
-    margin-top: 24px;
-    font-size: 20px;
-}
-
-.dataset__btn {
-    display: flex;
-    justify-content: center;
-    margin-top: 16px;
-}
-
-.dataset button {
-    color: white;
-    padding: 14px 24px;
-    border: none;
-    outline: none;
-    border-radius: 4px;
-    background: #d72a2a;
-    font-size: 1rem;
-}
-
-.dataset button:hover{
-    cursor: pointer;
-}
-
-.dataset__card:hover{
-    {#transform: scale(1.075);#}
-    {#transition: 0.3s ease-in;#}
-    cursor: pointer;
-}
-
-@media screen and (max-width: 1300px) {
-    .dataset{
-        padding: 10rem;
-    }
-
-    .dataset__wrapper{
-        grid-template-columns: 1fr 1fr;
-    }
-
-}
-
-@media screen and (max-width: 768px) {
-    .dataset__wrapper {
-        grid-template-columns: 1fr;
-    }
-}
-
-</style>
 </head>
 <body>
 
@@ -150,19 +50,19 @@
     </div>
 
 <!-- Services Section-->
-{#    <div class="dataset" id="dataset">#}
-{##}
-{#        <h1>Recommendation algorithms</h1>#}
-{#        <div class="dataset__wrapper">#}
-{#            <div class="dataset__card">#}
-{#                <h2>Popularity</h2>#}
-{#                <p></p>#}
-{#                <div class="dataset__btn">#}
-{#                    <button>Start Setup</button>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
+<!--{#    <div class="dataset" id="dataset">#}-->
+<!--{##}-->
+<!--{#        <h1>Recommendation algorithms</h1>#}-->
+<!--{#        <div class="dataset__wrapper">#}-->
+<!--{#            <div class="dataset__card">#}-->
+<!--{#                <h2>Popularity</h2>#}-->
+<!--{#                <p></p>#}-->
+<!--{#                <div class="dataset__btn">#}-->
+<!--{#                    <button>Start Setup</button>#}-->
+<!--{#                </div>#}-->
+<!--{#            </div>#}-->
+<!--{#        </div>#}-->
+<!--{#    </div>#}-->
 
 </body>
 </html>

@@ -1,5 +1,5 @@
-import pandas
-import os
+# import pandas
+# import os
 
 class DataScientist:
     def __init__(self, firstname, lastname, username, email, password):
@@ -18,11 +18,11 @@ class UserDataAcces:
         self.dbconnect = dbconnect
 
 
-        cwd = os.getcwd() + "/../../CSVFiles/articles.csv"
-
-        # Hier database maken ==> CREATE TABLE Item()
-        df = pandas.read_csv(cwd)
-        print(df)
+        # cwd = os.getcwd() + "/../../CSVFiles/articles.csv"
+        #
+        # # Hier database maken ==> CREATE TABLE Item()
+        # df = pandas.read_csv(cwd)
+        # print(df)
 
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
