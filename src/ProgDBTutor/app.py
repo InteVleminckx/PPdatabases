@@ -71,6 +71,10 @@ def contact():
 def services():
     return render_template('services.html', app_data=app_data)
 
+@app.route("/datasets")
+def datasets():
+    return render_template('datasets.html', app_data=app_data)
+
 
 #----------------- User_DB -----------------#
 @app.route("/login", methods=['GET'])
