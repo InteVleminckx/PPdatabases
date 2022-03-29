@@ -2,6 +2,10 @@
     display: inline-block;
     position: relative;
     margin-bottom: 40px;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 .dropbtn {
     background-color: #04AA6D;
@@ -70,6 +74,7 @@
     /*margin-bottom: 5rem;*/
     font-size: 2.5rem;
 
+    text-align: center;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -84,15 +89,15 @@
 
 ._services__card{
     margin: 10px;
-    height: 500px;
-    width: 1200px;
+    height: 300px;
+    width: 800px;
     border-radius: 4px;
-    display: flex;
+    /*display: flex;*/
     flex-direction: column;
     justify-content: center;
     color: white;
     background-image: linear-gradient(to right, #00dbde 0%, #fc00ff 100%);
-    transition: 0.3s ease-in;
+    /*transition: 0.3s ease-in;*/
 
     display: block;
     margin-left: auto;
@@ -126,6 +131,7 @@
     display: flex;
     justify-content: center;
     margin-top: 16px;
+
 }
 
 ._services__card button {
@@ -143,9 +149,9 @@
 }
 
 ._services__card:hover{
-    transform: scale(1.075);
-    transition: 0.3s ease-in;
-    cursor: pointer;
+    /*transform: scale(1.075);*/
+    /*transition: 0.3s ease-in;*/
+    /*cursor: pointer;*/
 }
 
 @media screen and (max-width: 1300px) {
@@ -206,6 +212,7 @@ input[type=submit]:hover {
   float: left;
   width: 25%;
   margin-top: 6px;
+    color: black;
 }
 
 .col-75 {
