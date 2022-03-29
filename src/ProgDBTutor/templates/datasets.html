@@ -5,7 +5,8 @@
 
 	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">
 
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
@@ -32,22 +33,71 @@
 
 <div class="dataset" id="dataset">
 
-        <h1>Datasets</h1>
 
+{#    <div class="element">#}
+{#        <div class="dataset_title" >Datasets</div>#}
+{#    </div>#}
+{#    <div class="element">#}
+{#        <div class="dataset__btn">#}
+{#            <button>Add Dataset</button>#}
+{#        </div>#}
+{#    </div>#}
+    <div class="_container">
+
+{#        <div class="topleft">#}
+            <div class="dataset_title" >Datasets</div>
+{#        </div>#}
+{#        <div class="topright">#}
             <div class="dataset__btn">
                 <button>Add Dataset</button>
             </div>
-
-{#        <div class="dataset__wrapper">#}
-            <div class="dataset__card">
-                <ol>
-                    <li> item1 </li>
-                    <li> item1 </li>
-                    <li> item1 </li>
-                </ol>
-            </div>
 {#        </div>#}
+
+        <div class="dataset__header">
+            <div class="dataset__item" tabindex="1">
+                <ul><li>Dataset number</li><li>Dataset name</li></ul>
+            </div>
+        </div>
+
+    <div class="dataset__card">
+        <div class="dataset__scroll">
+            <div class="dataset__item" tabindex="1">
+            <ul><li>1</li><li>Item 1</li></ul>
+            </div>
+            <div class="dataset__item" tabindex="2">
+                <ul><li>2</li><li>Item 2</li></ul>
+            </div>
+            <div class="dataset__item" tabindex="3">
+                <ul><li>3</li><li>Item 3</li></ul>
+            </div>
+            <div class="dataset__item" tabindex="4">
+                <ul><li>4</li><li>Item 4</li></ul>
+            </div>
+            <div class="dataset__item" tabindex="5">
+                <ul><li>5</li><li>Item 5</li></ul>
+            </div>
+            <div class="dataset__item" tabindex="6">
+                <ul><li>6</li><li>Item 6</li></ul>
+            </div>
+            <div class="dataset__item" tabindex="7">
+                <ul><li>7</li><li>Item 7</li></ul>
+            </div>
+            <div class="dataset__item" tabindex="8">
+                <ul><li>8</li><li>Item 8</li></ul>
+            </div>
+            <div class="dataset__item" tabindex="9">
+                <ul><li>8</li><li>Item 8</li></ul>
+            </div>
+            <div class="dataset__item" tabindex="10">
+                <ul><li>8</li><li>Item 8</li></ul>
+            </div>
+        </div>
     </div>
+    </div>
+
+
+
+</div>
 
 <!-- Services Section-->
 <!--{#    <div class="dataset" id="dataset">#}-->

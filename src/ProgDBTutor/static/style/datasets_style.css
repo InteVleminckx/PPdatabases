@@ -1,13 +1,61 @@
-.dataset{
-    background-color: #131313;
-    display: flex;
-    flex-direction: column;
+._container {
+    position: relative;
+
+    height: 600px;
+    width: 800px;
+
+    background: #ffffff;
+
     justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding-top: 50px;
+    margin-top: 50px;
 }
 
-.dataset h1{
+.topleft {
+    position: absolute;
+    top: 8px;
+    left: 16px;
+
+}
+
+.topright {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+
+}
+
+.dataset{
+    /*background-color: #131313;*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*!*justify-content: center;*!*/
+    /*!*align-items: center;*!*/
+    /*min-height: 100vh;*/
+}
+.element {
+    display: inline-block;
+    /*width: 100px;*/
+    /*height: 100px;*/
+    /*background: #0c5460;*/
+}
+.dataset_title {
+    color: #c81d1d;
+    font-size: 50px;
+    /*align-self: center;*/
+    /*justify-self: center;*/
+    text-align: center;
+    /*float: left;*/
+
+}
+.dataset h3{
+    /*justify-content: left;*/
+    float: left;
     margin-bottom: 50px;
     padding-top: 60px;
     background-color: #ff8177;
@@ -30,21 +78,80 @@
 /*{#}#}*/
 
 .dataset__card{
-    margin: 25px;
+
+    /*margin: 0;*/
     height: 425px;
     width: 800px;
     border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     color: white;
-    background-image: linear-gradient(to right, #00dbde 0%, #fc00ff 100%);
     background-color: #bfbbbb;
     transition: 0.3s ease-in;
+    font-size: 25px;
+
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
-.dataset__card h2 {
+.dataset__header{
+
+    margin-top: 25px;
+    margin-bottom: 5px;
+    width: 800px;
+    height: 50px;
+    border-radius: 4px;
+    color: white;
+    font-size: 25px;
+    background-color: #bfbbbb;
+    transition: 0.3s ease-in;
+
+    font-weight: bold;
+
+}
+
+.dataset__card, .dataset__header {
+    align-self: center;
+    justify-content: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dataset__header ul,  .dataset__card ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.dataset__header li, .dataset__card li {
+    float: left;
+    display: table-cell;
+    color: #000000;
     text-align: center;
+    width: 50%;
+}
+
+.dataset__headerItems {
+    height: 10%;
+    text-align: center;
+    border-bottom: 3px solid #131313;
+}
+
+.dataset__headerItems li{
+    margin-top: 7px;
+}
+
+.dataset__card .dataset__item{
+    height: 12%;
+    border-bottom: 1px dashed #131313;
+}
+
+.dataset__item li{
+    margin-top: 12px;
+}
+
+.dataset__card .dataset__item:focus{
+    background-color: red;
 }
 
 .dataset__card p {
@@ -54,29 +161,38 @@
 }
 
 .dataset__btn {
-    display: flex;
-    justify-content: center;
-    margin-top: 16px;
+    /*display: flex;*/
+    /*justify-content: right;*/
+    /*float: left;*/
+    /*margin-left: 800px;*/
+    float: right;
+    justify-self: center;
+    text-align: center;
+    align-self: center;
+    margin-top: -30px;
 }
 
-.dataset button {
+.button {
     color: white;
     padding: 14px 24px;
     border: none;
     outline: none;
     border-radius: 4px;
-    background: #d72a2a;
+    background: #4fd72a;
     font-size: 1rem;
+
+    /*justify-content: right;*/
+    /*justify-self: right;*/
 }
 
-.dataset button:hover{
+.button:hover{
     cursor: pointer;
 }
 
 .dataset__card:hover{
     /*{#transform: scale(1.075);#}*/
     /*{#transition: 0.3s ease-in;#}*/
-    cursor: pointer;
+    /*cursor: pointer;*/
 }
 
 @media screen and (max-width: 1300px) {
@@ -95,3 +211,5 @@
         grid-template-columns: 1fr;
     }
 }
+
+
