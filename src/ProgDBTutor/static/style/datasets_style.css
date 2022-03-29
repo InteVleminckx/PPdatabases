@@ -204,6 +204,8 @@
 }
 
 .stat_container {
+
+    border-radius: 25px;
     position: relative;
 
     height: 600px;
