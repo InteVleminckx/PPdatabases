@@ -50,16 +50,16 @@
 
 
 
-.services{
+._services{
     background-color: #131313;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
     min-height: 100vh;
 }
 
-.services h1{
+._services h1{
     background-color: #ff8177;
     background-image: linear-gradient(to right, #ff0844 0%, #e15226 100%);
     background-size: 100%;
@@ -69,19 +69,23 @@
     /*-moz-text-fill-color: transparent;*/
     /*margin-bottom: 5rem;*/
     font-size: 2.5rem;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
-.services__wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr;
-}
+/*.services__wrapper {*/
+/*    display: grid;*/
+/*    grid-template-columns: 1fr 1fr 1fr 1fr;*/
+/*    grid-template-rows: 1fr;*/
+/*}*/
 
-.services__card{
+._services__card{
     margin: 10px;
-    height: 425px;
-    width: 300px;
+    height: 500px;
+    width: 1200px;
     border-radius: 4px;
     display: flex;
     flex-direction: column;
@@ -89,38 +93,42 @@
     color: white;
     background-image: linear-gradient(to right, #00dbde 0%, #fc00ff 100%);
     transition: 0.3s ease-in;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.services__card:nth-child(2) {
-    background: #000046;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #1CB5E0, #000046);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #1CB5E0, #000046); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+/*._services__card:nth-child(2) {*/
+/*    background: #000046;  !* fallback for old browsers *!*/
+/*    background: -webkit-linear-gradient(to right, #1CB5E0, #000046);  !* Chrome 10-25, Safari 5.1-6 *!*/
+/*    background: linear-gradient(to right, #1CB5E0, #000046); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
 
-}
+/*}*/
 
-.services__card:nth-child(3) {
-    background: #4AC29A;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #BDFFF3, #4AC29A);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #BDFFF3, #4AC29A); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
+/*._services__card:nth-child(3) {*/
+/*    background: #4AC29A;  !* fallback for old browsers *!*/
+/*    background: -webkit-linear-gradient(to right, #BDFFF3, #4AC29A);  !* Chrome 10-25, Safari 5.1-6 *!*/
+/*    background: linear-gradient(to right, #BDFFF3, #4AC29A); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
+/*}*/
 
-.services__card h2 {
+._services__card h2 {
     text-align: center;
 }
 
-.services__card p {
+._services__card p {
     text-align: center;
     margin-top: 24px;
     font-size: 20px;
 }
 
-.services__btn {
+._services__btn {
     display: flex;
     justify-content: center;
     margin-top: 16px;
 }
 
-.services__card button {
+._services__card button {
     color: white;
     padding: 14px 24px;
     border: none;
@@ -130,29 +138,93 @@
     font-size: 1rem;
 }
 
-.services__card button:hover{
+._services__card button:hover{
     cursor: pointer;
 }
 
-.services__card:hover{
+._services__card:hover{
     transform: scale(1.075);
     transition: 0.3s ease-in;
     cursor: pointer;
 }
 
 @media screen and (max-width: 1300px) {
-    .services{
+    ._services{
         padding: 10rem;
     }
 
-    .services__wrapper{
+    ._services__wrapper{
         grid-template-columns: 1fr 1fr;
     }
 
 }
 
 @media screen and (max-width: 768px) {
-    .services__wrapper {
+    ._services__wrapper {
         grid-template-columns: 1fr;
     }
+}
+
+par_form {
+  box-sizing: border-box;
+}
+
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
 }
