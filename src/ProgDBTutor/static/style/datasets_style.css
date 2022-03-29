@@ -160,6 +160,14 @@
     font-size: 20px;
 }
 
+.showStatbtn {
+
+    margin-top: 24px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .dataset__btn {
     /*display: flex;*/
     /*justify-content: right;*/
@@ -209,7 +217,7 @@
     margin-left: auto;
     margin-right: auto;
 
-    margin-top: 100px;
+    margin-top: 60px;
     margin-bottom: 50px;
 }
 
