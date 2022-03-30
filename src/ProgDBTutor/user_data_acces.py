@@ -1,6 +1,5 @@
-# import pandas
+import pandas
 # import os
-
 class DataScientist:
     def __init__(self, firstname, lastname, username, email, password):
         self.firstname = firstname
@@ -17,6 +16,10 @@ class UserDataAcces:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 
+
+        # Hier database maken ==> CREATE TABLE Item()
+        #df = pandas.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
+        #print(df)
 
         # cwd = os.getcwd() + "/../../CSVFiles/articles.csv"
         #
