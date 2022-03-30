@@ -34,16 +34,26 @@
 
 <div class="_services" id="services">
 
-        <div class="_dropdown">
-        <button class="dropbtn"> Choose Dataset
-            <span class="fa-caret-down"></span>
-        </button>
-        <div class="dropdown-content">
-            <a href=""> option 1 </a>
-            <a href=""> option 2 </a>
+{#        <div class="_dropdown">#}
+{#        <button class="dropbtn"> Choose Dataset#}
+{#            <span class="fa-caret-down"></span>#}
+{#        </button>#}
+        <h1>1. Choosing Dataset</h1>
+        <p>Select a dataset with the selection button below. If you would like to add a new dataset (for admins only), go to the Datasets page.</p>
+
+        <div class="_select">
+        <select id="ds_select" name="ds_select">
+            <option value="dataset 1">dataset 1</option>
+            <option value="dataset 2">dataset 2</option>
+            <option value="dataset 3">dataset 3</option>
+        </select>
         </div>
-        </div>
-        <h1>Setting up parameters</h1>
+{#        <div class="dropdown-content">#}
+{#            <a href=""> option 1 </a>#}
+{#            <a href=""> option 2 </a>#}
+{#        </div>#}
+{#        </div>#}
+        <h1>2. Setting up parameters</h1>
 {#        <div class="services__wrapper">#}
             <div class="_services__card">
                 <div class="par_form">
@@ -51,41 +61,43 @@
                       <form action="">
                       <div class="row">
                         <div class="col-25">
-                          <label for="fname">First Name</label>
+                          <label for="startingpoint">Starting point</label>
                         </div>
                         <div class="col-75">
-                          <input type="text" id="fname" name="firstname" placeholder="Your name..">
+                          <input type="datetime-local" id="startingpoint" name="startingpoint" placeholder="Starting point">
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-25">
-                          <label for="lname">Last Name</label>
+                          <label for="endpoint">End point</label>
                         </div>
                         <div class="col-75">
-                          <input type="text" id="lname" name="lastname" placeholder="Your last name..">
+                          <input type="datetime-local" id="endpoint" name="endpoint" placeholder="End point">
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-25">
-                          <label for="country">Country</label>
+                          <label for="stepsize">Stepsize</label>
                         </div>
                         <div class="col-75">
-                          <select id="country" name="country">
-                            <option value="australia">Australia</option>
-                            <option value="canada">Canada</option>
-                            <option value="usa">USA</option>
-                          </select>
+{#                          <select id="country" name="country">#}
+{#                            <option value="australia">Australia</option>#}
+{#                            <option value="canada">Canada</option>#}
+{#                            <option value="usa">USA</option>#}
+{#                          </select>#}
+                            <input type="text" id="stepsize" name="stepsize" placeholder="Stepsize">
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-25">
-                          <label for="subject">Subject</label>
+                          <label for="topk">Top-k</label>
                         </div>
                         <div class="col-75">
-                          <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
+                            <input type="text" id="topk" name="topk" placeholder="Top-k">
+{#                          <textarea id="subject" name="subject" placeholder="Write something.." style=""></textarea>#}
                         </div>
                       </div>
-                      <br>
+{#                      <br>#}
 {#                      <div class="row">#}
 {#                        <input type="submit" value="Submit">#}
 {#                      </div>#}
@@ -104,40 +116,19 @@
     </div>
 
 <!-- Services Section-->
-    <div class="services" id="services">
+<div class="__services" id="services">
 
-        <h1>Recommendation algorithms</h1>
-        <div class="services__wrapper">
-            <div class="services__card">
-                <h2>Popularity</h2>
-                <p></p>
-                <div class="services__btn">
-                    <button>Start Setup</button>
-                </div>
-            </div>
-            <div class="services__card">
-                <h2>Recency</h2>
-                <p></p>
-                <div class="services__btn">
-                    <button>Start Setup</button>
-                </div>
-            </div>
-            <div class="services__card">
-                <h2>ItemKNN</h2>
-                <p></p>
-                <div class="services__btn">
-                    <button>Start Setup</button>
-                </div>
-            </div>
-            <div class="services__card">
-                <h2>Coming later</h2>
-                <p></p>
-                <div class="services__btn">
-                    <button>Start Setup</button>
-                </div>
+    <h1>Recommendation algorithms</h1>
+    <div class="__services__wrapper">
+        <div class="__services__card">
+            <h2>Popularity</h2>
+            <p></p>
+            <div class="__services__btn">
+                <button>Start Setup</button>
             </div>
         </div>
     </div>
+</div>
 
 </body>
 </html>

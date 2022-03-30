@@ -89,7 +89,7 @@
 
 ._services__card{
     margin: 10px;
-    height: 300px;
+    height: 200px;
     width: 800px;
     border-radius: 4px;
     /*display: flex;*/
@@ -171,11 +171,12 @@
     }
 }
 
-par_form {
+.par_form {
   box-sizing: border-box;
+
 }
 
-input[type=text], select, textarea {
+input[type=text], input[type=datetime-local], .container select, textarea {
   width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
@@ -228,6 +229,37 @@ input[type=submit]:hover {
   clear: both;
 }
 
+._select {
+    padding: 50px;
+        margin-bottom: 50px;
+
+    /*height: 200px;*/
+    /*width: 800px;*/
+    /*border-radius: 4px;*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    justify-content: center;
+    color: white;
+    background-color: #131313;
+    display: block;
+
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+
+}
+.ds_select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
   .col-25, .col-75, input[type=submit] {
@@ -235,3 +267,66 @@ input[type=submit]:hover {
     margin-top: 0;
   }
 }
+
+
+
+.__services{
+    background-color: #131313;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    min-height: 100vh;
+}
+
+.__services h1{
+    background-color: #ff8177;
+    background-image: linear-gradient(to right, #ff0844 0%, #e15226 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    /*-moz-background-clip: text;*/
+    -webkit-text-fill-color: transparent;
+    /*-moz-text-fill-color: transparent;*/
+    /*margin-bottom: 5rem;*/
+    font-size: 2.5rem;
+
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/*.services__wrapper {*/
+/*    display: grid;*/
+/*    grid-template-columns: 1fr 1fr 1fr 1fr;*/
+/*    grid-template-rows: 1fr;*/
+/*}*/
+
+.__services__card{
+    margin: 10px;
+    height: 200px;
+    width: 800px;
+    border-radius: 4px;
+    /*display: flex;*/
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+    background-image: linear-gradient(to right, #00dbde 0%, #fc00ff 100%);
+    /*transition: 0.3s ease-in;*/
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.__services__card h2 {
+    text-align: center;
+}
+
+.__services__card p {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 20px;
+}
+
