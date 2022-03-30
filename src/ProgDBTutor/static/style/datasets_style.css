@@ -1,0 +1,243 @@
+._container {
+    position: relative;
+
+    height: 600px;
+    width: 800px;
+
+    background: #ffffff;
+
+    justify-content: center;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding-top: 50px;
+    margin-top: 50px;
+}
+
+.topleft {
+    position: absolute;
+    top: 8px;
+    left: 16px;
+
+}
+
+.topright {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+
+}
+
+.dataset{
+    /*background-color: #131313;*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*!*justify-content: center;*!*/
+    /*!*align-items: center;*!*/
+    /*min-height: 100vh;*/
+}
+.element {
+    display: inline-block;
+    /*width: 100px;*/
+    /*height: 100px;*/
+    /*background: #0c5460;*/
+}
+.dataset_title {
+    color: #c81d1d;
+    font-size: 50px;
+    /*align-self: center;*/
+    /*justify-self: center;*/
+    text-align: center;
+    /*float: left;*/
+
+}
+.dataset h3{
+    /*justify-content: left;*/
+    float: left;
+    margin-bottom: 50px;
+    padding-top: 60px;
+    background-color: #ff8177;
+    background-image: linear-gradient(to right, #ff0844 0%, #e15226 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    /*-moz-background-clip: text;*/
+    -webkit-text-fill-color: transparent;
+    /*-moz-text-fill-color: transparent;*/
+    /*margin-bottom: 5rem;*/
+    font-size: 2.5rem;
+}
+
+
+/*{#.dataset__wrapper {#}*/
+/*    {#display: grid;#}*/
+/*{#    grid-template-columns: 1fr 1fr 1fr 1fr;#}*/
+/*{#    grid-template-rows: 1fr;#}*/
+/*{##}*/
+/*{#}#}*/
+
+.dataset__card{
+
+    /*margin: 0;*/
+    height: 425px;
+    width: 800px;
+    border-radius: 4px;
+    color: white;
+    background-color: #bfbbbb;
+    transition: 0.3s ease-in;
+    font-size: 25px;
+
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.dataset__header{
+
+    margin-top: 25px;
+    margin-bottom: 5px;
+    width: 800px;
+    height: 50px;
+    border-radius: 4px;
+    color: white;
+    font-size: 25px;
+    background-color: #bfbbbb;
+    transition: 0.3s ease-in;
+
+    font-weight: bold;
+
+}
+
+.dataset__card, .dataset__header {
+    align-self: center;
+    justify-content: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dataset__header ul,  .dataset__card ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.dataset__header li, .dataset__card li {
+    float: left;
+    display: table-cell;
+    color: #000000;
+    text-align: center;
+    width: 50%;
+}
+
+.dataset__headerItems {
+    height: 10%;
+    text-align: center;
+    border-bottom: 3px solid #131313;
+}
+
+.dataset__headerItems li{
+    margin-top: 7px;
+}
+
+.dataset__card .dataset__item{
+    height: 12%;
+    border-bottom: 1px dashed #131313;
+}
+
+.dataset__item li{
+    margin-top: 12px;
+}
+
+.dataset__card .dataset__item:focus{
+    background-color: red;
+}
+
+.dataset__card p {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 20px;
+}
+
+.showStatbtn {
+
+    margin-top: 24px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dataset__btn {
+    /*display: flex;*/
+    /*justify-content: right;*/
+    /*float: left;*/
+    /*margin-left: 800px;*/
+    float: right;
+    justify-self: center;
+    text-align: center;
+    align-self: center;
+    margin-top: -30px;
+}
+
+.button {
+    color: white;
+    padding: 14px 24px;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background: #4fd72a;
+    font-size: 1rem;
+
+    /*justify-content: right;*/
+    /*justify-self: right;*/
+}
+
+.button:hover{
+    cursor: pointer;
+}
+
+.dataset__card:hover{
+    /*{#transform: scale(1.075);#}*/
+    /*{#transition: 0.3s ease-in;#}*/
+    /*cursor: pointer;*/
+}
+
+.stat_container {
+
+    border-radius: 25px;
+    position: relative;
+
+    height: 600px;
+    width: 1200px;
+
+    background: #000000;
+
+    justify-content: center;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+    margin-top: 60px;
+    margin-bottom: 50px;
+}
+
+@media screen and (max-width: 1300px) {
+    .dataset{
+        padding: 10rem;
+    }
+
+    .dataset__wrapper{
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+    .dataset__wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+
+

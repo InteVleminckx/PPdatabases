@@ -1,0 +1,76 @@
+  /* Login */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../static/images/Pngtree_simple_technology_cut.jpg");
+    height: 100%;
+    /*margin: 0;*/
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    overflow: hidden;
+}
+.login_page {
+    width: 360px;
+    padding: 10% 0 0;
+    margin: auto;
+}
+.form {
+    position: relative;
+    z-index: 1;
+    background: rgba(109, 132, 140, 0.8);
+    max-width: 360px;
+    margin: 0 auto 100px;
+    padding: 45px;
+    text-align: center;
+}
+.form input{
+    font-family: 'Kumbh Sans', sans-serif;
+    outline: 1px;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.form button{
+    font-family: 'Kumbh Sans', sans-serif;
+    outline: 0;
+    background: #d3cc50;
+    background: -webkit-linear-gradient(to right, #009fa6, #568ee8, #d3cc50);
+    background: linear-gradient(to right, #009fa6, #568ee8, #d3cc50);
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.35s;
+}
+.form button:hover{
+    color: #fff;
+}
+.form button:after{
+    background: #568ee8;
+    transition: all 0.35s;
+}
+.form button:hover:after {
+    width: 100%;
+}
+.form .message{
+    margin: 15px 0 0;
+    color: aliceblue;
+    font-size: 12px;
+    margin-bottom: 2.5rem;
+}
+.form .message a{
+    color: #4caf50;
+    text-decoration: none;
+
+}
+.form .register_form{
+    display: none;
+}
+.cancel__btn{
+
+}

@@ -5,20 +5,107 @@
 
 	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='style/services_style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
 
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
 
-<style>
 
-
-
-</style>
 </head>
 <body>
 
+<nav class="navbar" id="navbar">
+        <div class="navbar_container">
+            <div class="navbar_toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar_menu">
+                <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">Services</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
+            </ul>
+        </div>
+    </nav>
+
+<!-- Dataset Section-->
+
+<div class="_services" id="services">
+
+        <div class="_dropdown">
+        <button class="dropbtn"> Choose Dataset
+            <span class="fa-caret-down"></span>
+        </button>
+        <div class="dropdown-content">
+            <a href=""> option 1 </a>
+            <a href=""> option 2 </a>
+        </div>
+        </div>
+        <h1>Setting up parameters</h1>
+{#        <div class="services__wrapper">#}
+            <div class="_services__card">
+                <div class="par_form">
+                    <div class="container">
+                      <form action="">
+                      <div class="row">
+                        <div class="col-25">
+                          <label for="fname">First Name</label>
+                        </div>
+                        <div class="col-75">
+                          <input type="text" id="fname" name="firstname" placeholder="Your name..">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-25">
+                          <label for="lname">Last Name</label>
+                        </div>
+                        <div class="col-75">
+                          <input type="text" id="lname" name="lastname" placeholder="Your last name..">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-25">
+                          <label for="country">Country</label>
+                        </div>
+                        <div class="col-75">
+                          <select id="country" name="country">
+                            <option value="australia">Australia</option>
+                            <option value="canada">Canada</option>
+                            <option value="usa">USA</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-25">
+                          <label for="subject">Subject</label>
+                        </div>
+                        <div class="col-75">
+                          <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
+                        </div>
+                      </div>
+                      <br>
+{#                      <div class="row">#}
+{#                        <input type="submit" value="Submit">#}
+{#                      </div>#}
+                      </form>
+                    </div>
+
+                </div>
+{#                <h2>Setting up parameters</h2>#}
+{#                <p></p>#}
+{#                <div class="services__btn">#}
+{#                    <button>Start Setup</button>#}
+{#                </div>#}
+
+            </div>
+{#        </div>#}
+    </div>
+
 <!-- Services Section-->
     <div class="services" id="services">
+
         <h1>Recommendation algorithms</h1>
         <div class="services__wrapper">
             <div class="services__card">
