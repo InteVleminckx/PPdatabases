@@ -1,4 +1,4 @@
-# import pandas
+import pandas
 # import os
 class DataScientist:
     def __init__(self, firstname, lastname, username, email, password):
