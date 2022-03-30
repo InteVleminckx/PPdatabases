@@ -1,15 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-#import pandas
-
-=======
-import pandas
-=======
 # import pandas
->>>>>>> 7746c0b1cb241df0d7528d2b547fefb1f0413f2a
 # import os
->>>>>>> 086e9c8a56bc557fafd63e120d0b2eed89e5b3ac
-
 class DataScientist:
     def __init__(self, firstname, lastname, username, email, password):
         self.firstname = firstname
@@ -27,17 +17,15 @@ class UserDataAcces:
         self.dbconnect = dbconnect
 
 
-<<<<<<< HEAD
         # Hier database maken ==> CREATE TABLE Item()
         #df = pandas.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
         #print(df)
-=======
+
         # cwd = os.getcwd() + "/../../CSVFiles/articles.csv"
         #
         # # Hier database maken ==> CREATE TABLE Item()
         # df = pandas.read_csv(cwd)
         # print(df)
->>>>>>> 086e9c8a56bc557fafd63e120d0b2eed89e5b3ac
 
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
