@@ -6,11 +6,6 @@ from flask.templating import render_template
 from config import config_data
 from db_connection import DBConnection
 from user_data_acces import DataScientist, UserDataAcces
-<<<<<<< HEAD
-#import pandas as pd
-=======
-# import pandas as pd
->>>>>>> 086e9c8a56bc557fafd63e120d0b2eed89e5b3ac
 
 # INITIALIZE SINGLETON SERVICES
 app = Flask('Tutorial ')
