@@ -55,6 +55,7 @@
 
 
 ._services{
+    padding-top: 50px;
     background-color: #131313;
     /*display: flex;*/
     /*flex-direction: column;*/
@@ -80,12 +81,11 @@
     margin-right: auto;
 }
 
-
-/*.services__wrapper {*/
-/*    display: grid;*/
-/*    grid-template-columns: 1fr 1fr 1fr 1fr;*/
-/*    grid-template-rows: 1fr;*/
-/*}*/
+._services p {
+    margin-top: 25px;
+    color: white;
+    text-align: center;
+}
 
 ._services__card{
     margin: 10px;
@@ -103,19 +103,6 @@
     margin-left: auto;
     margin-right: auto;
 }
-
-/*._services__card:nth-child(2) {*/
-/*    background: #000046;  !* fallback for old browsers *!*/
-/*    background: -webkit-linear-gradient(to right, #1CB5E0, #000046);  !* Chrome 10-25, Safari 5.1-6 *!*/
-/*    background: linear-gradient(to right, #1CB5E0, #000046); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
-
-/*}*/
-
-/*._services__card:nth-child(3) {*/
-/*    background: #4AC29A;  !* fallback for old browsers *!*/
-/*    background: -webkit-linear-gradient(to right, #BDFFF3, #4AC29A);  !* Chrome 10-25, Safari 5.1-6 *!*/
-/*    background: linear-gradient(to right, #BDFFF3, #4AC29A); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
-/*}*/
 
 ._services__card h2 {
     text-align: center;
@@ -172,6 +159,7 @@
 }
 
 .par_form {
+    margin-top: 25px;
   box-sizing: border-box;
 
 }
@@ -231,7 +219,7 @@ input[type=submit]:hover {
 
 ._select {
     padding: 50px;
-        margin-bottom: 50px;
+    margin-bottom: 50px;
 
     /*height: 200px;*/
     /*width: 800px;*/
@@ -245,7 +233,6 @@ input[type=submit]:hover {
 
     margin-left: auto;
     margin-right: auto;
-    justify-content: center;
     justify-items: center;
     align-content: center;
     align-items: center;
@@ -253,7 +240,7 @@ input[type=submit]:hover {
 
 }
 .ds_select {
-    width: 100%;
+    width: 300px;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
