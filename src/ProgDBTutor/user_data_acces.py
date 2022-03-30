@@ -1,4 +1,4 @@
-import pandas
+# import pandas
 # import os
 
 class DataScientist:
