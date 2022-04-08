@@ -246,6 +246,61 @@ input[type=submit]:hover {
     border-radius: 4px;
     resize: vertical;
 }
+.__select {
+    padding: 20px;
+    margin-top: 25px;
+
+    height: 40px;
+    width: 800px;
+    border-radius: 5px;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    justify-content: center;
+    color: white;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    display: block;
+
+    margin-left: auto;
+    margin-right: auto;
+    justify-items: center;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+
+}
+
+._ds_select {
+    width: 300px;
+    padding: 12px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    resize: vertical;
+}
+.___select {
+    padding: 50px;
+    margin-bottom: 50px;
+    margin-top: -10px;
+
+    height: 360px;
+    width: 800px;
+    border-radius: 5px;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    justify-content: center;
+    color: white;
+    background-color: #ffffff;
+    display: block;
+    box-sizing: border-box;
+
+    margin-left: auto;
+    margin-right: auto;
+    justify-items: center;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+
+}
 
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
@@ -299,9 +354,8 @@ input[type=submit]:hover {
     flex-direction: column;
     justify-content: center;
     color: white;
-    background-image: linear-gradient(to right, #00dbde 0%, #fc00ff 100%);
+    background-color: white;
     /*transition: 0.3s ease-in;*/
-
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -315,5 +369,13 @@ input[type=submit]:hover {
     text-align: center;
     margin-top: 24px;
     font-size: 20px;
+}
+
+.__services__btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    padding-bottom: 50px;
+
 }
 

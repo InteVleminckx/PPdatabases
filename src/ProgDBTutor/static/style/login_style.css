@@ -1,6 +1,6 @@
   /* Login */
 body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../static/images/Pngtree_simple_technology_cut.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../images/Pngtree_simple_technology_cut.jpg");
     height: 100%;
     /*margin: 0;*/
     background-size: cover;
