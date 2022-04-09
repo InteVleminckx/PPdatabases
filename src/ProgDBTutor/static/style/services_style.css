@@ -247,11 +247,11 @@ input[type=submit]:hover {
     resize: vertical;
 }
 .__select {
-    padding: 20px;
-    margin-top: 25px;
+    /*padding: 20px;*/
+    /*margin-top: 25px;*/
 
-    height: 40px;
-    width: 800px;
+    height: 450px;
+    width: 500px;
     border-radius: 5px;
     /*display: flex;*/
     /*flex-direction: column;*/
@@ -259,7 +259,6 @@ input[type=submit]:hover {
     color: white;
     background-color: #ffffff;
     box-sizing: border-box;
-    display: block;
 
     margin-left: auto;
     margin-right: auto;
@@ -276,29 +275,30 @@ input[type=submit]:hover {
     border: 1px solid #000000;
     border-radius: 4px;
     resize: vertical;
+    margin-top: 20px;
 }
 .___select {
     padding: 50px;
     margin-bottom: 50px;
-    margin-top: -10px;
+    /*margin-top: -10px;*/
 
-    height: 360px;
-    width: 800px;
+    height: 370px;
+    width: 100%;
     border-radius: 5px;
     /*display: flex;*/
     /*flex-direction: column;*/
     justify-content: center;
     color: white;
     background-color: #ffffff;
-    display: block;
+    /*display: block;*/
     box-sizing: border-box;
 
-    margin-left: auto;
-    margin-right: auto;
-    justify-items: center;
-    align-content: center;
-    align-items: center;
-    text-align: center;
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+    /*justify-items: center;*/
+    /*align-content: center;*/
+    /*align-items: center;*/
+    /*text-align: center;*/
 
 }
 
@@ -319,6 +319,8 @@ input[type=submit]:hover {
     /*justify-content: center;*/
     /*align-items: center;*/
     min-height: 100vh;
+    text-align: center;
+
 }
 
 .__services h1{
@@ -376,6 +378,125 @@ input[type=submit]:hover {
     justify-content: center;
     margin-top: 16px;
     padding-bottom: 50px;
+}
+.___services__btn {
+    justify-content: center;
+    margin-top: 35px;
+    padding-bottom: 50px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.box {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 40px;
+}
+
+.__container {
+    position: relative;
+
+    height: 450px;
+    width: 500px;
+    border-radius: 4px;
+    background: #ffffff;
+
+    justify-content: center;
+
+    /*display: block;*/
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+
+    /*padding-top: 50px;*/
+    /*margin-top: 50px;*/
+}
+._dataset_title {
+    color: #c81d1d;
+    font-size: 30px;
+    /*align-self: center;*/
+    /*justify-self: center;*/
+    text-align: center;
+    /*float: left;*/
 
 }
 
+._dataset__btn {
+    /*display: flex;*/
+    /*justify-content: right;*/
+    /*float: left;*/
+    /*margin-left: 800px;*/
+    float: right;
+    justify-self: center;
+    text-align: center;
+    align-self: center;
+    margin-top: -30px;
+}
+._dataset__header{
+
+    margin-top: 25px;
+    margin-bottom: 5px;
+    width: 500px;
+    height: 50px;
+    border-radius: 4px;
+    color: white;
+    font-size: 25px;
+    background-color: #bfbbbb;
+    transition: 0.3s ease-in;
+
+    font-weight: bold;
+
+}
+._dataset__card ._dataset__item{
+    height: 12%;
+    border-bottom: 1px dashed #131313;
+}
+
+._dataset__item li{
+    margin-top: 12px;
+}
+
+._dataset__card ._dataset__item:focus{
+    background-color: red;
+}
+._dataset__card, ._dataset__header {
+    align-self: center;
+    justify-content: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+._dataset__header ul,  ._dataset__card ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+._dataset__header li, ._dataset__card li {
+    float: left;
+    display: table-cell;
+    color: #000000;
+    text-align: center;
+    width: 50%;
+}
+._dataset__card{
+
+    /*margin: 0;*/
+    height: 300px;
+    width: 500px;
+    border-radius: 4px;
+    color: white;
+    background-color: #bfbbbb;
+    transition: 0.3s ease-in;
+    font-size: 25px;
+
+    overflow: hidden;
+    overflow-y: scroll;
+}
+._dataset__card p {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 20px;
+}
