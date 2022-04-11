@@ -123,58 +123,59 @@
     <h1>3. Selecting Recommendation algorithms</h1>
 
     <div class="box" style="margin-right: 50px">
-    <div class="__select">
-    <select class="_ds_select" id="_ds_select" name="_ds_select">
-        <option value="Algorithm 1">Algorithm 1</option>
-        <option value="Algorithm 2">Algorithm 2</option>
-        <option value="Algorithm 3">Algorithm 3</option>
-    </select>
+        <div class="__select">
+            <select class="_ds_select" id="_ds_select" name="_ds_select">
+                <option value="Algorithm 1">Algorithm 1</option>
+                <option value="Algorithm 2">Algorithm 2</option>
+                <option value="Algorithm 3">Algorithm 3</option>
+            </select>
 
-        <div class="___select">
-        <p style="color: black;">Choose Parameters</p>
+            <div class="___select">
+                <p style="color: black;">Set Parameters</p>
 
-        <div class="par_form">
-            <div class="container" style="border: 2px solid black">
-              <form action="">
-              <div class="row">
-                <div class="col-25">
-                  <label for="par1">K</label>
+                <div class="par_form">
+                    <div class="container" style="border: 2px solid black">
+                      <form action="">
+                      <div class="row">
+                        <div class="col-25">
+                          <label for="par1">K</label>
+                        </div>
+                        <div class="col-75" style="width: 25%">
+                          <input type="text" id="par1" name="par1" placeholder="par1">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-25">
+                          <label for="endpoint">Window</label>
+                        </div>
+                        <div class="col-75" style="width: 25%">
+                          <input type="text" id="par1" name="par1" placeholder="par1">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-25">
+                          <label for="stepsize">Normalize</label>
+                        </div>
+                        <div class="col-75" style="width: 25%">
+                            <input type="text" id="par1" name="par1" placeholder="par1">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-25">
+                          <label for="stepsize">Retrain interval</label>
+                        </div>
+                        <div class="col-75" style="width: 25%">
+                            <input type="text" id="par1" name="par1" placeholder="par1">
+                        </div>
+                      </div>
+                      </form>
+                    </div>
                 </div>
-                <div class="col-75" style="width: 25%">
-                  <input type="text" id="par1" name="par1" placeholder="par1">
+                <div class="___services__btn" style="margin-top: 20px;">
+                    <button>Add algorithm</button>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-25">
-                  <label for="endpoint">Window</label>
-                </div>
-                <div class="col-75" style="width: 25%">
-                  <input type="text" id="par1" name="par1" placeholder="par1">
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-25">
-                  <label for="stepsize">Normalize</label>
-                </div>
-                <div class="col-75" style="width: 25%">
-                    <input type="text" id="par1" name="par1" placeholder="par1">
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-25">
-                  <label for="stepsize">Retrain interval</label>
-                </div>
-                <div class="col-75" style="width: 25%">
-                    <input type="text" id="par1" name="par1" placeholder="par1">
-                </div>
-              </div>
-              </form>
             </div>
-            </div>
-    </div>
-
-    </div>
-
+        </div>
     </div>
 {#        Popularity: window size en retrain interval#}
 {#        Recency: retrain interval#}
@@ -182,14 +183,14 @@
     <div class="box">
         <div class="__container">
 
-            <div class="_dataset_title" >Algorithm list</div>
-                <div class="_dataset__btn">
-                    <button>Remove algorithm</button>
-                </div>
+            <div class="_dataset_title" >List of added algorithms</div>
+            <div class="_dataset__btn">
+                <button>Remove algorithm</button>
+            </div>
 
             <div class="_dataset__header">
                 <div class="_dataset__item" tabindex="1">
-                    <ul><li>Dataset number</li><li>Dataset name</li></ul>
+                    <ul><li>Algorithm number</li><li>Algorithm name</li></ul>
                 </div>
             </div>
 

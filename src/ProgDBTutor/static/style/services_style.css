@@ -52,8 +52,6 @@
 
 }
 
-
-
 ._services{
     padding-top: 50px;
     background-color: #131313;
@@ -61,7 +59,8 @@
     /*flex-direction: column;*/
     /*justify-content: center;*/
     /*align-items: center;*/
-    min-height: 100vh;
+    /*min-height: 100vh;*/
+    padding-bottom: 100px;
 }
 
 ._services h1{
@@ -219,7 +218,8 @@ input[type=submit]:hover {
 
 ._select {
     padding: 50px;
-    margin-bottom: 50px;
+    /*margin-bottom: 50px;*/
+    padding-bottom: 30px;
 
     /*height: 200px;*/
     /*width: 800px;*/
@@ -280,7 +280,7 @@ input[type=submit]:hover {
 .___select {
     padding: 50px;
     margin-bottom: 50px;
-    /*margin-top: -10px;*/
+    margin-top: -30px;
 
     height: 370px;
     width: 100%;
@@ -318,7 +318,7 @@ input[type=submit]:hover {
     /*flex-direction: column;*/
     /*justify-content: center;*/
     /*align-items: center;*/
-    min-height: 100vh;
+    /*min-height: 100vh;*/
     text-align: center;
 
 }
@@ -404,9 +404,9 @@ input[type=submit]:hover {
 
     justify-content: center;
 
-    /*display: block;*/
-    /*margin-left: auto;*/
-    /*margin-right: auto;*/
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 
     /*padding-top: 50px;*/
     /*margin-top: 50px;*/
@@ -414,9 +414,15 @@ input[type=submit]:hover {
 ._dataset_title {
     color: #c81d1d;
     font-size: 30px;
-    /*align-self: center;*/
-    /*justify-self: center;*/
-    text-align: center;
+    align-self: center;
+    justify-self: center;
+    text-align: left;
+    display: inline-block;
+    margin-top: 20px;
+    margin-bottom: -10px;
+    margin-left: -30px;
+    /*float: left;*/
+    /*padding: 10px 0px 0px 10px;*/
     /*float: left;*/
 
 }
@@ -430,7 +436,10 @@ input[type=submit]:hover {
     justify-self: center;
     text-align: center;
     align-self: center;
-    margin-top: -30px;
+
+    display: inline-block;
+    margin: auto;
+    /*margin-top: -30px;*/
 }
 ._dataset__header{
 
@@ -484,13 +493,13 @@ input[type=submit]:hover {
 ._dataset__card{
 
     /*margin: 0;*/
-    height: 300px;
+    height: 325px;
     width: 500px;
     border-radius: 4px;
     color: white;
     background-color: #bfbbbb;
     transition: 0.3s ease-in;
-    font-size: 25px;
+    /*font-size: 25px;*/
 
     overflow: hidden;
     overflow-y: scroll;
