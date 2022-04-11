@@ -420,11 +420,12 @@ input[type=submit]:hover {
     display: inline-block;
     margin-top: 20px;
     margin-bottom: -10px;
-    margin-left: -30px;
-    /*float: left;*/
-    /*padding: 10px 0px 0px 10px;*/
-    /*float: left;*/
+    margin-left: -25px;
+}
 
+.__container ._dataset__btn {
+    margin-top: 30px;
+    margin-right: 20px;
 }
 
 ._dataset__btn {
@@ -436,9 +437,10 @@ input[type=submit]:hover {
     justify-self: center;
     text-align: center;
     align-self: center;
-
     display: inline-block;
-    margin: auto;
+
+    /*margin-left: 50px;*/
+
     /*margin-top: -30px;*/
 }
 ._dataset__header{
