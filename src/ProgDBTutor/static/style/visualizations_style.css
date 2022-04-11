@@ -511,9 +511,3 @@ input[type=submit]:hover {
     margin-top: 24px;
     font-size: 20px;
 }
-
-.navbar_items:nth-last-child(1) {
-    border-right: none;
-    margin-right: 75px;
-}
-

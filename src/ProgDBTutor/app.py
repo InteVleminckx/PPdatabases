@@ -74,6 +74,10 @@ def services():
 def datasets():
     return render_template('datasets.html', app_data=app_data)
 
+@app.route("/visualizations")
+def visualizations():
+    return render_template('visualizations.html', app_data=app_data)
+
 
 #----------------- User_DB -----------------#
 @app.route("/login", methods=['GET'])

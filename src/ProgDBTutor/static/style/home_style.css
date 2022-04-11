@@ -80,7 +80,7 @@
     transition: all 0.3s ease-in-out;
 }
 
-.navbar_items:nth-last-child(2) {
+.navbar_items:nth-last-child(1) {
     border-right: none;
     margin-right: 75px;
 }
