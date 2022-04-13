@@ -515,7 +515,6 @@ input[type=submit]:hover {
 
 
 
-/* TODO: gwn om deze plek makkelijk terug te vinden */
 .card_section {
     background: #7d7d99;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #323232, #59595b);  /* Chrome 10-25, Safari 5.1-6 */
