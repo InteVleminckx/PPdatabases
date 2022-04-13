@@ -32,189 +32,56 @@
         </div>
     </nav>
 
-<!-- Dataset Section-->
-
-<div class="_services" id="services">
-
-{#        <div class="_dropdown">#}
-{#        <button class="dropbtn"> Choose Dataset#}
-{#            <span class="fa-caret-down"></span>#}
-{#        </button>#}
-        <h1>1. Choosing dataset</h1>
-        <p>Select a dataset with the selection button below. <br>
-            If you would like to add a new dataset (for admins only), go to the Datasets page.</p>
-
-        <div class="_select">
-        <select class="ds_select" id="ds_select" name="ds_select">
-            <option value="dataset 1">dataset 1</option>
-            <option value="dataset 2">dataset 2</option>
-            <option value="dataset 3">dataset 3</option>
-        </select>
-        </div>
-{#        <div class="dropdown-content">#}
-{#            <a href=""> option 1 </a>#}
-{#            <a href=""> option 2 </a>#}
-{#        </div>#}
-{#        </div>#}
-        <h1>2. Setting up parameters</h1>
-{#        <div class="services__wrapper">#}
-            <div class="_services__card">
-                <div class="par_form">
-                    <div class="container">
-                      <form action="">
-                      <div class="row">
-                        <div class="col-25">
-                          <label for="startingpoint">Starting point</label>
-                        </div>
-                        <div class="col-75">
-                          <input type="datetime-local" id="startingpoint" name="startingpoint" placeholder="Starting point">
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-25">
-                          <label for="endpoint">End point</label>
-                        </div>
-                        <div class="col-75">
-                          <input type="datetime-local" id="endpoint" name="endpoint" placeholder="End point">
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-25">
-                          <label for="stepsize">Stepsize</label>
-                        </div>
-                        <div class="col-75">
-{#                          <select id="country" name="country">#}
-{#                            <option value="australia">Australia</option>#}
-{#                            <option value="canada">Canada</option>#}
-{#                            <option value="usa">USA</option>#}
-{#                          </select>#}
-                            <input type="text" id="stepsize" name="stepsize" placeholder="Stepsize">
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-25">
-                          <label for="topk">Top-k</label>
-                        </div>
-                        <div class="col-75">
-                            <input type="text" id="topk" name="topk" placeholder="Top-k">
-{#                          <textarea id="subject" name="subject" placeholder="Write something.." style=""></textarea>#}
-                        </div>
-                      </div>
-{#                      <br>#}
-{#                      <div class="row">#}
-{#                        <input type="submit" value="Submit">#}
-{#                      </div>#}
-                      </form>
-                    </div>
-
-                </div>
-{#                <h2>Setting up parameters</h2>#}
-{#                <p></p>#}
-{#                <div class="services__btn">#}
-{#                    <button>Start Setup</button>#}
-{#                </div>#}
-
-            </div>
-{#        </div>#}
-    </div>
-
-<!-- Services Section-->
-<div class="__services" id="services">
-
-    <h1>3. Selecting Recommendation algorithms</h1>
-
-    <div class="box" style="margin-right: 50px">
-        <div class="__select">
-            <select class="_ds_select" id="_ds_select" name="_ds_select">
-                <option value="Algorithm 1">Algorithm 1</option>
-                <option value="Algorithm 2">Algorithm 2</option>
-                <option value="Algorithm 3">Algorithm 3</option>
-            </select>
-
-            <div class="___select">
-                <p style="color: black;">Set Parameters</p>
-
-                <div class="par_form">
-                    <div class="container" style="border: 2px solid black">
-                      <form action="">
-                      <div class="row">
-                        <div class="col-25">
-                          <label for="par1">K</label>
-                        </div>
-                        <div class="col-75" style="width: 25%">
-                          <input type="text" id="par1" name="par1" placeholder="par1">
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-25">
-                          <label for="endpoint">Window</label>
-                        </div>
-                        <div class="col-75" style="width: 25%">
-                          <input type="text" id="par1" name="par1" placeholder="par1">
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-25">
-                          <label for="stepsize">Normalize</label>
-                        </div>
-                        <div class="col-75" style="width: 25%">
-                            <input type="text" id="par1" name="par1" placeholder="par1">
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-25">
-                          <label for="stepsize">Retrain interval</label>
-                        </div>
-                        <div class="col-75" style="width: 25%">
-                            <input type="text" id="par1" name="par1" placeholder="par1">
-                        </div>
-                      </div>
-                      </form>
-                    </div>
-                </div>
-                <div class="___services__btn" style="margin-top: 20px;">
-                    <button>Add algorithm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-{#        Popularity: window size en retrain interval#}
-{#        Recency: retrain interval#}
-{#        ItemKNN: K, window, normalize en retrain interval#}
-    <div class="box">
-        <div class="__container">
-
-            <div class="_dataset_title" >List of added algorithms</div>
-            <div class="_dataset__btn">
-                <button>Remove algorithm</button>
-            </div>
-
-            <div class="_dataset__header">
-                <div class="_dataset__item" tabindex="1">
-                    <ul><li>Algorithm number</li><li>Algorithm name</li></ul>
-                </div>
-            </div>
-
-            <div class="_dataset__card">
-                <div class="_dataset__scroll">
-                    <div class="_dataset__item" tabindex="1">
-                    <ul><li>1</li><li>Item 1</li></ul>
-                    </div>
-                    <div class="_dataset__item" tabindex="2">
-                        <ul><li>2</li><li>Item 2</li></ul>
-                    </div>
-                    <div class="_dataset__item" tabindex="3">
-                        <ul><li>3</li><li>Item 3</li></ul>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-        <div class="___services__btn">
-            <button>Start Setup</button>
-        </div>
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="#">User section</a>
+  <a href="#">Item section</a>
+  <a href="#">A/B-test section</a>
+  <a href="#">Metrics</a>
 </div>
+
+<div class="page">
+
+<span style="font-size:30px;cursor:pointer; position: fixed; left: 10px;color:white;" onclick="openNav()">&#9776;</span>
+
+<div class="card_section" id="user_section">
+    <h1>User section</h1>
+    <div class="card_wrapper">
+        <div class="card">
+
+        </div>
+        <div class="card">
+
+        </div>
+    </div>
+
+</div>
+
+<div class="card_section" id="item_section">
+
+    <h1>Item section</h1>
+    <div class="card_wrapper">
+        <div class="card">
+
+        </div>
+        <div class="card">
+
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+<script>
+function openNav() {
+  document.getElementById("mySidenav").style.width = "300px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+</script>
 
 </body>
 </html>
