@@ -1,11 +1,13 @@
 # TUTORIAL Len Feremans, Sandy Moens and Joey De Pauw
 # see tutor https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
-from flask import Flask, request, session, jsonify, flash
+from flask import Flask, request, session, jsonify, flash, redirect, url_for
 from flask.templating import render_template
 
 from config import config_data
 from db_connection import DBConnection
 from user_data_acces import DataScientist, UserDataAcces
+
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # INITIALIZE SINGLETON SERVICES
 app = Flask('Tutorial ')
@@ -107,11 +109,14 @@ def add_user():
     elif len(user_password) < 1:
         flash('Password cannot be empty.', category='error')
     else:
+        user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
+        print('Adding {}'.format(user_obj.to_dct()))
+        user_obj = user_data_access.add_user(user_obj)
+
         flash('Account succesfully registered!', category='success')
 
-    user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=user_password)
-    print('Adding {}'.format(user_obj.to_dct()))
-    user_obj = user_data_access.add_user(user_obj)
+        return redirect(url_for('home'))
+
     return render_template('login.html', app_data=app_data)
 
 
