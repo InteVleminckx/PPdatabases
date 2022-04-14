@@ -97,21 +97,25 @@ def add_user():
     user_email = request.form.get('email')
     user_password = request.form.get('password')
 
+    user = DataScientist.query.filter_by(email=user_email).first
+
     # some basic checks (if they trigger, they 'flash' a message on the page (see the login.html doc))
-    if len(user_firstname) < 1:
+    if user: # check to see if user with the email already exists in the database
+        flash('This email already exists.', category='error')
+    elif len(user_firstname) < 1:
         flash('First name cannot be empty.', category='error')
     elif len(user_lastname) < 1:
         flash('Last name cannot be empty.', category='error')
-    elif len(user_username) < 2:
+    elif len(user_username) < 1:
         flash('Username cannot be empty.', category='error')
     elif len(user_email) < 1:
         flash('E-mail cannot be empty.', category='error')
     elif len(user_password) < 1:
         flash('Password cannot be empty.', category='error')
     else:
-        # user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
-        # print('Adding {}'.format(user_obj.to_dct()))
-        # user_obj = user_data_access.add_user(user_obj)
+        user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
+        print('Adding {}'.format(user_obj.to_dct()))
+        user_obj = user_data_access.add_user(user_obj)
 
         flash('Account succesfully registered!', category='success')
 
@@ -124,19 +128,21 @@ def login_user():
     user_email = request.form.get('email')
     user_password = request.form.get('password')
 
-    # some basic checks (if they trigger, they 'flash' a message on the page (see the login.html doc))
-    if len(user_email) < 1:
-        flash('E-mail cannot be empty.', category='error')
-    elif len(user_password) < 1:
-        flash('Password cannot be empty.', category='error')
+    user = DataScientist.query.filter_by(email=user_email).first
+    if user:
+        if check_password_hash(user.password, user_password):
+            flash('Logged in successfully!', category='success')
+            return redirect(url_for('main'))
+        else:
+            flash('Incorrect password, try again.', category='error')
     else:
-        # user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
-        # print('Adding {}'.format(user_obj.to_dct()))
-        # user_obj = user_data_access.add_user(user_obj)
+        flash('Email does not exist.', category='error')
 
-        flash('Succesfully logged in!', category='success')
+    # user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
+    # print('Adding {}'.format(user_obj.to_dct()))
+    # user_obj = user_data_access.add_user(user_obj)
 
-        # return redirect(url_for('home'))
+    # return redirect(url_for('home'))
 
     return render_template('login.html', app_data=app_data)
 
