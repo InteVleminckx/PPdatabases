@@ -1,6 +1,6 @@
 # TUTORIAL Len Feremans, Sandy Moens and Joey De Pauw
 # see tutor https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
-from flask import Flask, request, session, jsonify
+from flask import Flask, request, session, jsonify, flash
 from flask.templating import render_template
 
 from config import config_data
@@ -60,12 +60,6 @@ def main():
 def contact():
     return render_template('contact.html', app_data=app_data)
 
-
-#@app.route("/login")
-#def login():
-#    return render_template('login.html', app_data=app_data)
-
-
 @app.route("/services")
 def services():
     return render_template('services.html', app_data=app_data)
@@ -77,7 +71,6 @@ def datasets():
 @app.route("/visualizations")
 def visualizations():
     return render_template('visualizations.html', app_data=app_data)
-
 
 #----------------- User_DB -----------------#
 @app.route("/login", methods=['GET'])
@@ -101,6 +94,20 @@ def add_user():
     user_username = request.form.get('username')
     user_email = request.form.get('email')
     user_password = request.form.get('password')
+
+    # some basic checks (if they trigger, they 'flash' a message on the page (see the login.html doc))
+    if len(user_firstname) < 1:
+        flash('First name cannot be empty.', category='error')
+    elif len(user_lastname) < 1:
+        flash('Last name cannot be empty.', category='error')
+    elif len(user_username) < 2:
+        flash('Username cannot be empty.', category='error')
+    elif len(user_email) < 1:
+        flash('E-mail cannot be empty.', category='error')
+    elif len(user_password) < 1:
+        flash('Password cannot be empty.', category='error')
+    else:
+        flash('Account succesfully registered!', category='success')
 
     user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=user_password)
     print('Adding {}'.format(user_obj.to_dct()))
