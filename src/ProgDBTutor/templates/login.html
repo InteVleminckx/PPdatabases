@@ -51,7 +51,7 @@
 
     <div class="login_page">
         <div class="form">
-            <form class="register_form" id="register_form" action="/login" method="post">
+            <form class="register_form" id="register_form" action="/register" method="post">
                 <input type="text" name="firstname" autofocus placeholder="Firstname" required />
                 <input type="text" name="lastname" autofocus placeholder="Lastname" required />
                 <input type="text" name="username" autofocus placeholder="Username" required />
@@ -62,9 +62,9 @@
                 <button class="cancel__btn"> <a href="home"> Cancel </a> </button>
             </form>
 
-            <form class="login_form" id="login_form">
-                <input type="email" autofocus placeholder="Email" required/>
-                <input type="password" placeholder="Password" required/>
+            <form class="login_form" id="login_form" action="/login" method="post">
+                <input type="email" name="email" autofocus placeholder="Email" required/>
+                <input type="password" name="password" placeholder="Password" required/>
                 <button> Login </button>
                 <p class="message">Not registered? <a href="#register_form">Register</a></p>
                 <button class="cancel__btn"> <a href="home"> Cancel </a> </button>

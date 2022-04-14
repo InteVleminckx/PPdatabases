@@ -89,7 +89,7 @@ def get_user(username):
     return jsonify([user_object.to_dct()])
 
 
-@app.route("/login", methods=['POST'])
+@app.route("/register", methods=['POST'])
 def add_user():
     user_firstname = request.form.get('firstname')
     user_lastname = request.form.get('lastname')
@@ -109,17 +109,36 @@ def add_user():
     elif len(user_password) < 1:
         flash('Password cannot be empty.', category='error')
     else:
-        user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
-        print('Adding {}'.format(user_obj.to_dct()))
-        user_obj = user_data_access.add_user(user_obj)
+        # user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
+        # print('Adding {}'.format(user_obj.to_dct()))
+        # user_obj = user_data_access.add_user(user_obj)
 
         flash('Account succesfully registered!', category='success')
 
-        return redirect(url_for('home'))
+        return redirect(url_for('main'))
 
     return render_template('login.html', app_data=app_data)
 
+@app.route("/login", methods=['POST'])
+def login_user():
+    user_email = request.form.get('email')
+    user_password = request.form.get('password')
 
+    # some basic checks (if they trigger, they 'flash' a message on the page (see the login.html doc))
+    if len(user_email) < 1:
+        flash('E-mail cannot be empty.', category='error')
+    elif len(user_password) < 1:
+        flash('Password cannot be empty.', category='error')
+    else:
+        # user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
+        # print('Adding {}'.format(user_obj.to_dct()))
+        # user_obj = user_data_access.add_user(user_obj)
+
+        flash('Succesfully logged in!', category='success')
+
+        # return redirect(url_for('home'))
+
+    return render_template('login.html', app_data=app_data)
 
 # @app.route("/show_quotes")
 # def show_quotes():
