@@ -44,6 +44,9 @@ class UserDataAcces:
         row = cursor.fetchone()
         return DataScientist(row[0], row[1], row[2], row[3], row[4])
 
+    def get_user_by_email(self):
+        pass
+
     def add_user(self, user_obj):
         cursor = self.dbconnect.get_cursor()
         try:

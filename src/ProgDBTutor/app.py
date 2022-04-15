@@ -97,11 +97,14 @@ def add_user():
     user_email = request.form.get('email')
     user_password = request.form.get('password')
 
-    user = DataScientist.query.filter_by(email=user_email).first
+    cursor = user_data_access.dbconnect.get_cursor()
+    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
+
+    # user = DataScientist.query.filter_by(email=user_email).first
 
     # some basic checks (if they trigger, they 'flash' a message on the page (see the login.html doc))
-    if user: # check to see if user with the email already exists in the database
-        flash('This email already exists.', category='error')
+    if cursor.fetchone() is not None: # check to see if user with the email already exists in the database
+        flash('This username already exists.', category='error')
     elif len(user_firstname) < 1:
         flash('First name cannot be empty.', category='error')
     elif len(user_lastname) < 1:
@@ -125,12 +128,19 @@ def add_user():
 
 @app.route("/login", methods=['POST'])
 def login_user():
-    user_email = request.form.get('email')
+    user_username = request.form.get('username')
     user_password = request.form.get('password')
 
-    user = DataScientist.query.filter_by(email=user_email).first
-    if user:
-        if check_password_hash(user.password, user_password):
+    # user = DataScientist.query.filter_by(email=user_email).first
+
+    cursor = user_data_access.dbconnect.get_cursor()
+    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
+
+    if cursor.fetchone() is not None: # als de email is gevonden
+
+        cursor1 = user_data_access.dbconnect.get_cursor()
+        cursor1.execute("SELECT password FROM authentication WHERE username = %s", (user_username,))
+        if check_password_hash(cursor1.fetchone()[0], user_password):
             flash('Logged in successfully!', category='success')
             return redirect(url_for('main'))
         else:
