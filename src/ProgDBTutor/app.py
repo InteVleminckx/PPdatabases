@@ -2,12 +2,20 @@
 # see tutor https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
 from flask import Flask, request, session, jsonify, flash, redirect, url_for
 from flask.templating import render_template
+from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 from config import config_data
 from db_connection import DBConnection
 from user_data_acces import DataScientist, UserDataAcces
 
 from werkzeug.security import generate_password_hash, check_password_hash
+
+# engine = create_engine('postgresql://max@localhost:5432/postgres')
+# db = scoped_session(sessionmaker(bind=engine))
 
 # INITIALIZE SINGLETON SERVICES
 app = Flask('Tutorial ')
@@ -17,60 +25,49 @@ app_data['app_name'] = config_data['app_name']
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 user_data_access = UserDataAcces(connection)
 
+# login_manager = LoginManager()
+# login_manager.login_view = 'app.login_user'
+# login_manager.init_app(app)
+#
+# @login_manager.user_loader
+# def load_user(username):
+#
+#     cursor = user_data_access.dbconnect.get_cursor()
+#     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (username,))
+#
+#     return cursor
+
 DEBUG = False
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
-
-
-# REST API
-# See https://www.ibm.com/developerworks/library/ws-restful/index.html
-# @app.route('/quotes', methods=['GET'])
-# def get_quotes():
-#     # Lookup row in table Quote, e.g. 'SELECT ID,TEXT FROM Quote'
-#     quote_objects = quote_data_access.get_quotes()
-#     # Translate to json
-#     return jsonify([obj.to_dct() for obj in quote_objects])
-#
-#
-# @app.route('/quotes/<int:id>', methods=['GET'])
-# def get_quote(id):
-#     # ID of quote must be passed as parameter, e.g. http://localhost:5000/quotes?id=101
-#     # Lookup row in table Quote, e.g. 'SELECT ID,TEXT FROM Quote WHERE ID=?' and ?=101
-#     quote_obj = quote_data_access.get_quote(id)
-#     return jsonify(quote_obj.to_dct())
-#
-#
-# # To create resource use HTTP POST
-# @app.route('/quotes', methods=['POST'])
-# def add_quote():
-#     # Text value of <input type="text" id="text"> was posted by form.submit
-#     quote_text = request.form.get('text')
-#     quote_author = request.form.get('author')
-#     # Insert this value into table Quote(ID,TEXT)
-#     quote_obj = Quote(iden=None, text=quote_text, author=quote_author)
-#     print('Adding {}'.format(quote_obj.to_dct()))
-#     quote_obj = quote_data_access.add_quote(quote_obj)
-#     return jsonify(quote_obj.to_dct())
-
 
 #----------------- VIEW -----------------#
 @app.route("/")
 @app.route("/home")
 def main():
+    # print('hallo1')
+    # l = db.execute('SELECT * FROM datascientist').fetchall()
+    # for i in l:
+    #     print(i.username)
+    # print('hallo2')
     return render_template('home.html', app_data=app_data)
 
 @app.route("/contact")
+@login_required
 def contact():
     return render_template('contact.html', app_data=app_data)
 
 @app.route("/services")
+@login_required
 def services():
     return render_template('services.html', app_data=app_data)
 
 @app.route("/datasets")
+@login_required
 def datasets():
     return render_template('datasets.html', app_data=app_data)
 
 @app.route("/visualizations")
+@login_required
 def visualizations():
     return render_template('visualizations.html', app_data=app_data)
 
@@ -100,26 +97,16 @@ def add_user():
     cursor = user_data_access.dbconnect.get_cursor()
     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
 
-    # user = DataScientist.query.filter_by(email=user_email).first
+    # user = DataScientist.query.filter_by(username=user_username).first
 
     # some basic checks (if they trigger, they 'flash' a message on the page (see the login.html doc))
     if cursor.fetchone() is not None: # check to see if user with the email already exists in the database
         flash('This username already exists.', category='error')
-    elif len(user_firstname) < 1:
-        flash('First name cannot be empty.', category='error')
-    elif len(user_lastname) < 1:
-        flash('Last name cannot be empty.', category='error')
-    elif len(user_username) < 1:
-        flash('Username cannot be empty.', category='error')
-    elif len(user_email) < 1:
-        flash('E-mail cannot be empty.', category='error')
-    elif len(user_password) < 1:
-        flash('Password cannot be empty.', category='error')
     else:
         user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
         print('Adding {}'.format(user_obj.to_dct()))
         user_obj = user_data_access.add_user(user_obj)
-
+        # login_user(user_obj, remember=True)
         flash('Account succesfully registered!', category='success')
 
         return redirect(url_for('main'))
@@ -135,39 +122,34 @@ def login_user():
 
     cursor = user_data_access.dbconnect.get_cursor()
     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
-
-    if cursor.fetchone() is not None: # als de email is gevonden
-
+    print(cursor.fetchone())
+    print(cursor.fetchall())
+    print("aaaaaaaaaaaaa")
+    if cursor.fetchone() is not None: # als de username is gevonden
+        user = cursor.fetchone()[0]
+        print("aaaaaaaaaaaaa")
+        print(cursor.fetchone()[0])
+        print("aaaaaaaaaaaaa")
         cursor1 = user_data_access.dbconnect.get_cursor()
         cursor1.execute("SELECT password FROM authentication WHERE username = %s", (user_username,))
         if check_password_hash(cursor1.fetchone()[0], user_password):
             flash('Logged in successfully!', category='success')
+            # login_user(user, remember=True)
             return redirect(url_for('main'))
         else:
             flash('Incorrect password, try again.', category='error')
     else:
-        flash('Email does not exist.', category='error')
-
-    # user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
-    # print('Adding {}'.format(user_obj.to_dct()))
-    # user_obj = user_data_access.add_user(user_obj)
-
-    # return redirect(url_for('home'))
+        print(cursor.fetchone())
+        print(cursor.fetchall())
+        flash('Username does not exist.', category='error')
 
     return render_template('login.html', app_data=app_data)
 
-# @app.route("/show_quotes")
-# def show_quotes():
-#     quote_objects = quote_data_access.get_quotes()
-#     # Render quote_objects "server-side" using Jinja 2 template system
-#     return render_template('quotes.html', app_data=app_data, quote_objects=quote_objects)
-#
-#
-# @app.route("/show_quotes_ajax")
-# def show_quotes_ajax():
-#     # Render quote_objects "server-side" using Jinja 2 template system
-#     return render_template('quotes_ajax.html', app_data=app_data)
-
+# @app.route("/logout", methods=['POST'])
+# @login_required
+# def logout_user():
+#     logout_user()
+#     return redirect(url_for('login_user'))
 
 # RUN DEV SERVER
 if __name__ == "__main__":
