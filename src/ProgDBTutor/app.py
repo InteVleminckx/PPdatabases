@@ -96,11 +96,11 @@ def add_user():
 
     cursor = user_data_access.dbconnect.get_cursor()
     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
-
+    row = cursor.fetchone()
     # user = DataScientist.query.filter_by(username=user_username).first
 
     # some basic checks (if they trigger, they 'flash' a message on the page (see the login.html doc))
-    if cursor.fetchone() is not None: # check to see if user with the email already exists in the database
+    if row is not None: # check to see if user with the email already exists in the database
         flash('This username already exists.', category='error')
     else:
         user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
@@ -122,14 +122,9 @@ def login_user():
 
     cursor = user_data_access.dbconnect.get_cursor()
     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
-    print(cursor.fetchone())
-    print(cursor.fetchall())
-    print("aaaaaaaaaaaaa")
-    if cursor.fetchone() is not None: # als de username is gevonden
-        user = cursor.fetchone()[0]
-        print("aaaaaaaaaaaaa")
-        print(cursor.fetchone()[0])
-        print("aaaaaaaaaaaaa")
+    row = cursor.fetchone()
+    if row is not None: # als de username is gevonden
+        user = row[0]
         cursor1 = user_data_access.dbconnect.get_cursor()
         cursor1.execute("SELECT password FROM authentication WHERE username = %s", (user_username,))
         if check_password_hash(cursor1.fetchone()[0], user_password):
