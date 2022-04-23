@@ -18,7 +18,7 @@
 --
 -- This is a customer that buys items
 
-DROP TABLE IF EXISTS Customer, Authentication, DataScientist, Admin, Item, Interaction ;
+DROP TABLE IF EXISTS Customer, Authentication, DataScientist, Admin, Interaction , Dataset, ABTest;
 
 CREATE TABLE Customer (
     customer_id INT PRIMARY KEY ,
@@ -86,6 +86,22 @@ CREATE TABLE Interaction (
     price INT NOT NULL,
     PRIMARY KEY (customer_id, item_id)
 );
+
+-- Table to keep track of the datasets with their items
+CREATE TABLE Dataset (
+    dataset_id INT NOT NULL,
+    item_id INT NOT NULL,
+    attribute VARCHAR NOT NULL,
+    value VARCHAR,
+    PRIMARY KEY(dataset_id, item_id, attribute)
+);
+
+-- Table to keep the results of the ABTests
+CREATE TABLE ABTest (
+    abtest_id INT NOT NULL PRIMARY KEY,
+    dataset_id INT NOT NULL REFERENCES Dataset(dataset_id)
+);
+
 
 -- CREATE TABLE IF NOT EXISTS Users (
 --     firstname VARCHAR(256) NOT NULL,

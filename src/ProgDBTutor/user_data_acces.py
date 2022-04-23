@@ -15,11 +15,18 @@ class DataScientist:
 class UserDataAcces:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
+        cursor = self.dbconnect.get_cursor()
 
-
-        # Hier database maken ==> CREATE TABLE Item()
-        #df = pandas.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
-        #print(df)
+#         df = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
+#         amountRows = len(df.index)
+#         amountColumns = len(df.columns)
+#         dataset_id = 0
+#
+#         for row in range(amountRows):
+#             for column in range(amountColumns):
+#                 print(df.iloc[row, column])
+#                 cursor.execute('INSERT INTO Dataset(')
+#             rowIndex += 1
 
         # cwd = os.getcwd() + "/../../CSVFiles/articles.csv"
         #
