@@ -56,6 +56,7 @@ CREATE TABLE Interaction (
     t_dat DATETIME NOT NULL,
     price INT NOT NULL,
     PRIMARY KEY (customer_id, item_id, t_dat)
+
 );
 
 -- Table to keep track of the datasets with their items
