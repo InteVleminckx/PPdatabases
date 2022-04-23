@@ -17,16 +17,16 @@ class UserDataAcces:
         self.dbconnect = dbconnect
         cursor = self.dbconnect.get_cursor()
 
-#         df = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
-#         amountRows = len(df.index)
-#         amountColumns = len(df.columns)
-#         dataset_id = 0
-#
-#         for row in range(amountRows):
-#             for column in range(amountColumns):
-#                 print(df.iloc[row, column])
-#                 cursor.execute('INSERT INTO Dataset(')
-#             rowIndex += 1
+        df = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
+        amountRows = len(df.index)
+        amountColumns = len(df.columns)
+        dataset_id = 0
+
+        for row in range(amountRows):
+            for column in range(amountColumns):
+                print(df.iloc[row, column])
+                cursor.execute('INSERT INTO Dataset(')
+            rowIndex += 1
 
         # cwd = os.getcwd() + "/../../CSVFiles/articles.csv"
         #

@@ -18,7 +18,7 @@
 --
 -- This is a customer that buys items
 
-DROP TABLE IF EXISTS Customer, Authentication, DataScientist, Admin, Interaction , Dataset, ABTest;
+DROP TABLE IF EXISTS Customer, Authentication, DataScientist, Admin, Interaction , Dataset, ABTest, Users, Item;
 
 CREATE TABLE Customer (
     customer_id INT PRIMARY KEY ,
