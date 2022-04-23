@@ -8,6 +8,8 @@ LIMIT 2;
 """
 import datetime
 
+from app.py import user_data_access
+
 
 class Popularity:
 
@@ -25,19 +27,27 @@ class Popularity:
         # we gaan opnieuw data verzamelen binnen de window size
         startWindow = curDate - datetime.timedelta(days=self.window)
 
-        """
-        Doe het volgende:
-            Neem het volgende uit de database
-             SELECT *
-             FROM purchases
-             WHERE t_date between startWindow and curDate
+        # Neem het volgende uit de database
+
+        cursor = user_data_access.dbconnect.get_cursor()
+        cursor.execute("SELECT * FROM purchases WHERE t_date between %s and %s", startWindow, curDate)
+        row = cursor.fetchall()
+
+        # Slaag deze data opnieuw op in de database (in een andere table)
+        for r in row:
+            try:
+                cursor = user_data_access.dbconnect.get_cursor()
+                cursor.execute('INSERT INTO PurchasesTable(t_date, customer_id, article_id, price) VALUES(%s,%s,%s,%s)',
+                                   (r[0], r[1], r[2], r[3]))
+                user_data_access.dbconnect.commit()
+            except:
+                user_data_access.dbconnect.rollback()
+                raise Exception("Error inserting into PurchasesTable")
+
+        # training is gedaan en kunnen weer verder gaan
             
-            Slaag deze data opnieuw op in de database (in een andere table)
-            
-            training is gedaan en kunnen weer verder gaan
-            
-            We gaan nu alle recommendations bekijken voor dit window 
-        """
+        # We gaan nu alle recommendations bekijken voor dit window
+
         self.getRecommedation(startWindow, curDate)
 
     def getRecommedation(self, startWindow, curDate):
@@ -54,15 +64,27 @@ class Popularity:
 
             startStep = startStep - startWindow
 
-            """SELECT article_id, COUNT(article_id)
-            FROM tabel_waar_alle_recommendations_in_komen_van_het_training_interval t
-            WHERE t.t_date between startStep and startWindow
-            GROUP BY article_id
-            ORDER BY COUNT(article_id) DESC
-            LIMIT self.topk;
-            
-            Deze top k gaan we dan ook weer telkens opslagen zodat we dit later kunnen gebruiken voor visualisatie 
-            """
+            cursor = user_data_access.dbconnect.get_cursor()
+            cursor.execute("SELECT article_id, COUNT(article_id) \
+            FROM PurchasesTable t \
+            WHERE t.t_date between %s and %s \
+            GROUP BY article_id \
+            ORDER BY COUNT(article_id) DESC \
+            LIMIT %d;", startStep, startWindow, self.topk)
+            row = cursor.fetchall()
+
+            # Deze top k gaan we dan ook weer telkens opslagen zodat we dit later kunnen gebruiken voor visualisatie
+
+            for r in row:
+                try:
+                    cursor = user_data_access.dbconnect.get_cursor()
+                    cursor.execute(
+                        'INSERT INTO PopularityTopk(curDate, t_date, customer_id, article_id, price) VALUES(%s,%s,%s,%s,%s)',
+                        (r[0], r[1], r[2], r[3], r[4]))
+                    user_data_access.dbconnect.commit()
+                except:
+                    user_data_access.dbconnect.rollback()
+                    raise Exception("Error inserting into PopularityTopk")
 
     def recommend(self):
 
@@ -80,7 +102,6 @@ class Popularity:
             if self.retrainInterval == retrainCounter:
                 self.train(startdate)
                 retrainCounter = 0
-
 
             retrainCounter += 1
             startdate += delta
