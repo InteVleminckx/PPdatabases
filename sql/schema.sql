@@ -18,7 +18,7 @@
 --
 -- This is a customer that buys items
 
-DROP TABLE IF EXISTS Customer, Authentication, DataScientist, Admin, Item, Interaction ;
+DROP TABLE IF EXISTS Customer, Authentication, DataScientist, Admin, Interaction , Dataset, ABTest, Users, Item;
 
 CREATE TABLE Customer (
     customer_id INT PRIMARY KEY ,
@@ -42,54 +42,77 @@ CREATE TABLE DataScientist (
     email TEXT UNIQUE NOT NULL,
     firstname TEXT NOT NULL,
     lastname TEXT NOT NULL
-    );
+);
 
 -- "Admin" data scientist who is able to add datasets
 CREATE TABLE Admin (
     username TEXT PRIMARY KEY REFERENCES DataScientist(username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- Item that can be bought by customers
-CREATE TABLE Item (
-    item_id TEXT PRIMARY KEY ,
-    product_code INT NOT NULL,
-    product_name TEXT NOT NULL,
-    product_type_no INT NOT NULL,
-    product_type_name TEXT NOT NULL,
-    product_group_name TEXT NOT NULL,
-    graphical_appearance_no INT NOT NULL,
-    graphical_appearance_name TEXT NOT NULL,
-    colour_group_code INT NOT NULL,
-    colour_group_name TEXT NOT NULL,
-    perceived_colour_value_id INT NOT NULL,
-    perceived_colour_value_name TEXT NOT NULL,
-    perceived_colour_master_id INT NOT NULL,
-    perceived_colour_master_name TEXT NOT NULL,
-    department_no INT NOT NULL,
-    department_name TEXT NOT NULL,
-    index_code CHAR NOT NULL,
-    index_name TEXT NOT NULL,
-    index_group_no INT NOT NULL,
-    index_group_name TEXT NOT NULL,
-    section_no INT NOT NULL,
-    section_name TEXT NOT NULL,
-    garment_group_no INT NOT NULL,
-    garment_group_name TEXT NOT NULL,
-    detail_desc TEXT NOT NULL
+-- Table to keep track of the datasets with their items
+CREATE TABLE Dataset (
+    dataset_id INT NOT NULL,
+    item_id INT NOT NULL,
+    attribute TEXT NOT NULL,
+    value TEXT,
+    PRIMARY KEY(dataset_id, item_id, attribute)
 );
 
 -- Table to keep track of the purchases of users for specific items.
 CREATE TABLE Interaction (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
-    item_id TEXT NOT NULL REFERENCES Item(item_id) ON UPDATE CASCADE ON DELETE CASCADE ,
-    t_dat TIME NOT NULL,
+    dataset_id INT NOT NULL,
+    item_id INT NOT NULL,
+    attribute TEXT NOT NULL,
+    t_dat TIMESTAMP NOT NULL,
     price INT NOT NULL,
-    PRIMARY KEY (customer_id, item_id)
+    PRIMARY KEY (customer_id, item_id, t_dat),
+    FOREIGN KEY (dataset_id, item_id, attribute) REFERENCES Dataset(dataset_id, item_id, attribute)
 );
+
+-- Table to keep the results of the ABTests
+-- CREATE TABLE ABTest (
+--     abtest_id INT NOT NULL PRIMARY KEY,
+-- );
+
+-- Table to allow 1 ABTest to link with multiple datasets
+-- CREATE TABLE Datasets_ABTest (
+--     abtest_id INT NOT NULL,
+--     dataset_id INT NOT NULL
+-- );
 
 -- CREATE TABLE IF NOT EXISTS Users (
 --     firstname VARCHAR(256) NOT NULL,
 --     lastname VARCHAR(256) NOT NULL,
 --     username VARCHAR(256) NOT NULL,
 --     email VARCHAR(256) PRIMARY KEY
+-- );
+
+-- -- Item that can be bought by customers
+-- CREATE TABLE Item (
+--     item_id TEXT PRIMARY KEY ,
+--     product_code INT NOT NULL,
+--     product_name TEXT NOT NULL,
+--     product_type_no INT NOT NULL,
+--     product_type_name TEXT NOT NULL,
+--     product_group_name TEXT NOT NULL,
+--     graphical_appearance_no INT NOT NULL,
+--     graphical_appearance_name TEXT NOT NULL,
+--     colour_group_code INT NOT NULL,
+--     colour_group_name TEXT NOT NULL,
+--     perceived_colour_value_id INT NOT NULL,
+--     perceived_colour_value_name TEXT NOT NULL,
+--     perceived_colour_master_id INT NOT NULL,
+--     perceived_colour_master_name TEXT NOT NULL,
+--     department_no INT NOT NULL,
+--     department_name TEXT NOT NULL,
+--     index_code CHAR NOT NULL,
+--     index_name TEXT NOT NULL,
+--     index_group_no INT NOT NULL,
+--     index_group_name TEXT NOT NULL,
+--     section_no INT NOT NULL,
+--     section_name TEXT NOT NULL,
+--     garment_group_no INT NOT NULL,
+--     garment_group_name TEXT NOT NULL,
+--     detail_desc TEXT NOT NULL
 -- );
