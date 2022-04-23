@@ -51,20 +51,23 @@ CREATE TABLE Admin (
 
 -- Table to keep track of the datasets with their items
 CREATE TABLE Dataset (
-    dataset_id INT NOT NULL UNIQUE,
+    dataset_id INT NOT NULL,
     item_id INT NOT NULL,
-    attribute VARCHAR NOT NULL,
-    value VARCHAR,
+    attribute TEXT NOT NULL,
+    value TEXT,
     PRIMARY KEY(dataset_id, item_id, attribute)
 );
 
 -- Table to keep track of the purchases of users for specific items.
 CREATE TABLE Interaction (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
-    item_id TEXT NOT NULL REFERENCES Dataset(item_id) ON UPDATE CASCADE ON DELETE CASCADE ,
+    dataset_id INT NOT NULL,
+    item_id TEXT NOT NULL,
+    attribute TEXY NOT NULL
     t_dat TIMESTAMP NOT NULL,
     price INT NOT NULL,
-    PRIMARY KEY (customer_id, item_id, t_dat)
+    PRIMARY KEY (customer_id, item_id, t_dat),
+    FOREIGN KEY (dataset_id, item_id, attribute) REFERENCES Dataset(dataset_id, item_id, attribute)
 );
 
 -- Table to keep the results of the ABTests
