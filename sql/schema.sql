@@ -62,9 +62,9 @@ CREATE TABLE Interaction (
 CREATE TABLE Dataset (
     dataset_id INT NOT NULL,
     item_id INT NOT NULL,
-    attribute VARCHAR NOT NULL,
-    value VARCHAR,
-    PRIMARY KEY(dataset_id, item_id, attribute)
+    atribute VARCHAR NOT NULL,
+    val VARCHAR,
+    PRIMARY KEY(dataset_id, item_id, atribute)
 );
 
 -- Table to keep the results of the ABTests
