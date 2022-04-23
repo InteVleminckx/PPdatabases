@@ -50,13 +50,13 @@ CREATE TABLE Admin (
 );
 
 -- Table to keep track of the purchases of users for specific items.
-CREATE TABLE Interaction (
-    customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
-    item_id TEXT NOT NULL REFERENCES Item(item_id) ON UPDATE CASCADE ON DELETE CASCADE ,
-    t_dat TIME NOT NULL,
-    price INT NOT NULL,
-    PRIMARY KEY (customer_id, item_id)
-);
+-- CREATE TABLE Interaction (
+--     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
+--     item_id TEXT NOT NULL REFERENCES Item(item_id) ON UPDATE CASCADE ON DELETE CASCADE ,
+--     t_dat TIME NOT NULL,
+--     price INT NOT NULL,
+--     PRIMARY KEY (customer_id, item_id)
+-- );
 
 -- Table to keep track of the datasets with their items
 CREATE TABLE Dataset (
