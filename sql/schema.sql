@@ -49,35 +49,6 @@ CREATE TABLE Admin (
     username TEXT PRIMARY KEY REFERENCES DataScientist(username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- Item that can be bought by customers
-CREATE TABLE Item (
-    item_id TEXT PRIMARY KEY ,
-    product_code INT NOT NULL,
-    product_name TEXT NOT NULL,
-    product_type_no INT NOT NULL,
-    product_type_name TEXT NOT NULL,
-    product_group_name TEXT NOT NULL,
-    graphical_appearance_no INT NOT NULL,
-    graphical_appearance_name TEXT NOT NULL,
-    colour_group_code INT NOT NULL,
-    colour_group_name TEXT NOT NULL,
-    perceived_colour_value_id INT NOT NULL,
-    perceived_colour_value_name TEXT NOT NULL,
-    perceived_colour_master_id INT NOT NULL,
-    perceived_colour_master_name TEXT NOT NULL,
-    department_no INT NOT NULL,
-    department_name TEXT NOT NULL,
-    index_code CHAR NOT NULL,
-    index_name TEXT NOT NULL,
-    index_group_no INT NOT NULL,
-    index_group_name TEXT NOT NULL,
-    section_no INT NOT NULL,
-    section_name TEXT NOT NULL,
-    garment_group_no INT NOT NULL,
-    garment_group_name TEXT NOT NULL,
-    detail_desc TEXT NOT NULL
-);
-
 -- Table to keep track of the purchases of users for specific items.
 CREATE TABLE Interaction (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
@@ -108,4 +79,33 @@ CREATE TABLE ABTest (
 --     lastname VARCHAR(256) NOT NULL,
 --     username VARCHAR(256) NOT NULL,
 --     email VARCHAR(256) PRIMARY KEY
+-- );
+
+-- -- Item that can be bought by customers
+-- CREATE TABLE Item (
+--     item_id TEXT PRIMARY KEY ,
+--     product_code INT NOT NULL,
+--     product_name TEXT NOT NULL,
+--     product_type_no INT NOT NULL,
+--     product_type_name TEXT NOT NULL,
+--     product_group_name TEXT NOT NULL,
+--     graphical_appearance_no INT NOT NULL,
+--     graphical_appearance_name TEXT NOT NULL,
+--     colour_group_code INT NOT NULL,
+--     colour_group_name TEXT NOT NULL,
+--     perceived_colour_value_id INT NOT NULL,
+--     perceived_colour_value_name TEXT NOT NULL,
+--     perceived_colour_master_id INT NOT NULL,
+--     perceived_colour_master_name TEXT NOT NULL,
+--     department_no INT NOT NULL,
+--     department_name TEXT NOT NULL,
+--     index_code CHAR NOT NULL,
+--     index_name TEXT NOT NULL,
+--     index_group_no INT NOT NULL,
+--     index_group_name TEXT NOT NULL,
+--     section_no INT NOT NULL,
+--     section_name TEXT NOT NULL,
+--     garment_group_no INT NOT NULL,
+--     garment_group_name TEXT NOT NULL,
+--     detail_desc TEXT NOT NULL
 -- );
