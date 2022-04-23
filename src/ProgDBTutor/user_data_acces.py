@@ -25,14 +25,8 @@ class UserDataAcces:
         for row in range(amountRows):
             for column in range(amountColumns):
                 print(df.iloc[row, column])
-                cursor.execute('INSERT INTO Dataset(')
-            rowIndex += 1
-
-        # cwd = os.getcwd() + "/../../CSVFiles/articles.csv"
-        #
-        # # Hier database maken ==> CREATE TABLE Item()
-        # df = pandas.read_csv(cwd)
-        # print(df)
+                cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
+                (dataset_id, df.iloc[row, 0], str(df.iloc[0, column]), str(df.iloc[row, column])))
 
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
