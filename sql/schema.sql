@@ -49,15 +49,6 @@ CREATE TABLE Admin (
     username TEXT PRIMARY KEY REFERENCES DataScientist(username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- Table to keep track of the purchases of users for specific items.
-CREATE TABLE Interaction (
-    customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
-    item_id TEXT NOT NULL REFERENCES Dataset(item_id) ON UPDATE CASCADE ON DELETE CASCADE ,
-    t_dat TIMESTAMP NOT NULL,
-    price INT NOT NULL,
-    PRIMARY KEY (customer_id, item_id, t_dat)
-);
-
 -- Table to keep track of the datasets with their items
 CREATE TABLE Dataset (
     dataset_id INT NOT NULL UNIQUE,
@@ -65,6 +56,15 @@ CREATE TABLE Dataset (
     attribute VARCHAR NOT NULL,
     value VARCHAR,
     PRIMARY KEY(dataset_id, item_id, attribute)
+);
+
+-- Table to keep track of the purchases of users for specific items.
+CREATE TABLE Interaction (
+    customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
+    item_id TEXT NOT NULL REFERENCES Dataset(item_id) ON UPDATE CASCADE ON DELETE CASCADE ,
+    t_dat TIMESTAMP NOT NULL,
+    price INT NOT NULL,
+    PRIMARY KEY (customer_id, item_id, t_dat)
 );
 
 -- Table to keep the results of the ABTests
