@@ -60,19 +60,23 @@ CREATE TABLE Interaction (
 
 -- Table to keep track of the datasets with their items
 CREATE TABLE Dataset (
-    dataset_id INT NOT NULL,
+    dataset_id INT NOT NULL UNIQUE,
     item_id INT NOT NULL,
-    atribute VARCHAR NOT NULL,
-    val VARCHAR,
-    PRIMARY KEY(dataset_id, item_id, atribute)
+    attribute VARCHAR NOT NULL,
+    value VARCHAR,
+    PRIMARY KEY(dataset_id, item_id, attribute)
 );
 
 -- Table to keep the results of the ABTests
-CREATE TABLE ABTest (
-    abtest_id INT NOT NULL PRIMARY KEY,
-    dataset_id INT NOT NULL REFERENCES Dataset(dataset_id)
-);
+-- CREATE TABLE ABTest (
+--     abtest_id INT NOT NULL PRIMARY KEY,
+-- );
 
+-- Table to allow 1 ABTest to link with multiple datasets
+-- CREATE TABLE Datasets_ABTest (
+--     abtest_id INT NOT NULL,
+--     dataset_id INT NOT NULL
+-- );
 
 -- CREATE TABLE IF NOT EXISTS Users (
 --     firstname VARCHAR(256) NOT NULL,
