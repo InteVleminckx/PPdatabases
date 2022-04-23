@@ -16,7 +16,7 @@ class UserDataAcces:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 #         cursor = self.dbconnect.get_cursor()
-
+#
 #         df = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
 #         amountRows = len(df.index)
 #         amountColumns = len(df.columns)
