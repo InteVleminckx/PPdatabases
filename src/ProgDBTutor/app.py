@@ -14,8 +14,8 @@ from user_data_acces import DataScientist, UserDataAcces
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# engine = create_engine('postgresql://max@localhost:5432/postgres')
-# db = scoped_session(sessionmaker(bind=engine))
+engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
+db = scoped_session(sessionmaker(bind=engine))
 
 # INITIALIZE SINGLETON SERVICES
 app = Flask('Tutorial ')
@@ -25,17 +25,17 @@ app_data['app_name'] = config_data['app_name']
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 user_data_access = UserDataAcces(connection)
 
-# login_manager = LoginManager()
-# login_manager.login_view = 'app.login_user'
-# login_manager.init_app(app)
-#
-# @login_manager.user_loader
-# def load_user(username):
-#
-#     cursor = user_data_access.dbconnect.get_cursor()
-#     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (username,))
-#
-#     return cursor
+login_manager = LoginManager()
+login_manager.login_view = 'app.login_user'
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(username):
+
+    cursor = user_data_access.dbconnect.get_cursor()
+    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (username,))
+
+    return cursor
 
 DEBUG = False
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
@@ -44,11 +44,11 @@ HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
 @app.route("/")
 @app.route("/home")
 def main():
-    # print('hallo1')
-    # l = db.execute('SELECT * FROM datascientist').fetchall()
-    # for i in l:
-    #     print(i.username)
-    # print('hallo2')
+    print('hallo1')
+    l = db.execute('SELECT * FROM datascientist').fetchall()
+    for i in l:
+        print(i.username)
+    print('hallo2')
     return render_template('home.html', app_data=app_data)
 
 @app.route("/contact")
