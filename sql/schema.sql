@@ -62,7 +62,7 @@ CREATE TABLE Dataset (
 CREATE TABLE Interaction (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
     dataset_id INT NOT NULL,
-    item_id TEXT NOT NULL,
+    item_id INT NOT NULL,
     attribute TEXT NOT NULL,
     t_dat TIMESTAMP NOT NULL,
     price INT NOT NULL,
