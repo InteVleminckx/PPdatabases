@@ -53,7 +53,7 @@ CREATE TABLE Admin (
 CREATE TABLE Interaction (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
     item_id TEXT NOT NULL REFERENCES Dataset(item_id) ON UPDATE CASCADE ON DELETE CASCADE ,
-    t_dat DATETIME NOT NULL,
+    t_dat TIMESTAMP NOT NULL,
     price INT NOT NULL,
     PRIMARY KEY (customer_id, item_id, t_dat)
 );
