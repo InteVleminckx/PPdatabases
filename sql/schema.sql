@@ -63,7 +63,7 @@ CREATE TABLE Interaction (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
     dataset_id INT NOT NULL,
     item_id TEXT NOT NULL,
-    attribute TEXY NOT NULL
+    attribute TEXY NOT NULL,
     t_dat TIMESTAMP NOT NULL,
     price INT NOT NULL,
     PRIMARY KEY (customer_id, item_id, t_dat),
