@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS Recommendation, Result, Algorithm, ABTest, Interaction, Admin, DataScientist, Authentication, Customer, Dataset ;
 
--- Table to keep track of the items/articles of the dataset
+-- Table to keep track of the items/articles of the datasets
 CREATE TABLE Dataset (
     dataset_id INT NOT NULL,
     item_id INT NOT NULL,
