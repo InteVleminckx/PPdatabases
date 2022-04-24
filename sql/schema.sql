@@ -77,7 +77,7 @@ CREATE TABLE Algorithm (
     name TEXT NOT NULL,
     param_name TEXT NOT NULL,
     value TEXT NOT NULL,
-    PRIMARY KEY (abtest_id_ref, result_id_ref, param_name),
+    PRIMARY KEY (abtest_id_ref, result_id_ref, param_name)
 );
 
 -- Subresult of an ABTest (weak entity)
