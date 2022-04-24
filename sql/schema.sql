@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS Recommendation, Result, Algorithm, ABTest, Interaction, Adm
 CREATE TABLE Dataset (
      dataset_id INT NOT NULL,
      item_id INT NOT NULL,
-     attribute TEXT,
+     attribute TEXT NOT NULL,
      val TEXT,
      PRIMARY KEY (dataset_id, item_id, attribute)
 );
@@ -95,7 +95,7 @@ CREATE TABLE Result (
     -- Foreign key to Algorithm
     FOREIGN KEY (abtest_id_ref, result_id_ref, algorithm_param_ref) REFERENCES Algorithm(abtest_id_ref, result_id_ref, param_name) ON UPDATE CASCADE ON DELETE CASCADE,
     -- Foreign key to Dataset
-    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_dataset_ref) REFERENCES Dataset(dataset_id, item_id, attribute)
+    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_dataset_ref) REFERENCES Dataset(dataset_id, item_id, attribute) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Table to keep track of recommendations in the database (weak entity)
