@@ -109,6 +109,7 @@ class DatasetAcces:
     def getItems(self):
         pass
 
+    #This function returns the asked attribute of a given item. If the item exists
     def getItemAttribute(self, itemId, attr):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT item_id, attribute, val FROM Dataset WHERE %s = item_id AND %s = attr"% itemId, attr)
