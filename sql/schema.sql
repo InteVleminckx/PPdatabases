@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS CASCADE Customer, Authentication, DataScientist, Admin, Interaction , Dataset, ABTest, Users, Item;
-DROP TABLE IF EXISTS CASCADE Recommendation, Algorithm;
+DROP TABLE IF EXISTS ABTest, Recommendation, ALgorithm, Interaction, Dataset, Admin, DataScientist, Authentication, Customer
 
 CREATE TABLE Customer (
     customer_id INT PRIMARY KEY ,
