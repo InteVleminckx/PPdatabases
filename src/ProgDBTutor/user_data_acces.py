@@ -92,6 +92,19 @@ class Result:
         return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'dataset_id' : self.dataset_id, 'item_id' : self.item_id,
                 'attribute_dataset' : self.attribute_dataset, 'algorithm_param' : self.algorithm_param, 'creator' : self.creator}
 
+class Recommendation:
+    def __init__(self, abtest_id, result_id, dataset_id, customer_id, item_id, attribute):
+        self.abtest_id = abtest_id
+        self.result_id = result_id
+        self.dataset_id = dataset_id
+        self.customer_id = customer_id
+        self.item_id = item_id
+        self.attribute = attribute
+
+    def to_dct(self):
+        return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'dataset_id' : self.dataset_id,
+                'customer_id' : self.customer_id, 'item_id' : self.item_id, 'attribute' : self.attribute}
+
 #Acces Classes
 ########################################################################################################################
 
@@ -293,5 +306,5 @@ class UserDataAcces:
         if not row:
             return None
 
-        return Result(row[0], row[1], row[2], row[3], row[4],  row[5])
+        return Recommendation(row[0], row[1], row[2], row[3], row[4],  row[5])
 
