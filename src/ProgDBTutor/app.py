@@ -15,6 +15,8 @@ from user_data_acces import UserDataAcces
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
+import pandas as pd
+
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
 
@@ -71,7 +73,6 @@ def services():
             print(dataset)
             algo = request.form.get('algoSelection')
             print(algo)
-
             start = request.form.get('startingpoint')
             print(start)
             end = request.form.get('endpoint')
@@ -80,14 +81,27 @@ def services():
             print(stepsize)
             topk = request.form.get('topk')
             print(topk)
+            if algo == "popularity":
+                pass
+            elif algo == "recency":
+                pass
+            elif algo == "itemknn":
+                pass
         # add algorithm to database
         return render_template('services.html', app_data=app_data)
     return redirect(url_for('login'))
 
 
-@app.route("/datasets")
+@app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
 def datasets():
+    admin = True # later admin check doen
+    if request.method == 'POST':
+        if admin:
+            df = pd.read_csv(request.files.get('file'))
+
+        else:
+            flash("You need admin privileges to upload a dataset", category='error')
     return render_template('datasets.html', app_data=app_data)
 
 @app.route("/visualizations")

@@ -73,7 +73,7 @@
 
                           <!-- Algorithm Selection-->
 
-                            <select class="_ds_select" id="algoSelection" name="algoSelection">
+                            <select class="_ds_select" id="algoSelection" name="algoSelection" onchange="switchVisibleParameters();">
                                 <option value="popularity">popularity</option>
                                 <option value="recency">recency</option>
                                 <option value="itemknn">itemknn</option>
@@ -84,24 +84,43 @@
                             <p style="color: black;">Set Parameters</p>
 
                             <div class="par_form">
-                                <div class="container" style="border: 2px solid black">
+                                <div class="container1" id="popularity_par" style="border: 2px solid black; display:block">
                                   <div class="row">
-                                    <div class="col-25"><label for="par1">K</label></div>
+                                    <div class="col-25"><label for="windowsize">Window Size</label></div>
                                     <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
                                   </div>
                                   <div class="row">
-                                    <div class="col-25"><label for="endpoint">Window</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-25"><label for="stepsize">Normalize</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-25"><label for="stepsize">Retrain interval</label></div>
+                                    <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
                                     <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
                                   </div>
                                 </div>
+
+                                <div class="container2" id="recency_par" style="border: 2px solid black; display:none">
+                                  <div class="row">
+                                    <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                  </div>
+                                </div>
+
+                                <div class="container3" id="itemknn_par" style="border: 2px solid black; display:none">
+                                  <div class="row">
+                                    <div class="col-25"><label for="k">K</label></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-25"><label for="window">Window</label></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-25"><label for="normalize">Normalize</label></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                  </div>
+                                </div>
+
                             </div>
                             <div align="center" class="___services__btn" style="margin-top: 20px;">
                                 <button type="submit">
@@ -181,6 +200,35 @@
     form.find($("#endpoint")).val("2022-04-14T19:16");
     form.find($("#stepsize")).val("1");
     form.find($("#topk")).val("10");
+
+    function switchVisibleParameters() {
+
+        var select = document.getElementById('algoSelection');
+        var option = select.options[select.selectedIndex];
+
+        if (option.value == 'popularity') {
+            console.log(option.value);
+            if (document.getElementById('popularity_par').style.display == 'none') {
+                document.getElementById('popularity_par').style.display = 'block';
+                document.getElementById('recency_par').style.display = 'none';
+                document.getElementById('itemknn_par').style.display = 'none';
+            }
+        }
+        else if (option.value == 'recency') {
+            if (document.getElementById('recency_par').style.display == 'none') {
+                document.getElementById('popularity_par').style.display = 'none';
+                document.getElementById('recency_par').style.display = 'block';
+                document.getElementById('itemknn_par').style.display = 'none';
+            }
+        }
+        else if (option.value == 'itemknn') {
+            if (document.getElementById('itemknn_par').style.display == 'none') {
+                document.getElementById('popularity_par').style.display = 'none';
+                document.getElementById('recency_par').style.display = 'none';
+                document.getElementById('itemknn_par').style.display = 'block';
+            }
+        }
+    }
 
 </script>
 
