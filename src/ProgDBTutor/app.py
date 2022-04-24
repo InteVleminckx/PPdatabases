@@ -95,9 +95,8 @@ def services():
 @app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
 def datasets():
-    admin = True # later admin check doen
     if request.method == 'POST':
-        if admin:
+        if session['username'] == 'admin': # checken of de user de admin is
             df = pd.read_csv(request.files.get('file'))
 
         else:
