@@ -70,7 +70,7 @@ CREATE TABLE Interaction (
     -----
     t_dat TIMESTAMP NOT NULL,
     price INT NOT NULL,
-    PRIMARY KEY (customer_id, item_id, t_dat)
+    PRIMARY KEY (customer_id, item_id_ref, t_dat)
 );
 
 -- Table of algorithms
@@ -87,8 +87,8 @@ CREATE TABLE Recommendation (
     item_id_ref INT NOT NULL,
     attribute_ref TEXT NOT NULL,
     -----
-    algorithm TEXT NOT NULL REFERENCES Algorithm(name),
-    PRIMARY KEY (customer_id, dataset_id, item_id, algorithm)
+    algorithm_ref TEXT NOT NULL REFERENCES Algorithm(name),
+    PRIMARY KEY (customer_id, dataset_id_ref, item_id_ref, algorithm_ref)
 );
 
 -- Table to keep the results of the ABTests
