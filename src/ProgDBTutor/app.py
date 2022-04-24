@@ -66,6 +66,8 @@ def contact():
 # @login_required
 def services():
     if 'loggedin' in session:
+        algo = request.form.get('algoSelection')
+        # add algorithm to database
         return render_template('services.html', app_data=app_data)
     return redirect(url_for('login'))
 

@@ -88,14 +88,15 @@
 
 ._services__card{
     margin: 10px;
-    height: 200px;
+    height: 100%;
     width: 800px;
     border-radius: 4px;
     /*display: flex;*/
     flex-direction: column;
     justify-content: center;
     color: white;
-    background-image: linear-gradient(to right, #00dbde 0%, #fc00ff 100%);
+    /*background-image: linear-gradient(to right, #00dbde 0%, #fc00ff 100%);*/
+    background-color: white;
     /*transition: 0.3s ease-in;*/
 
     display: block;
