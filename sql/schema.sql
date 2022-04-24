@@ -11,7 +11,7 @@ CREATE TABLE Dataset (
 
 -- Table that contains the customers of a dataset
 CREATE TABLE Customer (
-    dataset_id INT NOT NULL REFERENCES Dataset(dataset_id),
+    dataset_id INT NOT NULL,
     customer_id INT NOT NULL,
     FN BOOLEAN,
     Active BOOLEAN,
