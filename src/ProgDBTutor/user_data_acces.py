@@ -15,18 +15,18 @@ class DataScientist:
 class UserDataAcces:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
-#         cursor = self.dbconnect.get_cursor()
-#
-#         df = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
-#         amountRows = len(df.index)
-#         amountColumns = len(df.columns)
-#         dataset_id = 0
-#
-#         for row in range(amountRows):
-#             for column in range(amountColumns):
-#                 print(df.iloc[row, column])
-#                 cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
-#                 (dataset_id, df.iloc[row, 0], str(df.iloc[0, column]), str(df.iloc[row, column])))
+        cursor = self.dbconnect.get_cursor()
+
+        df = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
+        amountRows = len(df.index)
+        amountColumns = len(df.columns)
+        dataset_id = 0
+
+        for row in range(amountRows):
+            for column in range(amountColumns):
+                print(df.iloc[row, column])
+                cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
+                (dataset_id, df.iloc[row, 0], str(df.iloc[0, column]), str(df.iloc[row, column])))
 
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
