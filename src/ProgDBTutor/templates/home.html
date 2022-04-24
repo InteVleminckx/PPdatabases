@@ -31,11 +31,19 @@
                 <li class="navbar_items"><a class="navbar_links" id="services-page" href="#services">Services</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="about-page" href="#about">About</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="contact-page" href="#contact">Contact</a></li>
-                <li class="navbar_btn">
-                    <button class="btn-1" role="button">
-                        <a class="navbar_bt" href="login">Login</a>
-                    </button>
-                </li>
+                {% if isLoggedin %}
+                    <li class="navbar_btn">
+                        <button class="btn-1" role="button">
+                            <a class="navbar_bt" href="{{ url_for('logout') }}">Logout</a>
+                        </button>
+                    </li>
+                {% else %}
+                    <li class="navbar_btn">
+                        <button class="btn-1" role="button">
+                            <a class="navbar_bt" href="login">Login</a>
+                        </button>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </nav>

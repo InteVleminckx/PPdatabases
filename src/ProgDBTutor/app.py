@@ -2,7 +2,7 @@
 # see tutor https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
 from flask import Flask, request, session, jsonify, flash, redirect, url_for
 from flask.templating import render_template
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user, current_user, UserMixin
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
@@ -11,6 +11,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from config import config_data
 from db_connection import DBConnection
 from user_data_acces import DataScientist, UserDataAcces
+from user_data_acces import UserDataAcces
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -25,17 +26,18 @@ app_data['app_name'] = config_data['app_name']
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 user_data_access = UserDataAcces(connection)
 
-login_manager = LoginManager()
-login_manager.login_view = 'app.login_user'
-login_manager.init_app(app)
+# login_manager = LoginManager()
+# login_manager.login_view = 'app.login_user'
+# login_manager.init_app(app)
 
-@login_manager.user_loader
-def load_user(username):
 
-    cursor = user_data_access.dbconnect.get_cursor()
-    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (username,))
-
-    return cursor
+# @login_manager.user_loader
+# def load_user(username):
+#
+#     cursor = user_data_access.dbconnect.get_cursor()
+#     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (username,))
+#
+#     return cursor
 
 DEBUG = False
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
@@ -44,30 +46,37 @@ HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
 @app.route("/")
 @app.route("/home")
 def main():
-    print('hallo1')
-    l = db.execute('SELECT * FROM datascientist').fetchall()
-    for i in l:
-        print(i.username)
-    print('hallo2')
-    return render_template('home.html', app_data=app_data)
+    # print('hallo1')
+    # l = db.execute('SELECT * FROM datascientist').fetchall()
+    # for i in l:
+    #     print(i.username)
+    # print('hallo2')
+    l = session.get('loggedin', False)
+    if l:
+        return render_template('home.html', app_data=app_data, isLoggedin=session['loggedin'])
+    else:
+        return render_template('home.html', app_data=app_data)
 
 @app.route("/contact")
-@login_required
+# @login_required
 def contact():
     return render_template('contact.html', app_data=app_data)
 
 @app.route("/services")
-@login_required
+# @login_required
 def services():
-    return render_template('services.html', app_data=app_data)
+    if 'loggedin' in session:
+        return render_template('services.html', app_data=app_data)
+    return render_template(url_for('login_user'))
+
 
 @app.route("/datasets")
-@login_required
+# @login_required
 def datasets():
     return render_template('datasets.html', app_data=app_data)
 
 @app.route("/visualizations")
-@login_required
+# @login_required
 def visualizations():
     return render_template('visualizations.html', app_data=app_data)
 
@@ -107,8 +116,10 @@ def add_user():
         print('Adding {}'.format(user_obj.to_dct()))
         user_obj = user_data_access.add_user(user_obj)
         # login_user(user_obj, remember=True)
-        flash('Account succesfully registered!', category='success')
 
+        flash('Account succesfully registered!', category='success')
+        session['loggedin'] = True
+        session['username'] = user_username
         return redirect(url_for('main'))
 
     return render_template('login.html', app_data=app_data)
@@ -118,7 +129,7 @@ def login_user():
     user_username = request.form.get('username')
     user_password = request.form.get('password')
 
-    # user = DataScientist.query.filter_by(email=user_email).first
+    # user = DataScientist.query.filter_by(username=user_username).first
 
     cursor = user_data_access.dbconnect.get_cursor()
     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
@@ -130,21 +141,23 @@ def login_user():
         if check_password_hash(cursor1.fetchone()[0], user_password):
             flash('Logged in successfully!', category='success')
             # login_user(user, remember=True)
+            session['loggedin'] = True
+            session['username'] = user
             return redirect(url_for('main'))
         else:
             flash('Incorrect password, try again.', category='error')
     else:
-        print(cursor.fetchone())
-        print(cursor.fetchall())
         flash('Username does not exist.', category='error')
 
     return render_template('login.html', app_data=app_data)
 
-# @app.route("/logout", methods=['POST'])
+@app.route("/logout", methods=['GET', 'POST'])
 # @login_required
-# def logout_user():
-#     logout_user()
-#     return redirect(url_for('login_user'))
+def logout():
+    # logout_user()
+    session.pop('loggedin', None)
+    session.pop('username', None)
+    return redirect(url_for('login_user'))
 
 # RUN DEV SERVER
 if __name__ == "__main__":
