@@ -63,7 +63,7 @@ class AB_Test:
         self.topk = topk
 
     def to_dct(self):
-        return {'test_id' : self.test_id, 'result_id' : self.result_id, 'start_point' = self.start_point, 'end_point' : self.end_point'
+        return {'test_id' : self.test_id, 'result_id' : self.result_id, 'start_point' : self.start_point, 'end_point' : self.end_point,
             'stepsize' : self.stepsize, 'topK' : self.topk}
 
 class Algorithm:
@@ -75,8 +75,8 @@ class Algorithm:
         self.value = value
 
     def to_dct(self):
-        return {'abtest_id' = self.abtest_id, 'result_id' = self.result_id, 'name' = self.name, 'param_name' : self.param_name,
-                'value' = self.value}
+        return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'name' : self.name, 'param_name' : self.param_name,
+                'value' : self.value}
 
 class Result:
     def __init__(self, abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param, creator):
@@ -89,7 +89,7 @@ class Result:
         self.creator = creator
 
     def to_dct(self):
-        return {'abtest_id' = self.abtest_id, 'result_id' = self.result_id, 'dataset_id' = self.dataset_id, 'item_id' = self.item_id,
+        return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'dataset_id' : self.dataset_id, 'item_id' : self.item_id,
                 'attribute_dataset' : self.attribute_dataset, 'algorithm_param' : self.algorithm_param, 'creator' : self.creator}
 
 #Acces Classes
@@ -271,7 +271,7 @@ class UserDataAcces:
         return Algorithm(row[0], row[1], row[2], row[3], row[4])
 
 
-    def getResult(self, result_id)
+    def getResult(self, result_id):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param \
                                 FROM Result WHERE result_id = %s",
