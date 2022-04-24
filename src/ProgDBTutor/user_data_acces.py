@@ -40,17 +40,73 @@ class Customer:
 
 #This class represents an interaction in the Interaction table
 class Inetraction:
-    def __init__(self, customer_id, dataset_id, item_id, atribute_id, time_data, price):
+    def __init__(self, customer_id, dataset_id, item_id, atribute, time_data, price):
         self.customer_id = customer_id
         self.dataset_id = dataset_id
         self.item_id = item_id
-        self.atribute_id = atribute_id
+        self.atribute = atribute
         self.time_date = time_date
         self.price = price
 
     def to_dct(self):
         return {'customer_id' : self.customer_id, 'dataset_id' : dataset_id, ' item_id' : self.item_id, 'attribute_id' : self.atribute_id,
                  'time_date' : self.time_date, 'price' : self.price}
+
+
+class AB_Test:
+    def __init__(self, test_id, result_id, start_point, end_point, stepsize, topk):
+        self.test_id = test_id
+        self.result_id = result_id
+        self.start_point =  start_point
+        self.end_point = end_point
+        self.stepsize = stepsize
+        self.topk = topk
+
+    def to_dct(self):
+        return {'test_id' : self.test_id, 'result_id' : self.result_id, 'start_point' : self.start_point, 'end_point' : self.end_point,
+            'stepsize' : self.stepsize, 'topK' : self.topk}
+
+class Algorithm:
+    def __init__(self, abtest_id, result_id, name, param_name, value):
+        self.abtest_id= abtest_id
+        self.result_id = result_id
+        self.name = name
+        self.param_name = param_name
+        self.value = value
+
+    def to_dct(self):
+        return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'name' : self.name, 'param_name' : self.param_name,
+                'value' : self.value}
+
+class Result:
+    def __init__(self, abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param, creator):
+        self.abtest_id = abtest_id
+        self.result_id = result_id
+        self.dataset_id = dataset_id
+        self.item_id = item_id
+        self.attribute_dataset = attribute_dataset
+        self. algorithm_param = algorithm_param
+        self.creator = creator
+
+    def to_dct(self):
+        return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'dataset_id' : self.dataset_id, 'item_id' : self.item_id,
+                'attribute_dataset' : self.attribute_dataset, 'algorithm_param' : self.algorithm_param, 'creator' : self.creator}
+
+class Recommendation:
+    def __init__(self, abtest_id, result_id, dataset_id, customer_id, item_id, attribute):
+        self.abtest_id = abtest_id
+        self.result_id = result_id
+        self.dataset_id = dataset_id
+        self.customer_id = customer_id
+        self.item_id = item_id
+        self.attribute = attribute
+
+    def to_dct(self):
+        return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'dataset_id' : self.dataset_id,
+                'customer_id' : self.customer_id, 'item_id' : self.item_id, 'attribute' : self.attribute}
+
+#Acces Classes
+########################################################################################################################
 
 #This class is for accesing the Datascientist table and the Admin table
 class UserDataAcces:
@@ -124,12 +180,6 @@ class UserDataAcces:
             self.dbconnect.rollback()
             raise Exception("Unable to save the user!")
 
-
-
-#this class is for accesing the Dataset table
-class DatasetAcces:
-    dataset_id = 1
-
     def __init__(self, dbconnect):
             self.dbconnect = dbconnect
             """ self.datasetId = dataset_id
@@ -185,11 +235,6 @@ class DatasetAcces:
 
         return [row[1], row[2]]
 
-#This class is for accesing the customer table in the database.
-class CustomerAcces:
-    def __init__(self):
-        self.dbconnect = dbconnect
-
 
     def getCustomer(self, customer_id):
         cursor = self.dbconnect.get_cursor()
@@ -202,7 +247,64 @@ class CustomerAcces:
 
         return Customer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
 
+    def getInteraction(self, customer_id, item_id, time_date):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT customer_id, dataset_id, item_id, attribute, t_dat, price \
+                        FROM Interaction WHERE customer_id = %s AND item_id = %s AND t_dat = %s LIMIT 1",
+                         (customer_id, item_id, time_date))
+
+        row = cursor.fetchone()
+        if not row:
+            return None
+
+        return Interaction(row[0], row[1], row[2], row[3], row[4], row[5])
+
+    def getAB_Test(self, abtestID, resultId):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT abtest_id, result_id, start_point, end_point, stepsize, topk \
+                        FROM ABTest WHERE abtest_id = %s AND result_id = %s",
+                         (abtest_id, result_id))
+
+        row = cursor.fetchone()
+        if not row:
+            return None
+
+        return AB_Test(row[0], row[1], row[2], row[3], row[4], row[5])
+
+    def getAlgorithm(self, abtest_id, result_id, param_name):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT abtest_id, result_id, name, param_name, value \
+                                FROM ABTest WHERE abtest_id = %s AND result_id = %s AND param_name = %s",
+                                 (abtest_id, result_id, param_name))
+
+        row = cursor.fetchone()
+        if not row:
+            return None
+
+        return Algorithm(row[0], row[1], row[2], row[3], row[4])
 
 
+    def getResult(self, result_id):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param \
+                                FROM Result WHERE result_id = %s",
+                                 (result_id))
 
+        row = cursor.fetchone()
+        if not row:
+            return None
+
+        return Result(row[0], row[1], row[2], row[3], row[4],  row[5], row[6])
+
+    def getRecommendation(self,result_id, customer_id):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param \
+                                FROM Recommendation WHERE result_id = %s AND customer_id = %s",
+                                  (result_id, customer_id))
+
+        row = cursor.fetchone()
+        if not row:
+            return None
+
+        return Recommendation(row[0], row[1], row[2], row[3], row[4],  row[5])
 
