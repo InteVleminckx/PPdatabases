@@ -62,7 +62,7 @@ def main():
 def contact():
     return render_template('contact.html', app_data=app_data)
 
-@app.route("/services")
+@app.route("/services", methods=['GET', 'POST'])
 # @login_required
 def services():
     if 'loggedin' in session:

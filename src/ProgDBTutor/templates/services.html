@@ -34,18 +34,15 @@
 <div class="_services" id="services">
 
 
-
 {#        <h1>1. Choosing dataset</h1>#}
 {#        <p>Select a dataset with the selection button below. <br>#}
 {#            If you would like to add a new dataset (for admins only), go to the Datasets page.</p>#}
 
-
-
-        <h1>2. Setting up parameters</h1>
+        <h1>Setting up the algorithm</h1>
             <div class="_services__card">
                 <div class="par_form">
                     <div class="container">
-                      <form method="POST" action="">
+                      <form method="POST" action="" data-name="cForm">
 
                           <!-- Dataset Selection-->
 
@@ -63,15 +60,15 @@
                           </div>
                           <div class="row">
                             <div class="col-25"><label for="endpoint">End point</label></div>
-                            <div class="col-75"><input type="datetime-local" id="endpoint" name="endpoint" placeholder="End point"></div>
+                            <div class="col-75"><input type="datetime-local" id="endpoint" name="endpoint" placeholder="End point" required></div>
                           </div>
                           <div class="row">
                             <div class="col-25"><label for="stepsize">Stepsize</label></div>
-                            <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize"></div>
+                            <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize" required></div>
                           </div>
                           <div class="row">
                             <div class="col-25"><label for="topk">Top-k</label></div>
-                            <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k"></div>
+                            <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" required></div>
                           </div>
 
                           <!-- Algorithm Selection-->
@@ -90,24 +87,24 @@
                                 <div class="container" style="border: 2px solid black">
                                   <div class="row">
                                     <div class="col-25"><label for="par1">K</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1"></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
                                   </div>
                                   <div class="row">
                                     <div class="col-25"><label for="endpoint">Window</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1"></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
                                   </div>
                                   <div class="row">
                                     <div class="col-25"><label for="stepsize">Normalize</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1"></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
                                   </div>
                                   <div class="row">
                                     <div class="col-25"><label for="stepsize">Retrain interval</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1"></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
                                   </div>
                                 </div>
                             </div>
-                            <div class="___services__btn" style="margin-top: 20px;">
-                                <button type="submit" onclick="update()">
+                            <div align="center" class="___services__btn" style="margin-top: 20px;">
+                                <button type="submit">
                                     Add algorithm
                                 </button>
                             </div>
@@ -173,13 +170,17 @@
     {#var value = select1.options[select1.selectedIndex].value;#}
     {#console.log(value);#}
 
-    function update() {
-        var select = document.getElementById('algoSelection');
-        var option = select.options[select.selectedIndex];
-
-        document.getElementById('algoSelection').value = option.value;
-    }
-    update();
+    {#function update() {#}
+    {#    var select = document.getElementById('algoSelection');#}
+    {#    var option = select.options[select.selectedIndex];#}
+    {##}
+    {#    document.getElementById('algoSelection').value = option.value;#}
+    {#update();#}
+    var form = $('form[data-name="cForm"]');
+    form.find($("#startingpoint")).val("2022-04-08T19:16");
+    form.find($("#endpoint")).val("2022-04-14T19:16");
+    form.find($("#stepsize")).val("1");
+    form.find($("#topk")).val("10");
 
 </script>
 
