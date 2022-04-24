@@ -67,7 +67,7 @@ def contact():
 def services():
     if 'loggedin' in session:
         return render_template('services.html', app_data=app_data)
-    return render_template(url_for('login_user'))
+    return redirect(url_for('login'))
 
 
 @app.route("/datasets")
