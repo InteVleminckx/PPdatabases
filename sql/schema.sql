@@ -2,11 +2,11 @@ DROP TABLE IF EXISTS Recommendation, Result, Algorithm, ABTest, Interaction, Adm
 
 -- Table to keep track of the items/articles of the dataset
 CREATE TABLE Dataset (
-     dataset_id INT NOT NULL,
-     item_id INT NOT NULL,
-     attribute TEXT NOT NULL,
-     val VARCHAR,
-     PRIMARY KEY (dataset_id, item_id, attribute)
+    dataset_id INT NOT NULL,
+    item_id INT NOT NULL,
+    attribute TEXT NOT NULL,
+    val TEXT,
+    PRIMARY KEY (dataset_id, item_id, attribute)
 );
 
 -- Table that contains the customers of a dataset
