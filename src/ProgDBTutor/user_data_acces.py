@@ -187,7 +187,7 @@ class DatasetAcces:
 
 #This class is for accesing the customer table in the database.
 class CustomerAcces:
-    def __init__(self)
+    def __init__(self):
         self.dbconnect = dbconnect
 
 
