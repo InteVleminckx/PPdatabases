@@ -19,6 +19,7 @@
 -- This is a customer that buys items
 
 DROP TABLE IF EXISTS Customer, Authentication, DataScientist, Admin, Interaction , Dataset, ABTest, Users, Item;
+DROP TABLE IF EXISTS Recommendation, Algorithm;
 
 CREATE TABLE Customer (
     customer_id INT PRIMARY KEY ,
@@ -67,13 +68,35 @@ CREATE TABLE Interaction (
     t_dat TIMESTAMP NOT NULL,
     price INT NOT NULL,
     PRIMARY KEY (customer_id, item_id, t_dat),
-    FOREIGN KEY (dataset_id, item_id, attribute) REFERENCES Dataset(dataset_id, item_id, attribute)
+    FOREIGN KEY (dataset_id, item_id, attribute) REFERENCES Dataset(dataset_id, item_id, attribute) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- Table of algorithms
+CREATE TABLE Algorithm (
+    name TEXT PRIMARY KEY
+);
+
+INSERT INTO Algorithm(name) VALUES ('Recency') ;
+INSERT INTO Algorithm(name) VALUES ('Popularity') ;
+INSERT INTO Algorithm(name) VALUES ('ItemKKN') ;
+
+-- Table to keep track of recommendations in the database
+CREATE TABLE Recommendation (
+    customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
+    -----
+    dataset_id INT NOT NULL,
+    item_id INT NOT NULL,
+    attribute TEXT NOT NULL,
+    -----
+    algorithm TEXT NOT NULL REFERENCES Algorithm(name),
+    FOREIGN KEY (dataset_id, item_id, attribute) REFERENCES Dataset(dataset_id, item_id, attribute) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY (customer_id, dataset_id, item_id, algorithm)
 );
 
 -- Table to keep the results of the ABTests
--- CREATE TABLE ABTest (
---     abtest_id INT NOT NULL PRIMARY KEY,
--- );
+CREATE TABLE ABTest (
+    abtest_id INT NOT NULL PRIMARY KEY
+);
 
 -- Table to allow 1 ABTest to link with multiple datasets
 -- CREATE TABLE Datasets_ABTest (
