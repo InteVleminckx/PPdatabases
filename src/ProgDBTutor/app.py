@@ -99,7 +99,7 @@ def visualizations():
 @app.route("/login", methods=['GET'])
 def login():
 
-    user_objects = user_data_access.get_users()
+    # user_objects = user_data_access.get_users()
     return render_template('login.html', app_data=app_data)
 
 
