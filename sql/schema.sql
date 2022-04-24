@@ -99,6 +99,6 @@ INSERT INTO Algorithm(name) VALUES ('Recency'), ('Popularity'), ('ItemKKN') ;
 INSERT INTO Dataset(dataset_id, item_id, atribute, val) VALUES (0, 0, 'size', 'small') ;
 INSERT INTO Customer(dataset_id, customer_id) VALUES (0, 10) ;
 INSERT INTO Interaction(customer_id, dataset_id_ref, item_id_ref, attribute_ref, t_dat, price) VALUES (10, 0, 0, 'size', current_timestamp , 20) ;
-INSERT INTO ABTest(dataset_id, customer_id) VALUES (100, 0) ;
-INSERT INTO Result(dataset_id, customer_id, algorithm_ref) VALUES (100, 0, 'Recency') ;
+INSERT INTO ABTest(abtest_id, result_id) VALUES (100, 0) ;
+INSERT INTO Result(abtest_id_ref, result_id, algorithm_ref) VALUES (100, 0, 'Recency') ;
 INSERT INTO Recommendation(abtest_id_ref, result_id, dataset_id_ref, customer_id, item_id_ref, attribute_ref) VALUES (100, 0, 0, 10, 0, 'small') ;
