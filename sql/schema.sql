@@ -116,11 +116,11 @@ CREATE TABLE Recommendation (
 
 -- Test
 INSERT INTO Dataset(dataset_id, item_id, attribute, val) VALUES (0, 0, 'size', 'small'), (0, 0, 'color', 'pink') ;
-INSERT INTO Algorithm(abtest_id_ref, result_id_ref, name, param_name, value) VALUES (0, 0, 'Recency', 'window_size', 30) ;
 INSERT INTO Customer(dataset_id, customer_id) VALUES (0, 10) ;
 INSERT INTO Authentication(username, password) VALUES ('jonasdm', '123piano') ;
 INSERT INTO DataScientist(username, email, firstname, lastname) VALUES ('jonasdm', 'jonasdm@hotmail.com', 'jonas', 'de maeyer') ;
 INSERT INTO Interaction(customer_id_ref, dataset_id_ref, item_id_ref, attribute_ref, t_dat, price) VALUES (10, 0, 0, 'size', current_timestamp , 20) ;
 INSERT INTO ABTest(abtest_id, result_id, start_point, end_point, stepsize, topk) VALUES (100, 0, current_timestamp , current_timestamp , 30, 30) ;
+INSERT INTO Algorithm(abtest_id_ref, result_id_ref, name, param_name, value) VALUES (100, 0, 'Recency', 'window_size', 30) ;
 INSERT INTO Result(abtest_id_ref, result_id_ref, dataset_id_ref, item_id_ref, attribute_dataset_ref, algorithm_param_ref, creator) VALUES (100, 0, 0, 0, 'color', 'window_size', 'jonasdm') ;
 INSERT INTO Recommendation(abtest_id_ref, result_id, dataset_id_ref, customer_id, item_id_ref, attribute_ref) VALUES (100, 0, 0, 10, 0, 'size') ;
