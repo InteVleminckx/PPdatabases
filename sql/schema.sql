@@ -5,7 +5,7 @@ CREATE TABLE Dataset (
      dataset_id INT NOT NULL,
      item_id INT NOT NULL,
      attribute TEXT NOT NULL,
---      val TEXT,
+     val VARCHAR,
      PRIMARY KEY (dataset_id, item_id, attribute)
 );
 
