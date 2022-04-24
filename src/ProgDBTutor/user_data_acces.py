@@ -12,10 +12,17 @@ class DataScientist:
         return {'firstname': self.firstname, 'lastname': self.lastname, 'username': self.username,'email': self.email, 'password': self.password}
 
 
+class Item:
+    def __init__(self, itemId, atributesAndVals, dataset_id):
+        self.id = itemId
+        self.attr = atributesAndVals
+        self.inDataset = dataset_id
+
+
 class UserDataAcces:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
-        cursor = self.dbconnect.get_cursor()
+        """ cursor = self.dbconnect.get_cursor()
 
         df = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
         amountRows = len(df.index)
@@ -26,7 +33,7 @@ class UserDataAcces:
             for column in range(amountColumns):
                 print(df.iloc[row, column])
                 cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
-                (int(dataset_id), int(df.iloc[row, 0]), str(df.iloc[0, column]), str(df.iloc[row, column])))
+                (int(dataset_id), int(df.iloc[row, 0]), str(df.iloc[0, column]), str(df.iloc[row, column]))) """
 
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
@@ -61,3 +68,53 @@ class UserDataAcces:
         except:
             self.dbconnect.rollback()
             raise Exception("Unable to save the user!")
+
+
+
+class DatasetAcces:
+    dataset_id = 1
+
+    def __init__(self, dbconnect):
+            self.dbconnect = dbconnect
+            self.datasetId = dataset_id
+            cursor = self.dbconnect.get_cursor()
+
+            df = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
+            amountRows = len(df.index)
+            amountColumns = len(df.columns)
+
+            for row in range(amountRows):
+                for column in range(amountColumns):
+                    print(df.iloc[row, column])
+                    cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
+                    (int(self.dataset_id), int(df.iloc[row, 0]), str(df.iloc[0, column]), str(df.iloc[row, column])))
+
+            dataset_id += 1
+
+
+
+    def getItem(self, itemId):
+         cursor = self.dbconnect.get_cursor()
+         cursor.execute("SELECT item_id, attribute, val FROM Dataset WHERE %s = item_id"% itemId)
+
+         #TODO maybe check if cursor is empty and raise an error if so
+
+         attr = {}
+         for row in cursor:
+            attr[row[1]] = row[2]
+
+         return Item(itemId, attr, self.dataset_id)
+
+    #TODO implement if needed
+    def getItems(self):
+        pass
+
+    def getItemAttribute(self, itemId, attr):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT item_id, attribute, val FROM Dataset WHERE %s = item_id AND %s = attr"% itemId, attr)
+
+        row = cursor.fetchone()
+        return [row[1], row[2]]
+
+
+

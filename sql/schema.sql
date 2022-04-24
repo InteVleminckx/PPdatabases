@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS Recommendation, Result, ABTest, Algorithm, Interaction, Dat
 CREATE TABLE Dataset (
      dataset_id INT NOT NULL,
      item_id INT NOT NULL,
-     atribute TEXT NOT NULL,
+     attribute TEXT NOT NULL,
      val TEXT,
      PRIMARY KEY(dataset_id, item_id, atribute)
 );
