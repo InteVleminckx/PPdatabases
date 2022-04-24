@@ -4,9 +4,9 @@ DROP TABLE IF EXISTS Recommendation, Result, Algorithm, ABTest, Interaction, Adm
 CREATE TABLE Dataset (
      dataset_id INT NOT NULL,
      item_id INT NOT NULL,
-     attribute TEXT NOT NULL,
+     atribute TEXT NOT NULL,
      val TEXT,
-     PRIMARY KEY(dataset_id, item_id, attribute)
+     PRIMARY KEY (dataset_id, item_id, atribute)
 );
 
 -- Table that contains the customers of a dataset
@@ -52,7 +52,7 @@ CREATE TABLE Interaction (
     -- Primary key ==> customer buys item at certain time ==> unique
     PRIMARY KEY (customer_id_ref, item_id_ref, t_dat),
     -- Reference to an item from a Dataset, need 3 attributes for the primary key of a dataset
-    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, attribute) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE,
     -- Reference to a customer from Customers, need 2 attributes for the primary key of a customer
     FOREIGN KEY (dataset_id_ref, customer_id_ref) REFERENCES Customer(dataset_id, customer_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -95,7 +95,7 @@ CREATE TABLE Result (
     -- Foreign key to Algorithm
     FOREIGN KEY (abtest_id_ref, result_id_ref, algorithm_param_ref) REFERENCES Algorithm(abtest_id_ref, result_id_ref, param_name) ON UPDATE CASCADE ON DELETE CASCADE,
     -- Foreign key to Dataset
-    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_dataset_ref) REFERENCES Dataset(dataset_id, item_id, attribute)
+    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_dataset_ref) REFERENCES Dataset(dataset_id, item_id, atribute)
 );
 
 -- Table to keep track of recommendations in the database (weak entity)
@@ -109,13 +109,13 @@ CREATE TABLE Recommendation (
     -- Primary key ==> combination of abtest, result, customer and item is unique
     PRIMARY KEY (abtest_id_ref, result_id, customer_id, dataset_id_ref, item_id_ref),
     -- Reference to an item/article in the Dataset table
-    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, attribute) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE,
     -- Reference to a customer from Customers, need 2 attributes for the primary key of a customer
     FOREIGN KEY (dataset_id_ref, customer_id) REFERENCES Customer(dataset_id, customer_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Test
-INSERT INTO Dataset(dataset_id, item_id, attribute, val) VALUES (0, 0, 'size', 'small'), (0, 0, 'color', 'pink') ;
+INSERT INTO Dataset(dataset_id, item_id, atribute, val) VALUES (0, 0, 'size', 'small'), (0, 0, 'color', 'pink') ;
 INSERT INTO Algorithm(abtest_id_ref, result_id_ref, name, param_name, value) VALUES (0, 0, 'Recency', 'window_size', 30) ;
 INSERT INTO Customer(dataset_id, customer_id) VALUES (0, 10) ;
 INSERT INTO Authentication(username, password) VALUES ('jonasdm', '123piano') ;
