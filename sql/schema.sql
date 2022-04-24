@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS ABTest, Recommendation, ALgorithm, Interaction, Dataset, Admin, DataScientist, Authentication, Customer
+DROP TABLE IF EXISTS ABTest, Recommendation, ALgorithm, Interaction, Dataset, Admin, DataScientist, Authentication, Customer ;
 
 CREATE TABLE Customer (
     customer_id INT PRIMARY KEY ,
