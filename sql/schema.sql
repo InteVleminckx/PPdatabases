@@ -62,15 +62,15 @@ CREATE TABLE Dataset (
 -- Table to keep track of the purchases of users for specific items.
 CREATE TABLE Interaction (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
-    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE,
-    -----
+    ----- Reference for 1 item
     dataset_id_ref INT NOT NULL,
     item_id_ref INT NOT NULL,
     attribute_ref TEXT NOT NULL,
     -----
     t_dat TIMESTAMP NOT NULL,
     price INT NOT NULL,
-    PRIMARY KEY (customer_id, item_id_ref, t_dat)
+    PRIMARY KEY (customer_id, item_id_ref, t_dat),
+    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Table of algorithms
@@ -81,14 +81,14 @@ CREATE TABLE Algorithm (
 -- Table to keep track of recommendations in the database
 CREATE TABLE Recommendation (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
-    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE,
-    -----
+    ----- Reference for 1 item
     dataset_id_ref INT NOT NULL,
     item_id_ref INT NOT NULL,
     attribute_ref TEXT NOT NULL,
     -----
     algorithm_ref TEXT NOT NULL REFERENCES Algorithm(name),
-    PRIMARY KEY (customer_id, dataset_id_ref, item_id_ref, algorithm_ref)
+    PRIMARY KEY (customer_id, dataset_id_ref, item_id_ref, algorithm_ref),
+    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Table to keep the results of the ABTests
