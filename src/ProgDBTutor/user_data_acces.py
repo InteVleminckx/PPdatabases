@@ -63,7 +63,7 @@ class AB_Test:
         self.topk = topk
 
     def to_dct(self):
-        return {'test_id' : self.test_id, 'result_id' : self.result_id, 'start_point' = self.start_point, 'end_point' : self.end_point'
+        return {'test_id' : self.test_id, 'result_id' : self.result_id, 'start_point' : self.start_point, 'end_point' : self.end_point'
             'stepsize' : self.stepsize, 'topK' : self.topk}
 
 class Algorithm:
@@ -75,7 +75,7 @@ class Algorithm:
         self.value = value
 
     def to_dct(self):
-        return {'abtest_id' = self.abtest_id, 'result_id' = self.result_id, 'name' = self.name, 'param_name' : self.param_name,
+        return {'abtest_id' = self.abtest_id, 'result_id' : self.result_id, 'name' = self.name, 'param_name' : self.param_name,
                 'value' = self.value}
 
 class Result:
@@ -91,6 +91,20 @@ class Result:
     def to_dct(self):
         return {'abtest_id' = self.abtest_id, 'result_id' = self.result_id, 'dataset_id' = self.dataset_id, 'item_id' = self.item_id,
                 'attribute_dataset' : self.attribute_dataset, 'algorithm_param' : self.algorithm_param, 'creator' : self.creator}
+
+class Recommendation:
+    def __init__(self, abtest_id, result_id, dataset_id, customer_id, item_id, attribute):
+        self.abtest_id = abtest_id
+        self.result_id = result_id
+        self.dataset_id = dataset_id
+        self.customer_id = customer_id
+        self.item_id = item_id
+        self.attribute = attribute
+
+    def to_dct(self):
+        return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'dataset_id' : self.dataset_id,
+                'customer_id' : self.customer_id, 'item_id' : self.item_id, 'attribute' : self.attribute}
+
 
 #Acces Classes
 ########################################################################################################################
