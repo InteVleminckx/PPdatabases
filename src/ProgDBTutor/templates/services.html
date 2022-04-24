@@ -12,7 +12,6 @@
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
 
-
 </head>
 <body>
 
@@ -32,118 +31,89 @@
         </div>
     </nav>
 
-<!-- Dataset Section-->
-
 <div class="_services" id="services">
 
-        <h1>1. Choosing dataset</h1>
-        <p>Select a dataset with the selection button below. <br>
-            If you would like to add a new dataset (for admins only), go to the Datasets page.</p>
 
-        <div class="_select">
-            <select class="ds_select" id="ds_select" name="ds_select">
-                <option value="dataset 1">dataset 1</option>
-                <option value="dataset 2">dataset 2</option>
-                <option value="dataset 3">dataset 3</option>
-            </select>
-        </div>
+
+{#        <h1>1. Choosing dataset</h1>#}
+{#        <p>Select a dataset with the selection button below. <br>#}
+{#            If you would like to add a new dataset (for admins only), go to the Datasets page.</p>#}
+
+
 
         <h1>2. Setting up parameters</h1>
             <div class="_services__card">
                 <div class="par_form">
                     <div class="container">
-                      <form method="Post" action="">
+                      <form method="POST" action="">
+
+                          <!-- Dataset Selection-->
+
+                          <select class="ds_select" id="datasetSelection" name="datasetSelection">
+                              <option value="dataset 1">dataset 1</option>
+                              <option value="dataset 2">dataset 2</option>
+                              <option value="dataset 3">dataset 3</option>
+                          </select>
+
+                          <!-- General parameters Selection-->
+
                           <div class="row">
-                            <div class="col-25">
-                              <label for="startingpoint">Starting point</label>
-                            </div>
-                            <div class="col-75">
-                              <input type="datetime-local" id="startingpoint" name="startingpoint" placeholder="Starting point">
-                            </div>
+                            <div class="col-25"><label for="startingpoint">Starting point</label></div>
+                            <div class="col-75"><input type="datetime-local" id="startingpoint" name="startingpoint" placeholder="Starting point" required></div>
                           </div>
                           <div class="row">
-                            <div class="col-25">
-                              <label for="endpoint">End point</label>
-                            </div>
-                            <div class="col-75">
-                              <input type="datetime-local" id="endpoint" name="endpoint" placeholder="End point">
-                            </div>
+                            <div class="col-25"><label for="endpoint">End point</label></div>
+                            <div class="col-75"><input type="datetime-local" id="endpoint" name="endpoint" placeholder="End point"></div>
                           </div>
                           <div class="row">
-                            <div class="col-25">
-                              <label for="stepsize">Stepsize</label>
-                            </div>
-                            <div class="col-75">
-                                <input type="text" id="stepsize" name="stepsize" placeholder="Stepsize">
-                            </div>
+                            <div class="col-25"><label for="stepsize">Stepsize</label></div>
+                            <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize"></div>
                           </div>
                           <div class="row">
-                            <div class="col-25">
-                              <label for="topk">Top-k</label>
-                            </div>
-                            <div class="col-75">
-                                <input type="text" id="topk" name="topk" placeholder="Top-k">
-                            </div>
+                            <div class="col-25"><label for="topk">Top-k</label></div>
+                            <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k"></div>
                           </div>
-                              <select class="_ds_select" id="algoSelection" name="algoSelection">
+
+                          <!-- Algorithm Selection-->
+
+                            <select class="_ds_select" id="algoSelection" name="algoSelection">
                                 <option value="popularity">popularity</option>
                                 <option value="recency">recency</option>
                                 <option value="itemknn">itemknn</option>
                             </select>
 
+                          <!-- Algorithm-specific parameters Selection-->
+
                             <p style="color: black;">Set Parameters</p>
 
                             <div class="par_form">
                                 <div class="container" style="border: 2px solid black">
-                                  <form action="">
                                   <div class="row">
-                                    <div class="col-25">
-                                      <label for="par1">K</label>
-                                    </div>
-                                    <div class="col-75" style="width: 25%">
-                                      <input type="text" id="par1" name="par1" placeholder="par1">
-                                    </div>
+                                    <div class="col-25"><label for="par1">K</label></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1"></div>
                                   </div>
                                   <div class="row">
-                                    <div class="col-25">
-                                      <label for="endpoint">Window</label>
-                                    </div>
-                                    <div class="col-75" style="width: 25%">
-                                      <input type="text" id="par1" name="par1" placeholder="par1">
-                                    </div>
+                                    <div class="col-25"><label for="endpoint">Window</label></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1"></div>
                                   </div>
                                   <div class="row">
-                                    <div class="col-25">
-                                      <label for="stepsize">Normalize</label>
-                                    </div>
-                                    <div class="col-75" style="width: 25%">
-                                        <input type="text" id="par1" name="par1" placeholder="par1">
-                                    </div>
+                                    <div class="col-25"><label for="stepsize">Normalize</label></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1"></div>
                                   </div>
                                   <div class="row">
-                                    <div class="col-25">
-                                      <label for="stepsize">Retrain interval</label>
-                                    </div>
-                                    <div class="col-75" style="width: 25%">
-                                        <input type="text" id="par1" name="par1" placeholder="par1">
-                                    </div>
+                                    <div class="col-25"><label for="stepsize">Retrain interval</label></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1"></div>
                                   </div>
-                                  </form>
                                 </div>
                             </div>
                             <div class="___services__btn" style="margin-top: 20px;">
-                                <button type="submit">Add algorithm</button>
+                                <button type="submit" onclick="update()">
+                                    Add algorithm
+                                </button>
                             </div>
                       </form>
                     </div>
-
                 </div>
-{#                <h2>Setting up parameters</h2>#}
-{#                <p></p>#}
-{#                <div class="services__btn">#}
-{#                    <button>Start Setup</button>#}
-{#                </div>#}
-
             </div>
     </div>
 
@@ -169,11 +139,11 @@
 
             <div class="_dataset__card">
                 <div class="_dataset__scroll">
-                    {% for i in range(len(algorithms)) %}
-                        <div class="_dataset__item" tabindex={{ i }}>
-                            <ul><li>{{ algorithms[i].id }}</li><li>{{ algorithms[i].name }}</li></ul>
-                        </div>
-                    {% endfor %}
+{#                    {% for i in range(len(algorithms)) %}#}
+{#                        <div class="_dataset__item" tabindex={{ i }}>#}
+{#                            <ul><li>{{ algorithms[i].id }}</li><li>{{ algorithms[i].name }}</li></ul>#}
+{#                        </div>#}
+{#                    {% endfor %}#}
 {#                    <div class="_dataset__item" tabindex="1">#}
 {#                        <ul><li>1</li><li>Item 1</li></ul>#}
 {#                    </div>#}
@@ -199,9 +169,18 @@
 </script>
 <script>
     {#$('#algoSelection').val();#}
-    var select1 = document.getElementById('algoSelect');
-    var value = select1.options[select1.selectedIndex].value;
-    console.log(value);
+    {#var select1 = document.getElementById('algoSelect');#}
+    {#var value = select1.options[select1.selectedIndex].value;#}
+    {#console.log(value);#}
+
+    function update() {
+        var select = document.getElementById('algoSelection');
+        var option = select.options[select.selectedIndex];
+
+        document.getElementById('algoSelection').value = option.value;
+    }
+    update();
+
 </script>
 
 </body>

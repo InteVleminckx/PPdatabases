@@ -66,7 +66,20 @@ def contact():
 # @login_required
 def services():
     if 'loggedin' in session:
-        algo = request.form.get('algoSelection')
+        if request.method == 'POST':
+            dataset = request.form.get('datasetSelection')
+            print(dataset)
+            algo = request.form.get('algoSelection')
+            print(algo)
+
+            start = request.form.get('startingpoint')
+            print(start)
+            end = request.form.get('endpoint')
+            print(end)
+            stepsize = request.form.get('stepsize')
+            print(stepsize)
+            topk = request.form.get('topk')
+            print(topk)
         # add algorithm to database
         return render_template('services.html', app_data=app_data)
     return redirect(url_for('login'))
