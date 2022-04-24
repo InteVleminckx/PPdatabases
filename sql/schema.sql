@@ -62,6 +62,7 @@ CREATE TABLE Dataset (
 -- Table to keep track of the purchases of users for specific items.
 CREATE TABLE Interaction (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE,
     -----
     dataset_id_ref INT NOT NULL,
     item_id_ref INT NOT NULL,
@@ -69,8 +70,7 @@ CREATE TABLE Interaction (
     -----
     t_dat TIMESTAMP NOT NULL,
     price INT NOT NULL,
-    PRIMARY KEY (customer_id, item_id, t_dat),
-    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE
+    PRIMARY KEY (customer_id, item_id, t_dat)
 );
 
 -- Table of algorithms
@@ -78,27 +78,27 @@ CREATE TABLE Algorithm (
     name TEXT PRIMARY KEY
 );
 
-INSERT INTO Algorithm(name) VALUES ('Recency') ;
-INSERT INTO Algorithm(name) VALUES ('Popularity') ;
-INSERT INTO Algorithm(name) VALUES ('ItemKKN') ;
-
 -- Table to keep track of recommendations in the database
 CREATE TABLE Recommendation (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE,
     -----
     dataset_id_ref INT NOT NULL,
     item_id_ref INT NOT NULL,
     attribute_ref TEXT NOT NULL,
     -----
     algorithm TEXT NOT NULL REFERENCES Algorithm(name),
-    PRIMARY KEY (customer_id, dataset_id, item_id, algorithm),
-    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE
+    PRIMARY KEY (customer_id, dataset_id, item_id, algorithm)
 );
 
 -- Table to keep the results of the ABTests
 CREATE TABLE ABTest (
     abtest_id INT PRIMARY KEY
 );
+
+INSERT INTO Algorithm(name) VALUES ('Recency') ;
+INSERT INTO Algorithm(name) VALUES ('Popularity') ;
+INSERT INTO Algorithm(name) VALUES ('ItemKKN') ;
 
 -- Table to allow 1 ABTest to link with multiple datasets
 -- CREATE TABLE Datasets_ABTest (
