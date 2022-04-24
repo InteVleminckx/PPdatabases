@@ -54,21 +54,23 @@ CREATE TABLE Admin (
 CREATE TABLE Dataset (
     dataset_id INT NOT NULL,
     item_id INT NOT NULL,
-    attribute TEXT NOT NULL,
-    value TEXT,
-    PRIMARY KEY(dataset_id, item_id, attribute)
+    atribute TEXT NOT NULL,
+    val TEXT,
+    PRIMARY KEY(dataset_id, item_id, atribute)
 );
 
 -- Table to keep track of the purchases of users for specific items.
 CREATE TABLE Interaction (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
-    dataset_id INT NOT NULL,
-    item_id INT NOT NULL,
-    attribute TEXT NOT NULL,
+    -----
+    dataset_id_ref INT NOT NULL,
+    item_id_ref INT NOT NULL,
+    attribute_ref TEXT NOT NULL,
+    -----
     t_dat TIMESTAMP NOT NULL,
     price INT NOT NULL,
     PRIMARY KEY (customer_id, item_id, t_dat),
-    FOREIGN KEY (dataset_id, item_id, attribute) REFERENCES Dataset(dataset_id, item_id, attribute) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Table of algorithms
@@ -84,18 +86,18 @@ INSERT INTO Algorithm(name) VALUES ('ItemKKN') ;
 CREATE TABLE Recommendation (
     customer_id INT NOT NULL REFERENCES Customer(customer_id) ON UPDATE CASCADE ON DELETE CASCADE ,
     -----
-    dataset_id INT NOT NULL,
-    item_id INT NOT NULL,
-    attribute TEXT NOT NULL,
+    dataset_id_ref INT NOT NULL,
+    item_id_ref INT NOT NULL,
+    attribute_ref TEXT NOT NULL,
     -----
     algorithm TEXT NOT NULL REFERENCES Algorithm(name),
-    FOREIGN KEY (dataset_id, item_id, attribute) REFERENCES Dataset(dataset_id, item_id, attribute) ON UPDATE CASCADE ON DELETE CASCADE,
-    PRIMARY KEY (customer_id, dataset_id, item_id, algorithm)
+    PRIMARY KEY (customer_id, dataset_id, item_id, algorithm),
+    FOREIGN KEY (dataset_id_ref, item_id_ref, attribute_ref) REFERENCES Dataset(dataset_id, item_id, atribute) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Table to keep the results of the ABTests
 CREATE TABLE ABTest (
-    abtest_id INT NOT NULL PRIMARY KEY
+    abtest_id INT PRIMARY KEY
 );
 
 -- Table to allow 1 ABTest to link with multiple datasets
