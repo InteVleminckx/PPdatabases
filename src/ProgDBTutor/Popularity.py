@@ -6,105 +6,57 @@ GROUP BY article_id
 ORDER BY COUNT(article_id) DESC
 LIMIT 2;
 """
+# from app import user_data_access
+
 import datetime
 
-from app.py import user_data_access
-
+#TODO: Deze imports mogen later weg, we kunnen de import van app.py hiervoor dan gebruiken
+# Had deze staan omdat ik dan enkel deze file kon runnen zonder afhankelijk te zijn van de app.py
+from config import config_data
+from db_connection import DBConnection
+from user_data_acces import UserDataAcces
+connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
+user_data_access = UserDataAcces(connection)
 
 class Popularity:
 
-    def __init__(self, begin, end, stepsize, topk, retrainInterval, window):
-        self.begin = begin
-        self.end = end
-        self.stepsize = stepsize
+    def __init__(self, dataset_id, startPoint, endPoint, stepsize, topk, window, retrainInterval):
+        self.startPoint = datetime.date(*self.getdate(startPoint))
+        self.endPoint = enddate = datetime.date(*self.getdate(endPoint))
+        self.stepsize = datetime.timedelta(days=stepsize)
         self.topk = topk
-        self.retrainInterval = retrainInterval
-        self.window = window
-        self.recommendations = list()
+        self.window = datetime.timedelta(days=window)
+        self.retrainInterval = datetime.timedelta(days=retrainInterval)
+        self.currentDate = self.startPoint
+        self.recommendations = dict()
+        self.dataset_id = dataset_id
 
-    def train(self, curDate):
+    def simulate(self):
+        nextRetrainInterval = self.currentDate
+        while self.currentDate <= self.endPoint:
+            if self.currentDate >= nextRetrainInterval:
+                self.train()
+                nextRetrainInterval += self.retrainInterval
 
-        # we gaan opnieuw data verzamelen binnen de window size
-        startWindow = curDate - datetime.timedelta(days=self.window)
-
-        # Neem het volgende uit de database
-
-        cursor = user_data_access.dbconnect.get_cursor()
-        cursor.execute("SELECT * FROM purchases WHERE t_date between %s and %s", startWindow, curDate)
-        row = cursor.fetchall()
-
-        # Slaag deze data opnieuw op in de database (in een andere table)
-        for r in row:
-            try:
-                cursor = user_data_access.dbconnect.get_cursor()
-                cursor.execute('INSERT INTO PurchasesTable(t_date, customer_id, article_id, price) VALUES(%s,%s,%s,%s)',
-                                   (r[0], r[1], r[2], r[3]))
-                user_data_access.dbconnect.commit()
-            except:
-                user_data_access.dbconnect.rollback()
-                raise Exception("Error inserting into PurchasesTable")
-
-        # training is gedaan en kunnen weer verder gaan
-            
-        # We gaan nu alle recommendations bekijken voor dit window
-
-        self.getRecommedation(startWindow, curDate)
-
-    def getRecommedation(self, startWindow, curDate):
-
-        delta = datetime.timedelta(days=self.stepsize)
-
-        while (startWindow <= curDate):
-            print(startWindow, end="\n")
-
-            startWindow += delta
-            """
-            hier gaan we dan telkens de top k berekenen voor de huidige stepsize
-            """
-
-            startStep = startStep - startWindow
-
-            cursor = user_data_access.dbconnect.get_cursor()
-            cursor.execute("SELECT article_id, COUNT(article_id) \
-            FROM PurchasesTable t \
-            WHERE t.t_date between %s and %s \
-            GROUP BY article_id \
-            ORDER BY COUNT(article_id) DESC \
-            LIMIT %d;", startStep, startWindow, self.topk)
-            row = cursor.fetchall()
-
-            # Deze top k gaan we dan ook weer telkens opslagen zodat we dit later kunnen gebruiken voor visualisatie
-
-            for r in row:
-                try:
-                    cursor = user_data_access.dbconnect.get_cursor()
-                    cursor.execute(
-                        'INSERT INTO PopularityTopk(curDate, t_date, customer_id, article_id, price) VALUES(%s,%s,%s,%s,%s)',
-                        (r[0], r[1], r[2], r[3], r[4]))
-                    user_data_access.dbconnect.commit()
-                except:
-                    user_data_access.dbconnect.rollback()
-                    raise Exception("Error inserting into PopularityTopk")
+            self.currentDate += self.stepsize
 
     def recommend(self):
+        self.simulate()
 
-        startdate = datetime.date(*self.getdate(self.begin))
-        enddate = datetime.date(*self.getdate(self.end))
-        delta = datetime.timedelta(days=self.stepsize)
+    def train(self):
+        trainWindow = (str(self.currentDate-self.window), str(self.currentDate))
+        recommendations = user_data_access.getPopularity(self.dataset_id, *trainWindow, self.topk)
+        if recommendations is not None:
+            list_ = []
+            for item_id, number_purchases in recommendations:
+                list_.append(item_id)
 
-        retrainCounter = 0
+        #TODO: niet vergeten dat dit moet worden toegevoegd worden aan de recommendations van een user
+            self.recommendations[trainWindow] = list_
 
-        # We lopen van het begin tot het einde over de dates
-        while (startdate <= enddate):
-            # Dan gaan we een
-            print(startdate, end="\n")
 
-            if self.retrainInterval == retrainCounter:
-                self.train(startdate)
-                retrainCounter = 0
-
-            retrainCounter += 1
-            startdate += delta
+        #TODO: Van wat ik er van denk is dat we een volledige AB test moeten opslagen per user
+        # Maar ook dat telkens elke keer een topk wordt berekent binnen de windowsize deze opgeslagen moet worden per use
 
     def getdate(self, date):
 
@@ -133,7 +85,8 @@ class Popularity:
 
 def main():
 
-    algo = Popularity("2020-11-12", "2020-11-13", 1, 5, 7, 14)
+    algo = Popularity(0, "2022-03-01", "2022-05-01", 1, 5, 14, 7)
     algo.recommend()
+    print("")
 
 main()

@@ -309,3 +309,16 @@ class UserDataAcces:
 
         return Recommendation(row[0], row[1], row[2], row[3], row[4],  row[5])
 
+    def getPopularity(self, dataset_id, begin_date, end_date, top_k):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT item_id, COUNT(item_id) \
+                       FROM Interaction action \
+                       WHERE action.t_dat BETWEEN %s AND %s AND action.dataset_id = %s \
+                       GROUP BY item_id \
+                       ORDER BY COUNT(item_id) DESC \
+                       LIMIT %s;", (begin_date, end_date, dataset_id, top_k)
+                       )
+        recommendations = cursor.fetchall()
+        if len(recommendations) == 0:
+            return None
+        return recommendations
