@@ -42,7 +42,7 @@
             <div class="_services__card">
                 <div class="par_form">
                     <div class="container">
-                      <form method="POST" action="" data-name="cForm">
+                      <form method="POST" data-name="cForm">
 
                           <!-- Dataset Selection-->
 
@@ -84,40 +84,40 @@
                             <p style="color: black;">Set Parameters</p>
 
                             <div class="par_form">
-                                <div class="container1" id="popularity_par" style="border: 2px solid black; display:block">
+                                <div class="container1" id="popularity_par" style="border: 2px solid black;">
                                   <div class="row">
                                     <div class="col-25"><label for="windowsize">Window Size</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="windowsize" name="windowsize" placeholder="windowsize" ></div>
                                   </div>
                                   <div class="row">
                                     <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="retraininterval1" name="retraininterval1" placeholder="retraininterval" ></div>
                                   </div>
                                 </div>
 
-                                <div class="container2" id="recency_par" style="border: 2px solid black; display:none">
+                                <div class="container2" id="recency_par" style="border: 2px solid black; opacity: 0;height: 0;width: 0;">
                                   <div class="row">
                                     <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="retraininterval2" name="retraininterval2" placeholder="retraininterval" ></div>
                                   </div>
                                 </div>
 
-                                <div class="container3" id="itemknn_par" style="border: 2px solid black; display:none">
+                                <div class="container3" id="itemknn_par" style="border: 2px solid black; opacity: 0;height: 0;width: 0;">
                                   <div class="row">
                                     <div class="col-25"><label for="k">K</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="k" name="k" placeholder="k" ></div>
                                   </div>
                                   <div class="row">
                                     <div class="col-25"><label for="window">Window</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="window" name="window" placeholder="window" ></div>
                                   </div>
                                   <div class="row">
                                     <div class="col-25"><label for="normalize">Normalize</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="normalize" name="normalize" placeholder="normalize" ></div>
                                   </div>
                                   <div class="row">
                                     <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="par1" name="par1" placeholder="par1" required></div>
+                                    <div class="col-75" style="width: 25%"><input type="text" id="retraininterval3" name="retraininterval3" placeholder="retraininterval" ></div>
                                   </div>
                                 </div>
 
@@ -194,6 +194,7 @@
     {#    var option = select.options[select.selectedIndex];#}
     {##}
     {#    document.getElementById('algoSelection').value = option.value;#}
+
     {#update();#}
     var form = $('form[data-name="cForm"]');
     form.find($("#startingpoint")).val("2022-04-08T19:16");
@@ -201,33 +202,68 @@
     form.find($("#stepsize")).val("1");
     form.find($("#topk")).val("10");
 
+
+    {#$(document).ready(function() {#}
+    {#    $("#algoSelection").change(function() {#}
+    {##}
+    {#        //Hide -other- visible forms#}
+    {#        $("#popularity_par, #recency_par, #itemknn_par").hide();#}
+    {#        $("#" + $(this).val()).show();#}
+    {#    });#}
+    {# });#}
+
     function switchVisibleParameters() {
 
-        var select = document.getElementById('algoSelection');
-        var option = select.options[select.selectedIndex];
+            var select = document.getElementById('algoSelection');
+            var option = select.options[select.selectedIndex];
 
-        if (option.value == 'popularity') {
-            console.log(option.value);
-            if (document.getElementById('popularity_par').style.display == 'none') {
-                document.getElementById('popularity_par').style.display = 'block';
-                document.getElementById('recency_par').style.display = 'none';
-                document.getElementById('itemknn_par').style.display = 'none';
+            if (option.value == 'popularity') {
+                console.log(option.value);
+                if (document.getElementById('popularity_par').style.opacity == '0') {
+                    document.getElementById('popularity_par').style.opacity = '1';
+                    document.getElementById('popularity_par').style.height = '100px';
+                    document.getElementById('popularity_par').style.width = '720px';
+
+                    document.getElementById('recency_par').style.opacity = '0';
+                    document.getElementById('recency_par').style.height = '0px';
+                    document.getElementById('recency_par').style.width = '0px';
+
+                    document.getElementById('itemknn_par').style.opacity = '0';
+                    document.getElementById('itemknn_par').style.height = '0px';
+                    document.getElementById('itemknn_par').style.width = '0px';
+
+                }
             }
-        }
-        else if (option.value == 'recency') {
-            if (document.getElementById('recency_par').style.display == 'none') {
-                document.getElementById('popularity_par').style.display = 'none';
-                document.getElementById('recency_par').style.display = 'block';
-                document.getElementById('itemknn_par').style.display = 'none';
+            else if (option.value == 'recency') {
+                if (document.getElementById('recency_par').style.opacity == '0') {
+                    document.getElementById('popularity_par').style.opacity = '0';
+                    document.getElementById('popularity_par').style.height = '0px';
+                    document.getElementById('popularity_par').style.width = '0px';
+
+                    document.getElementById('recency_par').style.opacity = '1';
+                    document.getElementById('recency_par').style.height = '50px';
+                    document.getElementById('recency_par').style.width = '720px';
+
+                    document.getElementById('itemknn_par').style.opacity = '0';
+                    document.getElementById('itemknn_par').style.height = '0px';
+                    document.getElementById('itemknn_par').style.width = '0px';
+                }
             }
-        }
-        else if (option.value == 'itemknn') {
-            if (document.getElementById('itemknn_par').style.display == 'none') {
-                document.getElementById('popularity_par').style.display = 'none';
-                document.getElementById('recency_par').style.display = 'none';
-                document.getElementById('itemknn_par').style.display = 'block';
+            else if (option.value == 'itemknn') {
+                if (document.getElementById('itemknn_par').style.opacity == '0') {
+                    document.getElementById('popularity_par').style.opacity = '0';
+                    document.getElementById('popularity_par').style.height = '0px';
+                    document.getElementById('popularity_par').style.width = '0px';
+
+                    document.getElementById('recency_par').style.opacity = '0';
+                    document.getElementById('recency_par').style.height = '0px';
+                    document.getElementById('recency_par').style.width = '0px';
+
+                    document.getElementById('itemknn_par').style.opacity = '1';
+                    document.getElementById('itemknn_par').style.height = '200px';
+                    document.getElementById('itemknn_par').style.width = '720px';
+                }
             }
-        }
     }
 
 </script>

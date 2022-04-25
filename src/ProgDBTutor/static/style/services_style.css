@@ -459,17 +459,25 @@
   border-radius: 5px;
   background-color: #f2f2f2;
   padding: 20px;
+    height: 100px;
+    width: 720px;
 }
 .container2 {
   border-radius: 5px;
   background-color: #f2f2f2;
   padding: 20px;
+    margin-top: 10px;
+    height: 50px;
+    width: 720px;
 
 }
 .container3 {
   border-radius: 5px;
   background-color: #f2f2f2;
   padding: 20px;
+    height: 200px;
+    width: 720px;
+
 }
 
 .container1 select, .container2 select, container3 select {

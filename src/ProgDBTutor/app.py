@@ -85,11 +85,22 @@ def services():
             topk = request.form.get('topk')
             print(topk)
             if algo == "popularity":
-                pass
+                windowsize = request.form.get('windowsize')
+                retraininterval = request.form.get('retraininterval1')
+                print(windowsize)
+                print(retraininterval)
             elif algo == "recency":
-                pass
+                retraininterval = request.form.get('retraininterval2')
+                print(retraininterval)
             elif algo == "itemknn":
-                pass
+                k = request.form.get('k')
+                window = request.form.get('window')
+                normalize = request.form.get('normalize')
+                retraininterval = request.form.get('retraininterval3')
+                print(k)
+                print(window)
+                print(normalize)
+                print(retraininterval)
         # add algorithm to database
         return render_template('services.html', app_data=app_data)
     return redirect(url_for('login'))
