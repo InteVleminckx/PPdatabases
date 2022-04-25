@@ -39,8 +39,8 @@ class Customer:
                 'status' : self.memberStatus, 'frequency' : self.fashNwsFreq, 'age' : self.age, 'postcode' : self.postCode}
 
 #This class represents an interaction in the Interaction table
-class Inetraction:
-    def __init__(self, customer_id, dataset_id, item_id, atribute, time_data, price):
+class Interaction:
+    def __init__(self, customer_id, dataset_id, item_id, atribute, time_date, price):
         self.customer_id = customer_id
         self.dataset_id = dataset_id
         self.item_id = item_id
@@ -49,7 +49,8 @@ class Inetraction:
         self.price = price
 
     def to_dct(self):
-        return {'customer_id' : self.customer_id, 'dataset_id' : dataset_id, ' item_id' : self.item_id, 'attribute_id' : self.atribute_id,
+        return {'customer_id' : self.customer_id, 'dataset_id' : self.dataset_id, ' item_id' : self.item_id,
+                'attribute_id' : self.atribute_id,
                  'time_date' : self.time_date, 'price' : self.price}
 
 
@@ -159,7 +160,8 @@ class UserDataAcces:
         cursor = self.dbconnect.get_cursor()
         # Zoekt een user op zijn username
         cursor.execute('SELECT d.firstname, d.lastname, d.username, d.email, a.password  FROM DataScientist d,\
-         Authentication a, Admin ad WHERE d.username == a.username AND d.username=%s AND d.username = ad.username',(username))
+         Authentication a, Admin ad WHERE d.username == a.username AND d.username=%s AND d.username = ad.username',
+                       (adminName))
         row = cursor.fetchone()
         if not row:
             return None
@@ -210,7 +212,7 @@ class UserDataAcces:
          notEmpty = False
          dataset_id = 0
          for row in cursor:
-            notEmpty = true
+            notEmpty = True
             dataset_id = row[0]
             attr[row[2]] = row[3]
 
@@ -259,11 +261,10 @@ class UserDataAcces:
 
         return Interaction(row[0], row[1], row[2], row[3], row[4], row[5])
 
-    def getAB_Test(self, abtestID, resultId):
+    def getAB_Test(self, abtestId, resultId):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT abtest_id, result_id, start_point, end_point, stepsize, topk \
-                        FROM ABTest WHERE abtest_id = %s AND result_id = %s",
-                         (abtest_id, result_id))
+                        FROM ABTest WHERE abtest_id = %s AND result_id = %s", (abtestId, resultId))
 
         row = cursor.fetchone()
         if not row:
