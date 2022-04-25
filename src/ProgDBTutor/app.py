@@ -14,11 +14,17 @@ from user_data_acces import DataScientist, UserDataAcces
 from user_data_acces import UserDataAcces
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 
 import pandas as pd
 import csv
-
 import os
+
+UPLOAD_FOLDER = './uploads'
+ALLOWED_EXTENSIONS = {'.csv'}
+
+algo_list = list()
+algo_id = 1
 
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
@@ -30,6 +36,8 @@ app_data = dict()
 app_data['app_name'] = config_data['app_name']
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 user_data_access = UserDataAcces(connection)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # login_manager = LoginManager()
 # login_manager.login_view = 'app.login_user'
@@ -84,14 +92,18 @@ def services():
             print(stepsize)
             topk = request.form.get('topk')
             print(topk)
+
             if algo == "popularity":
                 windowsize = request.form.get('windowsize')
                 retraininterval = request.form.get('retraininterval1')
-                print(windowsize)
-                print(retraininterval)
+                global algo_id
+                algo_list.append((algo_id, "popularity", "windowsize", windowsize))
+                algo_id+=1
+                algo_list.append((algo_id, "popularity", "retraininterval", retraininterval))
+                algo_id += 1
             elif algo == "recency":
                 retraininterval = request.form.get('retraininterval2')
-                print(retraininterval)
+
             elif algo == "itemknn":
                 k = request.form.get('k')
                 window = request.form.get('window')
@@ -111,35 +123,34 @@ def services():
 def datasets():
     if request.method == 'POST':
         if session['username'] == 'admin': # checken of de user de admin is
-            a_f = request.files['articles_file']
-            p_f = request.files['purchases_file']
-            c_f = request.files['customers_file']
 
-            cursor = user_data_access.dbconnect.get_cursor()
-            # Dataset table
-            data = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
-            amountRows = len(data.index)
-            amountColumns = len(data.columns)
-            dataset_id = 0
+            af = request.files['articles_file']
+            uploaded_file = secure_filename(af.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+            af.save(filepath)
+            data = []
+            with open(filepath, 'r') as file:
+               csvfile = csv.reader(file)
+               for row in csvfile:
+                   data.append(row)
+            print(data)
 
+            # Customer table
+
+            # Interaction table
+
+            # cursor = user_data_access.dbconnect.get_cursor()
+#             data = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
+#             amountRows = len(data.index)
+#             amountColumns = len(data.columns)
+#             dataset_id = 0
+#
 #             for row in range(amountRows):
 #                 for column in range(amountColumns):
 #                     print(data.iloc[row, column])
 #                     cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
 #                                    (int(dataset_id), int(data.iloc[row, 0]), str(data.iloc[0, column]),
 #                                     str(data.iloc[row, column])))
-
-#             data = pd.read_csv(request.files['articles_file'])
-#             with open(a_f, 'rb') as file:
-#                csvfile = csv.reader(file)
-#                for row in csvfile:
-#                    print(row[0])
-#                    data.append(row)
-#             print(data)
-
-            # Customer table
-
-            # Interaction table
 
         else:
             flash("You need admin privileges to upload a dataset", category='error')

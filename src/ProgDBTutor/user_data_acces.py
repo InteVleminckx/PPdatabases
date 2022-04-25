@@ -1,6 +1,8 @@
 import pandas
 
-# This class is to hold an datascientist out of the database
+"""
+This class is to hold an datascientist out of the database
+"""
 class DataScientist:
     def __init__(self, firstname, lastname, username, email, password):
         self.firstname = firstname
@@ -12,7 +14,9 @@ class DataScientist:
     def to_dct(self):
         return {'firstname': self.firstname, 'lastname': self.lastname, 'username': self.username,'email': self.email, 'password': self.password}
 
-#This class represents an item out of the database
+"""
+This class represents an item out of the database
+"""
 class Item:
     def __init__(self, itemId, atributesAndVals, dataset_id):
         self.item_id = itemId
@@ -22,7 +26,9 @@ class Item:
     def to_dct(self):
         return {'id' : self.id, 'attributes' : self.attr, 'datasetId' : self.inDataset}
 
-#This class represents a customer from the Customer table
+"""
+This class represents a customer from the Customer table
+"""
 class Customer:
     def __init__(self, dataset_id, customer_id, fn, isActive, status, freq, age, postCode):
         self.dataset_id = dataset_id
@@ -38,7 +44,9 @@ class Customer:
         return {'dataset_id' : self.dataset_id, 'customer_id' : self.customer_id, 'FN' : self.fn , 'acitve' : self.isActive,
                 'status' : self.memberStatus, 'frequency' : self.fashNwsFreq, 'age' : self.age, 'postcode' : self.postCode}
 
-#This class represents an interaction in the Interaction table
+"""
+This class represents an interaction in the Interaction table
+"""
 class Interaction:
     def __init__(self, customer_id, dataset_id, item_id, atribute, time_date, price):
         self.customer_id = customer_id
@@ -53,7 +61,9 @@ class Interaction:
                 'attribute_id' : self.atribute_id,
                  'time_date' : self.time_date, 'price' : self.price}
 
-#This class represents
+"""
+This class represents an entry out of the AB_Test table
+"""
 class AB_Test:
     def __init__(self, test_id, result_id, start_point, end_point, stepsize, topk):
         self.test_id = test_id
@@ -67,6 +77,9 @@ class AB_Test:
         return {'test_id' : self.test_id, 'result_id' : self.result_id, 'start_point' : self.start_point, 'end_point' : self.end_point,
             'stepsize' : self.stepsize, 'topK' : self.topk}
 
+"""
+This class represents an entry out of the Algorithm table in the database.
+"""
 class Algorithm:
     def __init__(self, abtest_id, result_id, name, param_name, value):
         self.abtest_id= abtest_id
@@ -79,6 +92,9 @@ class Algorithm:
         return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'name' : self.name, 'param_name' : self.param_name,
                 'value' : self.value}
 
+"""
+This table represents an entry out of the Result table in the database.
+"""
 class Result:
     def __init__(self, abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param, creator):
         self.abtest_id = abtest_id
@@ -93,6 +109,9 @@ class Result:
         return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'dataset_id' : self.dataset_id, 'item_id' : self.item_id,
                 'attribute_dataset' : self.attribute_dataset, 'algorithm_param' : self.algorithm_param, 'creator' : self.creator}
 
+"""
+This class represents an entry out of the Recommendation table of the database.
+"""
 class Recommendation:
     def __init__(self, abtest_id, result_id, dataset_id, customer_id, item_id, attribute, start_point, end_point):
         self.abtest_id = abtest_id
@@ -112,12 +131,17 @@ class Recommendation:
 #Acces Classes
 ########################################################################################################################
 
-#This class is for accesing the Datascientist table and the Admin table
+"""
+This class is for accesing the Datascientist table and the Admin table
+"""
 class UserDataAcces:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
 
 
+    """
+    This function gets all the datascientists in the database.
+    """
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT d.firstname, d.lastname, d.username, d.email, a.password FROM DataScientist d, Authentication a WHERE d.username = a.username') #Haalt uit de database
@@ -128,6 +152,9 @@ class UserDataAcces:
 
         return user_objects
 
+    """
+    This function gets the datascientists with the given name out of the database
+    """
     def get_user(self, username):
         cursor = self.dbconnect.get_cursor()
         # Zoekt een user op zijn username
@@ -138,6 +165,9 @@ class UserDataAcces:
 
         return DataScientist(row[0], row[1], row[2], row[3], row[4])
 
+    """
+    This function gets datascientists with the given email adress.
+    """
     def get_user_by_email(self, email):
         cursor = self.dbconnect.get_cursor()
         # Zoekt een user op zijn username
@@ -148,6 +178,9 @@ class UserDataAcces:
 
         return DataScientist(row[0], row[1], row[2], row[3], row[4])
 
+    """
+    This function gets the datascientist, wchich is also an admin.
+    """
     def getAdmin(self, adminName):
         cursor = self.dbconnect.get_cursor()
         # Zoekt een user op zijn username
@@ -160,6 +193,9 @@ class UserDataAcces:
 
         return DataScientist(row[0], row[1], row[2], row[3], row[4])
 
+    """
+    This function adds the given user object to the database.
+    """
     def add_user(self, user_obj):
         cursor = self.dbconnect.get_cursor()
         try:
@@ -174,7 +210,9 @@ class UserDataAcces:
             self.dbconnect.rollback()
             raise Exception("Unable to save the user!")
 
-
+    """
+    This fucntion gets the item zith the given item id from the dataset.
+    """
     def getItem(self, itemId):
          cursor = self.dbconnect.get_cursor()
          cursor.execute("SELECT dataset_id, item_id, attribute, val FROM Dataset WHERE %s = item_id", (itemId))
@@ -196,7 +234,9 @@ class UserDataAcces:
     def getItems(self):
         pass
 
-    #This function returns the asked attribute of a given item. If the item exists
+    """
+    This function returns the asked attribute of a given item. If the item exists
+    """
     def getItemAttribute(self, itemId, attr):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT item_id, attribute, val FROM Dataset WHERE %s = item_id AND %s = attr", (itemId, attr))
@@ -208,7 +248,9 @@ class UserDataAcces:
 
         return [row[1], row[2]]
 
-
+    """
+    This function gets the customer with the given customer id out of the database.
+    """
     def getCustomer(self, customer_id):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code\
@@ -220,7 +262,9 @@ class UserDataAcces:
 
         return Customer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
 
-    #This function returns all the id's of the customers in the same dataset.
+    """
+    This function returns all the id's of the customers in the same dataset.
+    """
     def getCustomersIDs(self, dataset_id):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT customer_id\
@@ -232,6 +276,9 @@ class UserDataAcces:
 
         return ids
 
+    """
+    This function gets the interaction out of the dtaabase that corresponds with the given attributes.
+    """
     def getInteraction(self, customer_id, item_id, time_date):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT customer_id, dataset_id, item_id, attribute, t_dat, price \
@@ -244,6 +291,9 @@ class UserDataAcces:
 
         return Interaction(row[0], row[1], row[2], row[3], row[4], row[5])
 
+    """
+    This function gets an AB-test from the database that corresponds with the given database.
+    """
     def getAB_Test(self, abtestId, resultId):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT abtest_id, result_id, start_point, end_point, stepsize, topk \
@@ -255,6 +305,9 @@ class UserDataAcces:
 
         return AB_Test(row[0], row[1], row[2], row[3], row[4], row[5])
 
+    """
+    This function gets the algorithm out of the database that corresponds to the goven attributes.
+    """
     def getAlgorithm(self, abtest_id, result_id, param_name):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT abtest_id, result_id, name, param_name, value \
@@ -267,7 +320,9 @@ class UserDataAcces:
 
         return Algorithm(row[0], row[1], row[2], row[3], row[4])
 
-
+    """
+    This function gets the result from the database that has the same result id.
+    """
     def getResult(self, result_id):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param, creator \
