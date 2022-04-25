@@ -115,14 +115,15 @@ def datasets():
             p_f = request.files['purchases_file']
             c_f = request.files['customers_file']
 
-            # data = []
-            # with open(a_f, 'rb') as file:
-            #     csvfile = csv.reader(file)
-            #     for row in csvfile:
-            #         data.append(row)
-            # print(data)
+            data = []
+            with open(a_f, 'rb') as file:
+                csvfile = csv.reader(file)
+                for row in csvfile:
+                    print(row[0])
+                    data.append(row)
+#             print(data)
 
-            # df = pd.read_csv(request.files.get('file'))
+            df = pd.read_csv(request.files.get('file'))
 
             """
             cursor = user_data_access.dbconnect.get_cursor()
