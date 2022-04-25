@@ -130,17 +130,17 @@ def datasets():
             # Interaction table
 
             cursor = user_data_access.dbconnect.get_cursor()
-            data = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
-            amountRows = len(data.index)
-            amountColumns = len(data.columns)
-            dataset_id = 0
-
-            for row in range(amountRows):
-                for column in range(amountColumns):
-                    print(data.iloc[row, column])
-                    cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
-                                   (int(dataset_id), int(data.iloc[row, 0]), str(data.iloc[0, column]),
-                                    str(data.iloc[row, column])))
+#             data = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
+#             amountRows = len(data.index)
+#             amountColumns = len(data.columns)
+#             dataset_id = 0
+#
+#             for row in range(amountRows):
+#                 for column in range(amountColumns):
+#                     print(data.iloc[row, column])
+#                     cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
+#                                    (int(dataset_id), int(data.iloc[row, 0]), str(data.iloc[0, column]),
+#                                     str(data.iloc[row, column])))
 
         else:
             flash("You need admin privileges to upload a dataset", category='error')
