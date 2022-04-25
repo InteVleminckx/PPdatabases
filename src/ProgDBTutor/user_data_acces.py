@@ -53,7 +53,7 @@ class Interaction:
                 'attribute_id' : self.atribute_id,
                  'time_date' : self.time_date, 'price' : self.price}
 
-
+#This class represents
 class AB_Test:
     def __init__(self, test_id, result_id, start_point, end_point, stepsize, topk):
         self.test_id = test_id
@@ -94,17 +94,20 @@ class Result:
                 'attribute_dataset' : self.attribute_dataset, 'algorithm_param' : self.algorithm_param, 'creator' : self.creator}
 
 class Recommendation:
-    def __init__(self, abtest_id, result_id, dataset_id, customer_id, item_id, attribute):
+    def __init__(self, abtest_id, result_id, dataset_id, customer_id, item_id, attribute, start_point, end_point):
         self.abtest_id = abtest_id
         self.result_id = result_id
         self.dataset_id = dataset_id
         self.customer_id = customer_id
         self.item_id = item_id
         self.attribute = attribute
+        self.start_point = start_point
+        self.end_point = end_point
 
     def to_dct(self):
         return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'dataset_id' : self.dataset_id,
                 'customer_id' : self.customer_id, 'item_id' : self.item_id, 'attribute' : self.attribute}
+
 
 #Acces Classes
 ########################################################################################################################
@@ -113,18 +116,7 @@ class Recommendation:
 class UserDataAcces:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
-        """ cursor = self.dbconnect.get_cursor()
 
-        df = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
-        amountRows = len(df.index)
-        amountColumns = len(df.columns)
-        dataset_id = 0
-
-        for row in range(amountRows):
-            for column in range(amountColumns):
-                print(df.iloc[row, column])
-                cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
-                (int(dataset_id), int(df.iloc[row, 0]), str(df.iloc[0, column]), str(df.iloc[row, column]))) """
 
     def get_users(self):
         cursor = self.dbconnect.get_cursor()
@@ -182,31 +174,10 @@ class UserDataAcces:
             self.dbconnect.rollback()
             raise Exception("Unable to save the user!")
 
-    def __init__(self, dbconnect):
-            self.dbconnect = dbconnect
-            """ self.datasetId = dataset_id
-            cursor = self.dbconnect.get_cursor()
-
-            df = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
-            amountRows = len(df.index)
-            amountColumns = len(df.columns)
-
-            for row in range(amountRows):
-                for column in range(amountColumns):
-                    print(df.iloc[row, column])
-                    cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
-                    (int(self.dataset_id), int(df.iloc[row, 0]), str(df.iloc[0, column]), str(df.iloc[row, column])))
-
-            dataset_id += 1 """
-
-
 
     def getItem(self, itemId):
          cursor = self.dbconnect.get_cursor()
          cursor.execute("SELECT dataset_id, item_id, attribute, val FROM Dataset WHERE %s = item_id", (itemId))
-
-         #TODO maybe check if cursor is empty and raise an error if so
-
 
          attr = {}
          notEmpty = False
@@ -249,6 +220,18 @@ class UserDataAcces:
 
         return Customer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
 
+    #This function returns all the id's of the customers in the same dataset.
+    def getCustomersIDs(self, dataset_id):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT customer_id\
+                        FROM Customer WHERE dataset_id = %s", (dataset_id))
+
+        ids = []
+        for row in cursor:
+            ids.append(row[0])
+
+        return ids
+
     def getInteraction(self, customer_id, item_id, time_date):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT customer_id, dataset_id, item_id, attribute, t_dat, price \
@@ -287,7 +270,7 @@ class UserDataAcces:
 
     def getResult(self, result_id):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param \
+        cursor.execute("SELECT abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param, creator \
                                 FROM Result WHERE result_id = %s",
                                  (result_id))
 
@@ -297,9 +280,21 @@ class UserDataAcces:
 
         return Result(row[0], row[1], row[2], row[3], row[4],  row[5], row[6])
 
+    def addResult(self, abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param, creator):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO Result( abtest_id, result_id, dataset_id, item_id, attribute_dataset, '
+                           'algorithm_param, creator) VALUES(%s,%s,%s,%s,%s,%s,%s)',
+                           (abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param, creator))
+
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception("Unable to save Result!")
+
     def getRecommendation(self,result_id, customer_id):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param \
+        cursor.execute("SELECT abtest_id, result_id, dataset_id, customer_id, item_id, attribute, start_point, end_point \
                                 FROM Recommendation WHERE result_id = %s AND customer_id = %s",
                                   (result_id, customer_id))
 
@@ -307,9 +302,22 @@ class UserDataAcces:
         if not row:
             return None
 
-        return Recommendation(row[0], row[1], row[2], row[3], row[4],  row[5])
+        return Recommendation(row[0], row[1], row[2], row[3], row[4],  row[5], row[6], row[7])
 
-    def getPopularity(self, dataset_id, begin_date, end_date, top_k):
+    def addRecommendation(self, abtest_id, result_id, dataset_id, customer_id, item_id, attribute, start_point, end_point):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute(
+                'INSERT INTO Recommendation( abtest_id, result_id, dataset_id, customer_id, item_id, attribute, '
+                'start_point, end_point) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)',
+                (abtest_id, result_id, dataset_id, customer_id, item_id, attribute, start_point, end_point))
+
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception("Unable to save Recommendation!")
+
+    def getPopularityItem(self, dataset_id, begin_date, end_date, top_k):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT item_id, COUNT(item_id) \
                        FROM Interaction action \
@@ -321,4 +329,4 @@ class UserDataAcces:
         recommendations = cursor.fetchall()
         if len(recommendations) == 0:
             return None
-        return recommendations
+        return self.getItem(recommendations)
