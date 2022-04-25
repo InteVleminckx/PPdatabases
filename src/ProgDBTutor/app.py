@@ -123,13 +123,12 @@ def services():
 def datasets():
     if request.method == 'POST':
         if session['username'] == 'admin': # checken of de user de admin is
-
             af = request.files['articles_file']
             uploaded_file = secure_filename(af.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
             af.save(filepath)
             data = []
-            with open(filepath, 'r') as file:
+            with open(filepath, 'r', encoding='utf-8-sig') as file:
                csvfile = csv.reader(file)
                for row in csvfile:
                    data.append(row)
