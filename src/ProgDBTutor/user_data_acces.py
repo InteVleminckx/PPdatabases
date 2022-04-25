@@ -248,6 +248,36 @@ class UserDataAcces:
 
         return [row[1], row[2]]
 
+
+    def addCustomer(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
+        cursor = self.dbconnect.get_cursor()
+
+        FN = True if (FN != '') else "NULL"
+        Active = True if (Active != '') else "NULL"
+        club_member_status = club_member_status if (club_member_status != '') else "NULL"
+        fashion_news_frequency = fashion_news_frequency if (fashion_news_frequency != '') else "NULL"
+        postal_code = postal_code if (postal_code != '') else "NULL"
+        age = age[:-2] if (age != '') else "NULL"
+
+        try:
+            cursor.execute('INSERT INTO Customer( dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code) '
+                           'VALUES('
+                           'dataset_id,'
+                           'customer_id,'
+                           '(%s if FN != "NULL" else NULL),'
+                           '(%s if FN != "NULL" else NULL),'
+                           '(%s if Active != "NULL" else NULL),'
+                           '(%s if club_member_status != "NULL" else NULL),'
+                           '(%s if fashion_news_frequency != "NULL" else NULL),'
+                           '(%s if age != "NULL" else NULL)'
+                           '(%s if postal_code != "NULL" else NULL)'
+                           ,(dataset_id,int(customer_id)))
+            self.dbconnect.commit()
+
+        except:
+            self.dbconnect.rollback()
+            # raise Exception("Unable to save Customer!")
+
     """
     This function gets the customer with the given customer id out of the database.
     """

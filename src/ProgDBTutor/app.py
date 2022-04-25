@@ -1,5 +1,7 @@
 # TUTORIAL Len Feremans, Sandy Moens and Joey De Pauw
 # see tutor https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
+import time
+
 from flask import Flask, request, session, jsonify, flash, redirect, url_for
 from flask.templating import render_template
 from flask_login import login_user, login_required, logout_user, current_user, UserMixin
@@ -123,17 +125,38 @@ def services():
 def datasets():
     if request.method == 'POST':
         if session['username'] == 'admin': # checken of de user de admin is
-            af = request.files['articles_file']
-            uploaded_file = secure_filename(af.filename)
+            # af = request.files['articles_file']
+            # uploaded_file = secure_filename(af.filename)
+            # filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+            # af.save(filepath)
+            # data = []
+            # with open(filepath, 'r', encoding='utf-8-sig') as file:
+            #    csvfile = csv.reader(file)
+            #    for row in csvfile:
+            #        data.append(row)
+            # print(data)
+
+
+            start = time.process_time()
+            cf = request.files['customers_file']
+            uploaded_file = secure_filename(cf.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-            af.save(filepath)
+            cf.save(filepath)
             data = []
             with open(filepath, 'r', encoding='utf-8-sig') as file:
-               csvfile = csv.reader(file)
-               for row in csvfile:
-                   data.append(row)
-            print(data)
+                csvfile = csv.reader(file)
+                dataset_id = 0
+                i = 0
+                for customer in csvfile:
+                    if i == 0:
+                       i += 1
+                       continue
+                    else:
+                        user_data_access.addCustomer(dataset_id, *customer)
 
+            print(start - time.process_time())
+
+            # print(data)
             # Customer table
 
             # Interaction table
@@ -163,18 +186,18 @@ def visualizations():
     return render_template('visualizations.html', app_data=app_data)
 
 #----------------- User_DB -----------------#
-@app.route("/login", methods=['GET'])
-def login():
-
-    # user_objects = user_data_access.get_users()
-    return render_template('login.html', app_data=app_data)
-
-
-@app.route("/login/<string:email>", methods=['GET'])
-def get_user(username):
-    user_object = user_data_access.get_user(username)
-
-    return jsonify([user_object.to_dct()])
+# @app.route("/login", methods=['GET'])
+# def login():
+#
+#     # user_objects = user_data_access.get_users()
+#     return render_template('login.html', app_data=app_data)
+#
+#
+# @app.route("/login/<string:email>", methods=['GET'])
+# def get_user(username):
+#     user_object = user_data_access.get_user(username)
+#
+#     return jsonify([user_object.to_dct()])
 
 
 @app.route("/register", methods=['POST'])
@@ -206,7 +229,7 @@ def add_user():
 
     return render_template('login.html', app_data=app_data)
 
-@app.route("/login", methods=['POST'])
+@app.route("/login", methods=['GET', 'POST'])
 def login_user():
     user_username = request.form.get('username')
     user_password = request.form.get('password')

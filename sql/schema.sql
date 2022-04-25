@@ -125,9 +125,9 @@ INSERT INTO DataScientist(username, email, firstname, lastname) VALUES ('jonasdm
 INSERT INTO Interaction(customer_id, dataset_id, item_id, attribute, t_dat, price) VALUES (10, 0, 0, 'size', current_timestamp , 20) ;
 INSERT INTO ABTest(abtest_id, result_id, start_point, end_point, stepsize, topk) VALUES (100, 0, current_timestamp , current_timestamp , 30, 30) ;
 INSERT INTO Algorithm(abtest_id, result_id, name, param_name, value) VALUES (100, 0, 'Recency', 'window_size', 30) ;
-INSERT INTO Result(abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param, creator) VALUES (100, 0, 0, 0, 'color', 'window_size', 'jonasdm') ;
-INSERT INTO Recommendation(abtest_id, result_id, dataset_id, customer_id, item_id, attribute) VALUES (100, 0, 0, 10, 0, 'size') ;
+-- INSERT INTO Result(abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param, creator) VALUES (100, 0, 0, 0, 'color', 'window_size', 'jonasdm') ;
+-- INSERT INTO Recommendation(abtest_id, result_id, dataset_id, customer_id, item_id, attribute) VALUES (100, 0, 0, 10, 0, 'size') ;
 
 -- Adding Admin account
-INSERT INTO DataScientist(username, email, firstname, lastname) VALUES ('admin', 'admin@hotmail.com', 'admin', 'the admin');
-INSERT INTO Authentication(username, password) VALUES ('admin', 'nimda');
+-- INSERT INTO DataScientist(username, email, firstname, lastname) VALUES ('admin', 'admin@hotmail.com', 'admin', 'the admin');
+-- INSERT INTO Authentication(username, password) VALUES ('admin', 'nimda');
