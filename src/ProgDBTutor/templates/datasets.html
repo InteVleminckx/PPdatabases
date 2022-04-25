@@ -30,6 +30,32 @@
         </div>
     </nav>
 
+<div class="par_form">
+    <div class="container" style="border: 2px solid black; width: 600px; display: block; margin-right: auto; margin-left: auto;">
+        <form method="POST" action="" enctype="multipart/form-data">
+
+            <div class="row">
+            <div class="col-25"><label for="name">Dataset name</label></div>
+            <div class="col-75"><input type="text" id="ds_name" name="ds_name" placeholder="Dataset name" required></div>
+            </div>
+            <div class="row">
+            <div class=""><input type="file" id="articles_file" name="articles_file" placeholder="articles" accept=".csv" required></div>
+            </div>
+            <div class="row">
+            <div class=""><input type="file" id="purchases_file" name="purchases_file" placeholder="purchases" accept=".csv" ></div>
+            </div>
+            <div class="row">
+            <div class=""><input type="file" id="customers_file" name="customers_file" placeholder="customers" accept=".csv" ></div>
+            </div>
+            <div align="center" class="___services__btn" style="margin-top: 20px;">
+                <button type="submit">
+                    Add dataset
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Dataset Section-->
 
 <div class="dataset" id="dataset">
@@ -39,7 +65,6 @@
         <div class="dataset_title" >Datasets</div>
         <div class="dataset__btn">
             <button>Remove Dataset</button>
-            <button>Add Dataset</button>
         </div>
         <div class="dataset__header">
             <div class="dataset__item" tabindex="1">
