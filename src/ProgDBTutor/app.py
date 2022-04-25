@@ -116,7 +116,7 @@ def datasets():
             #c_f = request.files['customers_file']
 
             # Dataset table
-            data = pd.read_csv(request.files['articles_file'])
+            #data = pd.read_csv(request.files['articles_file'])
             #with open(a_f, 'rb') as file:
             #    csvfile = csv.reader(file)
             #    for row in csvfile:
@@ -129,20 +129,19 @@ def datasets():
 
             # Interaction table
 
-            """
             cursor = user_data_access.dbconnect.get_cursor()
-            df = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
-            amountRows = len(df.index)
-            amountColumns = len(df.columns)
+            data = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
+            amountRows = len(data.index)
+            amountColumns = len(data.columns)
             dataset_id = 0
 
             for row in range(amountRows):
                 for column in range(amountColumns):
-                    print(df.iloc[row, column])
+                    print(data.iloc[row, column])
                     cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
-                                   (int(dataset_id), int(df.iloc[row, 0]), str(df.iloc[0, column]),
-                                    str(df.iloc[row, column])))
-            """
+                                   (int(dataset_id), int(data.iloc[row, 0]), str(data.iloc[0, column]),
+                                    str(data.iloc[row, column])))
+
         else:
             flash("You need admin privileges to upload a dataset", category='error')
     return render_template('datasets.html', app_data=app_data)
