@@ -111,23 +111,19 @@ def services():
 def datasets():
     if request.method == 'POST':
         if session['username'] == 'admin': # checken of de user de admin is
-            a_f = request.files['articles.csv']
-            p_f = request.files['purchases_file']
-            c_f = request.files['customers_file']
+            #a_f = request.files['articles_file']
+            #p_f = request.files['purchases_file']
+            #c_f = request.files['customers_file']
 
             # Dataset table
-            articles_file_name = secure_filename(a_f.filename)
-            data = pd.read_csv(articles_file_name)
-            amountRows = len(data.index)
-            amountColumns = len(data.columns)
-            dataset_id = 0
-            for row in range(amountRows):
-                for column in range(amountColumns):
-                    print(data.iloc[row, column])
-                    cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
-                                   (int(dataset_id), int(data.iloc[row, 0]), str(data.iloc[0, column]),
-                                    str(data.iloc[row, column])))
-
+            data = pd.read_csv(request.files['articles_file'])
+            #with open(a_f, 'rb') as file:
+            #    csvfile = csv.reader(file)
+            #    for row in csvfile:
+            #        print(row[0])
+            #        data.append(row)
+            #print(data)
+            #             print(data)
 
             # Customer table
 
