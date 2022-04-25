@@ -319,7 +319,7 @@ class UserDataAcces:
 
     def getPopularityItem(self, dataset_id, begin_date, end_date, top_k):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT item_id, COUNT(item_id) \
+        cursor.execute("SELECT action.item_id, COUNT(action.item_id) \
                        FROM Interaction action \
                        WHERE action.t_dat BETWEEN %s AND %s AND action.dataset_id = %s \
                        GROUP BY item_id \
@@ -329,4 +329,4 @@ class UserDataAcces:
         recommendations = cursor.fetchall()
         if len(recommendations) == 0:
             return None
-        return self.getItem(recommendations)
+        return recommendations

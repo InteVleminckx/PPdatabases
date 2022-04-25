@@ -12,6 +12,8 @@ import datetime
 
 #TODO: Deze imports mogen later weg, we kunnen de import van app.py hiervoor dan gebruiken
 # Had deze staan omdat ik dan enkel deze file kon runnen zonder afhankelijk te zijn van de app.py
+import time as tm
+
 from config import config_data
 from db_connection import DBConnection
 from user_data_acces import UserDataAcces
@@ -20,19 +22,28 @@ user_data_access = UserDataAcces(connection)
 
 class Popularity:
 
-    def __init__(self, dataset_id, startPoint, endPoint, stepsize, topk, window, retrainInterval):
+    def __init__(self, dataset_id, abtest_id, result_id, startPoint, endPoint, stepsize, topk, window, retrainInterval, algorithm_param,username):
         self.startPoint = datetime.date(*self.getdate(startPoint))
-        self.endPoint = enddate = datetime.date(*self.getdate(endPoint))
+        self.endPoint = datetime.date(*self.getdate(endPoint))
         self.stepsize = datetime.timedelta(days=stepsize)
+        self.intStep = stepsize
         self.topk = topk
         self.window = datetime.timedelta(days=window)
         self.retrainInterval = datetime.timedelta(days=retrainInterval)
         self.currentDate = self.startPoint
         self.recommendations = dict()
         self.dataset_id = dataset_id
+        self.abtest_id = abtest_id
+        self.result_id = result_id
+        self.algorithm_param = algorithm_param
+        self.user = username
+        self.simulationTime = None
 
     def simulate(self):
         nextRetrainInterval = self.currentDate
+
+        start_time = tm.process_time()
+
         while self.currentDate <= self.endPoint:
             if self.currentDate >= nextRetrainInterval:
                 self.train()
@@ -40,23 +51,30 @@ class Popularity:
 
             self.currentDate += self.stepsize
 
+            if self.simulationTime is None:
+                oneStep = tm.process_time() - start_time
+                oneStep /= self.intStep
+                days = (self.endPoint - self.startPoint).days
+                self.simulationTime = float("{0:.4f}".format(oneStep * days))
+                print("Excpected calculation time = " + str(self.simulationTime) + " seconds.")
+
     def recommend(self):
         self.simulate()
 
     def train(self):
         trainWindow = (str(self.currentDate-self.window), str(self.currentDate))
-        recommendations = user_data_access.getPopularity(self.dataset_id, *trainWindow, self.topk)
+        recommendations = user_data_access.getPopularityItem(self.dataset_id, *trainWindow, self.topk)
         if recommendations is not None:
-            list_ = []
-            for item_id, number_purchases in recommendations:
-                list_.append(item_id)
+            for item_id, count in recommendations:
+                item = user_data_access.getItem(str(item_id))
+                attribute = list(item.attr.keys())[0]
+                user_data_access.addResult(self.abtest_id, self.result_id, self.dataset_id, str(item_id), attribute,
+                                           self.algorithm_param, self.user)
 
-        #TODO: niet vergeten dat dit moet worden toegevoegd worden aan de recommendations van een user
-            self.recommendations[trainWindow] = list_
-
-
-        #TODO: Van wat ik er van denk is dat we een volledige AB test moeten opslagen per user
-        # Maar ook dat telkens elke keer een topk wordt berekent binnen de windowsize deze opgeslagen moet worden per use
+                customers = user_data_access.getCustomersIDs(str(self.dataset_id))
+                for customer in customers:
+                    user_data_access.addRecommendation(self.abtest_id, self.result_id, self.dataset_id, customer, str(item_id),
+                                                       attribute, *trainWindow)
 
     def getdate(self, date):
 
@@ -83,10 +101,9 @@ class Popularity:
 
         return int(year), int(month), int(day)
 
-def main():
-
-    algo = Popularity(0, "2022-03-01", "2022-05-01", 1, 5, 14, 7)
-    algo.recommend()
-    print("")
-
-main()
+# def main():
+#
+#     algo = Popularity(0,100, 0, "2022-03-01", "2022-05-01", 1, 5, 14, 7, "window_size","jonasdm")
+#     algo.recommend()
+#
+# main()
