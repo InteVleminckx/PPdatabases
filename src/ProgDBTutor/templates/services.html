@@ -155,11 +155,13 @@
 
             <div class="_dataset__card">
                 <div class="_dataset__scroll">
-{#                    {% for i in range(len(algorithms)) %}#}
-{#                        <div class="_dataset__item" tabindex={{ i }}>#}
-{#                            <ul><li>{{ algorithms[i].id }}</li><li>{{ algorithms[i].name }}</li></ul>#}
-{#                        </div>#}
-{#                    {% endfor %}#}
+                    {% set count = [] %}
+                    {% for key, value in algo_dict.items() %}
+                        <div class="_dataset__item" tabindex={{ count|length }}>
+                            <ul><li>{{ key }}</li><li>{{ value }}</li></ul>
+                        </div>
+                        {% set __ = count.append(1) %}
+                    {% endfor %}
 {#                    <div class="_dataset__item" tabindex="1">#}
 {#                        <ul><li>1</li><li>Item 1</li></ul>#}
 {#                    </div>#}

@@ -26,6 +26,7 @@ UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'.csv'}
 
 algo_list = list()
+algo_dict = dict()
 algo_id = 1
 
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
@@ -80,43 +81,44 @@ def contact():
 @app.route("/services", methods=['GET', 'POST'])
 # @login_required
 def services():
+    global algo_id
     if 'loggedin' in session:
         if request.method == 'POST':
             dataset = request.form.get('datasetSelection')
-            print(dataset)
             algo = request.form.get('algoSelection')
-            print(algo)
+            # general parameters
             start = request.form.get('startingpoint')
-            print(start)
             end = request.form.get('endpoint')
-            print(end)
             stepsize = request.form.get('stepsize')
-            print(stepsize)
             topk = request.form.get('topk')
-            print(topk)
 
             if algo == "popularity":
                 windowsize = request.form.get('windowsize')
                 retraininterval = request.form.get('retraininterval1')
-                global algo_id
+
                 algo_list.append((algo_id, "popularity", "windowsize", windowsize))
-                algo_id+=1
                 algo_list.append((algo_id, "popularity", "retraininterval", retraininterval))
+                algo_dict[algo_id] = "popularity"
                 algo_id += 1
             elif algo == "recency":
                 retraininterval = request.form.get('retraininterval2')
-
+                algo_list.append((algo_id, "recency", "retraininterval", retraininterval))
+                algo_dict[algo_id] = "recency"
+                algo_id += 1
             elif algo == "itemknn":
                 k = request.form.get('k')
                 window = request.form.get('window')
                 normalize = request.form.get('normalize')
                 retraininterval = request.form.get('retraininterval3')
-                print(k)
-                print(window)
-                print(normalize)
-                print(retraininterval)
+                algo_list.append((algo_id, "itemknn", "k", k))
+                algo_list.append((algo_id, "itemknn", "window", window))
+                algo_list.append((algo_id, "itemknn", "normalize", normalize))
+                algo_list.append((algo_id, "itemknn", "retraininterval", retraininterval))
+                algo_dict[algo_id] = "itemknn"
+                algo_id += 1
+
         # add algorithm to database
-        return render_template('services.html', app_data=app_data)
+        return render_template('services.html', app_data=app_data, algo_dict=algo_dict)
     return redirect(url_for('login'))
 
 
