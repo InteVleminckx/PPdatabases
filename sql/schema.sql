@@ -106,8 +106,11 @@ CREATE TABLE Recommendation (
     customer_id INT NOT NULL,
     item_id INT NOT NULL,
     attribute TEXT NOT NULL,
+    -- Params to keep the specific time period in which the topk is calculated
+    start_point INT NOT NULL,
+    end_point INT NOT NULL,
     -- Primary key ==> combination of abtest, result, customer and item is unique
-    PRIMARY KEY (abtest_id, result_id, customer_id, dataset_id, item_id),
+    PRIMARY KEY (abtest_id, result_id, customer_id, dataset_id, item_id, start_point, end_point),
     -- Reference to an item/article in the Dataset table
     FOREIGN KEY (dataset_id, item_id, attribute) REFERENCES Dataset(dataset_id, item_id, attribute) ON UPDATE CASCADE ON DELETE CASCADE,
     -- Reference to a customer from Customers, need 2 attributes for the primary key of a customer
