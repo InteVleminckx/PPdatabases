@@ -501,7 +501,7 @@ class UserDataAcces:
 
     def getRecencyItem(self, dataset_id, interval_start, interval_end, top_k):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT item_id \
+        cursor.execute("SELECT item_id\
                        FROM Interaction \
                        WHERE t_dat BETWEEN %s AND %s AND dataset_id = %s \
                        ORDER BY t_dat DESC LIMIT %s;", (interval_start, interval_end, dataset_id, top_k))
