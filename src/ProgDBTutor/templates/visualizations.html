@@ -12,6 +12,7 @@
 
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <body>
@@ -87,9 +88,12 @@
 
     </div>
     <div class="card">
-
+        <div>
+            <canvas id="ABTestChart" width="900" height="400"></canvas>
+        </div>
     </div>
 </div>
+
 
 </div>
 
@@ -99,6 +103,36 @@
 function openNav() {
   document.getElementById("mySidenav").style.width = "300px";
 }
+
+const labels = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+];
+
+const data = {
+    labels: labels,
+    datasets: [{
+        label: 'My First dataset',
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        data: [0, 10, 5, 2, 20, 30, 45],
+    }]
+};
+
+const config = {
+    type: 'line',
+    data: data,
+    options: {}
+};
+
+const myChart = new Chart(
+    document.getElementById('ABTestChart'),
+    config
+  );
 
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";

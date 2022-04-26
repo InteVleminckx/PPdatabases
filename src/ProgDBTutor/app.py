@@ -232,7 +232,6 @@ def datasets():
 @app.route("/visualizations")
 # @login_required
 def visualizations():
-
     return render_template('visualizations.html', app_data=app_data)
 
 #----------------- User_DB -----------------#

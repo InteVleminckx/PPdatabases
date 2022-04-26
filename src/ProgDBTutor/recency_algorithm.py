@@ -77,16 +77,11 @@ class Recency:
         recommendations = user_data_access.getRecencyItem(self.datasetID, start, end, self.top_k)
         if recommendations is not None:
             for item_id in recommendations:
-                item = user_data_access.getItem(str(item_id))
-                attribute = list(item.attr.keys())[0]
-                user_data_access.addResult(self.ABTestID, self.resultID, self.datasetID, str(item_id), attribute,
-                                           self.parameters, self.username)
-
-                customers = user_data_access.getCustomersIDs(str(self.datasetID))
-
-                for customer in customers:
-                    user_data_access.addRecommendation(self.ABTestID, self.resultID, self.datasetID, customer,
-                                                       str(item_id), attribute, start, end)
+                item = user_data_access.getItem(str(item_id), self.datasetID)
+                attribute_dataset = list(item.attributes.keys())[0]
+                attribute_costumer = list(user_data_access.getCustomer(-1, self.datasetID).attributes)[0]
+                user_data_access.addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id),
+                                                       attribute_dataset, attribute_costumer, start, end)
 
 
 # TESTCODE

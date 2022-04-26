@@ -548,6 +548,11 @@ class UserDataAcces:
         cursor = self.dbconnect.get_cursor()
         abtest = self.getAB_Test(self.getMaxABTestID())
 
+    def createGraph(self):
+        cursor = self.dbconnect.get_cursor()
+        abtest_id = 0
+
+
         f = open("chart.js", "w")
         f.write('<script>\nconst labels = [\n')
         f.close()
