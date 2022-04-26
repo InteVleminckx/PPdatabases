@@ -309,3 +309,81 @@ input[type=submit]:hover {
   }
 }
 
+/*table {*/
+/*    height: 300px;*/
+/*    width: 800px;*/
+/*    border-collapse: collapse;*/
+/*    !*white-space: nowrap;*!*/
+/*    !*text-align: center;*!*/
+/*}*/
+
+/*table, tr td {*/
+/*    border: 1px solid black;*/
+/*    !*height: 50px;*!*/
+/*}*/
+
+/*tbody {*/
+/*    height:260px;*/
+/*    display: block;*/
+/*    overflow-y: scroll;*/
+/*    overflow-x: hidden;*/
+/*}*/
+
+/*thead {*/
+/*    width: calc( 100% - 1em)*/
+/*}*/
+
+/*thead, tbody tr {*/
+/*    display: table;*/
+/*    width: 100%;*/
+/*    table-layout: fixed;*/
+/*}*/
+
+.scroll-table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table ,tr td{
+    border:1px solid black;
+    height: 40px;
+}
+tbody {
+    display:block;
+    height:300px;
+    overflow-y:scroll;
+}
+thead, tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;
+}
+thead {
+    width: calc( 100% - 1.05em );
+}
+table {
+    width:800px;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+td:nth-child {
+  border-right: 0;
+  border-left: 0;
+}
+td:first-child {
+  border-right: 0;
+  border-left: 1px;
+}
+td:last-child {
+  border-right: 1px;
+  border-left: 0;
+}
+
+table tbody tr.highlight td {
+    background-color: #1e7e34;
+}
+
+thead tr td {
+    font-weight: bold;
+}
