@@ -51,44 +51,12 @@
                 </tr>
             </thead>
             <tbody>
-{#                {% for key, value in algo_dict.items() %}#}
-{#                    <tr onclick="window.location.href='{{ url_for('dataset', rowData=key) }}';">#}
-{#                        <td>{{ key }}</td>#}
-{#                        <td>{{ value }}</td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-                <tr>
-                    <td>dataset nr1</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr2</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
+                {% for item in testList %}
+                    <tr onclick="window.location.href='{{ url_for('dataset', rowData=key) }}';">
+                        <td>A/B-test</td>
+                        <td>item</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
 {#    </div>#}
