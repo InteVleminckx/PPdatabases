@@ -377,7 +377,7 @@ class UserDataAcces:
             self.dbconnect.rollback()
             raise Exception("Unable to save Result!")
 
-    def getRecommendation(self,result_id, customer_id):
+    def getRecommendation(self, result_id, customer_id):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT abtest_id, result_id, dataset_id, customer_id, item_id, attribute, start_point, end_point \
                                 FROM Recommendation WHERE result_id = %s AND customer_id = %s",
@@ -411,6 +411,17 @@ class UserDataAcces:
                        ORDER BY COUNT(item_id) DESC \
                        LIMIT %s;", (begin_date, end_date, dataset_id, top_k)
                        )
+        recommendations = cursor.fetchall()
+        if len(recommendations) == 0:
+            return None
+        return recommendations
+
+    def getRecencyItem(self, dataset_id, interval_start, interval_end, top_k):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT item_id \
+                       FROM Interaction \
+                       WHERE t_dat BETWEEN %s AND %s AND dataset_id = %s \
+                       ORDER BY t_dat DESC LIMIT %s", (interval_start, interval_end, dataset_id, top_k))
         recommendations = cursor.fetchall()
         if len(recommendations) == 0:
             return None
