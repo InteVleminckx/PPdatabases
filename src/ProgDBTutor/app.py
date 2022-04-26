@@ -161,6 +161,10 @@ def services():
                     user_data_access.addResult(abtest_id, i, dataset_id, item_id, attribute_dataset, algorithm_param, creator)
 
                     i += 1
+
+                # Remove algorithms from list and dicts
+                algo_list = []
+                algo_dict = {}
                 user_data_access.datasetId += 1
                 user_data_access.dbconnect.commit()
 
