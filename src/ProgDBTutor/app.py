@@ -28,7 +28,6 @@ ALLOWED_EXTENSIONS = {'.csv'}
 algo_list = list()
 algo_dict = dict()
 algo_id = 1
-abtest_id = 1
 
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
@@ -87,7 +86,6 @@ def start():
 # @login_required
 def services():
     global algo_id
-    global algo_list
     if 'loggedin' in session:
         if request.method == 'POST':
             s = request.form.get('submit_button')
@@ -98,13 +96,16 @@ def services():
                 if algo == "popularity":
                     windowsize = request.form.get('windowsize')
                     retraininterval = request.form.get('retraininterval1')
+
                     algo_list.append((algo_id, "popularity", "windowsize", windowsize))
                     algo_list.append((algo_id, "popularity", "retraininterval", retraininterval))
                     algo_dict[algo_id] = "popularity"
+                    algo_id += 1
                 elif algo == "recency":
                     retraininterval = request.form.get('retraininterval2')
                     algo_list.append((algo_id, "recency", "retraininterval", retraininterval))
                     algo_dict[algo_id] = "recency"
+                    algo_id += 1
                 elif algo == "itemknn":
                     k = request.form.get('k')
                     window = request.form.get('window')
@@ -115,40 +116,21 @@ def services():
                     algo_list.append((algo_id, "itemknn", "normalize", normalize))
                     algo_list.append((algo_id, "itemknn", "retraininterval", retraininterval))
                     algo_dict[algo_id] = "itemknn"
-                algo_id += 1
+                    algo_id += 1
 
             elif s == 'abtestSubmit':
 
                 dataset = request.form.get('datasetSelection')
 
-                # General parameters for ABtest
+                # general parameters
                 start = request.form.get('startingpoint')
                 end = request.form.get('endpoint')
                 stepsize = request.form.get('stepsize')
                 topk = request.form.get('topk')
-
-                cursor = user_data_access.dbconnect.get_cursor()
-                for i in range(1, algo_id):
-                    cursor.execute('INSERT INTO ABTest(abtest_id, result_id, start_point, end_point, stepsize, topk) VALUES (%s, %s, %s, %s, %s, %s)',
-                                   (abtest_id, i, start, end, stepsize, topk))
-
-                user_data_access.dbconnect.commit()
+                print(dataset)
                 return redirect(url_for('visualizations'))
 
-            # Remove the last add algorithm
-            elif s == "remove":
-                algo_id -= 1
-                if algo_id == 0:
-                    algo_id = 1
-                else:
-                    if algo_dict[algo_id] == 'popularity':
-                        algo_list = algo_list[:-2]
-                    elif algo_dict[algo_id] == 'recency':
-                        algo_list = algo_list[:-1]
-                    elif algo_dict[algo_id] == 'itemknn':
-                        algo_list = algo_list[:-4]
-                    del algo_dict[algo_id]
-
+        # add algorithm to database
         return render_template('services.html', app_data=app_data, algo_dict=algo_dict)
     return redirect(url_for('login'))
 
