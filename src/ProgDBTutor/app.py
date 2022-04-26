@@ -41,7 +41,7 @@ app_data['app_name'] = config_data['app_name']
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 user_data_access = UserDataAcces(connection)
 
-algo_id = user_data_access.getMaxAlgorithmId()+1
+algo_id = 1
 abtest_id = user_data_access.getMaxABTestID()+1
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -169,7 +169,7 @@ def services():
                 user_data_access.dbconnect.commit()
 
                 # Call function to start a/b tests
-                abtest.startAB(abtest_id, user_data_access.datasetId)
+                abtest.startAB(abtest_id, user_data_access.datasetId-1)
 
                 abtest_id += 1
 
