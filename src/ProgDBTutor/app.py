@@ -41,7 +41,7 @@ app_data['app_name'] = config_data['app_name']
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 user_data_access = UserDataAcces(connection)
 
-algo_id = user_data_access.getMaxAlgorithmId()+1
+algo_id = 1
 abtest_id = user_data_access.getMaxABTestID()+1
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -233,16 +233,18 @@ def datasets():
 # @login_required
 def visualizations():
     labels, legend = [], []
-    current_abtest_id = 0
+    current_abtest_id = 1
     cursor = user_data_access.dbconnect.get_cursor()
     abtest = user_data_access.getAB_Test(current_abtest_id)
     for r_id in abtest.result_id:
-        legend += 'algorithm' + str(r_id)
+        string = 'algorithm' + str(r_id)
+        legend.append(string)
 
-    while current_abtest_id < abtest_id:
-        cursor.execute('SELECT result_id FROM Result WHERE abtest_id = %s', current_abtest_id)
-        for row in cursor:
-            legend += 'algorithm' + str(row[0])
+    start_point = abtest.start_point
+    end_point = abtest.end_point
+    days_between = end_point - start_point
+    for day in range(days_between.days):
+        labels += str(day)
 
     return render_template('visualizations.html', app_data=app_data, labels=labels, legend=legend)
 

@@ -106,18 +106,23 @@ function openNav() {
 
 const labels = [{% for item in labels %} "{{item}}",{% endfor %}];
 
-const data = {
-    labels: labels,
-    datasets: [{
-        label: 'My First dataset',
+datasets = [];
+for (let i = 0; i < legend.length; i++) {
+    datasets += {
+        label: legend[i],
         backgroundColor: 'rgb(255, 99, 132)',
         borderColor: 'rgb(255, 99, 132)',
-        data: [0, 10, 5, 2, 20, 30, 45],
-    }]
+        data: [{x : 20, y : 30, r : 15}]
+    };
+}
+
+const data = {
+    labels: labels,
+    datasets: datasets
 };
 
 const config = {
-    type: 'line',
+    type: 'bubble',
     data: data,
     options: {}
 };

@@ -516,7 +516,7 @@ class UserDataAcces:
                         FROM Dataset")
 
         row = cursor.fetchone()
-        if (len(row)) == 0:
+        if row[0] is None:
             return 0
 
         return row[0]
@@ -527,7 +527,7 @@ class UserDataAcces:
                                 FROM ABTest")
 
         row = cursor.fetchone()
-        if (len(row)) == 0:
+        if row[0] is None:
             return 0
 
         return row[0]
@@ -539,7 +539,7 @@ class UserDataAcces:
                                 FROM Algorithm")
 
         row = cursor.fetchone()
-        if (len(row)) == 0:
+        if row[0] is None:
             return 0
 
         return row[0]
@@ -551,8 +551,6 @@ class UserDataAcces:
     def createGraph(self):
         cursor = self.dbconnect.get_cursor()
         abtest_id = 0
-
-
         f = open("chart.js", "w")
         f.write('<script>\nconst labels = [\n')
         f.close()
