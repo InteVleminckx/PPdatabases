@@ -1,21 +1,24 @@
-const config = {
-  type: 'bubble',
-  data: data,
-  options: {}
-};
+const labels = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+];
 
 const data = {
+  labels: labels,
   datasets: [{
-    label: 'First Dataset',
-    data: [{
-      x: 20,
-      y: 30,
-      r: 15
-    }, {
-      x: 40,
-      y: 10,
-      r: 10
-    }],
-    backgroundColor: 'rgb(255, 99, 132)'
+    label: 'My First dataset',
+    backgroundColor: 'rgb(255, 99, 132)',
+    borderColor: 'rgb(255, 99, 132)',
+    data: [0, 10, 5, 2, 20, 30, 45],
   }]
+};
+
+const config = {
+  type: 'line',
+  data: data,
+  options: {}
 };
