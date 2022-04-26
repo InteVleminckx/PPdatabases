@@ -28,7 +28,7 @@ ALLOWED_EXTENSIONS = {'.csv'}
 algo_list = list()
 algo_dict = dict()
 algo_id = 1
-dataset_id = 0
+abtest_id = 1
 
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
@@ -87,6 +87,7 @@ def start():
 # @login_required
 def services():
     global algo_id
+    global algo_list
     if 'loggedin' in session:
         if request.method == 'POST':
             s = request.form.get('submit_button')
@@ -120,16 +121,59 @@ def services():
                     algo_id += 1
 
             elif s == 'abtestSubmit':
+                cursor = user_data_access.dbconnect.get_cursor()
 
+                # Params for foreign keys
                 dataset = request.form.get('datasetSelection')
+                dataset_id = ""
+                for char in dataset:
+                    if char.isdigit():
+                        dataset_id += char
+                user_name = session['username']
+                item = cursor.execute('SELECT d.item_id, d.attribute FROM Dataset LIMIT 1')
+                for row in item:
+                    item_id = row[0]
+                    attribute_dataset = row[1]
 
-                # general parameters
+                # General parameters for ABtest
                 start = request.form.get('startingpoint')
                 end = request.form.get('endpoint')
                 stepsize = request.form.get('stepsize')
                 topk = request.form.get('topk')
-                print(dataset)
+
+                cursor = user_data_access.dbconnect.get_cursor()
+                i = 1
+                while i < algo_id:
+                    # Add entry for ABtest table
+                    user_data_access.addAB_Test(abtest_id, i, start, end, stepsize, topk)
+
+                    # Add entries for Algorithm table
+                    for j in range(len(algo_list)):
+                        user_data_access.addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2], algo_list[j][3])
+
+                    # Add entry for result table
+                    user_data_access.addResult(abtest_id, i, dataset_id, item_id, attribute_dataset, )
+
+                    i += 1
+
+                # Add entries for Result table
+                user_data_access.datasetId += 1
+                user_data_access.dbconnect.commit()
                 return redirect(url_for('visualizations'))
+
+            # Remove the last add algorithm
+            elif s == "remove":
+                algo_id -= 1
+                if algo_id == 0:
+                    algo_id = 1
+                else:
+                    if algo_dict[algo_id] == 'popularity':
+                        algo_list = algo_list[:-2]
+                    elif algo_dict[algo_id] == 'recency':
+                        algo_list = algo_list[:-1]
+                    elif algo_dict[algo_id] == 'itemknn':
+                        algo_list = algo_list[:-4]
+                    del algo_dict[algo_id]
 
         # add algorithm to database
         return render_template('services.html', app_data=app_data, algo_dict=algo_dict)
@@ -141,37 +185,54 @@ def services():
 def datasets():
     if request.method == 'POST':
         if session['username'] == 'admin': # checken of de user de admin is
+            # af = request.files['articles_file']
+            # uploaded_file = secure_filename(af.filename)
+            # filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+            # af.save(filepath)
+            # data = []
+            # with open(filepath, 'r', encoding='utf-8-sig') as file:
+            #    csvfile = csv.reader(file)
+            #    for row in csvfile:
+            #        data.append(row)
+            # print(data)
 
-            # Filepath to articles file
-            af = request.files['articles_file']
-            uploaded_file = secure_filename(af.filename)
-            af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-            af.save(af_filename)
-            data_articles = pd.read_csv(af_filename)
-            columns_articles = list(data_articles.columns.values)
-            #Add articles to database
-            # user_data_access.addArticles(data_articles, columns_articles)
 
-            # Filepath to customers file
+            start = time.process_time()
             cf = request.files['customers_file']
             uploaded_file = secure_filename(cf.filename)
-            cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-            cf.save(cf_filename)
-            data_customers = pd.read_csv(cf_filename)
-            columns_customers = list(data_customers.columns.values)
-            #Add customers to database
-            # user_data_access.addCustomers(data_customers, columns_customers)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+            cf.save(filepath)
+            data = []
+            with open(filepath, 'r', encoding='utf-8-sig') as file:
+                csvfile = csv.reader(file)
+                dataset_id = 0
+                i = 0
+                for customer in csvfile:
+                    if i == 0:
+                       i += 1
+                       continue
+                    else:
+                        user_data_access.addCustomer(dataset_id, *customer)
 
-            # Filepath to purchase file
-            pf = request.files['purchases_file']
-            uploaded_file = secure_filename(pf.filename)
-            pf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-            pf.save(pf_filename)
-            data_purchases = pd.read_csv(pf_filename)
-            # columns_purchases = list(data_purchases.columns.values)
-            #Add purchases to database
-            user_data_access.addPurchases(data_purchases)
+            print(start - time.process_time())
 
+            # print(data)
+            # Customer table
+
+            # Interaction table
+
+            # cursor = user_data_access.dbconnect.get_cursor()
+#             data = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
+#             amountRows = len(data.index)
+#             amountColumns = len(data.columns)
+#             dataset_id = 0
+#
+#             for row in range(amountRows):
+#                 for column in range(amountColumns):
+#                     print(data.iloc[row, column])
+#                     cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
+#                                    (int(dataset_id), int(data.iloc[row, 0]), str(data.iloc[0, column]),
+#                                     str(data.iloc[row, column])))
 
         else:
             flash("You need admin privileges to upload a dataset", category='error')
@@ -209,7 +270,7 @@ def add_user():
     user_password = request.form.get('password')
 
     cursor = user_data_access.dbconnect.get_cursor()
-    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
+    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username))
     row = cursor.fetchone()
     # user = DataScientist.query.filter_by(username=user_username).first
 

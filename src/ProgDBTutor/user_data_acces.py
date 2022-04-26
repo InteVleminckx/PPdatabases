@@ -366,6 +366,19 @@ class UserDataAcces:
         return Interaction(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
 
     """
+    Function to add an entry to the ABTest table
+    """
+    def addAB_Test(self, abtest_id, result_id, start_point, end_point, stepsize, topk):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO ABTest(abtest_id, result_id, start_point, end_point, stepsize, topk) VALUES(%s,%s,%s,%s,%s,%s)',
+                           (abtest_id, result_id, start_point, end_point, stepsize, topk))
+
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception("Unable to save ABTest!")
+    """
     This function gets an AB-test from the database that corresponds with the given database.
     """
     def getAB_Test(self, abtestId, resultId):
@@ -378,6 +391,21 @@ class UserDataAcces:
             return None
 
         return AB_Test(row[0], row[1], row[2], row[3], row[4], row[5])
+
+    """
+    Function to add an entry to the Algorithm table
+    """
+    def addAlgorithm(self, abtest_id, result_id, name, param_name, value):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute(
+                'INSERT INTO Algorithm(abtest_id, result_id, name, param_name, value) VALUES(%s,%s,%s,%s,%s)',
+                (abtest_id, result_id, name, param_name, value))
+
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception("Unable to save Algorithm!")
 
     """
     This function gets the algorithm out of the database that corresponds to the goven attributes.
@@ -465,7 +493,7 @@ class UserDataAcces:
         cursor.execute("SELECT item_id \
                        FROM Interaction \
                        WHERE t_dat BETWEEN %s AND %s AND dataset_id = %s \
-                       ORDER BY t_dat DESC LIMIT %s", (interval_start, interval_end, dataset_id, top_k))
+                       ORDER BY t_dat DESC LIMIT %s;", (interval_start, interval_end, dataset_id, top_k))
         recommendations = cursor.fetchall()
         if len(recommendations) == 0:
             return None
