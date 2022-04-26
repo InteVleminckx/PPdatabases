@@ -93,6 +93,7 @@ def services():
     global algo_list
     global algo_dict
     global abtest_id
+    global algo_dict
     if 'loggedin' in session:
         if request.method == 'POST':
             s = request.form.get('submit_button')
@@ -238,20 +239,10 @@ def datasets():
 def visualizations():
     return render_template('visualizations.html', app_data=app_data)
 
+@app.route("/testlist")
+def testlist():
+    return render_template('testlist.html', app_data=app_data)
 #----------------- User_DB -----------------#
-# @app.route("/login", methods=['GET'])
-# def login():
-#
-#     # user_objects = user_data_access.get_users()
-#     return render_template('login.html', app_data=app_data)
-#
-#
-# @app.route("/login/<string:email>", methods=['GET'])
-# def get_user(username):
-#     user_object = user_data_access.get_user(username)
-#
-#     return jsonify([user_object.to_dct()])
-
 
 @app.route("/register", methods=['POST'])
 def add_user():
