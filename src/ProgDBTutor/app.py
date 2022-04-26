@@ -124,24 +124,24 @@ def services():
                 cursor = user_data_access.dbconnect.get_cursor()
 
                 # Params for foreign keys
-                dataset = request.form.get('datasetSelection')
-                dataset_id = ""
-                for char in dataset:
-                    if char.isdigit():
-                        dataset_id += char
-                user_name = session['username']
-                item = cursor.execute('SELECT d.item_id, d.attribute FROM Dataset LIMIT 1')
-                for row in item:
-                    item_id = row[0]
-                    attribute_dataset = row[1]
+                creator = session['username']
+                cursor.execute('SELECT item_id, attribute FROM Dataset LIMIT 1')
+                item = cursor.fetchone()
+                algorithm_param = ""
+                item_id = item[0]
+                attribute_dataset = item[1]
 
                 # General parameters for ABtest
                 start = request.form.get('startingpoint')
                 end = request.form.get('endpoint')
                 stepsize = request.form.get('stepsize')
                 topk = request.form.get('topk')
+                dataset = request.form.get('datasetSelection')
+                dataset_id = ""
+                for char in dataset:
+                    if char.isdigit():
+                        dataset_id += char
 
-                cursor = user_data_access.dbconnect.get_cursor()
                 i = 1
                 while i < algo_id:
                     # Add entry for ABtest table
@@ -149,14 +149,15 @@ def services():
 
                     # Add entries for Algorithm table
                     for j in range(len(algo_list)):
-                        user_data_access.addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2], algo_list[j][3])
+                        if algo_list[j][0] == i:
+                            algorithm_param = algo_list[j][2]
+                            user_data_access.addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2], algo_list[j][3])
 
                     # Add entry for result table
-                    user_data_access.addResult(abtest_id, i, dataset_id, item_id, attribute_dataset, )
+                    user_data_access.addResult(abtest_id, i, dataset_id, item_id, attribute_dataset, algorithm_param, creator)
 
                     i += 1
 
-                # Add entries for Result table
                 user_data_access.datasetId += 1
                 user_data_access.dbconnect.commit()
                 return redirect(url_for('visualizations'))
@@ -175,7 +176,6 @@ def services():
                         algo_list = algo_list[:-4]
                     del algo_dict[algo_id]
 
-        # add algorithm to database
         return render_template('services.html', app_data=app_data, algo_dict=algo_dict)
     return redirect(url_for('login'))
 

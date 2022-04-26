@@ -128,7 +128,7 @@ CREATE TABLE Recommendation (
 );
 
 -- Test
--- INSERT INTO Dataset(dataset_id, item_id, attribute, val) VALUES (0, 0, 'size', 'small'), (0, 0, 'color', 'pink') ;
+INSERT INTO Dataset(dataset_id, item_id, attribute, val) VALUES (1, 0, 'size', 'small'), (1, 0, 'color', 'pink') ;
 -- INSERT INTO Customer(dataset_id, customer_id) VALUES (0, 10) ;
 -- INSERT INTO Authentication(username, password) VALUES ('jonasdm', '123piano') ;
 -- INSERT INTO DataScientist(username, email, firstname, lastname) VALUES ('jonasdm', 'jonasdm@hotmail.com', 'jonas', 'de maeyer') ;
