@@ -76,16 +76,14 @@ class AB_Test:
 This class represents an entry out of the Algorithm table in the database.
 """
 class Algorithm:
-    def __init__(self, abtest_id, result_id, name, param_name, value):
+    def __init__(self, abtest_id, result_id, name, params):
         self.abtest_id= abtest_id
         self.result_id = result_id
         self.name = name
-        self.param_name = param_name
-        self.value = value
+        self.params = params
 
     def to_dct(self):
-        return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'name' : self.name, 'param_name' : self.param_name,
-                'value' : self.value}
+        return {'abtest_id' : self.abtest_id, 'result_id' : self.result_id, 'name' : self.name, 'parameters' : self.params,}
 
 """
 This table represents an entry out of the Result table in the database.
@@ -346,7 +344,7 @@ class UserDataAcces:
             query = 'INSERT INTO Interaction(customer_id, dataset_id, item_id, attribute_dataset, attribute_customer, t_dat, price)\
                            VALUES (%s, %s, %s, %s, %s, %s, %s) '
 
-            cursor.execute(query, (customer_id, self.datasetId, item_id, attribute_dataset, attribute_customer, data_purchases.iloc[row, 0], data_purchases.iloc[row, 3]))
+            cursor.execute(query, (str(customer_id), str(self.datasetId), str(item_id), attribute_dataset, attribute_customer, data_purchases.iloc[row, 0], data_purchases.iloc[row, 3]))
 
             self.dbconnect.commit()
 
@@ -360,7 +358,7 @@ class UserDataAcces:
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT customer_id, dataset_id, item_id, attribute_dataset, attribute_customer, t_dat, price \
                         FROM Interaction WHERE customer_id = %s AND item_id = %s AND t_dat = %s AND dataset_id = %s",
-                         (customer_id, item_id, time_date, dataset_id))
+                         (str(customer_id), str(item_id), time_date, str(dataset_id)))
 
         row = cursor.fetchone()
         if not row:
@@ -375,7 +373,7 @@ class UserDataAcces:
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute('INSERT INTO ABTest(abtest_id, result_id, start_point, end_point, stepsize, topk) VALUES(%s,%s,%s,%s,%s,%s)',
-                           (abtest_id, result_id, start_point, end_point, stepsize, topk))
+                           (str(abtest_id), str(result_id), start_point, end_point, str(stepsize), topk))
 
             self.dbconnect.commit()
         except:
@@ -384,16 +382,21 @@ class UserDataAcces:
     """
     This function gets an AB-test from the database that corresponds with the given database.
     """
-    def getAB_Test(self, abtestId, resultId):
+    def getAB_Test(self, abtestId):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT abtest_id, result_id, start_point, end_point, stepsize, topk \
-                        FROM ABTest WHERE abtest_id = %s AND result_id = %s", (abtestId, resultId))
+                        FROM ABTest WHERE abtest_id = %s", (str(abtestId)))
 
-        row = cursor.fetchone()
-        if not row:
+        res = []
+        rows = None
+        for row in cursor:
+            res.append(row[1])
+            rows = row
+
+        if not rows:
             return None
 
-        return AB_Test(row[0], row[1], row[2], row[3], row[4], row[5])
+        return AB_Test(rows[0], res, rows[2], rows[3], rows[4], rows[5])
 
     """
     Function to add an entry to the Algorithm table
@@ -403,7 +406,7 @@ class UserDataAcces:
         try:
             cursor.execute(
                 'INSERT INTO Algorithm(abtest_id, result_id, name, param_name, value) VALUES(%s,%s,%s,%s,%s)',
-                (abtest_id, result_id, name, param_name, value))
+                (str(abtest_id), str(result_id), name, param_name, str(value)))
 
             self.dbconnect.commit()
         except:
@@ -413,11 +416,11 @@ class UserDataAcces:
     """
     This function gets the algorithm out of the database that corresponds to the goven attributes.
     """
-    def getAlgorithm(self, abtest_id, result_id, param_name):
+    def getAlgorithm(self, abtest_id, result_id):
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT abtest_id, result_id, name, param_name, value \
-                                FROM ABTest WHERE abtest_id = %s AND result_id = %s AND param_name = %s",
-                                 (abtest_id, result_id, param_name))
+                                FROM Algorithm WHERE abtest_id = %s AND result_id = %s",
+                                 (str(abtest_id), str(result_id)))
 
         res = {}
         rows = None
@@ -437,7 +440,7 @@ class UserDataAcces:
         cursor = self.dbconnect.get_cursor()
         cursor.execute("SELECT abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param, creator \
                                 FROM Result WHERE result_id = %s",
-                                 (result_id))
+                                 (str(result_id)))
 
         row = cursor.fetchone()
         if not row:
@@ -506,3 +509,45 @@ class UserDataAcces:
         if len(recommendations) == 0:
             return None
         return recommendations
+
+    def getMaxDatasetID(self):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT MAX(dataset_id) \
+                        FROM Dataset")
+
+        row = cursor.fetchone()
+        if (len(row)) == 0:
+            return 0
+
+        return row[0]
+
+    def getMaxABTestID(self):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT MAX(abtest_id) \
+                                FROM ABTest")
+
+        row = cursor.fetchone()
+        if (len(row)) == 0:
+            return 0
+
+        return row[0]
+
+    def getMaxAlgorithmId(self):
+
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT MAX(result_id) \
+                                FROM Algorithm")
+
+        row = cursor.fetchone()
+        if (len(row)) == 0:
+            return 0
+
+        return row[0]
+
+    def createGraph(self):
+        cursor = self.dbconnect.get_cursor()
+        abtest = self.getAB_Test(self.getMaxABTestID())
+
+        f = open("chart.js", "w")
+        f.write('<script>\nconst labels = [\n')
+        f.close()

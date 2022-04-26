@@ -29,8 +29,6 @@ ALLOWED_EXTENSIONS = {'.csv'}
 
 algo_list = list()
 algo_dict = dict()
-algo_id = 1
-abtest_id = 1
 
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
@@ -42,6 +40,9 @@ app_data = dict()
 app_data['app_name'] = config_data['app_name']
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 user_data_access = UserDataAcces(connection)
+
+algo_id = user_data_access.getMaxAlgorithmId()+1
+abtest_id = user_data_access.getMaxABTestID()+1
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
