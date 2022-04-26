@@ -10,6 +10,7 @@ import time as tm
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 user_data_access = UserDataAcces(connection)
 
+
 class Metrics:
 
     def __init__(self, startDate, endDate):
