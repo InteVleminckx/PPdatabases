@@ -313,8 +313,11 @@ class UserDataAcces:
     """
     def getCustomersIDs(self, dataset_id):
         cursor = self.dbconnect.get_cursor()
+        # cursor.execute("SELECT c1.customer_id, c1.attribute\
+        #                 FROM Customer c1 WHERE c1.dataset_id = %s", (dataset_id))
+
         cursor.execute("SELECT c1.customer_id, c1.attribute\
-                        FROM Customer c1 JOIN Customer c2 ON c1.customer_id < c2.customer_id WHERE c1.dataset_id = %s AND c1.customer_id < c2.customer_id", (dataset_id))
+                                FROM Customer c1 WHERE c1.dataset_id = %s", (dataset_id))
 
         dic = {}
         for row in cursor:
