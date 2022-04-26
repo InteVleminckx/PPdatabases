@@ -43,10 +43,9 @@ class Popularity:
         nextRetrainInterval = self.currentDate
 
         start_time = tm.process_time()
-        customers = user_data_access.getCustomersIDs(str(self.dataset_id))
         while self.currentDate <= self.endPoint:
             if self.currentDate >= nextRetrainInterval:
-                self.train(customers)
+                self.train()
                 nextRetrainInterval += self.retrainInterval
 
             self.currentDate += self.stepsize
@@ -61,20 +60,15 @@ class Popularity:
     def recommend(self):
         self.simulate()
 
-    def train(self, customers):
+    def train(self):
         trainWindow = (str(self.currentDate-self.window), str(self.currentDate))
         recommendations = user_data_access.getPopularityItem(self.dataset_id, *trainWindow, self.topk)
         if recommendations is not None:
             for item_id, count in recommendations:
                 item = user_data_access.getItem(str(item_id), self.dataset_id)
                 attribute_dataset = list(item.attributes.keys())[0]
-
-                user_data_access.addResult(self.abtest_id, self.result_id, self.dataset_id, str(item_id), attribute_dataset,
-                                           self.algorithm_param, self.user)
-
-                for customer in customers:
-                    attribute_costumer = ""
-                    user_data_access.addRecommendation(self.abtest_id, self.result_id, self.dataset_id, customer, str(item_id),
+                attribute_costumer = list(user_data_access.getCustomer(-1, self.dataset_id).attributes)[0]
+                user_data_access.addRecommendation(self.abtest_id, self.result_id, self.dataset_id, -1, str(item_id),
                                                        attribute_dataset, attribute_costumer, *trainWindow)
 
     def getdate(self, date):
@@ -104,7 +98,7 @@ class Popularity:
 
 def main():
 
-    algo = Popularity(0, 100, 0, "2020-01-01", "2020-01-31", 1, 5, 14, 7, "window_size","jonasdm")
+    algo = Popularity(0, 100, 0, "2020-01-01", "2020-02-15", 1, 10, 2, 3, "window_size","jonasdm")
     algo.recommend()
 
 main()
