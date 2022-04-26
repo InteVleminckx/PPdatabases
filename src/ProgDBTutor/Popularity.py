@@ -9,22 +9,20 @@ LIMIT 2;
 # from app import user_data_access
 
 import datetime
-
-#TODO: Deze imports mogen later weg, we kunnen de import van app.py hiervoor dan gebruiken
-# Had deze staan omdat ik dan enkel deze file kon runnen zonder afhankelijk te zijn van de app.py
+from app import user_data_access
 import time as tm
 
-from config import config_data
-from db_connection import DBConnection
-from user_data_acces import UserDataAcces
-connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-user_data_access = UserDataAcces(connection)
+# from config import config_data
+# from db_connection import DBConnection
+# from user_data_acces import UserDataAcces
+# connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
+# user_data_access = UserDataAcces(connection)
 
 class Popularity:
 
-    def __init__(self, dataset_id, abtest_id, result_id, startPoint, endPoint, stepsize, topk, window, retrainInterval, algorithm_param,username):
-        self.startPoint = datetime.date(*self.getdate(startPoint))
-        self.endPoint = datetime.date(*self.getdate(endPoint))
+    def __init__(self, dataset_id, abtest_id, result_id, startPoint, endPoint, stepsize, topk, window, retrainInterval, algorithm_param):
+        self.startPoint = datetime.datetime.strptime(startPoint, '%Y-%m-%d %H:%M:%S')
+        self.endPoint = datetime.datetime.strptime(endPoint, '%Y-%m-%d %H:%M:%S')
         self.stepsize = datetime.timedelta(days=stepsize)
         self.intStep = stepsize
         self.topk = topk
@@ -36,7 +34,6 @@ class Popularity:
         self.abtest_id = abtest_id
         self.result_id = result_id
         self.algorithm_param = algorithm_param
-        self.user = username
         self.simulationTime = None
 
     def simulate(self):
@@ -61,7 +58,7 @@ class Popularity:
         self.simulate()
 
     def train(self):
-        trainWindow = (str(self.currentDate-self.window), str(self.currentDate))
+        trainWindow = (str(self.currentDate-self.window)[0:10], str(self.currentDate)[0:10])
         recommendations = user_data_access.getPopularityItem(self.dataset_id, *trainWindow, self.topk)
         if recommendations is not None:
             for item_id, count in recommendations:
@@ -71,34 +68,34 @@ class Popularity:
                 user_data_access.addRecommendation(self.abtest_id, self.result_id, self.dataset_id, -1, str(item_id),
                                                        attribute_dataset, attribute_costumer, *trainWindow)
 
-    def getdate(self, date):
-
-        year, month, day = "", "", ""
-
-        first, second = True, False
-
-        for letter in date:
-            if first and not second:
-                if letter == '-':
-                    second = True
-                else:
-                    year += letter
-
-            elif first and second:
-                if letter == "-":
-                    second = False
-                    first = False
-                else:
-                    month += letter
-
-            else:
-                day += letter
-
-        return int(year), int(month), int(day)
+    # def getdate(self, date):
+    # 
+    #     year, month, day = "", "", ""
+    # 
+    #     first, second = True, False
+    # 
+    #     for letter in date:
+    #         if first and not second:
+    #             if letter == '-':
+    #                 second = True
+    #             else:
+    #                 year += letter
+    # 
+    #         elif first and second:
+    #             if letter == "-":
+    #                 second = False
+    #                 first = False
+    #             else:
+    #                 month += letter
+    # 
+    #         else:
+    #             day += letter
+    # 
+    #     return int(year), int(month), int(day)
 
 def main():
 
-    algo = Popularity(0, 100, 0, "2020-01-01", "2020-02-15", 1, 10, 2, 3, "window_size","jonasdm")
+    algo = Popularity(0, 100, 0, "2020-01-01", "2020-02-15", 1, 10, 2, 3, "window_size")
     algo.recommend()
 
-main()
+# main()

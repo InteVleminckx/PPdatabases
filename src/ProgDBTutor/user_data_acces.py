@@ -419,11 +419,16 @@ class UserDataAcces:
                                 FROM ABTest WHERE abtest_id = %s AND result_id = %s AND param_name = %s",
                                  (abtest_id, result_id, param_name))
 
-        row = cursor.fetchone()
-        if not row:
+        res = {}
+        rows = None
+        for row in cursor:
+            res[row[3]] = row[4]
+            rows = row
+
+        if not rows:
             return None
 
-        return Algorithm(row[0], row[1], row[2], row[3], row[4])
+        return Algorithm(rows[0], rows[1], rows[2], res)
 
     """
     This function gets the result from the database that has the same result id.
