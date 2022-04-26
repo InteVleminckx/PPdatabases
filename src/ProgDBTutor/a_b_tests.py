@@ -7,6 +7,7 @@ from app import user_data_access
 # user_data_access = UserDataAcces(connection)
 
 import Popularity as popularity
+import recency_algorithm as receny
 
 def startAB(abtest_id, dataset_id=None):
     abtest = user_data_access.getAB_Test(abtest_id)
@@ -27,6 +28,11 @@ def startAB(abtest_id, dataset_id=None):
             windowsize = int(algorithm.params["windowsize"])
             popAlgo = popularity.Popularity(dataset_id, abtest_id, result_id, startpoint, endpoint, stepsize, topk, windowsize, retraininterval, algorithm_param)
             popAlgo.recommend()
+
+        elif algorithm.name == "recency":
+            retraininterval = int(algorithm.params["retraininterval"])
+            recAlgo = receny.Recency(dataset_id, abtest_id, result_id, startpoint, endpoint, topk, stepsize, retraininterval, algorithm_param)
+            recAlgo.recommend()
 
 
 def main():
