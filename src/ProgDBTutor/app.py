@@ -78,44 +78,57 @@ def main():
 def contact():
     return render_template('contact.html', app_data=app_data)
 
+@app.route("/services/start", methods=['GET', 'POST'])
+def start():
+    pass
+
 @app.route("/services", methods=['GET', 'POST'])
 # @login_required
 def services():
     global algo_id
     if 'loggedin' in session:
         if request.method == 'POST':
-            dataset = request.form.get('datasetSelection')
-            algo = request.form.get('algoSelection')
-            # general parameters
-            start = request.form.get('startingpoint')
-            end = request.form.get('endpoint')
-            stepsize = request.form.get('stepsize')
-            topk = request.form.get('topk')
+            s = request.form.get('submit_button')
+            if s == 'algoSubmit':
 
-            if algo == "popularity":
-                windowsize = request.form.get('windowsize')
-                retraininterval = request.form.get('retraininterval1')
+                algo = request.form.get('algoSelection')
 
-                algo_list.append((algo_id, "popularity", "windowsize", windowsize))
-                algo_list.append((algo_id, "popularity", "retraininterval", retraininterval))
-                algo_dict[algo_id] = "popularity"
-                algo_id += 1
-            elif algo == "recency":
-                retraininterval = request.form.get('retraininterval2')
-                algo_list.append((algo_id, "recency", "retraininterval", retraininterval))
-                algo_dict[algo_id] = "recency"
-                algo_id += 1
-            elif algo == "itemknn":
-                k = request.form.get('k')
-                window = request.form.get('window')
-                normalize = request.form.get('normalize')
-                retraininterval = request.form.get('retraininterval3')
-                algo_list.append((algo_id, "itemknn", "k", k))
-                algo_list.append((algo_id, "itemknn", "window", window))
-                algo_list.append((algo_id, "itemknn", "normalize", normalize))
-                algo_list.append((algo_id, "itemknn", "retraininterval", retraininterval))
-                algo_dict[algo_id] = "itemknn"
-                algo_id += 1
+                if algo == "popularity":
+                    windowsize = request.form.get('windowsize')
+                    retraininterval = request.form.get('retraininterval1')
+
+                    algo_list.append((algo_id, "popularity", "windowsize", windowsize))
+                    algo_list.append((algo_id, "popularity", "retraininterval", retraininterval))
+                    algo_dict[algo_id] = "popularity"
+                    algo_id += 1
+                elif algo == "recency":
+                    retraininterval = request.form.get('retraininterval2')
+                    algo_list.append((algo_id, "recency", "retraininterval", retraininterval))
+                    algo_dict[algo_id] = "recency"
+                    algo_id += 1
+                elif algo == "itemknn":
+                    k = request.form.get('k')
+                    window = request.form.get('window')
+                    normalize = request.form.get('normalize')
+                    retraininterval = request.form.get('retraininterval3')
+                    algo_list.append((algo_id, "itemknn", "k", k))
+                    algo_list.append((algo_id, "itemknn", "window", window))
+                    algo_list.append((algo_id, "itemknn", "normalize", normalize))
+                    algo_list.append((algo_id, "itemknn", "retraininterval", retraininterval))
+                    algo_dict[algo_id] = "itemknn"
+                    algo_id += 1
+
+            elif s == 'abtestSubmit':
+
+                dataset = request.form.get('datasetSelection')
+
+                # general parameters
+                start = request.form.get('startingpoint')
+                end = request.form.get('endpoint')
+                stepsize = request.form.get('stepsize')
+                topk = request.form.get('topk')
+                print(dataset)
+                return redirect(url_for('visualizations'))
 
         # add algorithm to database
         return render_template('services.html', app_data=app_data, algo_dict=algo_dict)
@@ -178,6 +191,7 @@ def datasets():
 @app.route("/visualizations")
 # @login_required
 def visualizations():
+
     return render_template('visualizations.html', app_data=app_data)
 
 #----------------- User_DB -----------------#
