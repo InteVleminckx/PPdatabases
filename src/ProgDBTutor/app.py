@@ -28,6 +28,7 @@ ALLOWED_EXTENSIONS = {'.csv'}
 algo_list = list()
 algo_dict = dict()
 algo_id = 1
+dataset_id = 0
 
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
@@ -140,16 +141,6 @@ def services():
 def datasets():
     if request.method == 'POST':
         if session['username'] == 'admin': # checken of de user de admin is
-            # af = request.files['articles_file']
-            # uploaded_file = secure_filename(af.filename)
-            # filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-            # af.save(filepath)
-            # data = []
-            # with open(filepath, 'r', encoding='utf-8-sig') as file:
-            #    csvfile = csv.reader(file)
-            #    for row in csvfile:
-            #        data.append(row)
-            # print(data)
 
             # Filepath to articles file
             af = request.files['articles_file']
