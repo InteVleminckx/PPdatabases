@@ -249,7 +249,14 @@ def visualizations():
 
 @app.route("/testlist")
 def testlist():
-    return render_template('testlist.html', app_data=app_data)
+    cursor = user_data_access.dbconnect.get_cursor()
+    cursor.execute("SELECT DISTINCT(abtest_id) FROM ABTest")
+
+    testList = list()
+    for row in cursor:
+        testList.append(row[0])
+
+    return render_template('testlist.html', app_data=app_data, testList = testList)
 #----------------- User_DB -----------------#
 
 @app.route("/register", methods=['POST'])
