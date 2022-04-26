@@ -10,8 +10,6 @@ import Popularity as popularity
 
 def startAB(abtest_id, dataset_id=None):
     abtest = user_data_access.getAB_Test(abtest_id)
-    print(user_data_access.datasetId)
-    dataset_id = dataset_id - 1
     result_ids = abtest.result_id
     startpoint = str(abtest.start_point)
     endpoint = str(abtest.end_point)
