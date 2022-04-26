@@ -104,7 +104,7 @@ def services():
                 if algo == "popularity":
                     windowsize = request.form.get('windowsize', None)
                     retraininterval = request.form.get('retraininterval1', None)
-                    if windowsize is None or retraininterval is None:
+                    if windowsize == "" or retraininterval == "":
                         flash('Algorithm parameters not fully filled in.', category='error')
                     else:
                         algo_list.append((algo_id, "popularity", "windowsize", windowsize))
@@ -113,7 +113,7 @@ def services():
                         algo_id += 1
                 elif algo == "recency":
                     retraininterval = request.form.get('retraininterval2', None)
-                    if retraininterval is None:
+                    if retraininterval == "":
                         flash('Algorithm parameters not fully filled in.', category='error')
                     else:
                         algo_list.append((algo_id, "recency", "retraininterval", retraininterval))
@@ -124,7 +124,7 @@ def services():
                     window = request.form.get('window')
                     normalize = request.form.get('normalize')
                     retraininterval = request.form.get('retraininterval3')
-                    if k is None or window is None or normalize is None or retraininterval is None:
+                    if k == None or window == "" or normalize == "" or retraininterval == "":
                         flash('Algorithm parameters not fully filled in.', category='error')
                     else:
                         algo_list.append((algo_id, "itemknn", "k", k))

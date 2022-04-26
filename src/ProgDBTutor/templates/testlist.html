@@ -52,9 +52,10 @@
             </thead>
             <tbody>
                 {% for item in testList %}
-                    <tr onclick="window.location.href='{{ url_for('dataset', rowData=key) }}';">
+                    <tr>
+{#                    onclick="window.location.href='{{ url_for('testlist', rowData=key) }}';"#}
                         <td>A/B-test</td>
-                        <td>item</td>
+                        <td>{{ item }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
