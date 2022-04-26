@@ -263,6 +263,9 @@ class UserDataAcces:
     def addCustomers(self, data_customers, columns_customers):
         cursor = self.dbconnect.get_cursor()
         print('start reading customers')
+
+        addedDefault  = False
+
         for row in range(0, len(data_customers.index)):
             for column in range(1, len(data_customers.columns)):
                 if str(data_customers.iloc[row, column]) == 'nan':
@@ -272,8 +275,21 @@ class UserDataAcces:
                                 int(data_customers.iloc[row, 0]),
                                 str(columns_customers[column]),
                                 str(data_customers.iloc[row, column])))
-            self.dbconnect.commit()
 
+            self.dbconnect.commit()
+            if not addedDefault:
+                print("Adding default costumer")
+                for column in range(1, len(data_customers.columns)):
+                    if str(data_customers.iloc[row, column]) == 'nan':
+                        data_customers.iloc[row, column] = ''
+                    cursor.execute('INSERT INTO Customer(dataset_id, customer_id, attribute , val) VALUES(%s, %s, %s, %s)',
+                                   (self.datasetId,
+                                    -1,
+                                    str(columns_customers[column]),
+                                    str(data_customers.iloc[row, column])))
+                addedDefault = True
+                self.dbconnect.commit()
+                print("Added default costumer")
         print('end reading customers')
 
     """
@@ -297,14 +313,17 @@ class UserDataAcces:
     """
     def getCustomersIDs(self, dataset_id):
         cursor = self.dbconnect.get_cursor()
+        # cursor.execute("SELECT c1.customer_id, c1.attribute\
+        #                 FROM Customer c1 WHERE c1.dataset_id = %s", (dataset_id))
+
         cursor.execute("SELECT c1.customer_id, c1.attribute\
-                        FROM Customer c1 JOIN Customer c2 ON c1.customer_id < c2.customer_id WHERE c1.dataset_id = %s AND c1.customer_id < c2.customer_id", (dataset_id))
+                                FROM Customer c1 WHERE c1.dataset_id = %s", (dataset_id))
 
-        ids = []
+        dic = {}
         for row in cursor:
-            ids.append(row[0])
+            dic[row[0]] = row[1]
 
-        return ids
+        return dic
 
 
     # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
@@ -330,6 +349,7 @@ class UserDataAcces:
             cursor.execute(query, (customer_id, self.datasetId, item_id, attribute_dataset, attribute_customer, data_purchases.iloc[row, 0], data_purchases.iloc[row, 3]))
 
             self.dbconnect.commit()
+
         self.datasetId += 1
         print('end reading purchases')
 
@@ -455,6 +475,7 @@ class UserDataAcces:
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
+            raise Exception("Unable to save Recommendation!")
 
     def getPopularityItem(self, dataset_id, begin_date, end_date, top_k):
         cursor = self.dbconnect.get_cursor()
