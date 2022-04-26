@@ -23,7 +23,7 @@
             </div>
             <ul class="navbar_menu">
                 <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">Services</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
@@ -31,34 +31,7 @@
         </div>
     </nav>
 
-<div class="par_form">
-    <div class="container" style="border: 2px solid black; width: 600px; display: block; margin-right: auto; margin-left: auto;">
-        <form method="POST" action="" enctype="multipart/form-data">
 
-            <div class="row">
-                <div class="col-25"><label for="name">Dataset name</label></div>
-                <div class="col-75"><input type="text" id="ds_name" name="ds_name" placeholder="Dataset name" required></div>
-            </div>
-            <div class="row">
-                <div class="col-25"><label for="articles_file">Articles file</label></div>
-                <div class="col-75"><input type="file" id="articles_file" name="articles_file" placeholder="articles" accept=".csv" required></div>
-            </div>
-            <div class="row">
-                <div class="col-25"><label for="purchases_file">Purchases file</label></div>
-                <div class="col-75"><input type="file" id="purchases_file" name="purchases_file" placeholder="purchases" accept=".csv" required></div>
-            </div>
-            <div class="row">
-                <div class="col-25"><label for="customers_file">Customers file</label></div>
-                <div class="col-75"><input type="file" id="customers_file" name="customers_file" placeholder="customers" accept=".csv" required></div>
-            </div>
-            <div align="center" class="___services__btn" style="margin-top: 20px;">
-                <button type="submit">
-                    Add dataset
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
 
 <!-- Dataset Section-->
 
@@ -66,15 +39,15 @@
 
 {#    <div class="_container">#}
 
-        <div class="dataset_title" >Datasets</div>
+        <div class="dataset_title" >A/B-tests</div>
         <div class="dataset__btn">
-            <button>Remove Dataset</button>
+            <button>Remove A/B-test</button>
         </div>
         <table class="scroll-table" id="scrolltable">
             <thead>
                 <tr>
-                    <td>Dataset number</td>
-                    <td>Dataset name</td>
+                    <td>A/B-test id</td>
+                    <td>A/B-test name</td>
                 </tr>
             </thead>
             <tbody>
@@ -120,17 +93,6 @@
         </table>
 {#    </div>#}
 
-    <p style="text-align: center">
-        Select a dataset and click on 'show statistics' to show the statistics of the dataset.<br>
-        A new dataset can be added with the 'Add Dataset' button in the top right.
-    </p>
-    <div>
-        <button class="showStatbtn">Show Statistics</button>
-    </div>
-
-    <div class="stat_container">
-
-    </div>
 
 
 </div>
