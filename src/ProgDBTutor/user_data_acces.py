@@ -447,7 +447,7 @@ class UserDataAcces:
         cursor.execute("SELECT item_id \
                        FROM Interaction \
                        WHERE t_dat BETWEEN %s AND %s AND dataset_id = %s \
-                       ORDER BY t_dat DESC LIMIT %s", (interval_start, interval_end, dataset_id, top_k))
+                       ORDER BY t_dat DESC LIMIT %s;", (interval_start, interval_end, dataset_id, top_k))
         recommendations = cursor.fetchall()
         if len(recommendations) == 0:
             return None
