@@ -138,43 +138,36 @@ def datasets():
             #        data.append(row)
             # print(data)
 
+            # Filepath to articles file
+            af = request.files['articles_file']
+            uploaded_file = secure_filename(af.filename)
+            af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+            af.save(af_filename)
+            data_articles = pd.read_csv(af_filename)
+            columns_articles = list(data_articles.columns.values)
+            #Add articles to database
+            # user_data_access.addArticles(data_articles, columns_articles)
 
-            start = time.process_time()
+            # Filepath to customers file
             cf = request.files['customers_file']
             uploaded_file = secure_filename(cf.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-            cf.save(filepath)
-            data = []
-            with open(filepath, 'r', encoding='utf-8-sig') as file:
-                csvfile = csv.reader(file)
-                dataset_id = 0
-                i = 0
-                for customer in csvfile:
-                    if i == 0:
-                       i += 1
-                       continue
-                    else:
-                        user_data_access.addCustomer(dataset_id, *customer)
+            cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+            cf.save(cf_filename)
+            data_customers = pd.read_csv(cf_filename)
+            columns_customers = list(data_customers.columns.values)
+            #Add customers to database
+            # user_data_access.addCustomers(data_customers, columns_customers)
 
-            print(start - time.process_time())
+            # Filepath to purchase file
+            pf = request.files['purchases_file']
+            uploaded_file = secure_filename(pf.filename)
+            pf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+            pf.save(pf_filename)
+            data_purchases = pd.read_csv(pf_filename)
+            # columns_purchases = list(data_purchases.columns.values)
+            #Add purchases to database
+            user_data_access.addPurchases(data_purchases)
 
-            # print(data)
-            # Customer table
-
-            # Interaction table
-
-            # cursor = user_data_access.dbconnect.get_cursor()
-#             data = pd.read_csv('/home/app/PPDB-Template-App/CSVFiles/articles.csv')
-#             amountRows = len(data.index)
-#             amountColumns = len(data.columns)
-#             dataset_id = 0
-#
-#             for row in range(amountRows):
-#                 for column in range(amountColumns):
-#                     print(data.iloc[row, column])
-#                     cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute, value) VALUES(%d, %d, %s, %s)',
-#                                    (int(dataset_id), int(data.iloc[row, 0]), str(data.iloc[0, column]),
-#                                     str(data.iloc[row, column])))
 
         else:
             flash("You need admin privileges to upload a dataset", category='error')

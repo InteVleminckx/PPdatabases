@@ -105,7 +105,8 @@ CREATE TABLE Recommendation (
     dataset_id INT NOT NULL,
     customer_id INT NOT NULL,
     item_id INT NOT NULL,
-    attribute TEXT NOT NULL,
+    attribute_dataset TEXT NOT NULL,
+    attribute_customer TEXT NOT NULL,
     -- Params to keep the specific time period in which the topk is calculated
     start_point TIMESTAMP NOT NULL,
     end_point TIMESTAMP NOT NULL,
@@ -114,7 +115,7 @@ CREATE TABLE Recommendation (
     -- Reference to an item/article in the Dataset table
     FOREIGN KEY (dataset_id, item_id, attribute) REFERENCES Dataset(dataset_id, item_id, attribute) ON UPDATE CASCADE ON DELETE CASCADE,
     -- Reference to a customer from Customers, need 2 attributes for the primary key of a customer
-    FOREIGN KEY (dataset_id, customer_id) REFERENCES Customer(dataset_id, customer_id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (dataset_id, customer_id, attribute_customer) REFERENCES Customer(dataset_id, customer_id, attribute) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Test

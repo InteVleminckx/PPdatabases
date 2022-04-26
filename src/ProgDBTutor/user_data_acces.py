@@ -24,7 +24,7 @@ class Item:
         self.dataset_id = dataset_id
 
     def to_dct(self):
-        return {'id' : self.id, 'attributes' : self.attr, 'datasetId' : self.inDataset}
+        return {'id' : self.item_id, 'attributes' : self.attributes, 'datasetId' : self.dataset_id}
 
 """
 This class represents a customer from the Customer table
@@ -249,34 +249,22 @@ class UserDataAcces:
         return [row[1], row[2]]
 
 
-    def addCustomer(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
+    # def addCustomer(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
+    def addCustomers(self, data_customers, columns_customers):
         cursor = self.dbconnect.get_cursor()
-
-        FN = True if (FN != '') else "NULL"
-        Active = True if (Active != '') else "NULL"
-        club_member_status = club_member_status if (club_member_status != '') else "NULL"
-        fashion_news_frequency = fashion_news_frequency if (fashion_news_frequency != '') else "NULL"
-        postal_code = postal_code if (postal_code != '') else "NULL"
-        age = age[:-2] if (age != '') else "NULL"
-
-        try:
-            cursor.execute('INSERT INTO Customer( dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code) '
-                           'VALUES('
-                           'dataset_id,'
-                           'customer_id,'
-                           '(%s if FN != "NULL" else NULL),'
-                           '(%s if FN != "NULL" else NULL),'
-                           '(%s if Active != "NULL" else NULL),'
-                           '(%s if club_member_status != "NULL" else NULL),'
-                           '(%s if fashion_news_frequency != "NULL" else NULL),'
-                           '(%s if age != "NULL" else NULL)'
-                           '(%s if postal_code != "NULL" else NULL)'
-                           ,(dataset_id,int(customer_id)))
+        print('start reading customers')
+        for row in range(0, len(data_customers.index)):
+            for column in range(1, len(data_customers.columns)):
+                if str(data_customers.iloc[row, column]) == 'nan':
+                    data_customers.iloc[row, column] = ''
+                cursor.execute('INSERT INTO Customer(dataset_id, customer_id, attribute , val) VALUES(%s, %s, %s, %s)',
+                               (self.datasetId,
+                                int(data_customers.iloc[row, 0]),
+                                str(columns_customers[column]),
+                                str(data_customers.iloc[row, column])))
             self.dbconnect.commit()
 
-        except:
-            self.dbconnect.rollback()
-            # raise Exception("Unable to save Customer!")
+        print('end reading customers')
 
     """
     This function gets the customer with the given customer id out of the database.
@@ -297,14 +285,41 @@ class UserDataAcces:
     """
     def getCustomersIDs(self, dataset_id):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT customer_id\
-                        FROM Customer WHERE dataset_id = %s", (dataset_id))
+        cursor.execute("SELECT c1.customer_id, c1.attribute\
+                        FROM Customer c1 JOIN Customer c2 ON c1.customer_id < c2.customer_id WHERE c1.dataset_id = %s AND c1.customer_id < c2.customer_id", (dataset_id))
 
         ids = []
         for row in cursor:
             ids.append(row[0])
 
         return ids
+
+
+    # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
+    def addPurchases(self, data_purchases):
+        # data_purchases = data_purchases.drop_duplicates()
+        cursor = self.dbconnect.get_cursor()
+        print('start reading purchases')
+        for row in range(0, len(data_purchases.index)):
+            item_id = str(data_purchases.iloc[row, 2])
+            customer_id = int(data_purchases.iloc[row, 1])
+
+            item = self.getItem(item_id, self.datasetId)
+            attribute_dataset = list(item.attributes)[0]
+            customer = self.getCustomer(customer_id, self.datasetId)
+            attribute_customer = list(customer.attributes)[0]
+
+            if self.getInteraction(customer_id, item_id, data_purchases.iloc[row, 0], self.datasetId) is not None:
+                continue
+
+            query = 'INSERT INTO Interaction(customer_id, dataset_id, item_id, attribute_dataset, attribute_customer, t_dat, price)\
+                           VALUES (%s, %s, %s, %s, %s, %s, %s) '
+
+            cursor.execute(query, (customer_id, self.datasetId, item_id, attribute_dataset, attribute_customer, data_purchases.iloc[row, 0], data_purchases.iloc[row, 3]))
+
+            self.dbconnect.commit()
+        self.datasetId += 1
+        print('end reading purchases')
 
     """
     This function gets the interaction out of the dtaabase that corresponds with the given attributes.
@@ -319,7 +334,7 @@ class UserDataAcces:
         if not row:
             return None
 
-        return Interaction(row[0], row[1], row[2], row[3], row[4], row[5])
+        return Interaction(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
 
     """
     This function gets an AB-test from the database that corresponds with the given database.

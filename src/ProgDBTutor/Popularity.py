@@ -43,10 +43,10 @@ class Popularity:
         nextRetrainInterval = self.currentDate
 
         start_time = tm.process_time()
-
+        customers = user_data_access.getCustomersIDs(str(self.dataset_id))
         while self.currentDate <= self.endPoint:
             if self.currentDate >= nextRetrainInterval:
-                self.train()
+                self.train(customers)
                 nextRetrainInterval += self.retrainInterval
 
             self.currentDate += self.stepsize
@@ -61,20 +61,21 @@ class Popularity:
     def recommend(self):
         self.simulate()
 
-    def train(self):
+    def train(self, customers):
         trainWindow = (str(self.currentDate-self.window), str(self.currentDate))
         recommendations = user_data_access.getPopularityItem(self.dataset_id, *trainWindow, self.topk)
         if recommendations is not None:
             for item_id, count in recommendations:
-                item = user_data_access.getItem(str(item_id))
-                attribute = list(item.attr.keys())[0]
-                user_data_access.addResult(self.abtest_id, self.result_id, self.dataset_id, str(item_id), attribute,
+                item = user_data_access.getItem(str(item_id), self.dataset_id)
+                attribute_dataset = list(item.attributes.keys())[0]
+
+                user_data_access.addResult(self.abtest_id, self.result_id, self.dataset_id, str(item_id), attribute_dataset,
                                            self.algorithm_param, self.user)
 
-                customers = user_data_access.getCustomersIDs(str(self.dataset_id))
                 for customer in customers:
+                    attribute_costumer = ""
                     user_data_access.addRecommendation(self.abtest_id, self.result_id, self.dataset_id, customer, str(item_id),
-                                                       attribute, *trainWindow)
+                                                       attribute_dataset, attribute_costumer, *trainWindow)
 
     def getdate(self, date):
 
@@ -101,9 +102,9 @@ class Popularity:
 
         return int(year), int(month), int(day)
 
-# def main():
-#
-#     algo = Popularity(0,100, 0, "2022-03-01", "2022-05-01", 1, 5, 14, 7, "window_size","jonasdm")
-#     algo.recommend()
-#
-# main()
+def main():
+
+    algo = Popularity(0, 100, 0, "2020-01-01", "2020-01-31", 1, 5, 14, 7, "window_size","jonasdm")
+    algo.recommend()
+
+main()
