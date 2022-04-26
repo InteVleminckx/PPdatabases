@@ -532,6 +532,7 @@ class UserDataAcces:
 
         return row[0]
 
+
     def getMaxAlgorithmId(self):
 
         cursor = self.dbconnect.get_cursor()
