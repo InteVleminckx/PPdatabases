@@ -91,6 +91,7 @@ def start():
 def services():
     global algo_id
     global algo_list
+    global algo_dict
     global abtest_id
     if 'loggedin' in session:
         if request.method == 'POST':
@@ -165,14 +166,13 @@ def services():
                 # Remove algorithms from list and dicts
                 algo_list = []
                 algo_dict = {}
-                user_data_access.datasetId += 1
                 user_data_access.dbconnect.commit()
 
                 # Call function to start a/b tests
-                abtest.startAB(abtest_id, user_data_access.datasetId-1)
+                abtest.startAB(abtest_id, dataset_id)
 
                 abtest_id += 1
-
+                algo_id = 1
                 return redirect(url_for('visualizations'))
 
             # Remove the last add algorithm
