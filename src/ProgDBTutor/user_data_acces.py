@@ -20,7 +20,7 @@ This class represents an item out of the database
 class Item:
     def __init__(self, itemId, atributesAndVals, dataset_id):
         self.item_id = itemId
-        self.attr = atributesAndVals
+        self.attributes = atributesAndVals
         self.dataset_id = dataset_id
 
     def to_dct(self):
@@ -30,35 +30,30 @@ class Item:
 This class represents a customer from the Customer table
 """
 class Customer:
-    def __init__(self, dataset_id, customer_id, fn, isActive, status, freq, age, postCode):
+    def __init__(self, dataset_id, customer_id, attributes):
         self.dataset_id = dataset_id
         self.customer_id = customer_id
-        self.fn = fn
-        self.isActive = isActive
-        self.memberStatus = status
-        self.fashNwsFreq = freq
-        self.age = age
-        self.postCode = postCode
+        self.attributes = attributes
 
     def to_dct(self):
-        return {'dataset_id' : self.dataset_id, 'customer_id' : self.customer_id, 'FN' : self.fn , 'acitve' : self.isActive,
-                'status' : self.memberStatus, 'frequency' : self.fashNwsFreq, 'age' : self.age, 'postcode' : self.postCode}
+        return {'dataset_id' : self.dataset_id, 'customer_id' : self.customer_id, 'attributes' : self.attributes}
 
 """
 This class represents an interaction in the Interaction table
 """
 class Interaction:
-    def __init__(self, customer_id, dataset_id, item_id, atribute, time_date, price):
+    def __init__(self, customer_id, dataset_id, item_id, attribute_dataset, attribute_customer, time_date, price):
         self.customer_id = customer_id
         self.dataset_id = dataset_id
         self.item_id = item_id
-        self.atribute = atribute
+        self.attribute_dataset = attribute_dataset
+        self.attribute_customer =attribute_customer
         self.time_date = time_date
         self.price = price
 
     def to_dct(self):
         return {'customer_id' : self.customer_id, 'dataset_id' : self.dataset_id, ' item_id' : self.item_id,
-                'attribute_id' : self.atribute_id,
+                'attribute_dataset' : self.attribute_dataset, ' attribute_customer' : self.attribute_customer,
                  'time_date' : self.time_date, 'price' : self.price}
 
 """
@@ -113,13 +108,14 @@ class Result:
 This class represents an entry out of the Recommendation table of the database.
 """
 class Recommendation:
-    def __init__(self, abtest_id, result_id, dataset_id, customer_id, item_id, attribute, start_point, end_point):
+    def __init__(self, abtest_id, result_id, dataset_id, customer_id, item_id, attribute_dataset, attribute_customer, start_point, end_point):
         self.abtest_id = abtest_id
         self.result_id = result_id
         self.dataset_id = dataset_id
         self.customer_id = customer_id
         self.item_id = item_id
-        self.attribute = attribute
+        self.attribute_dataset = attribute_dataset
+        self.attribute_customer = attribute_customer
         self.start_point = start_point
         self.end_point = end_point
 
@@ -137,6 +133,7 @@ This class is for accesing the Datascientist table and the Admin table
 class UserDataAcces:
     def __init__(self, dbconnect):
         self.dbconnect = dbconnect
+        self.datasetId = 0
 
 
     """
@@ -213,9 +210,9 @@ class UserDataAcces:
     """
     This fucntion gets the item zith the given item id from the dataset.
     """
-    def getItem(self, itemId):
+    def getItem(self, itemId, dataset_id):
          cursor = self.dbconnect.get_cursor()
-         cursor.execute("SELECT dataset_id, item_id, attribute, val FROM Dataset WHERE %s = item_id", (itemId))
+         cursor.execute("SELECT dataset_id, item_id, attribute, val FROM Dataset WHERE %s = item_id AND %s = dataset_id", (itemId, dataset_id))
 
          attr = {}
          notEmpty = False
@@ -230,9 +227,22 @@ class UserDataAcces:
 
          return Item(itemId, attr, dataset_id)
 
-    #TODO implement if needed
-    def getItems(self):
-        pass
+
+    # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
+    def addArticles(self, data_articles, columns_articles):
+        cursor = self.dbconnect.get_cursor()
+        print('start reading articles')
+        for row in range(0, len(data_articles.index)):
+            for column in range(1, len(data_articles.columns)):
+                if str(data_articles.iloc[row, column]) == 'nan':
+                    data_articles.iloc[row, column] = ''
+                cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute , val) VALUES(%s, %s, %s, %s);',
+                               (self.datasetId,
+                                int(data_articles.iloc[row, 0]),
+                                str(columns_articles[column]),
+                                str(data_articles.iloc[row, column])))
+            self.dbconnect.commit()
+        print('end reading articles')
 
     """
     This function returns the asked attribute of a given item. If the item exists
@@ -269,16 +279,18 @@ class UserDataAcces:
     """
     This function gets the customer with the given customer id out of the database.
     """
-    def getCustomer(self, customer_id):
+    def getCustomer(self, customer_id, dataset_id):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code\
-                        FROM Customer WHERE customer_id = %s LIMIT 1", (customer_id))
+        cursor.execute("SELECT dataset_id, customer_id,attribute, val\
+                        FROM Customer WHERE customer_id = %s AND dataset_id = %s", (customer_id,  dataset_id))
 
-        row = cursor.fetchone()
-        if not row:
-            return None
+        attr = {}
+        notEmpty = False
+        for row in cursor:
+            notEmpty = True
+            attr[row[2]] = row[3]
 
-        return Customer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+        return Customer(dataset_id, customer_id, attr)
 
     """
     This function returns all the id's of the customers in the same dataset.
@@ -324,11 +336,11 @@ class UserDataAcces:
     """
     This function gets the interaction out of the dtaabase that corresponds with the given attributes.
     """
-    def getInteraction(self, customer_id, item_id, time_date):
+    def getInteraction(self, customer_id, item_id, time_date, dataset_id):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT customer_id, dataset_id, item_id, attribute, t_dat, price \
-                        FROM Interaction WHERE customer_id = %s AND item_id = %s AND t_dat = %s LIMIT 1",
-                         (customer_id, item_id, time_date))
+        cursor.execute("SELECT customer_id, dataset_id, item_id, attribute_dataset, attribute_customer, t_dat, price \
+                        FROM Interaction WHERE customer_id = %s AND item_id = %s AND t_dat = %s AND dataset_id = %s",
+                         (customer_id, item_id, time_date, dataset_id))
 
         row = cursor.fetchone()
         if not row:
@@ -394,7 +406,7 @@ class UserDataAcces:
 
     def getRecommendation(self, result_id, customer_id):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT abtest_id, result_id, dataset_id, customer_id, item_id, attribute, start_point, end_point \
+        cursor.execute("SELECT abtest_id, result_id, dataset_id, customer_id, item_id, attribute_dataset, attribute_customer, start_point, end_point \
                                 FROM Recommendation WHERE result_id = %s AND customer_id = %s",
                                   (result_id, customer_id))
 
@@ -402,20 +414,19 @@ class UserDataAcces:
         if not row:
             return None
 
-        return Recommendation(row[0], row[1], row[2], row[3], row[4],  row[5], row[6], row[7])
+        return Recommendation(row[0], row[1], row[2], row[3], row[4],  row[5], row[6], row[7], row[8])
 
-    def addRecommendation(self, abtest_id, result_id, dataset_id, customer_id, item_id, attribute, start_point, end_point):
+    def addRecommendation(self, abtest_id, result_id, dataset_id, customer_id, item_id, attribute_dataset, attribute_customer, start_point, end_point):
         cursor = self.dbconnect.get_cursor()
         try:
             cursor.execute(
-                'INSERT INTO Recommendation( abtest_id, result_id, dataset_id, customer_id, item_id, attribute, '
-                'start_point, end_point) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)',
-                (abtest_id, result_id, dataset_id, customer_id, item_id, attribute, start_point, end_point))
+                'INSERT INTO Recommendation( abtest_id, result_id, dataset_id, customer_id, item_id, attribute_dataset, attribute_customer, '
+                'start_point, end_point) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+                (abtest_id, result_id, dataset_id, customer_id, item_id, attribute_dataset, attribute_customer, start_point, end_point))
 
             self.dbconnect.commit()
         except:
             self.dbconnect.rollback()
-            raise Exception("Unable to save Recommendation!")
 
     def getPopularityItem(self, dataset_id, begin_date, end_date, top_k):
         cursor = self.dbconnect.get_cursor()
