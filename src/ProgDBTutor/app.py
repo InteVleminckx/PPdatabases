@@ -223,7 +223,19 @@ def datasets():
 @app.route("/visualizations")
 # @login_required
 def visualizations():
-    return render_template('visualizations.html', app_data=app_data)
+    labels, legend = [], []
+    current_abtest_id = 0
+    cursor = user_data_access.dbconnect.get_cursor()
+    abtest = user_data_access.getAB_Test(current_abtest_id)
+    for r_id in abtest.result_id:
+        legend += 'algorithm' + str(r_id)
+
+    while current_abtest_id < abtest_id:
+        cursor.execute('SELECT result_id FROM Result WHERE abtest_id = %s', current_abtest_id)
+        for row in cursor:
+            legend += 'algorithm' + str(row[0])
+
+    return render_template('visualizations.html', app_data=app_data, labels=labels, legend=legend)
 
 #----------------- User_DB -----------------#
 # @app.route("/login", methods=['GET'])

@@ -104,14 +104,7 @@ function openNav() {
   document.getElementById("mySidenav").style.width = "300px";
 }
 
-const labels = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-];
+const labels = [{% for item in labels %} "{{item}}",{% endfor %}];
 
 const data = {
     labels: labels,
