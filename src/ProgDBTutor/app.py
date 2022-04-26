@@ -166,7 +166,6 @@ def services():
                 # Remove algorithms from list and dicts
                 algo_list = []
                 algo_dict = {}
-                user_data_access.datasetId += 1
                 user_data_access.dbconnect.commit()
 
                 # Call function to start a/b tests
