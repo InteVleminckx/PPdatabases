@@ -250,8 +250,14 @@ def datasets():
 
 @app.route("/datasetupload")
 def datasetupload(rowData):
-
+    cursor = user_data_access.dbconnect.get_cursor()
     # remove dataset(s) with id=rowData
+    try:
+        cursor.execute("DELETE FROM Dataset WHERE dataset_id = %s", (rowData))
+        user_data_access.dbconnect.commit()
+    except:
+        user_data_access.dbconnect.rollback()
+
     return render_template('datasets.html', app_data=app_data)
 
 @app.route("/visualizations")
