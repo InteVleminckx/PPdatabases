@@ -238,7 +238,15 @@ def datasets():
 
         else:
             flash("You need admin privileges to upload a dataset", category='error')
-    return render_template('datasets.html', app_data=app_data)
+
+    cursor = user_data_access.dbconnect.get_curser()
+    cursor.execute("SELECT DISTINCT dataset_id FROM Dataset")
+
+    datasetList = list()
+    for row in cursor:
+        datasetList.append(row[0])
+
+    return render_template('datasets.html', app_data=app_data, datasetList = datasetList)
 
 @app.route("/datasetupload")
 def datasetupload(rowData):
