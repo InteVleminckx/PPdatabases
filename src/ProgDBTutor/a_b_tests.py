@@ -41,6 +41,7 @@ def getABtestResults(abtest_id, dataset_id):
     topk = abtest.topk
     start_point = abtest.start_point
     end_point = abtest.end_point
+    f = open("ABtest.txt", "w")
 
     cursor = user_data_access.dbconnect.get_cursor()
     cursor.execute('SELECT DISTINCT result_id FROM Result WHERE dataset_id = %s', (str(dataset_id)))
