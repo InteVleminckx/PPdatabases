@@ -252,6 +252,7 @@ def datasets():
 def datasetupload(rowData):
 
     # remove dataset(s) with id=rowData
+
     return render_template('datasets.html', app_data=app_data)
 
 @app.route("/visualizations")
