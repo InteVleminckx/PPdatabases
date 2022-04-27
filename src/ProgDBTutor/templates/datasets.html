@@ -79,33 +79,13 @@
                 </tr>
             </thead>
             <tbody>
-{#                {% for key, value in algo_dict.items() %}#}
-{#                    <tr onclick="window.location.href='{{ url_for('dataset', rowData=key) }}';">#}
-{#                        <td>{{ key }}</td>#}
-{#                        <td>{{ value }}</td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-                <tr id="1">
-                    <td class="row_data">dataset nr1</td>
-                    <td class="row_data">datatset name</td>
-                    <td style="font-size: 20px;color: red;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>
-                </tr>
-                <tr id="2">
-                    <td class="row_data">dataset nr2</td>
-                    <td class="row_data">datatset name</td>
-                    <td style="font-size: 20px;color: red;">&times;</td>
-                </tr>
-                <tr id="3">
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                    <td>&times;</td>
-                </tr>
-                <tr id="4">
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                    <td>&times;</td>
-                </tr>
-
+                {% for id in datasetList %}
+                    <tr>
+                        <td>dataset name</td>
+                        <td>{{ id }}</td>
+                        <td style="font-size: 20px;color: red;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
 {#    </div>#}

@@ -258,7 +258,7 @@ def datasetupload(rowData):
     except:
         user_data_access.dbconnect.rollback()
 
-    return render_template('datasets.html', app_data=app_data)
+    return redirect(url_for('datasets'))
 
 @app.route("/visualizations")
 # @login_required
