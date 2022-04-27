@@ -12,7 +12,6 @@
 
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <body>
@@ -103,34 +102,6 @@
 function openNav() {
   document.getElementById("mySidenav").style.width = "300px";
 }
-
-const labels = [{% for item in labels %} "{{item}}",{% endfor %}];
-
-datasets = [];
-for (let i = 0; i < legend.length; i++) {
-    datasets += {
-        label: legend[i],
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: [{x : 20, y : 30, r : 15}]
-    };
-}
-
-const data = {
-    labels: labels,
-    datasets: datasets
-};
-
-const config = {
-    type: 'bubble',
-    data: data,
-    options: {}
-};
-
-const myChart = new Chart(
-    document.getElementById('ABTestChart'),
-    config
-  );
 
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";

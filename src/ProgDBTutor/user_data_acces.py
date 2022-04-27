@@ -453,7 +453,7 @@ class UserDataAcces:
         try:
             cursor.execute('INSERT INTO Result( abtest_id, result_id, dataset_id, item_id, attribute_dataset, '
                            'algorithm_param, creator) VALUES(%s,%s,%s,%s,%s,%s,%s)',
-                           (abtest_id, result_id, dataset_id, item_id, attribute_dataset, algorithm_param, creator))
+                           (str(abtest_id), str(result_id), str(dataset_id), str(item_id), attribute_dataset, algorithm_param, creator))
 
             self.dbconnect.commit()
         except:
