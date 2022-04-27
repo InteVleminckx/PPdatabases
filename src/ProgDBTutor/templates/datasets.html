@@ -23,7 +23,7 @@
             </div>
             <ul class="navbar_menu">
                 <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">Services</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
@@ -75,6 +75,7 @@
                 <tr>
                     <td>Dataset number</td>
                     <td>Dataset name</td>
+                    <td style="color: red;">Remove</td>
                 </tr>
             </thead>
             <tbody>
@@ -84,38 +85,27 @@
 {#                        <td>{{ value }}</td>#}
 {#                    </tr>#}
 {#                {% endfor %}#}
-                <tr>
-                    <td>dataset nr1</td>
-                    <td>datatset name</td>
+                <tr id="1">
+                    <td class="row_data">dataset nr1</td>
+                    <td class="row_data">datatset name</td>
+                    <td style="font-size: 20px;color: red;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>
                 </tr>
-                <tr>
-                    <td>dataset nr2</td>
-                    <td>datatset name</td>
+                <tr id="2">
+                    <td class="row_data">dataset nr2</td>
+                    <td class="row_data">datatset name</td>
+                    <td style="font-size: 20px;color: red;">&times;</td>
                 </tr>
-                <tr>
+                <tr id="3">
                     <td>dataset nr3</td>
                     <td>datatset name</td>
+                    <td>&times;</td>
                 </tr>
-                <tr>
+                <tr id="4">
                     <td>dataset nr3</td>
                     <td>datatset name</td>
+                    <td>&times;</td>
                 </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
+
             </tbody>
         </table>
 {#    </div>#}
@@ -136,9 +126,22 @@
 </div>
 
 <script>
+    {#var row_id = 0;#}
+
 $('#scrolltable tbody tr').click(function() {
     $(this).addClass('highlight').siblings().removeClass('highlight');
 });
+
+{#function selectRow() {#}
+{#    row_id = event.target.id;#}
+
+{##}
+{#function sendTableData() {#}
+{#    var data = document.getElementById(row_id).querySelectorAll(".row_data");#}
+{#    var id = data[0].innerHTML;#}
+{#    var name = data[1].innerHTML;#}
+{#    #}
+
 </script>
 
 <!-- Services Section-->

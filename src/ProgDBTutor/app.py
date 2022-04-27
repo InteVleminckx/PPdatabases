@@ -238,9 +238,27 @@ def datasets():
 
         else:
             flash("You need admin privileges to upload a dataset", category='error')
-    return render_template('datasets.html', app_data=app_data)
 
-# @app.route("/datasetupload")
+    cursor = user_data_access.dbconnect.get_curser()
+    cursor.execute("SELECT DISTINCT dataset_id FROM Dataset")
+
+    datasetList = list()
+    for row in cursor:
+        datasetList.append(row[0])
+
+    return render_template('datasets.html', app_data=app_data, datasetList = datasetList)
+
+@app.route("/datasetupload")
+def datasetupload(rowData):
+    cursor = user_data_access.dbconnect.get_cursor()
+    # remove dataset(s) with id=rowData
+    try:
+        cursor.execute("DELETE FROM Dataset WHERE dataset_id = %s", (rowData))
+        user_data_access.dbconnect.commit()
+    except:
+        user_data_access.dbconnect.rollback()
+
+    return render_template('datasets.html', app_data=app_data)
 
 @app.route("/visualizations")
 # @login_required
@@ -257,6 +275,7 @@ def testlist():
         testList.append(row[0])
 
     return render_template('testlist.html', app_data=app_data, testList = testList)
+
 #----------------- User_DB -----------------#
 
 @app.route("/register", methods=['POST'])
