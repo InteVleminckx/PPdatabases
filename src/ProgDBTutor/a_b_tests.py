@@ -50,23 +50,30 @@ def getABtestResults(abtest_id, dataset_id):
         resultIdList.append(row[0])
 
 
-    results = [['TOP-K', 'Current Date', 'Result_id', 'Algorithm name', 'Window']]
+    # results = ['TOP-K', 'Current Date', 'Algorithm name','Result_id', 'Window']
+    results = ['TOP-K', 'Current Date','Result_id', 'Algorithm name']
     for i in range(topk):
-        results[0].append('Item' + str(i+1))
+        results.append('Item' + str(i+1))
+
+    f.write('[\n')
+    for j in range(len(results)):
+        f.write(str(results[j]))
+        f.write('\n')
+    f.write(']\n')
+    f.write('start_point: ' + str(start_point)[0:10])
+    f.write('\n')
+    f.write('end_point: ' + str(end_point)[0:10])
+    f.write('\n')
+    f.write('topk: ' + str(topk))
+    f.write('\n')
 
     itemEndPoints = list()
     for res in resultIdList:
-        items = {}
-        cursor.execute("SELECT item_id, end_point FROM Recommendation WHERE abtest_id = %s AND dataset_id = %s AND result_id= %s", (abtest_id, dataset_id, res))
-        for row in cursor:
-            if getDate(row[1]) not in items:
-                items[getDate(row[1])] = []
-            items[getDate(row[1])].append(row[0])
-
+        f.write('\n')
+        f.write("result_id: " + str(res))
+        f.write('\n')
 
         cursor.execute('SELECT name, param_name, value FROM Algorithm WHERE abtest_id = %s AND result_id = %s',(abtest_id, res))
-
-
         windowsize = 0
         name = ''
         for row in cursor:
@@ -75,16 +82,33 @@ def getABtestResults(abtest_id, dataset_id):
                     windowsize = int(row[2])
 
             name = row[0]
-        itemEndPoints.append((res, items, name, windowsize))
+        f.write("name: " + name)
+        f.write('\n')
+        # f.write("windowsize: " + str(windowsize))
+        # f.write('\n')
 
-    f = open("test.txt", "w")
-    f.write(results[0])
-    f.write(itemEnd)
+        cursor.execute(
+            "SELECT item_id, end_point FROM Recommendation WHERE abtest_id = %s AND dataset_id = %s AND result_id= %s",
+            (abtest_id, dataset_id, res))
 
-    return results, itemEndPoints, start_point, end_point
+        items = {}
+        for row in cursor:
+            date = str(row[1])[0:10]
+            if date not in items:
+                items[date] = []
+            items[date].append(row[0])
 
-def getDate(date):
-    return int(date.year), int(date.day), int(date.day)
+        for key in items:
+            f.write("current date: " + str(key))
+            f.write('\n')
+            f.write( "items: " + str(items[key]))
+            f.write('\n')
+
+    f.close()
+
+#
+# def getDate(date):
+#     return int(date.year), int(date.day), int(date.day)
 
 def main():
     getABtestResults(6, 0)
