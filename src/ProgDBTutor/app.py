@@ -200,7 +200,7 @@ def services():
                     del algo_dict[algo_id]
 
         return render_template('services.html', app_data=app_data, algo_dict=algo_dict)
-    return redirect(url_for('login'))
+    return redirect(url_for('login_user'))
 
 
 @app.route("/datasets", methods=['GET', 'POST'])
