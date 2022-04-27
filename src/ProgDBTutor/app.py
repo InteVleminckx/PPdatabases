@@ -240,7 +240,11 @@ def datasets():
             flash("You need admin privileges to upload a dataset", category='error')
     return render_template('datasets.html', app_data=app_data)
 
-# @app.route("/datasetupload")
+@app.route("/datasetupload")
+def datasetupload(rowData):
+
+    # remove dataset(s) with id=rowData
+    return render_template('datasets.html', app_data=app_data)
 
 @app.route("/visualizations")
 # @login_required
@@ -257,6 +261,7 @@ def testlist():
         testList.append(row[0])
 
     return render_template('testlist.html', app_data=app_data, testList = testList)
+
 #----------------- User_DB -----------------#
 
 @app.route("/register", methods=['POST'])
