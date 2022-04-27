@@ -12,6 +12,8 @@
 
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 
 </head>
 <body>
@@ -25,7 +27,7 @@
             </div>
             <ul class="navbar_menu">
                 <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="services-page" href="A/B-test">Services</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
@@ -48,6 +50,7 @@
 <div class="card_section" id="user_section">
     <h1>User section</h1>
     <div class="card_wrapper">
+        <div class="card">
         <div class="card">
 
         </div>
@@ -88,21 +91,122 @@
 
     </div>
     <div class="card">
-        <div>
-            <canvas id="ABTestChart" width="900" height="400"></canvas>
-        </div>
+
     </div>
 </div>
-
+    <div>
+        <input type="file" id="input">
+    </div>
 
 </div>
-
+<div id="chart_div" style="width:800px; height:600px"></div>
 </div>
+
+
 
 <script>
+{#window.onload = runscript();#}
 function openNav() {
   document.getElementById("mySidenav").style.width = "300px";
 }
+
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawBubbleChart);
+
+const input = document.getElementById("input");
+input.addEventListener('change', () => {
+    let files = input.files;
+    if (files.length == 0) return;
+
+    const file = files[0];
+
+    let reader = new FileReader();
+
+    reader.onload = (e) => {
+
+        const file = e.target.result;
+        const lines = file.split(/\r\n|\n/);
+
+        var datachar = []
+
+        var addHeader = true;
+        var row = []
+        var res, name, windowsize, date, start, end, topk = ""
+
+        for (let i = 1; i < lines.length; i++) {
+
+            if (lines[i] == "]") {
+                addHeader = false;
+                datachar.push(row)
+                row = []
+            }
+            else if (addHeader && lines[i] != "["){
+                row.push(lines[i]);
+            }
+            else {
+                var itemVal = lines[i].split(': ')[1]
+                var itemName = lines[i].split(': ')[0]
+
+                if (itemName == "result_id"){
+                    res = itemVal
+                }
+                else if (itemName == "name"){
+                    name = itemVal
+                }
+                else if (itemName == "windowsize"){
+                    windowsize = itemVal
+                }
+                else if (itemName == "current date"){
+                    date = itemVal
+                }
+                else if (itemName == "start_point"){
+                    start = itemVal
+                }
+                else if (itemName == "end_point"){
+                    end = itemVal
+                }
+                else if (itemName == "topk"){
+                    topk = itemVal
+                }
+                else {
+                    row = [topk, new Date(date), parseInt(res), name]
+                    if (itemName == "items") {
+                        var number = itemVal.substring(1, itemVal.length-1);
+                        var numbers = number.split(', ');
+                        numbers = numbers.map(function (x) {
+                            return parseInt(x, 10);
+                        });
+                        row = row.concat(numbers);
+                        datachar.push(row)
+                    }
+                }
+
+            }
+        }
+
+
+        drawBubbleChart(datachar, start, end, topk);
+    }
+    reader.onerror = (e) => alert(e.target.error.name);
+    reader.readAsText(file);
+
+})
+
+function drawBubbleChart(datachar, start, end, topk){
+        console.log("print")
+        var data = google.visualization.arrayToDataTable(datachar);
+        console.log(data);
+        var options = {
+            title: 'A/B test (' + ' begin date: ' + start + ', end date: ' + end + ', top-k: ' + topk + ')',
+            hAxis: {title: 'Current Date'},
+            vAxis: {title: 'Algorithm'},
+            bubble: {textStyle: {fontSize: 11}}
+        };
+
+        var chart = new google.visualization.BubbleChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+}
+
 
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
@@ -110,6 +214,9 @@ function closeNav() {
 </script>
 
 </body>
+
+
+
 </html>
 
 
