@@ -179,6 +179,7 @@ def services():
 
                 # Call function to start a/b tests
                 abtest.startAB(abtest_id, dataset_id)
+                abtest.getABtestResults(abtest_id, dataset_id)
 
                 abtest_id += 1
                 algo_id = 1

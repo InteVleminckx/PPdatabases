@@ -1,10 +1,10 @@
-# from app import user_data_access
+from app import user_data_access
 
-from config import config_data
-from db_connection import DBConnection
-from user_data_acces import UserDataAcces
-connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-user_data_access = UserDataAcces(connection)
+# from config import config_data
+# from db_connection import DBConnection
+# from user_data_acces import UserDataAcces
+# connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
+# user_data_access = UserDataAcces(connection)
 
 import Popularity as popularity
 import recency_algorithm as receny
@@ -114,4 +114,4 @@ def getABtestResults(abtest_id, dataset_id):
 def main():
     getABtestResults(6, 0)
 
-main()
+# main()
