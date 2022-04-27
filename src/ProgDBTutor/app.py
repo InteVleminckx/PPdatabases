@@ -253,22 +253,22 @@ def datasets():
         userAmount = 0
         articleAmount = 0
         interactionAmount = 0
-        cursor = user_data_access.dbconnect.get_curser()
-        cursor.execute("SELECT COUNT(DISTINCT customer_id) FROM Customer WHERE dataset_id = %s", (dataset_id))
-        userAmount = cursor.fetchone()
-        cursor = user_data_access.dbconnect.get_curser()
-        cursor.execute("SELECT COUNT(DISTINCT item_id) FROM Dataset WHERE dataset_id = %s", (dataset_id))
-        articleAmount = cursor.fetchone()
-        cursor = user_data_access.dbconnect.get_curser()
-        cursor.execute("SELECT COUNT(DISTINCT (customer_id, item_id, t_dat)) FROM Interaction WHERE dataset_id = %s", (dataset_id))
-        interactionAmount = cursor.fetchone()
+        # cursor = user_data_access.dbconnect.get_cursor()
+        # cursor.execute("SELECT COUNT(DISTINCT customer_id) FROM Customer WHERE dataset_id = %s", (str(dataset_id)))
+        # userAmount = cursor.fetchone()
 
-    cursor = user_data_access.dbconnect.get_curser()
-    cursor.execute("SELECT DISTINCT dataset_id FROM Dataset")
+        # cursor.execute("SELECT COUNT(DISTINCT item_id) FROM Dataset WHERE dataset_id = %s", (str(dataset_id)))
+        # articleAmount = cursor.fetchone()
+
+        # cursor.execute("SELECT COUNT(DISTINCT (customer_id, item_id, t_dat)) FROM Interaction WHERE dataset_id = %s", (str(dataset_id)))
+        # interactionAmount = cursor.fetchone()
+
+    # cursor = user_data_access.dbconnect.get_curser()
+    # cursor.execute("SELECT DISTINCT dataset_id FROM Dataset")
 
     datasetList = list()
-    for row in cursor:
-        datasetList.append(row[0])
+    # for row in cursor:
+    #     datasetList.append(row[0])
 
     return render_template('datasets.html', app_data=app_data, datasetList = datasetList)
 
