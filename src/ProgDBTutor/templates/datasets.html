@@ -94,12 +94,32 @@
         Select a dataset and click on 'show statistics' to show the statistics of the dataset.<br>
         A new dataset can be added with the 'Add Dataset' button in the top right.
     </p>
-    <div>
-        <button class="showStatbtn">Show Statistics</button>
-    </div>
+    <form method="GET" action="">
+        <select class="ds_select" id="datasetSelection" name="datasetSelection">
+            <option value="dataset 0">dataset 0</option>
+            <option value="dataset 1">dataset 1</option>
+            <option value="dataset 2">dataset 2</option>
+            <option value="dataset 3">dataset 3</option>
+            {% for id in datasetList %}
+                <option value="dataset {{ id }}">dataset {{ id }}</option>
+            {% endfor %}
+        </select>
+        <div>
+            <button type="submit" name="submit_button" value="datasetSubmit" class="showStatbtn">Show Statistics</button>
+        </div>
+    </form>
+
 
     <div class="stat_container">
+        <p>Amount of items</p>
 
+        <p>Amount of users</p>
+
+        <p>Amount of interactions</p>
+
+        <p>Price distributions</p>
+
+        <p>Timestamps distributions</p>
     </div>
 
 

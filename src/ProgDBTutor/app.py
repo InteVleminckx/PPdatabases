@@ -238,6 +238,29 @@ def datasets():
 
         else:
             flash("You need admin privileges to upload a dataset", category='error')
+    else:
+        dataset_id = ""
+        s = request.form.get('submit_button')
+        if s == 'datasetSubmit':
+
+            d = request.form.get('datasetSelection')
+
+            for char in d:
+                if char.isdigit():
+                    dataset_id += char
+
+        userAmount = 0
+        articleAmount = 0
+        interactionAmount = 0
+        cursor = user_data_access.dbconnect.get_curser()
+        cursor.execute("SELECT COUNT(DISTINCT customer_id) FROM Customer WHERE dataset_id = %s", (dataset_id))
+        userAmount = cursor.fetchone()
+        cursor = user_data_access.dbconnect.get_curser()
+        cursor.execute("SELECT COUNT(DISTINCT item_id) FROM Dataset WHERE dataset_id = %s", (dataset_id))
+        articleAmount = cursor.fetchone()
+        cursor = user_data_access.dbconnect.get_curser()
+        cursor.execute("SELECT COUNT(DISTINCT (customer_id, item_id, t_dat)) FROM Interaction WHERE dataset_id = %s", (dataset_id))
+        interactionAmount = cursor.fetchone()
 
     cursor = user_data_access.dbconnect.get_curser()
     cursor.execute("SELECT DISTINCT dataset_id FROM Dataset")
