@@ -44,7 +44,7 @@ def getABtestResults(abtest_id, dataset_id):
     f = open("ABtest.txt", "w")
 
     cursor = user_data_access.dbconnect.get_cursor()
-    cursor.execute('SELECT DISTINCT result_id FROM Result WHERE dataset_id = %s', (str(dataset_id)))
+    cursor.execute('SELECT DISTINCT result_id FROM Result WHERE dataset_id = %s and abtest_id = %s', (str(dataset_id), str(abtest_id)))
 
     resultIdList = list()
     for row in cursor:
