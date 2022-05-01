@@ -237,6 +237,7 @@ def datasets():
             #Add purchases to database
             user_data_access.addPurchases(data_purchases)
 
+
         else:
             flash("You need admin privileges to upload a dataset", category='error')
     else:

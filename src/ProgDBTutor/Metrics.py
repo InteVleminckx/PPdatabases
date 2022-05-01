@@ -110,3 +110,4 @@ class Metrics:
         # Average Revenue Per User
         ARPU = None
         pass
+

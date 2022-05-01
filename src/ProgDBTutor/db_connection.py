@@ -15,6 +15,7 @@ class DBConnection:
     def get_connection(self):
         return self.conn
 
+
     def get_cursor(self):
         return self.conn.cursor()
 
