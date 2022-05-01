@@ -1,3 +1,4 @@
+
 # Author: Len Feremans
 # Unit tests for QuoteDataAccess
 import unittest

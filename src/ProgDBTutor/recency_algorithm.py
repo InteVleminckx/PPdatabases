@@ -73,6 +73,7 @@ class Recency:
         then it will get the recommendations for that interval
         """
 
+
         recommendations = user_data_access.getRecencyItem(self.datasetID, start, end, self.top_k)
         if recommendations is not None:
             for item_id in recommendations:

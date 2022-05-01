@@ -1,3 +1,4 @@
+
 # Data Access Object pattern: see http://best-practice-software-engineering.ifs.tuwien.ac.at/patterns/dao.html
 # For clean separation of concerns, create separate data layer that abstracts all data access to/from RDBM
 

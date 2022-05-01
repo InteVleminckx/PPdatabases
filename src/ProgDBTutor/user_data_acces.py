@@ -341,6 +341,7 @@ class UserDataAcces:
             if self.getInteraction(customer_id, item_id, data_purchases.iloc[row, 0], self.datasetId) is not None:
                 continue
 
+
             query = 'INSERT INTO Interaction(customer_id, dataset_id, item_id, attribute_dataset, attribute_customer, t_dat, price)\
                            VALUES (%s, %s, %s, %s, %s, %s, %s) '
 

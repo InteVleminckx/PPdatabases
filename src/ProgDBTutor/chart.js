@@ -1,3 +1,4 @@
+
 const labels = [
   'January',
   'February',
