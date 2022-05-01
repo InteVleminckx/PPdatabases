@@ -394,6 +394,23 @@ class UserDataAcces:
 
         return Interaction(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
 
+
+    def getNumberOfInteractions(self, dataset_id, curDate):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT count(item_id) FROM Interaction WHERE t_dat = %s AND dataset_id = %s;',
+                       (curDate, dataset_id))
+
+        return cursor.fetchone()[0]
+
+    def getNumberOfActiveUsers(self, dataset_id, curDate):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT count(distinct customer_id) FROM Interaction WHERE t_dat = %s AND dataset_id = %s;',
+                       (curDate, dataset_id))
+
+        return cursor.fetchone()[0]
+
+
+
     """
     Function to add an entry to the ABTest table
     """

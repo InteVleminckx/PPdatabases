@@ -1,11 +1,15 @@
 
 from app import user_data_access
+import datetime
+import json as jsn
+import sys
 
 # from config import config_data
 # from db_connection import DBConnection
 # from user_data_acces import UserDataAcces
 # connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 # user_data_access = UserDataAcces(connection)
+
 
 import Popularity as popularity
 import recency_algorithm as receny
@@ -36,7 +40,31 @@ def startAB(abtest_id, dataset_id=None):
             recAlgo.recommend()
 
 def getAB_Pop_Active(abtest_id, dataset_id):
-    pass
+
+    abtest = user_data_access.getAB_Test(abtest_id)
+
+    curDate = abtest.start_point
+
+    items = list()
+    users = list()
+    while curDate <= abtest.end_point:
+        curDate_str = str(curDate)[0:10]
+        numberOfItems = user_data_access.getNumberOfInteractions(dataset_id, curDate_str)
+        numberOfActiveUsers = user_data_access.getNumberOfActiveUsers(dataset_id, curDate_str)
+
+        items.append({"date": curDate_str, "purchases": numberOfItems})
+        users.append({"date": curDate_str, "active_users": numberOfActiveUsers})
+
+        curDate += datetime.timedelta(days=1)
+
+    sys.stdout = open("metrics1.js", "w")
+
+    dictItems = jsn.dumps(items)
+    dictUsers = jsn.dumps(users)
+
+    print("var items = '{}' ".format(dictItems))
+    print("var users = '{}' ".format(dictUsers))
+    sys.stdout.close()
 
 
 def getABtestResults(abtest_id, dataset_id):
@@ -116,6 +144,6 @@ def getABtestResults(abtest_id, dataset_id):
 #     return int(date.year), int(date.day), int(date.day)
 
 def main():
-    getABtestResults(6, 0)
+    getAB_Pop_Active(1,0)
 
 # main()
