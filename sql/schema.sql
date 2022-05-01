@@ -80,7 +80,7 @@ CREATE TABLE ABTest (
 -- Table of algorithms
 -- (1, 1, topk, 20)
 -- (1, 1, window_size, 30)
-CREATE TABLE  (
+CREATE TABLE  Algorithm(
     abtest_id INT NOT NULL,
     result_id INT NOT NULL,
     name TEXT NOT NULL,
