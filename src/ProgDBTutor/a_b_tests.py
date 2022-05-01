@@ -1,14 +1,14 @@
 
-from app import user_data_access
+# from app import user_data_access
 import datetime
 import json as jsn
 import sys
 
-# from config import config_data
-# from db_connection import DBConnection
-# from user_data_acces import UserDataAcces
-# connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-# user_data_access = UserDataAcces(connection)
+from config import config_data
+from db_connection import DBConnection
+from user_data_acces import UserDataAcces
+connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
+user_data_access = UserDataAcces(connection)
 
 
 import Popularity as popularity
@@ -57,7 +57,7 @@ def getAB_Pop_Active(abtest_id, dataset_id):
 
         curDate += datetime.timedelta(days=1)
 
-    sys.stdout = open("metrics1.js", "w")
+    sys.stdout = open("static/metrics1.js", "w")
 
     dictItems = jsn.dumps(items)
     dictUsers = jsn.dumps(users)
@@ -65,6 +65,36 @@ def getAB_Pop_Active(abtest_id, dataset_id):
     print("var items = '{}' ".format(dictItems))
     print("var users = '{}' ".format(dictUsers))
     sys.stdout.close()
+
+def getCTR(abtest_id, dataset_id):
+    abtest = user_data_access.getAB_Test(abtest_id)
+
+    curDate = abtest.start_point
+    results = user_data_access.getResultIds(abtest_id, dataset_id)
+
+    ctrs = []
+    for result in results:
+        ctr = []
+        while curDate <= abtest.end_point:
+            curDate_str = str(curDate)[0:10]
+
+
+            algorithm = user_data_access.getAlgorithm(abtest_id, result)
+            numberOfClicks = user_data_access.getClickTroughRate(abtest_id, result,dataset_id, curDate_str)
+            ctr.append({"date": curDate_str, "clicks": numberOfClicks, "algo_name": algorithm.name, "params": algorithm.params})
+            curDate += datetime.timedelta(days=1)
+
+        ctrs.append(ctr)
+        curDate = abtest.start_point
+
+
+    sys.stdout = open("static/metrics2.js", "w")
+
+    for i, clicks in enumerate(ctrs):
+        print("var clicks" + str(i) + " = '{}' ".format(jsn.dumps(clicks)))
+
+    sys.stdout.close()
+
 
 
 def getABtestResults(abtest_id, dataset_id):
@@ -144,6 +174,6 @@ def getABtestResults(abtest_id, dataset_id):
 #     return int(date.year), int(date.day), int(date.day)
 
 def main():
-    getAB_Pop_Active(1,0)
+    getCTR(1,0)
 
-# main()
+main()
