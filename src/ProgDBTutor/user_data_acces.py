@@ -1,3 +1,5 @@
+import time
+
 import pandas
 
 """
@@ -228,18 +230,27 @@ class UserDataAcces:
 
     # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
     def addArticles(self, data_articles, columns_articles):
+        #Duurt 1.30 min op deze manier
+        start = time.process_time()
         cursor = self.dbconnect.get_cursor()
         print('start reading articles')
+        execute = []
+        query = 'INSERT INTO Dataset(dataset_id, item_id, attribute , val) VALUES(%s, %s, %s, %s);'
         for row in range(0, len(data_articles.index)):
             for column in range(1, len(data_articles.columns)):
                 if str(data_articles.iloc[row, column]) == 'nan':
                     data_articles.iloc[row, column] = ''
-                cursor.execute('INSERT INTO Dataset(dataset_id, item_id, attribute , val) VALUES(%s, %s, %s, %s);',
-                               (self.datasetId,
+
+                files = (self.datasetId,
                                 int(data_articles.iloc[row, 0]),
                                 str(columns_articles[column]),
-                                str(data_articles.iloc[row, column])))
-            self.dbconnect.commit()
+                                str(data_articles.iloc[row, column]))
+
+                execute.append(files)
+        cursor.executemany(query, execute)
+        self.dbconnect.commit()
+
+        print("Articles: ", time.process_time() - start)
         print('end reading articles')
 
     """
@@ -259,35 +270,47 @@ class UserDataAcces:
 
     # def addCustomer(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
     def addCustomers(self, data_customers, columns_customers):
+        #duurt 6 min
         cursor = self.dbconnect.get_cursor()
+        start = time.process_time()
         print('start reading customers')
-
+        query = 'INSERT INTO Customer(dataset_id, customer_id, attribute , val) VALUES(%s, %s, %s, %s);'
         addedDefault  = False
-
+        execute = []
         for row in range(0, len(data_customers.index)):
             for column in range(1, len(data_customers.columns)):
                 if str(data_customers.iloc[row, column]) == 'nan':
                     data_customers.iloc[row, column] = ''
-                cursor.execute('INSERT INTO Customer(dataset_id, customer_id, attribute , val) VALUES(%s, %s, %s, %s)',
-                               (self.datasetId,
+
+                file = (self.datasetId,
                                 int(data_customers.iloc[row, 0]),
                                 str(columns_customers[column]),
-                                str(data_customers.iloc[row, column])))
+                                str(data_customers.iloc[row, column]))
 
-            self.dbconnect.commit()
+                execute.append(file)
+                # cursor.execute()
+
+            # self.dbconnect.commit()
             if not addedDefault:
                 print("Adding default costumer")
                 for column in range(1, len(data_customers.columns)):
                     if str(data_customers.iloc[row, column]) == 'nan':
                         data_customers.iloc[row, column] = ''
-                    cursor.execute('INSERT INTO Customer(dataset_id, customer_id, attribute , val) VALUES(%s, %s, %s, %s)',
-                                   (self.datasetId,
+
+
+                    file = (self.datasetId,
                                     -1,
                                     str(columns_customers[column]),
-                                    str(data_customers.iloc[row, column])))
+                                    str(data_customers.iloc[row, column]))
+                    execute.append(file)
+                    # cursor.execute()
                 addedDefault = True
-                self.dbconnect.commit()
+                # self.dbconnect.commit()
                 print("Added default costumer")
+
+        cursor.executemany(query, execute)
+        self.dbconnect.commit()
+        print("Customer: ", time.process_time() - start)
         print('end reading customers')
 
     """
@@ -327,8 +350,15 @@ class UserDataAcces:
     # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
     def addPurchases(self, data_purchases):
         # data_purchases = data_purchases.drop_duplicates()
+        #57 minuten
         cursor = self.dbconnect.get_cursor()
+        start = time.process_time()
         print('start reading purchases')
+
+        execute = []
+        created = set()
+        query = 'INSERT INTO Interaction(customer_id, dataset_id, item_id, attribute_dataset, attribute_customer, t_dat, price)\
+                                   VALUES (%s, %s, %s, %s, %s, %s, %s);'
         for row in range(0, len(data_purchases.index)):
             item_id = str(data_purchases.iloc[row, 2])
             customer_id = int(data_purchases.iloc[row, 1])
@@ -338,17 +368,14 @@ class UserDataAcces:
             customer = self.getCustomer(customer_id, self.datasetId)
             attribute_customer = list(customer.attributes)[0]
 
-            if self.getInteraction(customer_id, item_id, data_purchases.iloc[row, 0], self.datasetId) is not None:
+            if (item_id, customer_id) in created:
                 continue
 
-
-            query = 'INSERT INTO Interaction(customer_id, dataset_id, item_id, attribute_dataset, attribute_customer, t_dat, price)\
-                           VALUES (%s, %s, %s, %s, %s, %s, %s) '
-
-            cursor.execute(query, (str(customer_id), str(self.datasetId), str(item_id), attribute_dataset, attribute_customer, data_purchases.iloc[row, 0], data_purchases.iloc[row, 3]))
-
-            self.dbconnect.commit()
-
+            created.add((item_id, customer_id))
+            execute.append((str(customer_id), str(self.datasetId), str(item_id), attribute_dataset, attribute_customer, data_purchases.iloc[row, 0], data_purchases.iloc[row, 3]))
+        cursor.executemany(query, execute)
+        self.dbconnect.commit()
+        print("Purchases: ", time.process_time() - start)
         self.datasetId += 1
         print('end reading purchases')
 

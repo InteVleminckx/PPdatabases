@@ -35,6 +35,9 @@ def startAB(abtest_id, dataset_id=None):
             recAlgo = receny.Recency(dataset_id, abtest_id, result_id, startpoint, endpoint, topk, stepsize, retraininterval, algorithm_param)
             recAlgo.recommend()
 
+def getAB_Pop_Active(abtest_id, dataset_id):
+    pass
+
 
 def getABtestResults(abtest_id, dataset_id):
 
