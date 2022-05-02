@@ -22,7 +22,8 @@ import pandas as pd
 import csv
 import os
 import a_b_tests as abtest
-
+from datetime import datetime
+from datetime import timedelta
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'.csv'}
@@ -289,7 +290,23 @@ def datasetupload(rowData):
 @app.route("/visualizations")
 # @login_required
 def visualizations():
-    return render_template('visualizations.html', app_data=app_data)
+    labels, legend = [], []
+    current_abtest_id = 1
+    cursor = user_data_access.dbconnect.get_cursor()
+    abtest = user_data_access.getAB_Test(current_abtest_id)
+    for r_id in abtest.result_id:
+        string = 'algorithm' + str(r_id)
+        legend.append(string)
+
+    start_point = abtest.start_point
+    end_point = abtest.end_point
+    days_between = end_point - start_point
+    for day in range(days_between.days):
+        current_day = start_point.strftime("%Y-%m-%d")
+        current_day = str(datetime.strptime(current_day, '%Y-%m-%d') + timedelta(days=day))
+        labels.append(str(current_day)[0:10])
+
+    return render_template('visualizations.html', app_data=app_data, labels=labels, legend=legend)
 
 @app.route("/testlist")
 def testlist():
