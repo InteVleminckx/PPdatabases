@@ -1,6 +1,7 @@
 import time
 
 import pandas
+import psycopg2.extras
 
 """
 This class is to hold an datascientist out of the database
@@ -235,7 +236,7 @@ class UserDataAcces:
         cursor = self.dbconnect.get_cursor()
         print('start reading articles')
         execute = []
-        query = 'INSERT INTO Dataset(dataset_id, item_id, attribute , val) VALUES(%s, %s, %s, %s);'
+        insert_query = 'INSERT INTO Dataset(dataset_id, item_id, attribute , val) VALUES %s'
         for row in range(0, len(data_articles.index)):
             for column in range(1, len(data_articles.columns)):
                 if str(data_articles.iloc[row, column]) == 'nan':
@@ -247,7 +248,10 @@ class UserDataAcces:
                                 str(data_articles.iloc[row, column]))
 
                 execute.append(files)
-        cursor.executemany(query, execute)
+
+        psycopg2.extras.execute_values(
+            cursor, insert_query, execute, template=None, page_size=100
+        )
         self.dbconnect.commit()
 
         print("Articles: ", time.process_time() - start)
@@ -274,7 +278,7 @@ class UserDataAcces:
         cursor = self.dbconnect.get_cursor()
         start = time.process_time()
         print('start reading customers')
-        query = 'INSERT INTO Customer(dataset_id, customer_id, attribute , val) VALUES(%s, %s, %s, %s);'
+        insert_query = 'INSERT INTO Customer(dataset_id, customer_id, attribute , val) VALUES %s;'
         addedDefault  = False
         execute = []
         for row in range(0, len(data_customers.index)):
@@ -288,7 +292,6 @@ class UserDataAcces:
                                 str(data_customers.iloc[row, column]))
 
                 execute.append(file)
-                # cursor.execute()
 
             # self.dbconnect.commit()
             if not addedDefault:
@@ -297,19 +300,19 @@ class UserDataAcces:
                     if str(data_customers.iloc[row, column]) == 'nan':
                         data_customers.iloc[row, column] = ''
 
-
                     file = (self.datasetId,
                                     -1,
                                     str(columns_customers[column]),
                                     str(data_customers.iloc[row, column]))
                     execute.append(file)
-                    # cursor.execute()
                 addedDefault = True
-                # self.dbconnect.commit()
                 print("Added default costumer")
 
-        cursor.executemany(query, execute)
+        psycopg2.extras.execute_values(
+            cursor, insert_query, execute, template=None, page_size=100
+        )
         self.dbconnect.commit()
+
         print("Customer: ", time.process_time() - start)
         print('end reading customers')
 
@@ -357,8 +360,8 @@ class UserDataAcces:
 
         execute = []
         created = set()
-        query = 'INSERT INTO Interaction(customer_id, dataset_id, item_id, attribute_dataset, attribute_customer, t_dat, price)\
-                                   VALUES (%s, %s, %s, %s, %s, %s, %s);'
+        insert_query = 'INSERT INTO Interaction(customer_id, dataset_id, item_id, attribute_dataset, attribute_customer, t_dat, price)\
+                                   VALUES %s'
         for row in range(0, len(data_purchases.index)):
             item_id = str(data_purchases.iloc[row, 2])
             customer_id = int(data_purchases.iloc[row, 1])
@@ -373,14 +376,18 @@ class UserDataAcces:
 
             created.add((item_id, customer_id))
             execute.append((str(customer_id), str(self.datasetId), str(item_id), attribute_dataset, attribute_customer, data_purchases.iloc[row, 0], data_purchases.iloc[row, 3]))
-        cursor.executemany(query, execute)
+
+        psycopg2.extras.execute_values(
+            cursor, insert_query, execute, template=None, page_size=100
+        )
+
         self.dbconnect.commit()
         print("Purchases: ", time.process_time() - start)
         self.datasetId += 1
         print('end reading purchases')
 
     """
-    This function gets the interaction out of the dtaabase that corresponds with the given attributes.
+    This function gets the interaction out of the database that corresponds with the given attributes.
     """
     def getInteraction(self, customer_id, item_id, time_date, dataset_id):
         cursor = self.dbconnect.get_cursor()

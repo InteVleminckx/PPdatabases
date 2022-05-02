@@ -173,7 +173,7 @@ def getABtestResults(abtest_id, dataset_id):
 # def getDate(date):
 #     return int(date.year), int(date.day), int(date.day)
 
-def main():
-    getCTR(1,0)
+# def main():
+#     getCTR(1,0)
 
-main()
+# main()
