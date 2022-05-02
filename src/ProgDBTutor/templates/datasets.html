@@ -14,6 +14,7 @@
 </head>
 <body>
 
+
 <nav class="navbar" id="navbar">
         <div class="navbar_container">
             <div class="navbar_toggle" id="mobile-menu">
@@ -23,9 +24,10 @@
             </div>
             <ul class="navbar_menu">
                 <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">Services</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
             </ul>
         </div>
     </nav>
@@ -74,47 +76,17 @@
                 <tr>
                     <td>Dataset number</td>
                     <td>Dataset name</td>
+                    <td style="color: red;">Remove</td>
                 </tr>
             </thead>
             <tbody>
-{#                {% for key, value in algo_dict.items() %}#}
-{#                    <tr onclick="window.location.href='{{ url_for('dataset', rowData=key) }}';">#}
-{#                        <td>{{ key }}</td>#}
-{#                        <td>{{ value }}</td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-                <tr>
-                    <td>dataset nr1</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr2</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
-                <tr>
-                    <td>dataset nr3</td>
-                    <td>datatset name</td>
-                </tr>
+                {% for id in datasetList %}
+                    <tr>
+                        <td>dataset name</td>
+                        <td>{{ id }}</td>
+                        <td style="font-size: 20px;color: red;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
 {#    </div>#}
@@ -123,21 +95,54 @@
         Select a dataset and click on 'show statistics' to show the statistics of the dataset.<br>
         A new dataset can be added with the 'Add Dataset' button in the top right.
     </p>
-    <div>
-        <button class="showStatbtn">Show Statistics</button>
-    </div>
+    <form method="GET" action="">
+        <select class="ds_select" id="datasetSelection" name="datasetSelection">
+            <option value="dataset 0">dataset 0</option>
+            <option value="dataset 1">dataset 1</option>
+            <option value="dataset 2">dataset 2</option>
+            <option value="dataset 3">dataset 3</option>
+            {% for id in datasetList %}
+                <option value="dataset {{ id }}">dataset {{ id }}</option>
+            {% endfor %}
+        </select>
+        <div>
+            <button type="submit" name="submit_button" value="datasetSubmit" class="showStatbtn">Show Statistics</button>
+        </div>
+    </form>
+
 
     <div class="stat_container">
+        <p>Amount of items</p>
 
+        <p>Amount of users</p>
+
+        <p>Amount of interactions</p>
+
+        <p>Price distributions</p>
+
+        <p>Timestamps distributions</p>
     </div>
 
 
 </div>
 
 <script>
+    {#var row_id = 0;#}
+
 $('#scrolltable tbody tr').click(function() {
     $(this).addClass('highlight').siblings().removeClass('highlight');
 });
+
+{#function selectRow() {#}
+{#    row_id = event.target.id;#}
+
+{##}
+{#function sendTableData() {#}
+{#    var data = document.getElementById(row_id).querySelectorAll(".row_data");#}
+{#    var id = data[0].innerHTML;#}
+{#    var name = data[1].innerHTML;#}
+{#    #}
+
 </script>
 
 <!-- Services Section-->

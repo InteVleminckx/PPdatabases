@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS Recommendation, Result, Algorithm, ABTest, Interaction, Admin, DataScientist, Authentication, Customer, Dataset ;
 
 -- Table to keep track of the items/articles of the datasets
+drop table Recommendation;
 CREATE TABLE Dataset (
     dataset_id INT NOT NULL,
     item_id INT NOT NULL,
@@ -80,7 +81,7 @@ CREATE TABLE ABTest (
 -- Table of algorithms
 -- (1, 1, topk, 20)
 -- (1, 1, window_size, 30)
-CREATE TABLE Algorithm (
+CREATE TABLE Algorithm(
     abtest_id INT NOT NULL,
     result_id INT NOT NULL,
     name TEXT NOT NULL,
@@ -139,5 +140,5 @@ INSERT INTO Dataset(dataset_id, item_id, attribute, val) VALUES (1, 0, 'size', '
 -- INSERT INTO Recommendation(abtest_id, result_id, dataset_id, customer_id, item_id, attribute) VALUES (100, 0, 0, 10, 0, 'size') ;
 
 -- Adding Admin account
--- INSERT INTO DataScientist(username, email, firstname, lastname) VALUES ('admin', 'admin@hotmail.com', 'admin', 'the admin');
--- INSERT INTO Authentication(username, password) VALUES ('admin', 'nimda');
+INSERT INTO Authentication(username, password) VALUES ('admin', 'nimda');
+INSERT INTO DataScientist(username, email, firstname, lastname) VALUES ('admin', 'admin@hotmail.com', 'admin', 'the admin');

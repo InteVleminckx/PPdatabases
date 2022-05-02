@@ -24,6 +24,7 @@
       crossorigin="anonymous"
     />
 
+
 </head>
 <body>
 
@@ -78,6 +79,12 @@
     <script>
         $('.message a').click(function(){
         $('form').animate({height:"toggle", opacity: "toggle"}, "slow");
+        });
+
+        $(document).ready(function() {
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+            }, 1000); // <-- time in milliseconds
         });
     </script>
 

@@ -94,6 +94,7 @@ def services():
     global algo_list
     global algo_dict
     global abtest_id
+    global algo_dict
     if 'loggedin' in session:
         if request.method == 'POST':
             s = request.form.get('submit_button')
@@ -102,29 +103,37 @@ def services():
                 algo = request.form.get('algoSelection')
 
                 if algo == "popularity":
-                    windowsize = request.form.get('windowsize')
-                    retraininterval = request.form.get('retraininterval1')
-
-                    algo_list.append((algo_id, "popularity", "windowsize", windowsize))
-                    algo_list.append((algo_id, "popularity", "retraininterval", retraininterval))
-                    algo_dict[algo_id] = "popularity"
-                    algo_id += 1
+                    windowsize = request.form.get('windowsize', None)
+                    retraininterval = request.form.get('retraininterval1', None)
+                    if windowsize == "" or retraininterval == "":
+                        flash('Algorithm parameters not fully filled in.', category='error')
+                    else:
+                        algo_list.append((algo_id, "popularity", "windowsize", windowsize))
+                        algo_list.append((algo_id, "popularity", "retraininterval", retraininterval))
+                        algo_dict[algo_id] = "popularity"
+                        algo_id += 1
                 elif algo == "recency":
-                    retraininterval = request.form.get('retraininterval2')
-                    algo_list.append((algo_id, "recency", "retraininterval", retraininterval))
-                    algo_dict[algo_id] = "recency"
-                    algo_id += 1
+                    retraininterval = request.form.get('retraininterval2', None)
+                    if retraininterval == "":
+                        flash('Algorithm parameters not fully filled in.', category='error')
+                    else:
+                        algo_list.append((algo_id, "recency", "retraininterval", retraininterval))
+                        algo_dict[algo_id] = "recency"
+                        algo_id += 1
                 elif algo == "itemknn":
                     k = request.form.get('k')
                     window = request.form.get('window')
                     normalize = request.form.get('normalize')
                     retraininterval = request.form.get('retraininterval3')
-                    algo_list.append((algo_id, "itemknn", "k", k))
-                    algo_list.append((algo_id, "itemknn", "window", window))
-                    algo_list.append((algo_id, "itemknn", "normalize", normalize))
-                    algo_list.append((algo_id, "itemknn", "retraininterval", retraininterval))
-                    algo_dict[algo_id] = "itemknn"
-                    algo_id += 1
+                    if k == None or window == "" or normalize == "" or retraininterval == "":
+                        flash('Algorithm parameters not fully filled in.', category='error')
+                    else:
+                        algo_list.append((algo_id, "itemknn", "k", k))
+                        algo_list.append((algo_id, "itemknn", "window", window))
+                        algo_list.append((algo_id, "itemknn", "normalize", normalize))
+                        algo_list.append((algo_id, "itemknn", "retraininterval", retraininterval))
+                        algo_dict[algo_id] = "itemknn"
+                        algo_id += 1
 
             elif s == 'abtestSubmit':
                 cursor = user_data_access.dbconnect.get_cursor()
@@ -171,6 +180,8 @@ def services():
 
                 # Call function to start a/b tests
                 abtest.startAB(abtest_id, dataset_id)
+                abtest.getABtestResults(abtest_id, dataset_id)
+                abtest.getAB_Pop_Active(abtest_id, dataset_id)
 
                 abtest_id += 1
                 algo_id = 1
@@ -191,7 +202,7 @@ def services():
                     del algo_dict[algo_id]
 
         return render_template('services.html', app_data=app_data, algo_dict=algo_dict)
-    return redirect(url_for('login'))
+    return redirect(url_for('login_user'))
 
 
 @app.route("/datasets", methods=['GET', 'POST'])
@@ -228,11 +239,53 @@ def datasets():
             #Add purchases to database
             user_data_access.addPurchases(data_purchases)
 
+
         else:
             flash("You need admin privileges to upload a dataset", category='error')
-    return render_template('datasets.html', app_data=app_data)
+    else:
+        dataset_id = ""
+        s = request.form.get('submit_button')
+        if s == 'datasetSubmit':
 
-# @app.route("/datasetupload")
+            d = request.form.get('datasetSelection')
+
+            for char in d:
+                if char.isdigit():
+                    dataset_id += char
+
+        userAmount = 0
+        articleAmount = 0
+        interactionAmount = 0
+        # cursor = user_data_access.dbconnect.get_cursor()
+        # cursor.execute("SELECT COUNT(DISTINCT customer_id) FROM Customer WHERE dataset_id = %s", (str(dataset_id)))
+        # userAmount = cursor.fetchone()
+
+        # cursor.execute("SELECT COUNT(DISTINCT item_id) FROM Dataset WHERE dataset_id = %s", (str(dataset_id)))
+        # articleAmount = cursor.fetchone()
+
+        # cursor.execute("SELECT COUNT(DISTINCT (customer_id, item_id, t_dat)) FROM Interaction WHERE dataset_id = %s", (str(dataset_id)))
+        # interactionAmount = cursor.fetchone()
+
+    # cursor = user_data_access.dbconnect.get_curser()
+    # cursor.execute("SELECT DISTINCT dataset_id FROM Dataset")
+
+    datasetList = list()
+    # for row in cursor:
+    #     datasetList.append(row[0])
+
+    return render_template('datasets.html', app_data=app_data, datasetList = datasetList)
+
+@app.route("/datasetupload")
+def datasetupload(rowData):
+    cursor = user_data_access.dbconnect.get_cursor()
+    # remove dataset(s) with id=rowData
+    try:
+        cursor.execute("DELETE FROM Dataset WHERE dataset_id = %s", (rowData))
+        user_data_access.dbconnect.commit()
+    except:
+        user_data_access.dbconnect.rollback()
+
+    return redirect(url_for('datasets'))
 
 @app.route("/visualizations")
 # @login_required
@@ -255,22 +308,20 @@ def visualizations():
 
     return render_template('visualizations.html', app_data=app_data, labels=labels, legend=legend)
 
+@app.route("/testlist")
+def testlist():
+    cursor = user_data_access.dbconnect.get_cursor()
+    cursor.execute("SELECT DISTINCT(abtest_id) FROM ABTest")
+
+    testList = list()
+    for row in cursor:
+        testList.append(row[0])
+
+    return render_template('testlist.html', app_data=app_data, testList = testList)
+
 #----------------- User_DB -----------------#
-# @app.route("/login", methods=['GET'])
-# def login():
-#
-#     # user_objects = user_data_access.get_users()
-#     return render_template('login.html', app_data=app_data)
-#
-#
-# @app.route("/login/<string:email>", methods=['GET'])
-# def get_user(username):
-#     user_object = user_data_access.get_user(username)
-#
-#     return jsonify([user_object.to_dct()])
 
-
-@app.route("/register", methods=['POST'])
+@app.route("/register", methods=['GET', 'POST'])
 def add_user():
     user_firstname = request.form.get('firstname')
     user_lastname = request.form.get('lastname')
@@ -279,7 +330,7 @@ def add_user():
     user_password = request.form.get('password')
 
     cursor = user_data_access.dbconnect.get_cursor()
-    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username))
+    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
     row = cursor.fetchone()
     # user = DataScientist.query.filter_by(username=user_username).first
 
@@ -301,29 +352,31 @@ def add_user():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login_user():
-    user_username = request.form.get('username')
-    user_password = request.form.get('password')
 
-    # user = DataScientist.query.filter_by(username=user_username).first
+    if request.method == 'POST':
 
-    cursor = user_data_access.dbconnect.get_cursor()
-    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
-    row = cursor.fetchone()
-    if row is not None: # als de username is gevonden
-        user = row[0]
-        cursor1 = user_data_access.dbconnect.get_cursor()
-        cursor1.execute("SELECT password FROM authentication WHERE username = %s", (user_username,))
-        password = cursor1.fetchone()[0]
-        if check_password_hash(password, user_password) or (user_username == 'admin' and password == user_password):
-            flash('Logged in successfully!', category='success')
-            # login_user(user, remember=True)
-            session['loggedin'] = True
-            session['username'] = user
-            return redirect(url_for('main'))
+        user_username = request.form.get('username')
+        user_password = request.form.get('password')
+
+        # user = DataScientist.query.filter_by(username=user_username).first
+        cursor = user_data_access.dbconnect.get_cursor()
+        cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
+        row = cursor.fetchone()
+        if row is not None: # als de username is gevonden
+            user = row[0]
+            cursor1 = user_data_access.dbconnect.get_cursor()
+            cursor1.execute("SELECT password FROM authentication WHERE username = %s", (user_username,))
+            password = cursor1.fetchone()[0]
+            if check_password_hash(password, user_password) or (user_username == 'admin' and password == user_password):
+                flash('Logged in successfully!', category='success')
+                # login_user(user, remember=True)
+                session['loggedin'] = True
+                session['username'] = user
+                return redirect(url_for('main'))
+            else:
+                flash('Incorrect password, try again.', category='error')
         else:
-            flash('Incorrect password, try again.', category='error')
-    else:
-        flash('Username does not exist.', category='error')
+            flash('Username does not exist.', category='error')
 
     return render_template('login.html', app_data=app_data)
 
@@ -333,6 +386,7 @@ def logout():
     # logout_user()
     session.pop('loggedin', None)
     session.pop('username', None)
+    # session.pop('_flashes', None)
     return redirect(url_for('login_user'))
 
 # RUN DEV SERVER

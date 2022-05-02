@@ -1,0 +1,96 @@
+<html>
+<head>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+
+	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">
+
+	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
+	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
+
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+        <div class="navbar_container">
+            <div class="navbar_toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar_menu">
+                <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+
+<!-- Dataset Section-->
+
+<div class="dataset" id="dataset">
+
+{#    <div class="_container">#}
+
+        <div class="dataset_title" >A/B-tests</div>
+        <div class="dataset__btn">
+            <button>Remove A/B-test</button>
+        </div>
+        <table class="scroll-table" id="scrolltable">
+            <thead>
+                <tr>
+                    <td>A/B-test id</td>
+                    <td>A/B-test name</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in testList %}
+                    <tr>
+{#                    onclick="window.location.href='{{ url_for('testlist', rowData=key) }}';"#}
+                        <td>A/B-test</td>
+                        <td>{{ item }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+{#    </div>#}
+
+
+
+</div>
+
+<script>
+$('#scrolltable tbody tr').click(function() {
+    $(this).addClass('highlight').siblings().removeClass('highlight');
+});
+</script>
+
+<!-- Services Section-->
+<!--{#    <div class="dataset" id="dataset">#}-->
+<!--{##}-->
+<!--{#        <h1>Recommendation algorithms</h1>#}-->
+<!--{#        <div class="dataset__wrapper">#}-->
+<!--{#            <div class="dataset__card">#}-->
+<!--{#                <h2>Popularity</h2>#}-->
+<!--{#                <p></p>#}-->
+<!--{#                <div class="dataset__btn">#}-->
+<!--{#                    <button>Start Setup</button>#}-->
+<!--{#                </div>#}-->
+<!--{#            </div>#}-->
+<!--{#        </div>#}-->
+<!--{#    </div>#}-->
+
+</body>
+</html>
+
+
+
+
