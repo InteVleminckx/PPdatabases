@@ -304,7 +304,7 @@ def testlist():
 
 #----------------- User_DB -----------------#
 
-@app.route("/register", methods=['POST'])
+@app.route("/register", methods=['GET', 'POST'])
 def add_user():
     user_firstname = request.form.get('firstname')
     user_lastname = request.form.get('lastname')
@@ -335,29 +335,31 @@ def add_user():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login_user():
-    user_username = request.form.get('username')
-    user_password = request.form.get('password')
 
-    # user = DataScientist.query.filter_by(username=user_username).first
+    if request.method == 'POST':
 
-    cursor = user_data_access.dbconnect.get_cursor()
-    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
-    row = cursor.fetchone()
-    if row is not None: # als de username is gevonden
-        user = row[0]
-        cursor1 = user_data_access.dbconnect.get_cursor()
-        cursor1.execute("SELECT password FROM authentication WHERE username = %s", (user_username,))
-        password = cursor1.fetchone()[0]
-        if check_password_hash(password, user_password) or (user_username == 'admin' and password == user_password):
-            flash('Logged in successfully!', category='success')
-            # login_user(user, remember=True)
-            session['loggedin'] = True
-            session['username'] = user
-            return redirect(url_for('main'))
+        user_username = request.form.get('username')
+        user_password = request.form.get('password')
+
+        # user = DataScientist.query.filter_by(username=user_username).first
+        cursor = user_data_access.dbconnect.get_cursor()
+        cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
+        row = cursor.fetchone()
+        if row is not None: # als de username is gevonden
+            user = row[0]
+            cursor1 = user_data_access.dbconnect.get_cursor()
+            cursor1.execute("SELECT password FROM authentication WHERE username = %s", (user_username,))
+            password = cursor1.fetchone()[0]
+            if check_password_hash(password, user_password) or (user_username == 'admin' and password == user_password):
+                flash('Logged in successfully!', category='success')
+                # login_user(user, remember=True)
+                session['loggedin'] = True
+                session['username'] = user
+                return redirect(url_for('main'))
+            else:
+                flash('Incorrect password, try again.', category='error')
         else:
-            flash('Incorrect password, try again.', category='error')
-    else:
-        flash('Username does not exist.', category='error')
+            flash('Username does not exist.', category='error')
 
     return render_template('login.html', app_data=app_data)
 
@@ -367,6 +369,7 @@ def logout():
     # logout_user()
     session.pop('loggedin', None)
     session.pop('username', None)
+    # session.pop('_flashes', None)
     return redirect(url_for('login_user'))
 
 # RUN DEV SERVER
