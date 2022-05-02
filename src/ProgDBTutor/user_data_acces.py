@@ -409,7 +409,25 @@ class UserDataAcces:
 
         return cursor.fetchone()[0]
 
+    def getResultIds(self, abtest_id, dataset_id):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT result_id FROM Result WHERE abtest_id = %s AND dataset_id = %s;',(abtest_id, dataset_id))
 
+        rows = cursor.fetchall()
+        results = []
+        for row in rows:
+            results.append(row[0])
+
+        return results
+
+    def getClickTroughRate(self, abtest_id, result_id,dataset_id, curDate):
+
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('SELECT count(DISTINCT r.item_id) FROM Recommendation r, Interaction i WHERE r.abtest_id = %s AND r.result_id = %s AND %s BETWEEN r.start_point AND r.end_point'
+                       ' AND i.dataset_id = %s AND i.t_dat = %s AND r.item_id = i.item_id;', (abtest_id, result_id, curDate, dataset_id, curDate))
+
+
+        return cursor.fetchone()[0]
 
     """
     Function to add an entry to the ABTest table
