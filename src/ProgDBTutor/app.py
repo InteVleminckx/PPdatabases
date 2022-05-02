@@ -313,7 +313,7 @@ def add_user():
     user_password = request.form.get('password')
 
     cursor = user_data_access.dbconnect.get_cursor()
-    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username))
+    cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
     row = cursor.fetchone()
     # user = DataScientist.query.filter_by(username=user_username).first
 
