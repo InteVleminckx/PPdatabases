@@ -1,5 +1,4 @@
 
-from app import user_data_access
 import datetime
 import json as jsn
 import sys
@@ -14,7 +13,7 @@ import sys
 import Popularity as popularity
 import recency_algorithm as receny
 
-def startAB(abtest_id, dataset_id=None):
+def startAB(abtest_id, dataset_id, user_data_access):
     abtest = user_data_access.getAB_Test(abtest_id)
     result_ids = abtest.result_id
     startpoint = str(abtest.start_point)
@@ -39,7 +38,7 @@ def startAB(abtest_id, dataset_id=None):
             recAlgo = receny.Recency(dataset_id, abtest_id, result_id, startpoint, endpoint, topk, stepsize, retraininterval, algorithm_param)
             recAlgo.recommend()
 
-def getAB_Pop_Active(abtest_id, dataset_id):
+def getAB_Pop_Active(abtest_id, dataset_id, user_data_access):
     dataset_id = 0
     abtest = user_data_access.getAB_Test(abtest_id)
 
@@ -66,7 +65,7 @@ def getAB_Pop_Active(abtest_id, dataset_id):
     print("var users = '{}' ".format(dictUsers))
     sys.stdout.close()
 
-def getCTR(abtest_id, dataset_id):
+def getCTR(abtest_id, dataset_id, user_data_access):
     abtest = user_data_access.getAB_Test(abtest_id)
 
     curDate = abtest.start_point
@@ -97,7 +96,7 @@ def getCTR(abtest_id, dataset_id):
 
 
 
-def getABtestResults(abtest_id, dataset_id):
+def getABtestResults(abtest_id, dataset_id, user_data_access):
 
     abtest = user_data_access.getAB_Test(abtest_id)
     topk = abtest.topk
@@ -174,6 +173,6 @@ def getABtestResults(abtest_id, dataset_id):
 #     return int(date.year), int(date.day), int(date.day)
 
 # def main():
-#     getCTR(1,0)
+#     getCTR(1,0, user_data_access)
 
 # main()
