@@ -1,14 +1,14 @@
 
-# from app import user_data_access
+from app import user_data_access
 import datetime
 import json as jsn
 import sys
 
-from config import config_data
-from db_connection import DBConnection
-from user_data_acces import UserDataAcces
-connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-user_data_access = UserDataAcces(connection)
+# from config import config_data
+# from db_connection import DBConnection
+# from user_data_acces import UserDataAcces
+# connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
+# user_data_access = UserDataAcces(connection)
 
 
 import Popularity as popularity
@@ -40,7 +40,7 @@ def startAB(abtest_id, dataset_id=None):
             recAlgo.recommend()
 
 def getAB_Pop_Active(abtest_id, dataset_id):
-
+    dataset_id = 0
     abtest = user_data_access.getAB_Test(abtest_id)
 
     curDate = abtest.start_point
