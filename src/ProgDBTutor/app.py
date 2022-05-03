@@ -346,7 +346,7 @@ def add_user():
         flash('Account succesfully registered!', category='success')
         session['loggedin'] = True
         session['username'] = user_username
-        return redirect(url_for('main'))
+        return redirect(url_for('services'))
 
     return render_template('login.html', app_data=app_data)
 
@@ -372,7 +372,7 @@ def login_user():
                 # login_user(user, remember=True)
                 session['loggedin'] = True
                 session['username'] = user
-                return redirect(url_for('main'))
+                return redirect(url_for('services'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:

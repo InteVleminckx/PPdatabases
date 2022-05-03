@@ -12,6 +12,18 @@
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
 
+{#    <link#}
+{#      rel="stylesheet"#}
+{#      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"#}
+{#      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"#}
+{#      crossorigin="anonymous"#}
+{#    />#}
+{#    <link#}
+{#      rel="stylesheet"#}
+{#      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"#}
+{#      crossorigin="anonymous"#}
+{#    />#}
+
 </head>
 <body>
 
@@ -31,6 +43,28 @@
             </ul>
         </div>
     </nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'error' %}
+            <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% else %}
+            <div class="alert alert-success alter-dismissable fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
 
 <form method="POST" action="" data-name="cForm">
@@ -266,6 +300,12 @@
                 }
             }
     }
+
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+            }, 1000); // <-- time in milliseconds
+        });
 
 </script>
 
