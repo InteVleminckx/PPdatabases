@@ -108,7 +108,9 @@
 <div id="chart_div" style="width:800px; height:600px"></div>
 
 {#TODO: Dit moet nog op de juiste plaats komen te staan#}
-<canvas id="myChart" width="300px" height="250px"></canvas>
+    <div style="width:1000px; height:800px">
+        <canvas id="myChart"></canvas>
+    </div>
 </div>
 
 </div>
@@ -125,106 +127,6 @@ function openNav() {
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
-
-{#google.charts.load('current', {'packages':['corechart']});#}
-{#google.charts.setOnLoadCallback(drawBubbleChart);#}
-{##}
-{#const input = document.getElementById("input");#}
-{#input.addEventListener('change', () => {#}
-{#    let files = input.files;#}
-{#    if (files.length == 0) return;#}
-{##}
-{#    const file = files[0];#}
-{##}
-{#    let reader = new FileReader();#}
-{##}
-{#    reader.onload = (e) => {#}
-{##}
-{#        const file = e.target.result;#}
-{#        const lines = file.split(/\r\n|\n/);#}
-{##}
-{#        var datachar = []#}
-{##}
-{#        var addHeader = true;#}
-{#        var row = []#}
-{#        var res, name, windowsize, date, start, end, topk = ""#}
-{##}
-{#        for (let i = 1; i < lines.length; i++) {#}
-{##}
-{#            if (lines[i] == "]") {#}
-{#                addHeader = false;#}
-{#                datachar.push(row)#}
-{#                row = []#}
-{#            }#}
-{#            else if (addHeader && lines[i] != "["){#}
-{#                row.push(lines[i]);#}
-{#            }#}
-{#            else {#}
-{#                var itemVal = lines[i].split(': ')[1]#}
-{#                var itemName = lines[i].split(': ')[0]#}
-{##}
-{#                if (itemName == "result_id"){#}
-{#                    res = itemVal#}
-{#                }#}
-{#                else if (itemName == "name"){#}
-{#                    name = itemVal#}
-{#                }#}
-{#                else if (itemName == "windowsize"){#}
-{#                    windowsize = itemVal#}
-{#                }#}
-{#                else if (itemName == "current date"){#}
-{#                    date = itemVal#}
-{#                }#}
-{#                else if (itemName == "start_point"){#}
-{#                    start = itemVal#}
-{#                }#}
-{#                else if (itemName == "end_point"){#}
-{#                    end = itemVal#}
-{#                }#}
-{#                else if (itemName == "topk"){#}
-{#                    topk = itemVal#}
-{#                }#}
-{#                else {#}
-{#                    row = [topk, new Date(date), parseInt(res), name]#}
-{#                    if (itemName == "items") {#}
-{#                        var number = itemVal.substring(1, itemVal.length-1);#}
-{#                        var numbers = number.split(', ');#}
-{#                        numbers = numbers.map(function (x) {#}
-{#                            return parseInt(x, 10);#}
-{#                        });#}
-{#                        row = row.concat(numbers);#}
-{#                        datachar.push(row)#}
-{#                    }#}
-{#                }#}
-{##}
-{#            }#}
-{#        }#}
-{##}
-{##}
-{##}
-{#        drawBubbleChart(datachar, start, end, topk);#}
-{#    }#}
-{#    reader.onerror = (e) => alert(e.target.error.name);#}
-{#    reader.readAsText(file);#}
-{##}
-{#})#}
-{##}
-{#function drawBubbleChart(datachar, start, end, topk){#}
-{#        console.log("print")#}
-{#        var data = google.visualization.arrayToDataTable(datachar);#}
-{#        console.log(data);#}
-{#        var options = {#}
-{#            title: 'A/B test (' + ' begin date: ' + start + ', end date: ' + end + ', top-k: ' + topk + ')',#}
-{#            hAxis: {title: 'Current Date'},#}
-{#            vAxis: {title: 'Algorithm'},#}
-{#            bubble: {textStyle: {fontSize: 11}}#}
-{#        };#}
-{##}
-{#        var chart = new google.visualization.BubbleChart(document.getElementById('chart_div'));#}
-{#        chart.draw(data, options);#}
-{#}#}
-
-
 
 </script>
 
