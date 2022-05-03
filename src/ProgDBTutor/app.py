@@ -10,10 +10,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from config import config_data
-from db_connection import DBConnection
-from user_data_acces import DataScientist, UserDataAcces
-from user_data_acces import UserDataAcces
+# from config import config_data
+# from db_connection import DBConnection
+from user_data_acces import DataScientist #, UserDataAcces
+# from user_data_acces import UserDataAcces
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -23,9 +23,20 @@ import csv
 import os
 import a_b_tests as abtest
 
+from config import config_data
+from db_connection import DBConnection
+from user_data_acces import UserDataAcces
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'.csv'}
+
+app = Flask('Tutorial')
+app.secret_key = '*^*(*&)(*)(*afafafaSDD47j\3yX R~X@H!jmM]Lwf/,?KT'
+app_data = dict()
+app_data['app_name'] = config_data['app_name']
+connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
+user_data_access = UserDataAcces(connection)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 algo_list = list()
 algo_dict = dict()
@@ -34,17 +45,11 @@ engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
 
 # INITIALIZE SINGLETON SERVICES
-app = Flask('Tutorial ')
-app.secret_key = '*^*(*&)(*)(*afafafaSDD47j\3yX R~X@H!jmM]Lwf/,?KT'
-app_data = dict()
-app_data['app_name'] = config_data['app_name']
-connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-user_data_access = UserDataAcces(connection)
+
 
 algo_id = 1
 abtest_id = user_data_access.getMaxABTestID()+1
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # login_manager = LoginManager()
 # login_manager.login_view = 'app.login_user'
@@ -178,9 +183,9 @@ def services():
                 user_data_access.dbconnect.commit()
 
                 # Call function to start a/b tests
-                abtest.startAB(abtest_id, dataset_id)
-                abtest.getABtestResults(abtest_id, dataset_id)
-                abtest.getAB_Pop_Active(abtest_id, dataset_id)
+                abtest.startAB(abtest_id, dataset_id, user_data_access)
+                abtest.getABtestResults(abtest_id, dataset_id, user_data_access)
+                abtest.getAB_Pop_Active(abtest_id, dataset_id, user_data_access)
 
                 abtest_id += 1
                 algo_id = 1
