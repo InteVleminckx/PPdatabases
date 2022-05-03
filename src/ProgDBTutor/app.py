@@ -27,6 +27,7 @@ from config import config_data
 from db_connection import DBConnection
 from user_data_acces import UserDataAcces
 
+
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'.csv'}
 
