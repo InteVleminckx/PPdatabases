@@ -454,8 +454,7 @@ class UserDataAcces:
     """
     def getAB_Test(self, abtestId):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT abtest_id, result_id, start_point, end_point, stepsize, topk \
-                        FROM ABTest WHERE abtest_id = %s", (str(abtestId)))
+        cursor.execute('SELECT abtest_id, result_id, start_point, end_point, stepsize, topk FROM ABTest WHERE abtest_id = %s', (str(abtestId)))
 
         res = []
         rows = None

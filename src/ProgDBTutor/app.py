@@ -22,6 +22,7 @@ import pandas as pd
 import csv
 import os
 import a_b_tests as abtest
+from datetime import datetime, timedelta
 
 from config import config_data
 from db_connection import DBConnection
@@ -184,9 +185,9 @@ def services():
                 user_data_access.dbconnect.commit()
 
                 # Call function to start a/b tests
-                abtest.startAB(abtest_id, dataset_id, user_data_access)
-                abtest.getABtestResults(abtest_id, dataset_id, user_data_access)
-                abtest.getAB_Pop_Active(abtest_id, dataset_id, user_data_access)
+                abtest.startAB(user_data_access.getMaxABTestID(), dataset_id, user_data_access)
+                abtest.getABtestResults(user_data_access.getMaxABTestID(), dataset_id, user_data_access)
+                abtest.getAB_Pop_Active(user_data_access.getMaxABTestID(), dataset_id, user_data_access)
 
                 abtest_id += 1
                 algo_id = 1
@@ -296,7 +297,7 @@ def datasetupload(rowData):
 # @login_required
 def visualizations():
     labels, legend = [], []
-    current_abtest_id = 1
+    current_abtest_id = user_data_access.getMaxABTestID()
     cursor = user_data_access.dbconnect.get_cursor()
     abtest = user_data_access.getAB_Test(current_abtest_id)
     for r_id in abtest.result_id:
