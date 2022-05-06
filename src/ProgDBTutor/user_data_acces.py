@@ -401,7 +401,6 @@ class UserDataAcces:
 
         return Interaction(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
 
-
     def getNumberOfInteractions(self, dataset_id, curDate):
         cursor = self.dbconnect.get_cursor()
         cursor.execute('SELECT count(item_id) FROM Interaction WHERE t_dat = %s AND dataset_id = %s;',
@@ -454,8 +453,7 @@ class UserDataAcces:
     """
     def getAB_Test(self, abtestId):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT abtest_id, result_id, start_point, end_point, stepsize, topk \
-                        FROM ABTest WHERE abtest_id = %s", (str(abtestId)))
+        cursor.execute('SELECT abtest_id, result_id, start_point, end_point, stepsize, topk FROM ABTest WHERE abtest_id = %s', (str(abtestId),))
 
         res = []
         rows = None

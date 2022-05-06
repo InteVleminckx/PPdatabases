@@ -2,6 +2,7 @@ function drawChart(){
 
     var purchs = JSON.parse(items);
     var usersA = JSON.parse(users);
+    console.log("drawChart")
     //Sorteren van de aankopen en users op datum
     purchs = purchs.sort((a,b) => new Date(b.date) - new Date(a.date))
     usersA = usersA.sort((a,b) => new Date(b.date) - new Date(a.date))

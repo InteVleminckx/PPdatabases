@@ -22,10 +22,17 @@ import pandas as pd
 import csv
 import os
 import a_b_tests as abtest
+from datetime import datetime, timedelta
 
 from config import config_data
 from db_connection import DBConnection
 from user_data_acces import UserDataAcces
+
+"""
+Imports voor pages
+"""
+from datasets import *
+
 
 
 UPLOAD_FOLDER = './uploads'
@@ -184,9 +191,9 @@ def services():
                 user_data_access.dbconnect.commit()
 
                 # Call function to start a/b tests
-                abtest.startAB(abtest_id, dataset_id, user_data_access)
-                abtest.getABtestResults(abtest_id, dataset_id, user_data_access)
-                abtest.getAB_Pop_Active(abtest_id, dataset_id, user_data_access)
+                abtest.startAB(user_data_access.getMaxABTestID(), dataset_id, user_data_access)
+                abtest.getABtestResults(user_data_access.getMaxABTestID(), dataset_id, user_data_access)
+                abtest.getAB_Pop_Active(user_data_access.getMaxABTestID(), dataset_id, user_data_access)
 
                 abtest_id += 1
                 algo_id = 1
@@ -214,39 +221,9 @@ def services():
 # @login_required
 def datasets():
     if request.method == 'POST':
-        if session['username'] == 'admin': # checken of de user de admin is
-            # Filepath to articles file
-            af = request.files['articles_file']
-            uploaded_file = secure_filename(af.filename)
-            af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-            af.save(af_filename)
-            data_articles = pd.read_csv(af_filename)
-            columns_articles = list(data_articles.columns.values)
-            #Add articles to database
-            user_data_access.addArticles(data_articles, columns_articles)
+        #TODO: hier zou nog gecontroleerd moeten worden welk post request dit is -> add, remove of view dataset
+        addDataset(app, user_data_access, session)
 
-            # Filepath to customers file
-            cf = request.files['customers_file']
-            uploaded_file = secure_filename(cf.filename)
-            cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-            cf.save(cf_filename)
-            data_customers = pd.read_csv(cf_filename)
-            columns_customers = list(data_customers.columns.values)
-            #Add customers to database
-            user_data_access.addCustomers(data_customers, columns_customers)
-
-            # Filepath to purchase file
-            pf = request.files['purchases_file']
-            uploaded_file = secure_filename(pf.filename)
-            pf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-            pf.save(pf_filename)
-            data_purchases = pd.read_csv(pf_filename)
-            #Add purchases to database
-            user_data_access.addPurchases(data_purchases)
-
-
-        else:
-            flash("You need admin privileges to upload a dataset", category='error')
     else:
         dataset_id = ""
         s = request.form.get('submit_button')
@@ -261,6 +238,9 @@ def datasets():
         userAmount = 0
         articleAmount = 0
         interactionAmount = 0
+
+        getDatasetInformation(user_data_access, dataset_id)
+
         # cursor = user_data_access.dbconnect.get_cursor()
         # cursor.execute("SELECT COUNT(DISTINCT customer_id) FROM Customer WHERE dataset_id = %s", (str(dataset_id)))
         # userAmount = cursor.fetchone()
@@ -296,7 +276,7 @@ def datasetupload(rowData):
 # @login_required
 def visualizations():
     labels, legend = [], []
-    current_abtest_id = 1
+    current_abtest_id = user_data_access.getMaxABTestID()
     cursor = user_data_access.dbconnect.get_cursor()
     abtest = user_data_access.getAB_Test(current_abtest_id)
     for r_id in abtest.result_id:
