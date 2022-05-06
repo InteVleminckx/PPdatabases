@@ -1,6 +1,8 @@
 import time
 
 import pandas
+import numpy
+from psycopg2.extensions import register_adapter, AsIs
 import psycopg2.extras
 
 """
@@ -234,14 +236,16 @@ class UserDataAcces:
         #Duurt 1.30 min op deze manier
         start = time.process_time()
         cursor = self.dbconnect.get_cursor()
-        insert_query = 'INSERT INTO Dataset(dataset_id, item_id, attribute , val) VALUES %s'
+        insert_query = 'INSERT INTO Articles(item_number, val, attribute, type, dataset_id) VALUES %s'
+
         print('start reading articles')
 
         tuples_list = []
         for column in data_articles.columns:
             subset = data_articles[[column]].copy()
             subset['column'] = column
-            subset['type'] = data_articles.dtypes[column]  # dtype is configurable in your webapplication and should come from there.
+            #TODO: zorg ervoor da hier het juiste type geselecteerd wordt en we zo dan het juiste type kunnen toewijden
+            subset['type'] = str(data_articles.dtypes[column])
             subset['dataset_id'] = self.datasetId
             tuples = list(subset.to_records())
             tuples_list.extend(tuples)
@@ -260,10 +264,10 @@ class UserDataAcces:
 
         print(len(tuples_list))
         print('start inserting articles')
-        # psycopg2.extras.execute_values(
-        #     cursor, insert_query, tuples_list, template=None, page_size=100
-        # )
-        # self.dbconnect.commit()
+        psycopg2.extras.execute_values(
+            cursor, insert_query, tuples_list, template=None, page_size=100
+        )
+        self.dbconnect.commit()
 
         print("Articles: ", time.process_time() - start)
         print('end reading articles')
@@ -290,38 +294,17 @@ class UserDataAcces:
         start = time.process_time()
         print('start reading customers')
         insert_query = 'INSERT INTO Customer(dataset_id, customer_id, attribute , val) VALUES %s;'
-        addedDefault  = False
         execute = []
 
         tuples_list = []
         for column in data_customers.columns:
             subset = data_customers[[column]].copy()
             subset['column'] = column
-            subset['type'] = data_customers.dtypes[
-                column]  # dtype is configurable in your webapplication and should come from there.
+            subset['type'] = str(data_customers.dtypes[column])
             subset['dataset_id'] = self.datasetId
             tuples = list(subset.to_records())
             tuples_list.extend(tuples)
 
-        # for row in range(0, len(data_customers.index)):
-        #     for column in range(1, len(data_customers.columns)):
-        #         if str(data_customers.iloc[row, column]) == 'nan':
-        #             data_customers.iloc[row, column] = ''
-        #
-        #         file = (self.datasetId,
-        #                         int(data_customers.iloc[row, 0]),
-        #                         str(columns_customers[column]),
-        #                         str(data_customers.iloc[row, column]))
-        #
-        #         execute.append(file)
-        #
-        #     # self.dbconnect.commit()
-        #     if not addedDefault:
-        #         print("Adding default costumer")
-        #         for column in range(1, len(data_customers.columns)):
-        #             if str(data_customers.iloc[row, column]) == 'nan':
-        #                 data_customers.iloc[row, column] = ''
-        #
         #             file = (self.datasetId,
         #                             -1,
         #                             str(columns_customers[column]),
@@ -329,11 +312,16 @@ class UserDataAcces:
         #             execute.append(file)
         #         addedDefault = True
         #         print("Added default costumer")
-        #
-        # psycopg2.extras.execute_values(
-        #     cursor, insert_query, execute, template=None, page_size=100
-        # )
-        # self.dbconnect.commit()
+
+        # add default user
+        tuples_list.append((-1, str(columns_customers[0]), str(data_customers.iloc[1, 0]), 'default', self.datasetId))
+
+        psycopg2.extras.execute_values(
+            cursor, insert_query, execute, template=None, page_size=100
+        )
+
+        self.dbconnect.commit()
+
         print(len(tuples_list))
         print("Customer: ", time.process_time() - start)
         print('end reading customers')
