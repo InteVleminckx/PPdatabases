@@ -104,7 +104,45 @@
     </div>
 
     <div class="_container3">
-        <form method="POST" action="" enctype="multipart/form-data">
+{#        <form method="POST" action="" enctype="multipart/form-data" name="myForm">#}
+{#            <div class="_row">#}
+{#                <div class="_column">#}
+{#                    <div class="c3_namecontainer">#}
+{#                        <input type="text" id="ds_name" name="ds_name" placeholder="Enter dataset name" required>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="_row">#}
+{#                <div class="_column">#}
+{#                    <div class="c3_filecontainer">#}
+{#                        <h2> Articles file</h2>#}
+{#                        <input type="file" id="articles_file" name="articles_file" placeholder="articles" accept=".csv" required>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="_column">#}
+{#                    <div class="c3_filecontainer">#}
+{#                        <h2> Purchases file</h2>#}
+{#                        <input type="file" id="purchases_file" name="purchases_file" placeholder="purchases" accept=".csv" required>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="_column">#}
+{#                    <div class="c3_filecontainer">#}
+{#                        <h2> Customers file</h2>#}
+{#                        <input type="file" id="customers_file" name="customers_file" placeholder="customers" accept=".csv" required>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="_row">#}
+{#                <div class="_column">#}
+{#                    <div class="c3_button">#}
+{#                        <button type="submit">#}
+{#                            Add dataset#}
+{#                        </button>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </form>#}
+        <form method="POST" action="" enctype="multipart/form-data" name="myForm">
             <div class="_row">
                 <div class="_column">
                     <div class="c3_namecontainer">
@@ -116,26 +154,35 @@
                 <div class="_column">
                     <div class="c3_filecontainer">
                         <h2> Articles file</h2>
-                        <input type="file" id="articles_file" name="articles_file" placeholder="articles" accept=".csv" required>
+                        <div id="btn1" onclick="getFile1()"> Choose file </div>
+                        <div style="height: 0px; width: 0px; overflow: hidden;">
+                            <input type="file" id="articles_file" name="articles_file" value="upload1" accept=".csv" required onchange="sub1(this)">
+                        </div>
                     </div>
                 </div>
                 <div class="_column">
                     <div class="c3_filecontainer">
                         <h2> Purchases file</h2>
-                        <input type="file" id="purchases_file" name="purchases_file" placeholder="purchases" accept=".csv" required>
+                        <div id="btn2" onclick="getFile2()"> Choose file </div>
+                        <div style="height: 0px; width: 0px; overflow: hidden;">
+                            <input type="file" id="purchases_file" name="purchases_file" value="upload2" accept=".csv" required onchange="sub2(this)">
+                        </div>
                     </div>
                 </div>
                 <div class="_column">
                     <div class="c3_filecontainer">
                         <h2> Customers file</h2>
-                        <input type="file" id="customers_file" name="customers_file" placeholder="customers" accept=".csv" required>
+                        <div id="btn3" onclick="getFile3()"> Choose file </div>
+                        <div style="height: 0px; width: 0px; overflow: hidden;">
+                            <input type="file" id="customers_file" name="customers_file" value="upload3" accept=".csv" required onchange="sub3(this)">
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="_row">
                 <div class="_column">
                     <div class="c3_button">
-                        <button type="submit">
+                        <button type="submit" role="button">
                             Add dataset
                         </button>
                     </div>
@@ -251,6 +298,37 @@
 $('#scrolltable tbody tr').click(function() {
     $(this).addClass('highlight').siblings().removeClass('highlight');
 });
+
+function getFile1() {
+    document.getElementById("articles_file").click();
+}
+function getFile2() {
+    document.getElementById("purchases_file").click();
+}
+function getFile3() {
+    document.getElementById("customers_file").click();
+}
+
+function sub1(obj) {
+    var file = obj.value;
+    var filename = file.split("\\");
+    document.getElementById("btn1").innerHTML = filename[filename.length - 1];
+    event.preventDefault();
+}
+
+function sub2(obj) {
+    var file = obj.value;
+    var filename = file.split("\\");
+    document.getElementById("btn2").innerHTML = filename[filename.length - 1];
+    event.preventDefault();
+}
+
+function sub3(obj) {
+    var file = obj.value;
+    var filename = file.split("\\");
+    document.getElementById("btn3").innerHTML = filename[filename.length - 1];
+    event.preventDefault();
+}
 
 {#function selectRow() {#}
 {#    row_id = event.target.id;#}

@@ -517,6 +517,7 @@ thead tr td {
     margin-top: 5px;
     margin-bottom: 5px;
     border-radius: 5px;
+    cursor: pointer;
 
 }
 
@@ -545,12 +546,18 @@ thead tr td {
     border-radius: 10px;
 }
 
+.c3_namecontainer input {
+    background-color: #dbd7d7;
+}
+
 .c3_filecontainer {
     height: 260px;
-    /*max-width: 330px;*/
+    width: 310px;
     background-color: #b8b5b5;
     margin: 10px;
     border-radius: 10px;
+    text-align: center;
+
 }
 
 .c3_filecontainer h2 {
@@ -570,9 +577,39 @@ thead tr td {
 }
 
 .c3_button {
+    /*height: 35px;*/
+    /*background-color: #b8b5b5;*/
+    /*margin: 10px;*/
+    /*border-radius: 5px;*/
+    /*text-align: center;*/
+
     height: 35px;
     background-color: #b8b5b5;
     margin: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     border-radius: 5px;
+    text-align: center;
+    color: #b8b5b5;
 }
 
+.c3_button button {
+    background-color: #b8b5b5;
+    border: 0;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#btn1, #btn2, #btn3 {
+    position: relative;
+    width: 150px;
+    top: 70px;
+    left: 70px;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border: 1px dashed #bbb;
+    text-align: center;
+    background-color: #dddddd;
+    cursor: pointer;
+}
