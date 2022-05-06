@@ -295,15 +295,17 @@ class UserDataAcces:
         # add default user
         tuples_list.append((-1, str(columns_customers[0]), str(data_customers.iloc[1, 0]), 'default', self.datasetId))
 
+        print('end reading customers')
+        print(len(tuples_list))
+        print('start inserting customers')
         psycopg2.extras.execute_values(
             cursor, insert_query, tuples_list, template=None, page_size=100
         )
 
         self.dbconnect.commit()
 
-        print(len(tuples_list))
         print("Customer: ", time.process_time() - start)
-        print('end reading customers')
+        print('end inserting customers')
 
     """
     This function gets the customer with the given customer id out of the database.
