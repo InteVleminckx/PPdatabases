@@ -281,18 +281,16 @@ class UserDataAcces:
 
     # def addCustomer(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
     def addCustomers(self, data_customers, columns_customers):
-        #duurt 6 min
         cursor = self.dbconnect.get_cursor()
         start = time.process_time()
         print('start reading customers')
         insert_query = 'INSERT INTO Customer(customer_number, val, attribute,type , dataset_id) VALUES %s;'
-        execute = []
 
         tuples_list = []
         for column in data_customers.columns:
             subset = data_customers[[column]].copy()
             subset['column'] = column
-            subset['type'] = str(data_customers.dtypes[column])
+            subset['type'] = data_customers.dtypes[column].name
             subset['dataset_id'] = self.datasetId
             tuples = list(subset.to_records())
             tuples_list.extend(tuples)
@@ -361,7 +359,7 @@ class UserDataAcces:
         for column in data_purchases.columns:
             subset = data_purchases[[column]].copy()
             subset['column'] = column
-            subset['type'] = data_purchases.dtypes[column]  # dtype is configurable in your webapplication and should come from there.
+            subset['type'] = data_purchases.dtypes[column].name  # dtype is configurable in your webapplication and should come from there.
             subset['dataset_id'] = self.datasetId
             tuples = list(subset.to_records())
             tuples_list.extend(tuples)
