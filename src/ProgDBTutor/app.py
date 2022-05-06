@@ -31,7 +31,7 @@ from user_data_acces import UserDataAcces
 """
 Imports voor pages
 """
-from datasets import *
+from datasets import handelRequests
 
 
 
@@ -220,28 +220,31 @@ def services():
 @app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
 def datasets():
-    if request.method == 'POST':
-        #TODO: hier zou nog gecontroleerd moeten worden welk post request dit is -> add, remove of view dataset
-        #addDataset(app, user_data_access, session)
-        pass
 
-    else:
-        dataset_id = ""
-        s = request.form.get('submit_button')
-        if s == 'datasetSubmit':
+    handelRequests(app, user_data_access, session, request)
 
-            d = request.form.get('datasetSelection')
-
-            for char in d:
-                if char.isdigit():
-                    dataset_id += char
-
-        userAmount = 0
-        articleAmount = 0
-        interactionAmount = 0
-
-        #getDatasetInformation(user_data_access, dataset_id)
-        pass
+    # if request.method == 'POST':
+    #     #TODO: hier zou nog gecontroleerd moeten worden welk post request dit is -> add, remove of view dataset
+    #     #addDataset(app, user_data_access, session)
+    #     pass
+    #
+    # else:
+    #     dataset_id = ""
+    #     s = request.form.get('submit_button')
+    #     if s == 'datasetSubmit':
+    #
+    #         d = request.form.get('datasetSelection')
+    #
+    #         for char in d:
+    #             if char.isdigit():
+    #                 dataset_id += char
+    #
+    #     userAmount = 0
+    #     articleAmount = 0
+    #     interactionAmount = 0
+    #
+    #     #getDatasetInformation(user_data_access, dataset_id)
+    #     pass
 
         # cursor = user_data_access.dbconnect.get_cursor()
         # cursor.execute("SELECT COUNT(DISTINCT customer_id) FROM Customer WHERE dataset_id = %s", (str(dataset_id)))
@@ -256,11 +259,12 @@ def datasets():
     # cursor = user_data_access.dbconnect.get_curser()
     # cursor.execute("SELECT DISTINCT dataset_id FROM Dataset")
 
-    datasetList = list()
+    # datasetList = list()
     # for row in cursor:
     #     datasetList.append(row[0])
 
-    return render_template('datasets.html', app_data=app_data, datasetList = datasetList)
+    # return render_template('datasets.html', app_data=app_data, datasetList = datasetList)
+    return render_template('datasets.html', app_data=app_data)
 
 @app.route("/datasetupload")
 def datasetupload(rowData):

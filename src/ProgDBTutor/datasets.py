@@ -9,6 +9,30 @@ de datasets page
 """
 
 
+def handelRequests(app, user_data_access, session, request):
+    # Remove en select dataset form
+    if request.method == 'GET':
+
+        rqst = request.args.get('datasetSelection')
+        dlte = request.args.get('delete_btn')
+
+        # Delete hier de dataset
+        if dlte is not None:
+            removeDataset(user_data_access, session)
+
+        # vernander alle waarder en grafiek op de pagina
+        else:
+            # getDatasetInformation(user_data_access, dataset_id)
+            pass
+
+    # Add dataset form
+    elif request.method == 'POST':
+        addDataset(app, user_data_access, session)
+
+    else:
+        pass
+
+
 def addDataset(app, user_data_access, session):
     if session['username'] == 'admin':  # checken of de user de admin is
         importArticles(app, user_data_access)
@@ -16,6 +40,13 @@ def addDataset(app, user_data_access, session):
         importPurchases(app, user_data_access)
     else:
         flash("You need admin privileges to upload a dataset", category='error')
+
+
+def removeDataset(user_data_access, session):
+    if session['username'] == 'admin':  # checken of de user de admin is
+        pass
+    else:
+        flash("You need admin privileges to delete a dataset", category='error')
 
 
 def getDatasetInformation(user_data_access, dataset_id):
@@ -67,6 +98,7 @@ def getNumberOfUsers(cursor, dataset_id):
     # alles
     return cursor.fetchone()[0] - 1
 
+
 def getNumberOfArticles(cursor, dataset_id):
     #We doen dit op deze manier omdat dit sneller is als distinct, want distinct sorteerd eerst heel de tabel
     query = 'CREATE OR REPLACE VIEW articles AS SELECT item_id FROM Dataset WHERE dataset_id = %s GROUP BY' \
@@ -74,6 +106,7 @@ def getNumberOfArticles(cursor, dataset_id):
 
     cursor.execute(query)
     return cursor.fetchone()[0]
+
 
 def getNumberOfInteractions(cursor, dataset_id):
     query = 'SELECT count(*) FROM Interaction WHERE dataset_id = %s;', (str(dataset_id),)
