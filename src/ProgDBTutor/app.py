@@ -222,7 +222,8 @@ def services():
 def datasets():
     if request.method == 'POST':
         #TODO: hier zou nog gecontroleerd moeten worden welk post request dit is -> add, remove of view dataset
-        addDataset(app, user_data_access, session)
+        #addDataset(app, user_data_access, session)
+        pass
 
     else:
         dataset_id = ""
@@ -239,7 +240,8 @@ def datasets():
         articleAmount = 0
         interactionAmount = 0
 
-        getDatasetInformation(user_data_access, dataset_id)
+        #getDatasetInformation(user_data_access, dataset_id)
+        pass
 
         # cursor = user_data_access.dbconnect.get_cursor()
         # cursor.execute("SELECT COUNT(DISTINCT customer_id) FROM Customer WHERE dataset_id = %s", (str(dataset_id)))
