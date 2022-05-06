@@ -47,16 +47,15 @@ CREATE TABLE Admin (
 
 -- Table to keep track of the purchases of users for specific items.
 CREATE TABLE Interaction (
+    t_dat TIMESTAMP NOT NULL,
     customer_id INT NOT NULL,
+    item_id INT NOT NULL,
+    price FLOAT NOT NULL,
     -- Reference to an item from a Dataset, need 3 attributes for the primary key of a dataset
     dataset_id INT NOT NULL REFERENCES Dataset(dataset_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    item_id INT NOT NULL,
-    attribute_dataset TEXT NOT NULL,
     attribute_customer TEXT NOT NULL,
-    t_dat TIMESTAMP NOT NULL,
-    price INT NOT NULL,
     -- Primary key ==> customer buys item at certain time ==> unique
-    PRIMARY KEY (customer_id, item_id, t_dat),
+    PRIMARY KEY (customer_id, item_id, t_dat, price),
     -- Reference to a customer from Customers, need 2 attributes for the primary key of a customer
     FOREIGN KEY (dataset_id, customer_id, attribute_customer) REFERENCES Customer(dataset_id, customer_number, attribute) ON UPDATE CASCADE ON DELETE CASCADE
 );
