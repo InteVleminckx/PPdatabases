@@ -16,18 +16,6 @@ CREATE TABLE Articles (
     PRIMARY KEY (dataset_id, item_number, attribute)
 );
 
--- CREATE TABLE Customer (
---     dataset_id INT NOT NULL,
---     customer_id INT NOT NULL,
---     FN BOOLEAN,
---     Active BOOLEAN,
---     club_member_status TEXT,
---     fashion_news_frequency TEXT,
---     age INT,
---     postal_code TEXT,
---     PRIMARY KEY (dataset_id, customer_id)
--- );
-
 -- Table that contains the customers of a dataset
 CREATE TABLE Customer (
     customer_number INT NOT NULL,
@@ -115,7 +103,8 @@ CREATE TABLE Result (
 CREATE TABLE Recommendation (
     abtest_id INT NOT NULL,
     result_id INT NOT NULL,
-    dataset_id INT NOT NULL,
+    -- Reference to an item/article in the Dataset table
+    dataset_id INT NOT NULL REFERENCES Dataset(dataset_id) ON UPDATE CASCADE ON DELETE CASCADE,
     customer_id INT NOT NULL,
     item_id INT NOT NULL,
     attribute_customer TEXT NOT NULL,

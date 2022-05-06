@@ -240,6 +240,9 @@ class UserDataAcces:
 
         print('start reading articles')
 
+        # isinstance(value, (int, numpy.integer))
+        # value = int(value) if isinstance(value, (int, numpy.integer)) else value
+
         tuples_list = []
         for column in data_articles.columns:
             subset = data_articles[[column]].copy()
