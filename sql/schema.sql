@@ -128,6 +128,16 @@ CREATE TABLE Recommendation (
     FOREIGN KEY (dataset_id, customer_id, attribute_customer) REFERENCES Customer(dataset_id, customer_id, attribute) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+-- TODO: nog bespreken met Jonas
+-- CREATE TABLE DatasetNames (
+--
+--                               dataset_id INT NOT NULL,
+--                               dataset_name TEXT NOT NULL,
+--                               PRIMARY KEY (dataset_id),
+--                               FOREIGN KEY (dataset_id)
+--
+-- );
+
 -- Test
 INSERT INTO Dataset(dataset_id, item_id, attribute, val) VALUES (1, 0, 'size', 'small'), (1, 0, 'color', 'pink') ;
 -- INSERT INTO Customer(dataset_id, customer_id) VALUES (0, 10) ;
