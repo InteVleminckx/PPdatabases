@@ -16,21 +16,108 @@
 
 
 <nav class="navbar" id="navbar">
-        <div class="navbar_container">
-            <div class="navbar_toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-            <ul class="navbar_menu">
-                <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
-            </ul>
+    <div class="navbar_container">
+        <div class="navbar_toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
         </div>
-    </nav>
+        <ul class="navbar_menu">
+            <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="giantcontainer">
+
+    <div class="container0">
+        <form method="GET" action="">
+            <select class="c0_select" id="datasetSelection" name="datasetSelection">
+                <option value="dataset 0">dataset 0</option>
+                <option value="dataset 1">dataset 1</option>
+                <option value="dataset 2">dataset 2</option>
+                <option value="dataset 3">dataset 3</option>
+                {% for id in datasetList %}
+                    <option value="dataset {{ id }}">dataset {{ id }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    <div class="container1">
+        <div class="_row">
+            <div class="_column">
+                <div class="c1_statcontainer">
+                    <h2>Number of users:</h2>
+                </div>
+            </div>
+            <div class="_column">
+                <div class="c1_statcontainer">
+                    <h2>Number of items:</h2>
+                </div>
+            </div>
+            <div class="_column">
+                <div class="c1_statcontainer">
+                    <h2>Number of interactions:</h2>
+                </div>
+            </div>
+        </div>
+        <div class="_row">
+            <div class="_column">
+                <div class="c1_graphcontainer">
+
+                </div>
+            </div>
+            <div class="_column">
+                <div class="c1_graphcontainer">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container2">
+        <button class="c2_button" role="button">
+            <p>Add dataset</p>
+        </button>
+        <button class="c2_button" role="button">
+            <p>Delete dataset</p>
+        </button>
+    </div>
+
+    <div class="container3">
+        <form method="POST" action="" enctype="multipart/form-data">
+            <div class="c3_namecontainer">
+                <input type="text" id="ds_name" name="ds_name" placeholder="Enter dataset name" required>
+            </div>
+            <div class="c3_filecontainer">
+                <input type="file" id="articles_file" name="articles_file" placeholder="articles" accept=".csv" required>
+            </div>
+            <div class="c3_filecontainer">
+                <input type="file" id="purchases_file" name="purchases_file" placeholder="purchases" accept=".csv" required>
+            </div>
+            <div class="c3_filecontainer">
+                <input type="file" id="customers_file" name="customers_file" placeholder="customers" accept=".csv" required>
+            </div>
+            <div class="c3_button">
+                <button type="submit">
+                    Add dataset
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+
+
+
 
 <div class="par_form">
     <div class="container" style="border: 2px solid black; width: 600px; display: block; margin-right: auto; margin-left: auto;">

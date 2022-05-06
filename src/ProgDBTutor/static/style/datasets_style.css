@@ -388,3 +388,115 @@ table tbody tr.highlight td {
 thead tr td {
     font-weight: bold;
 }
+
+/* css for the dataset page */
+
+.giantcontainer {
+    margin-top: 35px;
+    padding: 10px;
+    justify-content: center;
+}
+
+.container0 {
+    width: 300px;
+    height: 30px;
+    background-color: #534e4e;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 10px;
+}
+
+.container0 select {
+    width: 280px;
+    background-color: #8f9992;
+}
+
+.c0_select {
+    width: 100%;
+}
+
+.container1 {
+    width: 1000px;
+    /*height: 550px;*/
+    background-color: #534e4e;
+    border-radius: 10px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    justify-content: space-evenly;
+
+    padding: 8px;
+    flex-wrap: wrap;
+
+}
+
+._row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+._column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+}
+
+.container1 h2 {
+    color: #16d8f5;
+    font-size: 24px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.c1_statcontainer {
+    /*width: 320px;*/
+    height: 260px;
+    background-color: #a5a7a6;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.c1_graphcontainer {
+    /*width: 480px;*/
+    height: 260px;
+    background-color: #a5a7a6;
+    margin: 10px;
+    border-radius: 10px;
+
+}
+
+.container2 {
+
+}
+
+.c2_button {
+
+}
+
+.container3 {
+
+}
+
+.c3_namecontainer {
+
+}
+
+.c3_filecontainer {
+
+}
+
+.c3_button {
+
+}
+
