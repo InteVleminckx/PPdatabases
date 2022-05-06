@@ -216,6 +216,16 @@ def services():
         return render_template('services.html', app_data=app_data, algo_dict=algo_dict)
     return redirect(url_for('login_user'))
 
+@app.route("/datasets/<ds_id>", methods=['GET', 'POST'])
+def getData(ds_id):
+    if request.method == 'GET':
+        print(ds_id)
+        print(ds_id)
+        list = dict({'users': 20})
+        return list
+    else:
+        print("ZIE MIJ")
+
 
 @app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
