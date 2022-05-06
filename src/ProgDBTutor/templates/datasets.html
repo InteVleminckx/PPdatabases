@@ -58,19 +58,19 @@
             <div class="_column">
                 <div class="c1_statcontainer">
                     <h2>Number of customers:</h2>
-                    <p>413321</p>
+                    <p id="nr_of_customers">0</p>
                 </div>
             </div>
             <div class="_column">
                 <div class="c1_statcontainer">
                     <h2>Number of items:</h2>
-                    <p>2093210</p>
+                    <p id="nr_of_items">0</p>
                 </div>
             </div>
             <div class="_column">
                 <div class="c1_statcontainer">
                     <h2>Number of interactions:</h2>
-                    <p>10952346</p>
+                    <p id="nr_of_interactions">0</p>
                 </div>
             </div>
         </div>
@@ -341,7 +341,24 @@ function sendData() {
         for (const [key, value] of Object.entries(text)) {
             console.log(key, value);
         }
-        {#document.getElementById().innerText =#}
+        if (text.hasOwnProperty("nr_of_customers")) {
+            document.getElementById("nr_of_customers").innerHTML = text["nr_of_customers"];
+        }
+        else {
+            document.getElementById("nr_of_customers").innerHTML = "0";
+        }
+        if (text.hasOwnProperty("nr_of_items")) {
+            document.getElementById("nr_of_items").innerHTML = text["nr_of_items"];
+        }
+        else {
+            document.getElementById("nr_of_items").innerHTML = "0";
+        }
+        if (text.hasOwnProperty("nr_of_interactions")) {
+            document.getElementById("nr_of_interactions").innerHTML = text["nr_of_interactions"];
+        }
+        else {
+            document.getElementById("nr_of_interactions").innerHTML = "0";
+        }
     });
 }
 
