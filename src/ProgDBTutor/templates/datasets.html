@@ -34,11 +34,12 @@
 
 <div class="giantcontainer">
 
+    <form method="GET" action="" name="form1">
     <div class="_container0">
         <div class="_row">
             <div class="_column">
-                <form method="GET" action="">
-                    <select class="c0_select" id="datasetSelection" name="datasetSelection">
+
+                    <select class="c0_select" id="datasetSelection" name="datasetSelection" onchange="this.form.submit()">
                         <option value="dataset 0">dataset 0</option>
                         <option value="dataset 1">dataset 1</option>
                         <option value="dataset 2">dataset 2</option>
@@ -47,7 +48,7 @@
                             <option value="dataset {{ id }}">dataset {{ id }}</option>
                         {% endfor %}
                     </select>
-                </form>
+
             </div>
         </div>
     </div>
@@ -96,12 +97,13 @@
                 </button>
             </div>
             <div class="_column">
-                <button class="c2_button" role="button">
+                <button class="c2_button" type="submit" role="button" id="delete_btn" name="delete_btn">
                     Delete dataset
                 </button>
             </div>
         </div>
     </div>
+    </form>
 
     <div class="_container3">
 {#        <form method="POST" action="" enctype="multipart/form-data" name="myForm">#}
@@ -142,7 +144,7 @@
 {#                </div>#}
 {#            </div>#}
 {#        </form>#}
-        <form method="POST" action="" enctype="multipart/form-data" name="myForm">
+        <form method="POST" action="" enctype="multipart/form-data" name="form2">
             <div class="_row">
                 <div class="_column">
                     <div class="c3_namecontainer">
