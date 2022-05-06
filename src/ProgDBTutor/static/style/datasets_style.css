@@ -388,3 +388,228 @@ table tbody tr.highlight td {
 thead tr td {
     font-weight: bold;
 }
+
+/* css for the dataset page */
+
+.giantcontainer {
+    margin-top: 35px;
+    padding: 10px;
+    justify-content: center;
+}
+
+._container0 {
+    width: 400px;
+    /*height: 30px;*/
+    background-color: #534e4e;
+    border-radius: 10px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+._container0 select {
+    height: 35px;
+    /*width: 280px;*/
+    background-color: #b8b5b5;
+    border-radius: 10px;
+}
+
+.c0_select {
+    width: 100%;
+}
+
+._container1 {
+    width: 1000px;
+    /*height: 550px;*/
+    background-color: #534e4e;
+    border-radius: 10px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    justify-content: space-evenly;
+
+    padding: 8px;
+    flex-wrap: wrap;
+
+    margin-bottom: 10px;
+
+}
+
+._row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+._column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+}
+
+
+
+.c1_statcontainer {
+    /*width: 320px;*/
+    height: 160px;
+    background-color: #b8b5b5;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.c1_graphcontainer {
+    /*width: 480px;*/
+    height: 260px;
+    background-color: #b8b5b5;
+    margin: 10px;
+    border-radius: 10px;
+
+}
+
+.c1_statcontainer h2 {
+    color: #03a9f4;
+    font-size: 24px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.c1_statcontainer p {
+    color: #000000;
+    font-size: 32px;
+    text-align: center;
+    line-height: 110px;
+
+}
+
+._container2 {
+    width: 1000px;
+    /*height: 550px;*/
+    background-color: #534e4e;
+    border-radius: 10px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    justify-content: space-evenly;
+
+    padding: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+
+}
+
+.c2_button {
+    /*width: 480px;*/
+    height: 35px;
+    background-color: #b8b5b5;
+    margin: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
+._container3 {
+    width: 1000px;
+    /*height: 550px;*/
+    background-color: #534e4e;
+    border-radius: 10px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    justify-content: space-evenly;
+
+    padding: 8px;
+    flex-wrap: wrap;
+
+    margin-bottom: 10px;
+}
+
+.c3_namecontainer {
+    height: 40px;
+    background-color: #b8b5b5;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.c3_namecontainer input {
+    background-color: #dbd7d7;
+}
+
+.c3_filecontainer {
+    height: 260px;
+    width: 310px;
+    background-color: #b8b5b5;
+    margin: 10px;
+    border-radius: 10px;
+    text-align: center;
+
+}
+
+.c3_filecontainer h2 {
+    color: #03a9f4;
+    font-size: 24px;
+    /*margin-top: 10px;*/
+    /*margin-left: 10px;*/
+    text-align: center;
+    margin-top: 30px;
+}
+
+.c3_filecontainer input {
+    color: #000000;
+    font-size: 16px;
+    margin-left: 10px;
+    margin-top: 50px;
+}
+
+.c3_button {
+    /*height: 35px;*/
+    /*background-color: #b8b5b5;*/
+    /*margin: 10px;*/
+    /*border-radius: 5px;*/
+    /*text-align: center;*/
+
+    height: 35px;
+    background-color: #b8b5b5;
+    margin: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    text-align: center;
+    color: #b8b5b5;
+}
+
+.c3_button button {
+    background-color: #b8b5b5;
+    border: 0;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#btn1, #btn2, #btn3 {
+    position: relative;
+    width: 150px;
+    top: 70px;
+    left: 70px;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border: 1px dashed #bbb;
+    text-align: center;
+    background-color: #dddddd;
+    cursor: pointer;
+}

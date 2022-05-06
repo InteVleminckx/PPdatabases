@@ -16,112 +16,280 @@
 
 
 <nav class="navbar" id="navbar">
-        <div class="navbar_container">
-            <div class="navbar_toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-            <ul class="navbar_menu">
-                <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
-            </ul>
+    <div class="navbar_container">
+        <div class="navbar_toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
         </div>
-    </nav>
+        <ul class="navbar_menu">
+            <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
+        </ul>
+    </div>
+</nav>
 
-<div class="par_form">
-    <div class="container" style="border: 2px solid black; width: 600px; display: block; margin-right: auto; margin-left: auto;">
-        <form method="POST" action="" enctype="multipart/form-data">
+<div class="giantcontainer">
 
-            <div class="row">
-                <div class="col-25"><label for="name">Dataset name</label></div>
-                <div class="col-75"><input type="text" id="ds_name" name="ds_name" placeholder="Dataset name" required></div>
+    <form method="GET" action="" name="form1">
+    <div class="_container0">
+        <div class="_row">
+            <div class="_column">
+
+                    <select class="c0_select" id="datasetSelection" name="datasetSelection" onchange="this.form.submit()">
+                        <option value="dataset 0">dataset 0</option>
+                        <option value="dataset 1">dataset 1</option>
+                        <option value="dataset 2">dataset 2</option>
+                        <option value="dataset 3">dataset 3</option>
+                        {% for id in datasetList %}
+                            <option value="dataset {{ id }}">dataset {{ id }}</option>
+                        {% endfor %}
+                    </select>
+
             </div>
-            <div class="row">
-                <div class="col-25"><label for="articles_file">Articles file</label></div>
-                <div class="col-75"><input type="file" id="articles_file" name="articles_file" placeholder="articles" accept=".csv" required></div>
+        </div>
+    </div>
+
+    <div class="_container1">
+        <div class="_row">
+            <div class="_column">
+                <div class="c1_statcontainer">
+                    <h2>Number of users:</h2>
+                    <p>413321</p>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-25"><label for="purchases_file">Purchases file</label></div>
-                <div class="col-75"><input type="file" id="purchases_file" name="purchases_file" placeholder="purchases" accept=".csv" required></div>
+            <div class="_column">
+                <div class="c1_statcontainer">
+                    <h2>Number of items:</h2>
+                    <p>2093210</p>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-25"><label for="customers_file">Customers file</label></div>
-                <div class="col-75"><input type="file" id="customers_file" name="customers_file" placeholder="customers" accept=".csv" required></div>
+            <div class="_column">
+                <div class="c1_statcontainer">
+                    <h2>Number of interactions:</h2>
+                    <p>10952346</p>
+                </div>
             </div>
-            <div align="center" class="___services__btn" style="margin-top: 20px;">
-                <button type="submit">
+        </div>
+        <div class="_row">
+            <div class="_column">
+                <div class="c1_graphcontainer">
+
+                </div>
+            </div>
+            <div class="_column">
+                <div class="c1_graphcontainer">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="_container2">
+        <div class="_row">
+            <div class="_column">
+                <button class="c2_button" role="button">
                     Add dataset
                 </button>
             </div>
-        </form>
+            <div class="_column">
+                <button class="c2_button" type="submit" role="button" id="delete_btn" name="delete_btn">
+                    Delete dataset
+                </button>
+            </div>
+        </div>
     </div>
-</div>
-
-<!-- Dataset Section-->
-
-<div class="dataset" id="dataset">
-
-{#    <div class="_container">#}
-
-        <div class="dataset_title" >Datasets</div>
-        <div class="dataset__btn">
-            <button>Remove Dataset</button>
-        </div>
-        <table class="scroll-table" id="scrolltable">
-            <thead>
-                <tr>
-                    <td>Dataset number</td>
-                    <td>Dataset name</td>
-                    <td style="color: red;">Remove</td>
-                </tr>
-            </thead>
-            <tbody>
-                {% for id in datasetList %}
-                    <tr>
-                        <td>dataset name</td>
-                        <td>{{ id }}</td>
-                        <td style="font-size: 20px;color: red;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-{#    </div>#}
-
-    <p style="text-align: center">
-        Select a dataset and click on 'show statistics' to show the statistics of the dataset.<br>
-        A new dataset can be added with the 'Add Dataset' button in the top right.
-    </p>
-    <form method="GET" action="">
-        <select class="ds_select" id="datasetSelection" name="datasetSelection">
-            <option value="dataset 0">dataset 0</option>
-            <option value="dataset 1">dataset 1</option>
-            <option value="dataset 2">dataset 2</option>
-            <option value="dataset 3">dataset 3</option>
-            {% for id in datasetList %}
-                <option value="dataset {{ id }}">dataset {{ id }}</option>
-            {% endfor %}
-        </select>
-        <div>
-            <button type="submit" name="submit_button" value="datasetSubmit" class="showStatbtn">Show Statistics</button>
-        </div>
     </form>
 
-
-    <div class="stat_container">
-        <p>Amount of items</p>
-
-        <p>Amount of users</p>
-
-        <p>Amount of interactions</p>
-
-        <p>Price distributions</p>
-
-        <p>Timestamps distributions</p>
+    <div class="_container3">
+{#        <form method="POST" action="" enctype="multipart/form-data" name="myForm">#}
+{#            <div class="_row">#}
+{#                <div class="_column">#}
+{#                    <div class="c3_namecontainer">#}
+{#                        <input type="text" id="ds_name" name="ds_name" placeholder="Enter dataset name" required>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="_row">#}
+{#                <div class="_column">#}
+{#                    <div class="c3_filecontainer">#}
+{#                        <h2> Articles file</h2>#}
+{#                        <input type="file" id="articles_file" name="articles_file" placeholder="articles" accept=".csv" required>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="_column">#}
+{#                    <div class="c3_filecontainer">#}
+{#                        <h2> Purchases file</h2>#}
+{#                        <input type="file" id="purchases_file" name="purchases_file" placeholder="purchases" accept=".csv" required>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="_column">#}
+{#                    <div class="c3_filecontainer">#}
+{#                        <h2> Customers file</h2>#}
+{#                        <input type="file" id="customers_file" name="customers_file" placeholder="customers" accept=".csv" required>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="_row">#}
+{#                <div class="_column">#}
+{#                    <div class="c3_button">#}
+{#                        <button type="submit">#}
+{#                            Add dataset#}
+{#                        </button>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </form>#}
+        <form method="POST" action="" enctype="multipart/form-data" name="form2">
+            <div class="_row">
+                <div class="_column">
+                    <div class="c3_namecontainer">
+                        <input type="text" id="ds_name" name="ds_name" placeholder="Enter dataset name" required>
+                    </div>
+                </div>
+            </div>
+            <div class="_row">
+                <div class="_column">
+                    <div class="c3_filecontainer">
+                        <h2> Articles file</h2>
+                        <div id="btn1" onclick="getFile1()"> Choose file </div>
+                        <div style="height: 0px; width: 0px; overflow: hidden;">
+                            <input type="file" id="articles_file" name="articles_file" value="upload1" accept=".csv" required onchange="sub1(this)">
+                        </div>
+                    </div>
+                </div>
+                <div class="_column">
+                    <div class="c3_filecontainer">
+                        <h2> Purchases file</h2>
+                        <div id="btn2" onclick="getFile2()"> Choose file </div>
+                        <div style="height: 0px; width: 0px; overflow: hidden;">
+                            <input type="file" id="purchases_file" name="purchases_file" value="upload2" accept=".csv" required onchange="sub2(this)">
+                        </div>
+                    </div>
+                </div>
+                <div class="_column">
+                    <div class="c3_filecontainer">
+                        <h2> Customers file</h2>
+                        <div id="btn3" onclick="getFile3()"> Choose file </div>
+                        <div style="height: 0px; width: 0px; overflow: hidden;">
+                            <input type="file" id="customers_file" name="customers_file" value="upload3" accept=".csv" required onchange="sub3(this)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="_row">
+                <div class="_column">
+                    <div class="c3_button">
+                        <button type="submit" role="button">
+                            Add dataset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
+
+</div>
+
+
+
+
+
+
+{#<div class="par_form">#}
+{#    <div class="container" style="border: 2px solid black; width: 600px; display: block; margin-right: auto; margin-left: auto;">#}
+{#        <form method="POST" action="" enctype="multipart/form-data">#}
+{##}
+{#            <div class="row">#}
+{#                <div class="col-25"><label for="name">Dataset name</label></div>#}
+{#                <div class="col-75"><input type="text" id="ds_name" name="ds_name" placeholder="Dataset name" required></div>#}
+{#            </div>#}
+{#            <div class="row">#}
+{#                <div class="col-25"><label for="articles_file">Articles file</label></div>#}
+{#                <div class="col-75"><input type="file" id="articles_file" name="articles_file" placeholder="articles" accept=".csv" required></div>#}
+{#            </div>#}
+{#            <div class="row">#}
+{#                <div class="col-25"><label for="purchases_file">Purchases file</label></div>#}
+{#                <div class="col-75"><input type="file" id="purchases_file" name="purchases_file" placeholder="purchases" accept=".csv" required></div>#}
+{#            </div>#}
+{#            <div class="row">#}
+{#                <div class="col-25"><label for="customers_file">Customers file</label></div>#}
+{#                <div class="col-75"><input type="file" id="customers_file" name="customers_file" placeholder="customers" accept=".csv" required></div>#}
+{#            </div>#}
+{#            <div align="center" class="___services__btn" style="margin-top: 20px;">#}
+{#                <button type="submit">#}
+{#                    Add dataset#}
+{#                </button>#}
+{#            </div>#}
+{#        </form>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<!-- Dataset Section-->#}
+{##}
+{#<div class="dataset" id="dataset">#}
+{##}
+{#    <div class="_container">#}
+{##}
+{#        <div class="dataset_title" >Datasets</div>#}
+{#        <div class="dataset__btn">#}
+{#            <button>Remove Dataset</button>#}
+{#        </div>#}
+{#        <table class="scroll-table" id="scrolltable">#}
+{#            <thead>#}
+{#                <tr>#}
+{#                    <td>Dataset number</td>#}
+{#                    <td>Dataset name</td>#}
+{#                    <td style="color: red;">Remove</td>#}
+{#                </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#                {% for id in datasetList %}#}
+{#                    <tr>#}
+{#                        <td>dataset name</td>#}
+{#                        <td>{{ id }}</td>#}
+{#                        <td style="font-size: 20px;color: red;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#            </tbody>#}
+{#        </table>#}
+{#    </div>#}
+{##}
+{#    <p style="text-align: center">#}
+{#        Select a dataset and click on 'show statistics' to show the statistics of the dataset.<br>#}
+{#        A new dataset can be added with the 'Add Dataset' button in the top right.#}
+{#    </p>#}
+{#    <form method="GET" action="">#}
+{#        <select class="ds_select" id="datasetSelection" name="datasetSelection">#}
+{#            <option value="dataset 0">dataset 0</option>#}
+{#            <option value="dataset 1">dataset 1</option>#}
+{#            <option value="dataset 2">dataset 2</option>#}
+{#            <option value="dataset 3">dataset 3</option>#}
+{#            {% for id in datasetList %}#}
+{#                <option value="dataset {{ id }}">dataset {{ id }}</option>#}
+{#            {% endfor %}#}
+{#        </select>#}
+{#        <div>#}
+{#            <button type="submit" name="submit_button" value="datasetSubmit" class="showStatbtn">Show Statistics</button>#}
+{#        </div>#}
+{#    </form>#}
+{##}
+{##}
+{#    <div class="stat_container">#}
+{#        <p>Amount of items</p>#}
+{##}
+{#        <p>Amount of users</p>#}
+{##}
+{#        <p>Amount of interactions</p>#}
+{##}
+{#        <p>Price distributions</p>#}
+{##}
+{#        <p>Timestamps distributions</p>#}
+{#    </div>#}
 
 
 </div>
@@ -132,6 +300,37 @@
 $('#scrolltable tbody tr').click(function() {
     $(this).addClass('highlight').siblings().removeClass('highlight');
 });
+
+function getFile1() {
+    document.getElementById("articles_file").click();
+}
+function getFile2() {
+    document.getElementById("purchases_file").click();
+}
+function getFile3() {
+    document.getElementById("customers_file").click();
+}
+
+function sub1(obj) {
+    var file = obj.value;
+    var filename = file.split("\\");
+    document.getElementById("btn1").innerHTML = filename[filename.length - 1];
+    event.preventDefault();
+}
+
+function sub2(obj) {
+    var file = obj.value;
+    var filename = file.split("\\");
+    document.getElementById("btn2").innerHTML = filename[filename.length - 1];
+    event.preventDefault();
+}
+
+function sub3(obj) {
+    var file = obj.value;
+    var filename = file.split("\\");
+    document.getElementById("btn3").innerHTML = filename[filename.length - 1];
+    event.preventDefault();
+}
 
 {#function selectRow() {#}
 {#    row_id = event.target.id;#}
