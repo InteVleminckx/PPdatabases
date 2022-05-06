@@ -240,9 +240,6 @@ class UserDataAcces:
 
         print('start reading articles')
 
-        # isinstance(value, (int, numpy.integer))
-        # value = int(value) if isinstance(value, (int, numpy.integer)) else value
-
         tuples_list = []
         psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
         for column in data_articles.columns:
