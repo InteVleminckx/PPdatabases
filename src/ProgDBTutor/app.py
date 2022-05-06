@@ -31,7 +31,7 @@ from user_data_acces import UserDataAcces
 """
 Imports voor pages
 """
-from datasets import handelRequests
+from datasets import *
 
 
 
@@ -219,9 +219,12 @@ def services():
 @app.route("/datasets/<ds_id>", methods=['GET', 'POST'])
 def getData(ds_id):
     if request.method == 'GET':
+        list = dict({})
+        list["nr_of_users"] = getNumberOfUsers()
+        list["nr_of_items"] = getNumberOfArticles()
+        list["nr_of_interactions"] = getNumberOfInteractions()
         print(ds_id)
         print(ds_id)
-        list = dict({'users': 20})
         return list
     else:
         print("ZIE MIJ")
