@@ -39,13 +39,13 @@
         <div class="_row">
             <div class="_column">
 
-                    <select class="c0_select" id="datasetSelection" name="datasetSelection" onchange="this.form.submit()">
-                        <option value="dataset 0">dataset 0</option>
-                        <option value="dataset 1">dataset 1</option>
-                        <option value="dataset 2">dataset 2</option>
-                        <option value="dataset 3">dataset 3</option>
+                    <select class="c0_select" id="datasetSelection" name="datasetSelection" onchange="sendData()">
+                        <option value="0">dataset 0</option>
+                        <option value="1">dataset 1</option>
+                        <option value="2">dataset 2</option>
+                        <option value="3">dataset 3</option>
                         {% for id in datasetList %}
-                            <option value="dataset {{ id }}">dataset {{ id }}</option>
+                            <option value="{{ id }}">dataset {{ id }}</option>
                         {% endfor %}
                     </select>
 
@@ -57,20 +57,20 @@
         <div class="_row">
             <div class="_column">
                 <div class="c1_statcontainer">
-                    <h2>Number of users:</h2>
-                    <p>413321</p>
+                    <h2>Number of customers:</h2>
+                    <p id="nr_of_customers">0</p>
                 </div>
             </div>
             <div class="_column">
                 <div class="c1_statcontainer">
                     <h2>Number of items:</h2>
-                    <p>2093210</p>
+                    <p id="nr_of_items">0</p>
                 </div>
             </div>
             <div class="_column">
                 <div class="c1_statcontainer">
                     <h2>Number of interactions:</h2>
-                    <p>10952346</p>
+                    <p id="nr_of_interactions">0</p>
                 </div>
             </div>
         </div>
@@ -330,6 +330,36 @@ function sub3(obj) {
     var filename = file.split("\\");
     document.getElementById("btn3").innerHTML = filename[filename.length - 1];
     event.preventDefault();
+}
+
+function sendData() {
+    let id = document.getElementById("datasetSelection").value;
+
+    fetch(`/datasets/${id}`).then(function(response) {
+        return response.text();
+    }).then(function(text) {
+        for (const [key, value] of Object.entries(text)) {
+            console.log(key, value);
+        }
+        if (text.hasOwnProperty("nr_of_customers")) {
+            document.getElementById("nr_of_customers").innerHTML = text["nr_of_customers"];
+        }
+        else {
+            document.getElementById("nr_of_customers").innerHTML = "0";
+        }
+        if (text.hasOwnProperty("nr_of_items")) {
+            document.getElementById("nr_of_items").innerHTML = text["nr_of_items"];
+        }
+        else {
+            document.getElementById("nr_of_items").innerHTML = "0";
+        }
+        if (text.hasOwnProperty("nr_of_interactions")) {
+            document.getElementById("nr_of_interactions").innerHTML = text["nr_of_interactions"];
+        }
+        else {
+            document.getElementById("nr_of_interactions").innerHTML = "0";
+        }
+    });
 }
 
 {#function selectRow() {#}
