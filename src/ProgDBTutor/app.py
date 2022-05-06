@@ -220,7 +220,7 @@ def services():
 def getData(ds_id):
     if request.method == 'GET':
         list = dict({})
-        list["nr_of_users"] = str(getNumberOfUsers())
+        list["nr_of_customers"] = str(getNumberOfUsers())
         list["nr_of_items"] = str(getNumberOfArticles())
         list["nr_of_interactions"] = str(getNumberOfInteractions())
         print(ds_id)
