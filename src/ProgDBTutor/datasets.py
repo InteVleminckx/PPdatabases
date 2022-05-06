@@ -91,7 +91,7 @@ def importPurchases(app, user_data_access):
 def getNumberOfUsers(cursor, dataset_id):
     #We doen dit op deze manier omdat dit sneller is als distinct, want distinct sorteerd eerst heel de tabel
     query = 'CREATE OR REPLACE VIEW customers AS SELECT customer_id FROM Customer WHERE dataset_id = %s GROUP BY' \
-            'customer_id; SELECT count(*) FROM customers;', (str(dataset_id),)
+            'customer_id; SELECT count(*) FROM customers; DROP VIEW customers;', (str(dataset_id),)
 
     cursor.execute(query)
     # we doen min 1 omdat we een extra user hebben toegevoegd voor de a/b tests dat eigenlijk een algemene user is voor
@@ -101,8 +101,8 @@ def getNumberOfUsers(cursor, dataset_id):
 
 def getNumberOfArticles(cursor, dataset_id):
     #We doen dit op deze manier omdat dit sneller is als distinct, want distinct sorteerd eerst heel de tabel
-    query = 'CREATE OR REPLACE VIEW articles AS SELECT item_id FROM Dataset WHERE dataset_id = %s GROUP BY' \
-            'item_id; SELECT count(*) FROM customers;', (str(dataset_id),)
+    query = 'CREATE OR REPLACE VIEW articlesC AS SELECT item_id FROM Dataset WHERE dataset_id = %s GROUP BY' \
+            'item_id; SELECT count(*) FROM articlesC; DROP VIEW articlesC;', (str(dataset_id),)
 
     cursor.execute(query)
     return cursor.fetchone()[0]

@@ -244,26 +244,15 @@ class UserDataAcces:
         # value = int(value) if isinstance(value, (int, numpy.integer)) else value
 
         tuples_list = []
+        psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
         for column in data_articles.columns:
             subset = data_articles[[column]].copy()
             subset['column'] = column
             #TODO: zorg ervoor da hier het juiste type geselecteerd wordt en we zo dan het juiste type kunnen toewijden
-            subset['type'] = str(data_articles.dtypes[column])
+            subset['type'] = data_articles.dtypes[column].name
             subset['dataset_id'] = self.datasetId
             tuples = list(subset.to_records())
             tuples_list.extend(tuples)
-
-        # for row in range(0, len(data_articles.index)):
-        #     for column in range(1, len(data_articles.columns)):
-        #         if str(data_articles.iloc[row, column]) == 'nan':
-        #             data_articles.iloc[row, column] = ''
-        #
-        #         files = (self.datasetId,
-        #                         int(data_articles.iloc[row, 0]),
-        #                         str(columns_articles[column]),
-        #                         str(data_articles.iloc[row, column]))
-        #
-        #         tuples_list.append(files)
 
         print(len(tuples_list))
         print('start inserting articles')
@@ -296,7 +285,7 @@ class UserDataAcces:
         cursor = self.dbconnect.get_cursor()
         start = time.process_time()
         print('start reading customers')
-        insert_query = 'INSERT INTO Customer(dataset_id, customer_id, attribute , val) VALUES %s;'
+        insert_query = 'INSERT INTO Customer(customer_number, val, attribute,type , dataset_id) VALUES %s;'
         execute = []
 
         tuples_list = []
@@ -308,19 +297,11 @@ class UserDataAcces:
             tuples = list(subset.to_records())
             tuples_list.extend(tuples)
 
-        #             file = (self.datasetId,
-        #                             -1,
-        #                             str(columns_customers[column]),
-        #                             str(data_customers.iloc[row, column]))
-        #             execute.append(file)
-        #         addedDefault = True
-        #         print("Added default costumer")
-
         # add default user
         tuples_list.append((-1, str(columns_customers[0]), str(data_customers.iloc[1, 0]), 'default', self.datasetId))
 
         psycopg2.extras.execute_values(
-            cursor, insert_query, execute, template=None, page_size=100
+            cursor, insert_query, tuples_list, template=None, page_size=100
         )
 
         self.dbconnect.commit()
