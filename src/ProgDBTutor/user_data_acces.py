@@ -234,14 +234,13 @@ class UserDataAcces:
     # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
     def addArticles(self, data_articles, columns_articles):
         #Duurt 1.30 min op deze manier
+        print('start reading articles')
         start = time.process_time()
         cursor = self.dbconnect.get_cursor()
+        psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
         insert_query = 'INSERT INTO Articles(item_number, val, attribute, type, dataset_id) VALUES %s'
 
-        print('start reading articles')
-
         tuples_list = []
-        psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
         for column in data_articles.columns:
             subset = data_articles[[column]].copy()
             subset['column'] = column
@@ -251,8 +250,6 @@ class UserDataAcces:
             tuples = list(subset.to_records())
             tuples_list.extend(tuples)
 
-        print(len(tuples_list))
-        print('start inserting articles')
         psycopg2.extras.execute_values(
             cursor, insert_query, tuples_list, template=None, page_size=100
         )
@@ -281,7 +278,7 @@ class UserDataAcces:
         cursor = self.dbconnect.get_cursor()
         start = time.process_time()
         print('start reading customers')
-        insert_query = 'INSERT INTO Customer(customer_number, val, attribute,type , dataset_id) VALUES %s;'
+        insert_query = 'INSERT INTO Customer(customer_number, val, attribute, type, dataset_id) VALUES %s;'
 
         tuples_list = []
         for column in data_customers.columns:
@@ -312,7 +309,7 @@ class UserDataAcces:
     """
     def getCustomer(self, customer_id, dataset_id):
         cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT dataset_id, customer_id,attribute, val\
+        cursor.execute("SELECT dataset_id, customer_id, attribute, val\
                         FROM Customer WHERE customer_id = %s AND dataset_id = %s", (customer_id,  dataset_id))
 
         attr = {}
@@ -343,49 +340,28 @@ class UserDataAcces:
 
     # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
     def addPurchases(self, data_purchases):
-        # data_purchases = data_purchases.drop_duplicates()
-        #57 minuten
+        print('start reading purchases')
         cursor = self.dbconnect.get_cursor()
         start = time.process_time()
-        print('start reading purchases')
-
-        execute = []
-        created = set()
-        insert_query = 'INSERT INTO Interaction(customer_id, dataset_id, item_id, attribute_dataset, attribute_customer, t_dat, price)\
+        psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
+        insert_query = 'INSERT INTO Interaction(t_dat, customer_id, item_id, price, dataset_id, attribute_customer)\
                                    VALUES %s'
 
-        tuples_list = []
-        for column in data_purchases.columns:
-            subset = data_purchases[[column]].copy()
-            subset['column'] = column
-            subset['type'] = data_purchases.dtypes[column].name  # dtype is configurable in your webapplication and should come from there.
-            subset['dataset_id'] = self.datasetId
-            tuples = list(subset.to_records())
-            tuples_list.extend(tuples)
+        data_purchases = data_purchases.drop_duplicates()
+        cursor.execute('SELECT attribute FROM customer WHERE dataset_id = %s LIMIT 1', str(self.datasetId))
+        customer = cursor.fetchone()
+        customer_attribute = customer[0]
+        data_purchases['dataset_id'] = self.datasetId
+        data_purchases['attribute_customer'] = customer_attribute
+        tuples_list = list(data_purchases.to_records(index=False))
 
-        # for row in range(0, len(data_purchases.index)):
-        #     item_id = str(data_purchases.iloc[row, 2])
-        #     customer_id = int(data_purchases.iloc[row, 1])
-        #
-        #     item = self.getItem(item_id, self.datasetId)
-        #     attribute_dataset = list(item.attributes)[0]
-        #     customer = self.getCustomer(customer_id, self.datasetId)
-        #     attribute_customer = list(customer.attributes)[0]
-        #
-        #     if (item_id, customer_id) in created:
-        #         continue
-        #
-        #     created.add((item_id, customer_id))
-        #     execute.append((str(customer_id), str(self.datasetId), str(item_id), attribute_dataset, attribute_customer, data_purchases.iloc[row, 0], data_purchases.iloc[row, 3]))
-        #
-        # psycopg2.extras.execute_values(
-        #     cursor, insert_query, execute, template=None, page_size=100
-        # )
-        #
-        # self.dbconnect.commit()
-        print(len(tuples_list))
-        print("Purchases: ", time.process_time() - start)
+        psycopg2.extras.execute_values(
+            cursor, insert_query, tuples_list, template=None, page_size=100
+        )
+        self.dbconnect.commit()
         self.datasetId += 1
+
+        print("Purchases: ", time.process_time() - start)
         print('end reading purchases')
 
     """
