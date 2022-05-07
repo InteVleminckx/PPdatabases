@@ -92,7 +92,7 @@
     <div class="_container2">
         <div class="_row">
             <div class="_column">
-                <button class="c2_button" role="button">
+                <button class="c2_button" role="button" onclick="displayC3()">
                     Add dataset
                 </button>
             </div>
@@ -105,7 +105,7 @@
     </div>
     </form>
 
-    <div class="_container3">
+    <div class="_container3" id="_container3" style="display: none;">
 {#        <form method="POST" action="" enctype="multipart/form-data" name="myForm">#}
 {#            <div class="_row">#}
 {#                <div class="_column">#}
@@ -360,6 +360,16 @@ function sendData() {
             document.getElementById("nr_of_interactions").innerHTML = "0";
         }
     });
+}
+
+function displayC3() {
+    var c3 = document.getElementById("_container3");
+    if (c3.style.display == "none") {
+        c3.style.display = "block";
+    }
+    else {
+        c3.style.display = "none";
+    }
 }
 
 {#function selectRow() {#}
