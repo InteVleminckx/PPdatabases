@@ -9,6 +9,8 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+import redis
+from rq import Queue
 
 # from config import config_data
 # from db_connection import DBConnection
@@ -49,8 +51,12 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 algo_list = list()
 algo_dict = dict()
 
-# engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
-# db = scoped_session(sessionmaker(bind=engine))
+engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
+db = scoped_session(sessionmaker(bind=engine))
+
+#For threading
+rds = redis.Redis()
+tq = Queue(connection=rds)
 
 # INITIALIZE SINGLETON SERVICES
 
@@ -72,14 +78,18 @@ abtest_id = user_data_access.getMaxABTestID()+1
 #
 #     return cursor
 
-DEBUG = False
+DEBUG = True
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
 
 #----------------- VIEW -----------------#
 @app.route("/")
 @app.route("/home")
 def main():
-
+    # print('hallo1')
+    # l = db.execute('SELECT * FROM datascientist').fetchall()
+    # for i in l:
+    #     print(i.username)
+    # print('hallo2')
     l = session.get('loggedin', False)
     if l:
         return render_template('home.html', app_data=app_data, isLoggedin=session['loggedin'])
@@ -169,15 +179,20 @@ def services():
                 while i < algo_id:
                     # Add entry for ABtest table
                     user_data_access.addAB_Test(abtest_id, i, start, end, stepsize, topk)
+                    #tq.enqueue(user_data_access.addAB_Test, abtest_id, i, start, end, stepsize, topk)
 
                     # Add entries for Algorithm table
                     for j in range(len(algo_list)):
                         if algo_list[j][0] == i:
                             algorithm_param = algo_list[j][2]
-                            user_data_access.addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2], algo_list[j][3])
+                            #user_data_access.addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
+                            # algo_list[j][3])
+                            tq.enqueue(user_data_access.addAlgorithm,abtest_id, i, algo_list[j][1], algo_list[j][2], algo_list[j][3])
 
                     # Add entry for result table
-                    user_data_access.addResult(abtest_id, i, dataset_id, item_id, attribute_dataset, algorithm_param, creator)
+                    user_data_access.addResult(abtest_id, i, dataset_id, item_id, attribute_dataset,algorithm_param, creator)
+                    #tq.enqueue(user_data_access.addResult, abtest_id, i, dataset_id, item_id, attribute_dataset,
+                    # algorithm_param, creator)
 
                     i += 1
 
@@ -185,11 +200,16 @@ def services():
                 algo_list = []
                 algo_dict = {}
                 user_data_access.dbconnect.commit()
+                #tq.enqueue(user_data_access.dbconnect.commit)
 
                 # Call function to start a/b tests
+                maxABtestID = user_data_access.getMaxABTestID()
                 abtest.startAB(user_data_access.getMaxABTestID(), dataset_id, user_data_access)
-                abtest.getABtestResults(user_data_access.getMaxABTestID(), dataset_id, user_data_access)
-                abtest.getAB_Pop_Active(user_data_access.getMaxABTestID(), dataset_id, user_data_access)
+                #tq.enqueue(abtest.startAB, maxABtestID,dataset_id, user_data_access)
+                abtest.getABtestResults(maxABtestID, dataset_id, user_data_access)
+                #tq.enqueue(abtest.getABtestResults, maxABtestID, dataset_id, user_data_access)
+                abtest.getAB_Pop_Active(maxABtestID, dataset_id, user_data_access)
+                #tq.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id, user_data_access)
 
                 abtest_id += 1
                 algo_id = 1
@@ -215,7 +235,13 @@ def services():
 @app.route("/datasets/<ds_id>", methods=['GET', 'POST'])
 def getData(ds_id):
     if request.method == 'GET':
-        return getDatasetInformation(user_data_access, ds_id)
+        list = dict({})
+        list["nr_of_users"] = str(getNumberOfUsers())
+        list["nr_of_items"] = str(getNumberOfArticles())
+        list["nr_of_interactions"] = str(getNumberOfInteractions())
+        print(ds_id)
+        print(ds_id)
+        return list
     else:
         print("ZIE MIJ")
 
@@ -225,7 +251,7 @@ def getData(ds_id):
 def datasets():
 
     handelRequests(app, user_data_access, session, request)
-    dataset_names = user_data_access.getDatasets()
+    #tq.enqueue(handelRequests, app, user_data_access, session, request)
 
     # if request.method == 'POST':
     #     #TODO: hier zou nog gecontroleerd moeten worden welk post request dit is -> add, remove of view dataset
@@ -268,7 +294,7 @@ def datasets():
     #     datasetList.append(row[0])
 
     # return render_template('datasets.html', app_data=app_data, datasetList = datasetList)
-    return render_template('datasets.html', app_data=app_data, names=dataset_names)
+    return render_template('datasets.html', app_data=app_data)
 
 @app.route("/datasetupload")
 def datasetupload(rowData):

@@ -230,6 +230,10 @@ class UserDataAcces:
 
          return Item(itemId, attr, dataset_id)
 
+    def addDataset(self, name):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute('INSERT INTO Dataset(dataset_id, dataset_name) VALUES (%s,%s)', (self.datasetId, name))
+
 
     def getDatasets(self):
         cursor = self.dbconnect.get_cursor()

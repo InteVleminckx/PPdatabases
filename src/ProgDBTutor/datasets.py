@@ -30,15 +30,16 @@ def handelRequests(app, user_data_access, session, request):
 
     # Add dataset form
     elif request.method == 'POST':
+        name = request.form.get("ds_name")
         addDataset(app, user_data_access, session)
-
     else:
         pass
 
 
-def addDataset(app, user_data_access, session):
+def addDataset(app, user_data_access, session,name):
     if session['username'] == 'admin':  # checken of de user de admin is
         dataset_id = importDataset(user_data_access)
+        user_data_access.addDataset(name)
         importArticles(app, user_data_access, dataset_id)
         importCustomers(app, user_data_access, dataset_id)
         importPurchases(app, user_data_access, dataset_id)
