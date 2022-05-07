@@ -88,7 +88,7 @@
     <div class="_container2">
         <div class="_row">
             <div class="_column">
-                <button class="c2_button" role="button" onclick="displayC3()">
+                <button class="c2_button" role="button" id="add_btn" name="add_btn" onclick="displayC3()">
                     Add dataset
                 </button>
             </div>
@@ -101,7 +101,7 @@
     </div>
     </form>
 {#TODO: style terug naar none zetten#}
-    <div class="_container3" id="_container3" style="display: block;">
+    <div class="_container3" id="_container3" style="display: none;">
 {#        <form method="POST" action="" enctype="multipart/form-data" name="myForm">#}
 {#            <div class="_row">#}
 {#                <div class="_column">#}
@@ -422,6 +422,10 @@ function displayC3() {
         c3.style.display = "none";
     }
 }
+
+$('button.c2_button').click(function(e) {
+    e.preventDefault();
+});
 
 {#function selectRow() {#}
 {#    row_id = event.target.id;#}
