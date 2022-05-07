@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from flask import request, flash
@@ -58,8 +59,8 @@ def getDatasetInformation(user_data_access, dataset_id):
     numberOfArticles = getNumberOfArticles(cursor, dataset_id)
     numberOfInteractions = getNumberOfInteractions(cursor, dataset_id)
     numbers = list()
-    numbers.append({'users': numberOfUser, 'articles': numberOfArticles, 'interactions': numberOfInteractions})
-
+    numbers.append({'users': numberOfUser, 'articles': numberOfArticles, 'interactions': numberOfInteractions, 'distributions': getPriceDistribution(cursor, dataset_id),
+                    'activeUsers': getActiveUsers(cursor, dataset_id)})
     dictNumbers = json.dumps(numbers)
     return dictNumbers
 
@@ -132,3 +133,47 @@ def getNumberOfInteractions(cursor, dataset_id):
     if not row:
         return 0
     return row[0]
+
+def getActiveUsers(cursor, dataset_id):
+    cursor.execute('CREATE OR REPLACE VIEW active AS SELECT customer_id, extract(YEAR FROM t_dat) AS year, extract(MONTH FROM t_dat) AS month FROM '
+                   'Interaction WHERE dataset_id = %s GROUP BY extract(YEAR FROM t_dat) , extract(MONTH FROM t_dat), customer_id;', str(dataset_id))
+    cursor.execute(' SELECT count(year), year, month AS date FROM active GROUP BY year, month; ')
+
+    rows = cursor.fetchall()
+    if not rows:
+        cursor.execute('DROP VIEW active;')
+        return None
+    rows = sorted(rows, key=lambda x: (x[2], x[1]))
+    users = list()
+    for row in rows:
+        users.append({'month': str(int(row[1])) + "-" + str(int(row[2])), 'count': row[0]})
+    cursor.execute('DROP VIEW active;')
+    return users
+
+def getPriceDistribution(cursor, dataset_id):
+
+    cursor.execute('SELECT min(price) as min, max(price) as max, (max(price) - min(price))/20 as interval FROM Interaction WHERE dataset_id = %s', (str(dataset_id)))
+    row = cursor.fetchone()
+
+    if not row:
+        return None
+
+    min, max, interval = row
+
+    distributions = list()
+
+    for i in range(1,21):
+        begin = min + interval*(i-1)
+        end = min + interval*i
+        if i == 1:
+            cursor.execute('SELECT count(*), (%s,%s) AS range FROM Interaction WHERE price >= %s AND price <= %s', (str(begin),str(end),str(begin),str(end)))
+        else:
+            cursor.execute('SELECT count(*), (%s,%s) AS range FROM Interaction WHERE price > %s AND price <= %s', (str(begin),str(end),str(begin),str(end)))
+
+        row = cursor.fetchone()
+        if row:
+            distributions.append({'range':row[1], 'count':row[0]})
+
+
+    return distributions
+

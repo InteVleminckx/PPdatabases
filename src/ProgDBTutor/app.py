@@ -231,8 +231,6 @@ def datasets():
     handelRequests(app, user_data_access, session, request)
     dataset_names = user_data_access.getDatasets()
 
-
-
     # if request.method == 'POST':
     #     #TODO: hier zou nog gecontroleerd moeten worden welk post request dit is -> add, remove of view dataset
     #     #addDataset(app, user_data_access, session)
