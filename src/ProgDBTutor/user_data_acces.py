@@ -231,8 +231,18 @@ class UserDataAcces:
          return Item(itemId, attr, dataset_id)
 
 
+    def getDatasets(self):
+        cursor = self.dbconnect.get_cursor()
+        cursor.execute("SELECT dataset_id, dataset_name FROM Dataset")
+
+        dataset_names = []
+        for row in cursor:
+            dataset_names.append((row[0], row[1]))
+
+        return dataset_names
+
     # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-    def addArticles(self, data_articles, columns_articles):
+    def addArticles(self, data_articles, dataset_id):
         #Duurt 1.30 min op deze manier
         print('start reading articles')
         start = time.process_time()
@@ -246,7 +256,7 @@ class UserDataAcces:
             subset['column'] = column
             #TODO: zorg ervoor da hier het juiste type geselecteerd wordt en we zo dan het juiste type kunnen toewijden
             subset['type'] = data_articles.dtypes[column].name
-            subset['dataset_id'] = self.datasetId
+            subset['dataset_id'] = dataset_id
             tuples = list(subset.to_records())
             tuples_list.extend(tuples)
 
@@ -274,7 +284,7 @@ class UserDataAcces:
 
 
     # def addCustomer(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-    def addCustomers(self, data_customers, columns_customers):
+    def addCustomers(self, data_customers, columns_customers, dataset_id):
         cursor = self.dbconnect.get_cursor()
         start = time.process_time()
         print('start reading customers')
@@ -285,12 +295,12 @@ class UserDataAcces:
             subset = data_customers[[column]].copy()
             subset['column'] = column
             subset['type'] = data_customers.dtypes[column].name
-            subset['dataset_id'] = self.datasetId
+            subset['dataset_id'] = dataset_id
             tuples = list(subset.to_records())
             tuples_list.extend(tuples)
 
         # add default user
-        tuples_list.append((-1, str(data_customers.iloc[1, 0]), str(columns_customers[0]), 'default', self.datasetId))
+        tuples_list.append((-1, str(data_customers.iloc[1, 0]), str(columns_customers[0]), 'default', dataset_id))
 
         print('end reading customers')
         print(len(tuples_list))
@@ -339,7 +349,7 @@ class UserDataAcces:
 
 
     # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-    def addPurchases(self, data_purchases):
+    def addPurchases(self, data_purchases, dataset_id):
         print('start reading purchases')
         cursor = self.dbconnect.get_cursor()
         start = time.process_time()
@@ -347,11 +357,11 @@ class UserDataAcces:
         insert_query = 'INSERT INTO Interaction(t_dat, customer_id, item_id, price, dataset_id, attribute_customer)\
                                    VALUES %s'
 
-        cursor.execute('SELECT attribute FROM customer WHERE dataset_id = %s LIMIT 1', str(self.datasetId))
+        cursor.execute('SELECT attribute FROM customer WHERE dataset_id = %s AND customer_number = -1 LIMIT 1', str(dataset_id))
         customer = cursor.fetchone()
         customer_attribute = customer[0]
         print(customer_attribute)
-        data_purchases['dataset_id'] = self.datasetId
+        data_purchases['dataset_id'] = dataset_id
         data_purchases['attribute_customer'] = customer_attribute
         data_purchases = data_purchases.drop_duplicates()
         tuples_list = list(data_purchases.to_records(index=False))
@@ -556,6 +566,18 @@ class UserDataAcces:
         if len(recommendations) == 0:
             return None
         return recommendations
+
+    def addDataset(self, dataset_id, dataset_name):
+        cursor = self.dbconnect.get_cursor()
+        try:
+            cursor.execute('INSERT INTO Dataset(dataset_id, dataset_name) VALUES(%s,%s)',
+                           (str(dataset_id), str(dataset_name)))
+
+            self.dbconnect.commit()
+        except:
+            self.dbconnect.rollback()
+            raise Exception("Unable to save dataset!")
+
 
     def getMaxDatasetID(self):
         cursor = self.dbconnect.get_cursor()

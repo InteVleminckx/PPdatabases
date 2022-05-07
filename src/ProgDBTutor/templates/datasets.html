@@ -40,12 +40,8 @@
             <div class="_column">
 
                     <select class="c0_select" id="datasetSelection" name="datasetSelection" onchange="sendData()">
-                        <option value="0">dataset 0</option>
-                        <option value="1">dataset 1</option>
-                        <option value="2">dataset 2</option>
-                        <option value="3">dataset 3</option>
-                        {% for id in datasetList %}
-                            <option value="{{ id }}">dataset {{ id }}</option>
+                        {% for id, name in names %}
+                            <option value="{{ id }}">dataset: {{ name }}</option>
                         {% endfor %}
                     </select>
 
@@ -104,8 +100,8 @@
         </div>
     </div>
     </form>
-
-    <div class="_container3" id="_container3" style="display: none;">
+{#TODO: style terug naar none zetten#}
+    <div class="_container3" id="_container3" style="display: block;">
 {#        <form method="POST" action="" enctype="multipart/form-data" name="myForm">#}
 {#            <div class="_row">#}
 {#                <div class="_column">#}
@@ -296,6 +292,7 @@
 
 <script>
     {#var row_id = 0;#}
+window.onload = sendData();
 
 $('#scrolltable tbody tr').click(function() {
     $(this).addClass('highlight').siblings().removeClass('highlight');
@@ -338,27 +335,32 @@ function sendData() {
     fetch(`/datasets/${id}`).then(function(response) {
         return response.text();
     }).then(function(text) {
-        for (const [key, value] of Object.entries(text)) {
-            console.log(key, value);
-        }
-        if (text.hasOwnProperty("nr_of_customers")) {
-            document.getElementById("nr_of_customers").innerHTML = text["nr_of_customers"];
-        }
-        else {
-            document.getElementById("nr_of_customers").innerHTML = "0";
-        }
-        if (text.hasOwnProperty("nr_of_items")) {
-            document.getElementById("nr_of_items").innerHTML = text["nr_of_items"];
-        }
-        else {
-            document.getElementById("nr_of_items").innerHTML = "0";
-        }
-        if (text.hasOwnProperty("nr_of_interactions")) {
-            document.getElementById("nr_of_interactions").innerHTML = text["nr_of_interactions"];
-        }
-        else {
-            document.getElementById("nr_of_interactions").innerHTML = "0";
-        }
+        numbers = JSON.parse(text)
+        document.getElementById("nr_of_customers").innerHTML = numbers[0].users
+        document.getElementById("nr_of_items").innerHTML = numbers[0].articles
+        document.getElementById("nr_of_interactions").innerHTML = numbers[0].interactions
+
+        {#for (const [key, value] of Object.entries(text)) {#}
+        {#    console.log(key, value);#}
+        {# } #}
+        {#if (text.hasOwnProperty("nr_of_customers")) {#}
+        {#    document.getElementById("nr_of_customers").innerHTML = text["nr_of_customers"];#}
+        {# } #}
+        {#else {#}
+        {#    document.getElementById("nr_of_customers").innerHTML = "0";#}
+        {# } #}
+        {#if (text.hasOwnProperty("nr_of_items")) {#}
+        {#    document.getElementById("nr_of_items").innerHTML = text["nr_of_items"];#}
+        {# } #}
+        {#else {#}
+        {#    document.getElementById("nr_of_items").innerHTML = "0";#}
+        {# } #}
+        {#if (text.hasOwnProperty("nr_of_interactions")) {#}
+        {#    document.getElementById("nr_of_interactions").innerHTML = text["nr_of_interactions"];#}
+        {# } #}
+        {#else {#}
+        {#    document.getElementById("nr_of_interactions").innerHTML = "0";#}
+        {# } #}
     });
 }
 

@@ -219,13 +219,7 @@ def services():
 @app.route("/datasets/<ds_id>", methods=['GET', 'POST'])
 def getData(ds_id):
     if request.method == 'GET':
-        list = dict({})
-        list["nr_of_customers"] = str(getNumberOfUsers())
-        list["nr_of_items"] = str(getNumberOfArticles())
-        list["nr_of_interactions"] = str(getNumberOfInteractions())
-        print(ds_id)
-        print(ds_id)
-        return list
+        return getDatasetInformation(user_data_access, ds_id)
     else:
         print("ZIE MIJ")
 
@@ -235,6 +229,9 @@ def getData(ds_id):
 def datasets():
 
     handelRequests(app, user_data_access, session, request)
+    dataset_names = user_data_access.getDatasets()
+
+
 
     # if request.method == 'POST':
     #     #TODO: hier zou nog gecontroleerd moeten worden welk post request dit is -> add, remove of view dataset
@@ -277,7 +274,7 @@ def datasets():
     #     datasetList.append(row[0])
 
     # return render_template('datasets.html', app_data=app_data, datasetList = datasetList)
-    return render_template('datasets.html', app_data=app_data)
+    return render_template('datasets.html', app_data=app_data, names=dataset_names)
 
 @app.route("/datasetupload")
 def datasetupload(rowData):
