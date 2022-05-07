@@ -49,8 +49,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 algo_list = list()
 algo_dict = dict()
 
-engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
-db = scoped_session(sessionmaker(bind=engine))
+# engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
+# db = scoped_session(sessionmaker(bind=engine))
 
 # INITIALIZE SINGLETON SERVICES
 
@@ -79,11 +79,7 @@ HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
 @app.route("/")
 @app.route("/home")
 def main():
-    # print('hallo1')
-    # l = db.execute('SELECT * FROM datascientist').fetchall()
-    # for i in l:
-    #     print(i.username)
-    # print('hallo2')
+
     l = session.get('loggedin', False)
     if l:
         return render_template('home.html', app_data=app_data, isLoggedin=session['loggedin'])
