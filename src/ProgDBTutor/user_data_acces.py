@@ -290,7 +290,7 @@ class UserDataAcces:
             tuples_list.extend(tuples)
 
         # add default user
-        tuples_list.append((-1, str(columns_customers[0]), str(data_customers.iloc[1, 0]), 'default', self.datasetId))
+        tuples_list.append((-1, str(data_customers.iloc[1, 0]), str(columns_customers[0]), 'default', self.datasetId))
 
         print('end reading customers')
         print(len(tuples_list))
@@ -347,12 +347,13 @@ class UserDataAcces:
         insert_query = 'INSERT INTO Interaction(t_dat, customer_id, item_id, price, dataset_id, attribute_customer)\
                                    VALUES %s'
 
-        data_purchases = data_purchases.drop_duplicates()
         cursor.execute('SELECT attribute FROM customer WHERE dataset_id = %s LIMIT 1', str(self.datasetId))
         customer = cursor.fetchone()
         customer_attribute = customer[0]
+        print(customer_attribute)
         data_purchases['dataset_id'] = self.datasetId
         data_purchases['attribute_customer'] = customer_attribute
+        data_purchases = data_purchases.drop_duplicates()
         tuples_list = list(data_purchases.to_records(index=False))
 
         psycopg2.extras.execute_values(
