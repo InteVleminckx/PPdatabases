@@ -55,7 +55,7 @@ CREATE TABLE Interaction (
     dataset_id INT NOT NULL REFERENCES Dataset(dataset_id) ON UPDATE CASCADE ON DELETE CASCADE,
     attribute_customer TEXT NOT NULL,
     -- Primary key ==> customer buys item at certain time ==> unique
-    PRIMARY KEY (customer_id, item_id, t_dat, price),
+    PRIMARY KEY (customer_id, item_id, t_dat, price, dataset_id),
     -- Reference to a customer from Customers, need 2 attributes for the primary key of a customer
     FOREIGN KEY (dataset_id, customer_id, attribute_customer) REFERENCES Customer(dataset_id, customer_number, attribute) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -117,7 +117,7 @@ CREATE TABLE Recommendation (
 );
 
 -- Test
-INSERT INTO Dataset(dataset_id, dataset_name) VALUES (0, 'H&M');
+-- INSERT INTO Dataset(dataset_id, dataset_name) VALUES (0, 'H&M');
 -- INSERT INTO Customer(dataset_id, customer_id) VALUES (0, 10) ;
 -- INSERT INTO Authentication(username, password) VALUES ('jonasdm', '123piano') ;
 -- INSERT INTO DataScientist(username, email, firstname, lastname) VALUES ('jonasdm', 'jonasdm@hotmail.com', 'jonas', 'de maeyer') ;
