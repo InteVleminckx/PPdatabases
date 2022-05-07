@@ -80,7 +80,6 @@
                 <div class="par_form">
                     <div class="container">
 
-
                           <!-- Dataset Selection-->
 
                           <select class="ds_select" id="datasetSelection" name="datasetSelection">
@@ -250,55 +249,55 @@
 
     function switchVisibleParameters() {
 
-            var select = document.getElementById('algoSelection');
-            var option = select.options[select.selectedIndex];
+        var select = document.getElementById('algoSelection');
+        var option = select.options[select.selectedIndex];
 
-            if (option.value == 'popularity') {
-                if (document.getElementById('popularity_par').style.opacity == '0') {
-                    document.getElementById('popularity_par').style.opacity = '1';
-                    document.getElementById('popularity_par').style.height = '100px';
-                    document.getElementById('popularity_par').style.width = '720px';
+        if (option.value == 'popularity') {
+            if (document.getElementById('popularity_par').style.opacity == '0') {
+                document.getElementById('popularity_par').style.opacity = '1';
+                document.getElementById('popularity_par').style.height = '100px';
+                document.getElementById('popularity_par').style.width = '720px';
 
-                    document.getElementById('recency_par').style.opacity = '0';
-                    document.getElementById('recency_par').style.height = '0px';
-                    document.getElementById('recency_par').style.width = '0px';
+                document.getElementById('recency_par').style.opacity = '0';
+                document.getElementById('recency_par').style.height = '0px';
+                document.getElementById('recency_par').style.width = '0px';
 
-                    document.getElementById('itemknn_par').style.opacity = '0';
-                    document.getElementById('itemknn_par').style.height = '0px';
-                    document.getElementById('itemknn_par').style.width = '0px';
+                document.getElementById('itemknn_par').style.opacity = '0';
+                document.getElementById('itemknn_par').style.height = '0px';
+                document.getElementById('itemknn_par').style.width = '0px';
 
-                }
             }
-            else if (option.value == 'recency') {
-                if (document.getElementById('recency_par').style.opacity == '0') {
-                    document.getElementById('popularity_par').style.opacity = '0';
-                    document.getElementById('popularity_par').style.height = '0px';
-                    document.getElementById('popularity_par').style.width = '0px';
+        }
+        else if (option.value == 'recency') {
+            if (document.getElementById('recency_par').style.opacity == '0') {
+                document.getElementById('popularity_par').style.opacity = '0';
+                document.getElementById('popularity_par').style.height = '0px';
+                document.getElementById('popularity_par').style.width = '0px';
 
-                    document.getElementById('recency_par').style.opacity = '1';
-                    document.getElementById('recency_par').style.height = '50px';
-                    document.getElementById('recency_par').style.width = '720px';
+                document.getElementById('recency_par').style.opacity = '1';
+                document.getElementById('recency_par').style.height = '50px';
+                document.getElementById('recency_par').style.width = '720px';
 
-                    document.getElementById('itemknn_par').style.opacity = '0';
-                    document.getElementById('itemknn_par').style.height = '0px';
-                    document.getElementById('itemknn_par').style.width = '0px';
-                }
+                document.getElementById('itemknn_par').style.opacity = '0';
+                document.getElementById('itemknn_par').style.height = '0px';
+                document.getElementById('itemknn_par').style.width = '0px';
             }
-            else if (option.value == 'itemknn') {
-                if (document.getElementById('itemknn_par').style.opacity == '0') {
-                    document.getElementById('popularity_par').style.opacity = '0';
-                    document.getElementById('popularity_par').style.height = '0px';
-                    document.getElementById('popularity_par').style.width = '0px';
+        }
+        else if (option.value == 'itemknn') {
+            if (document.getElementById('itemknn_par').style.opacity == '0') {
+                document.getElementById('popularity_par').style.opacity = '0';
+                document.getElementById('popularity_par').style.height = '0px';
+                document.getElementById('popularity_par').style.width = '0px';
 
-                    document.getElementById('recency_par').style.opacity = '0';
-                    document.getElementById('recency_par').style.height = '0px';
-                    document.getElementById('recency_par').style.width = '0px';
+                document.getElementById('recency_par').style.opacity = '0';
+                document.getElementById('recency_par').style.height = '0px';
+                document.getElementById('recency_par').style.width = '0px';
 
-                    document.getElementById('itemknn_par').style.opacity = '1';
-                    document.getElementById('itemknn_par').style.height = '200px';
-                    document.getElementById('itemknn_par').style.width = '720px';
-                }
+                document.getElementById('itemknn_par').style.opacity = '1';
+                document.getElementById('itemknn_par').style.height = '200px';
+                document.getElementById('itemknn_par').style.width = '720px';
             }
+        }
     }
 
     $(document).ready(function() {
