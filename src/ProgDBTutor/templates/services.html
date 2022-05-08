@@ -66,123 +66,130 @@
 {#    {% endif %}#}
 {#{% endwith %}#}
 
+
 <div class="abtestpage" id="services">
-    <div class="_row">
-        <div class="_column">
-            <form method="POST" action="" data-name="cForm">
-                <h1>Setting up the A/B-test</h1>
-                <div class="abtestcontainer1">
-                    <div class="container___">
+    <h1>Setting up the A/B-test</h1>
+    <div class="abtestcontainer">
+        <div class="_row">
+            <div class="_column">
+                <form method="POST" action="" data-name="cForm">
 
-                          <!-- Dataset Selection-->
+                    <div class="abtestcontainer1">
+                        <div class="container___">
 
-                          <select class="ds_select" id="datasetSelection" name="datasetSelection">
-                              <option value="dataset 0">dataset 0</option>
-                              <option value="dataset 1">dataset 1</option>
-                              <option value="dataset 2">dataset 2</option>
-                              <option value="dataset 3">dataset 3</option>
-                          </select>
+                              <!-- Dataset Selection-->
 
-                          <!-- General parameters Selection-->
+                              <select class="ds_select" id="datasetSelection" name="datasetSelection">
+                                  <option value="dataset 0">dataset 0</option>
+                                  <option value="dataset 1">dataset 1</option>
+                                  <option value="dataset 2">dataset 2</option>
+                                  <option value="dataset 3">dataset 3</option>
+                              </select>
 
-                          <div class="row">
-                            <div class="col-25"><label for="startingpoint">Starting point</label></div>
-                            <div class="col-75"><input type="datetime-local" id="startingpoint" name="startingpoint" placeholder="Starting point" required></div>
-                          </div>
-                          <div class="row">
-                            <div class="col-25"><label for="endpoint">End point</label></div>
-                            <div class="col-75"><input type="datetime-local" id="endpoint" name="endpoint" placeholder="End point" required></div>
-                          </div>
-                          <div class="row">
-                            <div class="col-25"><label for="stepsize">Stepsize</label></div>
-                            <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize" required></div>
-                          </div>
-                          <div class="row">
-                            <div class="col-25"><label for="topk">Top-k</label></div>
-                            <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" required></div>
-                          </div>
+                              <!-- General parameters Selection-->
 
-                          <!-- Algorithm Selection-->
+                              <div class="row">
+                                <div class="col-25"><label for="startingpoint">Starting point</label></div>
+                                <div class="col-75"><input type="datetime-local" id="startingpoint" name="startingpoint" placeholder="Starting point" required></div>
+                              </div>
+                              <div class="row">
+                                <div class="col-25"><label for="endpoint">End point</label></div>
+                                <div class="col-75"><input type="datetime-local" id="endpoint" name="endpoint" placeholder="End point" required></div>
+                              </div>
+                              <div class="row">
+                                <div class="col-25"><label for="stepsize">Stepsize</label></div>
+                                <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize" required></div>
+                              </div>
+                              <div class="row">
+                                <div class="col-25"><label for="topk">Top-k</label></div>
+                                <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" required></div>
+                              </div>
 
-                            <select class="_ds_select" id="algoSelection" name="algoSelection" onchange="switchVisibleParameters();">
-                                <option value="popularity">popularity</option>
-                                <option value="recency">recency</option>
-                                <option value="itemknn">itemknn</option>
-                            </select>
+                              <!-- Algorithm Selection-->
 
-                          <!-- Algorithm-specific parameters Selection-->
+                                <select class="_ds_select" id="algoSelection" name="algoSelection" onchange="switchVisibleParameters();">
+                                    <option value="popularity">popularity</option>
+                                    <option value="recency">recency</option>
+                                    <option value="itemknn">itemknn</option>
+                                </select>
 
-                            <p style="color: black; margin-top: 12px;">Set Parameters</p>
+                              <!-- Algorithm-specific parameters Selection-->
 
-                            <div class="par_form">
-                                <div class="container1" id="popularity_par" style="border: 2px solid black;">
-                                  <div class="row">
-                                    <div class="col-25"><label for="windowsize">Window Size</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="windowsize" name="windowsize" placeholder="windowsize" ></div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="retraininterval1" name="retraininterval1" placeholder="retraininterval" ></div>
-                                  </div>
+                                <p style="color: black; margin-top: 12px;">Set Parameters</p>
+
+                                <div class="par_form">
+                                    <div class="container1" id="popularity_par" style="border: 2px solid black; display: block;">
+                                      <div class="row">
+                                        <div class="col-25"><label for="windowsize">Window Size</label></div>
+                                        <div class="col-75" style="width: 25%"><input type="text" id="windowsize" name="windowsize" placeholder="windowsize" ></div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
+                                        <div class="col-75" style="width: 25%"><input type="text" id="retraininterval1" name="retraininterval1" placeholder="retraininterval" ></div>
+                                      </div>
+                                    </div>
+
+                                    <div class="container2" id="recency_par" style="border: 2px solid black; display: none;">
+                                      <div class="row">
+                                        <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
+                                        <div class="col-75" style="width: 25%"><input type="text" id="retraininterval2" name="retraininterval2" placeholder="retraininterval" ></div>
+                                      </div>
+                                    </div>
+
+                                    <div class="container3" id="itemknn_par" style="border: 2px solid black; display: none;">
+                                      <div class="row">
+                                        <div class="col-25"><label for="k">K</label></div>
+                                        <div class="col-75" style="width: 25%"><input type="text" id="k" name="k" placeholder="k" ></div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-25"><label for="window">Window</label></div>
+                                        <div class="col-75" style="width: 25%"><input type="text" id="window" name="window" placeholder="window" ></div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-25"><label for="normalize">Normalize</label></div>
+                                        <div class="col-75" style="width: 25%"><input type="text" id="normalize" name="normalize" placeholder="normalize" ></div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
+                                        <div class="col-75" style="width: 25%"><input type="text" id="retraininterval3" name="retraininterval3" placeholder="retraininterval" ></div>
+                                      </div>
+                                    </div>
+
                                 </div>
-
-                                <div class="container2" id="recency_par" style="border: 2px solid black; opacity: 0;height: 0;width: 0;">
-                                  <div class="row">
-                                    <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="retraininterval2" name="retraininterval2" placeholder="retraininterval" ></div>
-                                  </div>
-                                </div>
-
-                                <div class="container3" id="itemknn_par" style="border: 2px solid black; opacity: 0;height: 0;width: 0;">
-                                  <div class="row">
-                                    <div class="col-25"><label for="k">K</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="k" name="k" placeholder="k" ></div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-25"><label for="window">Window</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="window" name="window" placeholder="window" ></div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-25"><label for="normalize">Normalize</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="normalize" name="normalize" placeholder="normalize" ></div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-25"><label for="retraininterval">Retrain interval</label></div>
-                                    <div class="col-75" style="width: 25%"><input type="text" id="retraininterval3" name="retraininterval3" placeholder="retraininterval" ></div>
-                                  </div>
-                                </div>
-
-                            </div>
-
-                        <input type="submit" name="submit_button" value="algoSubmit">
+                            <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="algoSubmit" role="button">
+                                Add dataset
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
 
-        <div class="_column">
-            <div class="abtestcontainer1" style="">
-                <table class="scroll-table" id="scrolltable">
-                    <thead>
-                        <tr>
-                            <td>Dataset number</td>
-                            <td>Dataset name</td>
-                            <td style="color: red;">Remove</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for key, value in algo_dict.items() %}
-                            <tr>
-                                <td>{{ key }}</td>
-                                <td>{{ value }}</td>
-                                <td style="font-size: 20px;color: red;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="_column">
+                <div class="abtestcontainer1" style="background-color: white;">
+                    <div class="greycontainer">
+                        <table class="scroll-table" id="scrolltable" style="background-color: darkgray;">
+                            <thead>
+                                <tr>
+                                    <td style="border-top: 0;">Dataset number</td>
+                                    <td style="border-top: 0;">Dataset name</td>
+                                    <td style="color: red; border-top: 0;">Remove</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, value in algo_dict.items() %}
+                                    <tr>
+                                        <td>{{ key }}</td>
+                                        <td>{{ value }}</td>
+                                        <td style="font-size: 20px;color: red;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
             </div>
 
         </div>
+    </div>
     </div>
 {#    <input type="submit" name="submit_button" value="abtestSubmit">#}
 </div>
@@ -372,50 +379,74 @@
         var select = document.getElementById('algoSelection');
         var option = select.options[select.selectedIndex];
 
-        if (option.value == 'popularity') {
-            if (document.getElementById('popularity_par').style.opacity == '0') {
-                document.getElementById('popularity_par').style.opacity = '1';
-                document.getElementById('popularity_par').style.height = '100px';
-                document.getElementById('popularity_par').style.width = '456px';
-
-                document.getElementById('recency_par').style.opacity = '0';
-                document.getElementById('recency_par').style.height = '0px';
-                document.getElementById('recency_par').style.width = '0px';
-
-                document.getElementById('itemknn_par').style.opacity = '0';
-                document.getElementById('itemknn_par').style.height = '0px';
-                document.getElementById('itemknn_par').style.width = '0px';
+    {#    if (option.value == 'popularity') {#}
+    {#        if (document.getElementById('popularity_par').style.opacity == '0') {#}
+    {#            document.getElementById('popularity_par').style.opacity = '1';#}
+    {#            document.getElementById('popularity_par').style.height = '100px';#}
+    {#            document.getElementById('popularity_par').style.width = '456px';#}
+    {##}
+    {#            document.getElementById('recency_par').style.opacity = '0';#}
+    {#            document.getElementById('recency_par').style.height = '0px';#}
+    {#            document.getElementById('recency_par').style.width = '0px';#}
+    {##}
+    {#            document.getElementById('itemknn_par').style.opacity = '0';#}
+    {#            document.getElementById('itemknn_par').style.height = '0px';#}
+    {#            document.getElementById('itemknn_par').style.width = '0px';#}
+    {##}
+    {#        }#}
+    {#    }#}
+    {#    else if (option.value == 'recency') {#}
+    {#        if (document.getElementById('recency_par').style.opacity == '0') {#}
+    {#            document.getElementById('popularity_par').style.opacity = '0';#}
+    {#            document.getElementById('popularity_par').style.height = '0px';#}
+    {#            document.getElementById('popularity_par').style.width = '0px';#}
+    {##}
+    {#            document.getElementById('recency_par').style.opacity = '1';#}
+    {#            document.getElementById('recency_par').style.height = '50px';#}
+    {#            document.getElementById('recency_par').style.width = '456px';#}
+    {##}
+    {#            document.getElementById('itemknn_par').style.opacity = '0';#}
+    {#            document.getElementById('itemknn_par').style.height = '0px';#}
+    {#            document.getElementById('itemknn_par').style.width = '0px';#}
+    {#        }#}
+    {#    }#}
+    {#    else if (option.value == 'itemknn') {#}
+    {#        if (document.getElementById('itemknn_par').style.opacity == '0') {#}
+    {#            document.getElementById('popularity_par').style.opacity = '0';#}
+    {#            document.getElementById('popularity_par').style.height = '0px';#}
+    {#            document.getElementById('popularity_par').style.width = '0px';#}
+    {##}
+    {#            document.getElementById('recency_par').style.opacity = '0';#}
+    {#            document.getElementById('recency_par').style.height = '0px';#}
+    {#            document.getElementById('recency_par').style.width = '0px';#}
+    {##}
+    {#            document.getElementById('itemknn_par').style.opacity = '1';#}
+    {#            document.getElementById('itemknn_par').style.height = '200px';#}
+    {#            document.getElementById('itemknn_par').style.width = '456px';#}
+    {#        }#}
+    {#    }#}
+    {##}
+    console.log(option.value);
+    if (option.value == 'popularity') {
+            if (document.getElementById('popularity_par').style.display == 'none') {
+                document.getElementById('popularity_par').style.display = 'block';
+                document.getElementById('recency_par').style.display = 'none';
+                document.getElementById('itemknn_par').style.display = 'none';
 
             }
         }
         else if (option.value == 'recency') {
-            if (document.getElementById('recency_par').style.opacity == '0') {
-                document.getElementById('popularity_par').style.opacity = '0';
-                document.getElementById('popularity_par').style.height = '0px';
-                document.getElementById('popularity_par').style.width = '0px';
-
-                document.getElementById('recency_par').style.opacity = '1';
-                document.getElementById('recency_par').style.height = '50px';
-                document.getElementById('recency_par').style.width = '456px';
-
-                document.getElementById('itemknn_par').style.opacity = '0';
-                document.getElementById('itemknn_par').style.height = '0px';
-                document.getElementById('itemknn_par').style.width = '0px';
+            if (document.getElementById('recency_par').style.display == 'none') {
+                document.getElementById('popularity_par').style.display = 'none';
+                document.getElementById('recency_par').style.display = 'block';
+                document.getElementById('itemknn_par').style.display = 'none';
             }
         }
         else if (option.value == 'itemknn') {
-            if (document.getElementById('itemknn_par').style.opacity == '0') {
-                document.getElementById('popularity_par').style.opacity = '0';
-                document.getElementById('popularity_par').style.height = '0px';
-                document.getElementById('popularity_par').style.width = '0px';
-
-                document.getElementById('recency_par').style.opacity = '0';
-                document.getElementById('recency_par').style.height = '0px';
-                document.getElementById('recency_par').style.width = '0px';
-
-                document.getElementById('itemknn_par').style.opacity = '1';
-                document.getElementById('itemknn_par').style.height = '200px';
-                document.getElementById('itemknn_par').style.width = '456px';
+            if (document.getElementById('itemknn_par').style.display == 'none') {
+                document.getElementById('popularity_par').style.display = 'none';
+                document.getElementById('recency_par').style.display = 'none';
+                document.getElementById('itemknn_par').style.display = 'block';
             }
         }
     }

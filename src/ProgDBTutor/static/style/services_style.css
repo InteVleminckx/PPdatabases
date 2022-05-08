@@ -460,17 +460,17 @@
   border-radius: 5px;
   background-color: #f2f2f2;
   padding: 10px;
-    padding-right: 20px;
-    padding-left: 20px;
-    height: 100px;
+    /*padding-right: 20px;*/
+    /*padding-left: 20px;*/
+    height: 200px;
     /*width: 720px;*/
 }
 .container2 {
   border-radius: 5px;
   background-color: #f2f2f2;
   padding: 10px;
-    margin-top: 10px;
-    height: 50px;
+    /*margin-top: 10px;*/
+    height: 200px;
     /*width: 720px;*/
 
 }
@@ -478,7 +478,7 @@
   border-radius: 5px;
   background-color: #f2f2f2;
   padding: 10px;
-    height: 180px;
+    height: 200px;
     /*width: 720px;*/
 
 }
@@ -497,30 +497,44 @@
     /*width: 400px;*/
     /*height: 30px;*/
     background-color: #000000;
+    justify-content: center;
+    padding: 100px;
+    padding-top: 0;
+}
+
+.abtestcontainer {
+    /*width: 400px;*/
+    /*height: 30px;*/
+    width: 100%;
+    background-color: #4f4d4d;
+    border-radius: 10px;
 
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    padding: 30px;
-    padding-top: 10px;
-    overflow-x: hidden;
+    /*padding: 20px;*/
+    /*padding-top: 10px;*/
+    flex-wrap: wrap;
+    /*overflow-x: hidden;*/
 }
 
 .abtestcontainer1 {
     /*height: 160px;*/
     background-color: #b8b5b5;
-    margin: 10px;
+    margin: 50px;
+    margin-top: 35px;
     border-radius: 10px;
     /*padding-top: 5px;*/
-    width: 500px;
+    /*width: 500px;*/
 }
 
-/*.par_form {*/
-/*    margin-top: 25px;*/
-/*  box-sizing: border-box;*/
+.par_form {
+    margin-top: 25px;
+  box-sizing: border-box;
+    background-color: #ae4f4f;
 
 
-/*}*/
+}
 
 input[type=text], input[type=datetime-local], .container___ select, textarea {
   width: 100%;
@@ -551,21 +565,21 @@ input[type=submit]:hover {
 
 .container___ {
   border-radius: 5px;
-  background-color: #f2f2f2;
+  background-color: darkgray;
   padding: 20px;
     width: 100%;
 }
 
 .col-25 {
   float: left;
-  width: 25%;
+  width: 35%;
   margin-top: 6px;
     color: black;
 }
 
 .col-75 {
   float: left;
-  width: 75%;
+  width: 65%;
   margin-top: 6px;
 }
 
@@ -582,4 +596,10 @@ input[type=submit]:hover {
     width: 100%;
     margin-top: 0;
   }
+}
+
+.greycontainer {
+    background-color: darkgray;
+    padding-top: 5px;
+
 }
