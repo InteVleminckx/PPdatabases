@@ -242,151 +242,12 @@
     }
 }
 
-.par_form {
-    margin-top: 25px;
-  box-sizing: border-box;
-
-
-}
-
 input[type=text], input[type=datetime-local], .container select, textarea {
   width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
   resize: vertical;
-}
-
-label {
-  padding: 12px 12px 12px 0;
-  display: inline-block;
-}
-
-input[type=submit] {
-  background-color: #04AA6D;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  float: right;
-}
-
-input[type=submit]:hover {
-  background-color: #45a049;
-}
-
-.container {
-  border-radius: 5px;
-  background-color: #f2f2f2;
-  padding: 20px;
-}
-
-.col-25 {
-  float: left;
-  width: 25%;
-  margin-top: 6px;
-    color: black;
-}
-
-.col-75 {
-  float: left;
-  width: 75%;
-  margin-top: 6px;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-  .col-25, .col-75, input[type=submit] {
-    width: 100%;
-    margin-top: 0;
-  }
-}
-
-/*table {*/
-/*    height: 300px;*/
-/*    width: 800px;*/
-/*    border-collapse: collapse;*/
-/*    !*white-space: nowrap;*!*/
-/*    !*text-align: center;*!*/
-/*}*/
-
-/*table, tr td {*/
-/*    border: 1px solid black;*/
-/*    !*height: 50px;*!*/
-/*}*/
-
-/*tbody {*/
-/*    height:260px;*/
-/*    display: block;*/
-/*    overflow-y: scroll;*/
-/*    overflow-x: hidden;*/
-/*}*/
-
-/*thead {*/
-/*    width: calc( 100% - 1em)*/
-/*}*/
-
-/*thead, tbody tr {*/
-/*    display: table;*/
-/*    width: 100%;*/
-/*    table-layout: fixed;*/
-/*}*/
-
-.scroll-table {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-table ,tr td{
-    border:1px solid black;
-    height: 40px;
-}
-tbody {
-    display:block;
-    height:300px;
-    overflow-y:scroll;
-}
-thead, tbody tr {
-    display:table;
-    width:100%;
-    table-layout:fixed;
-}
-thead {
-    width: calc( 100% - 1.05em );
-}
-table {
-    width:800px;
-    text-align: center;
-    border-collapse: collapse;
-}
-
-td:not(:first-child):not(:last-child) {
-  border-right: 0;
-  border-left: 0;
-}
-td:first-child {
-  border-right: 0;
-  border-left: 1px;
-}
-td:last-child {
-  border-right: 1px;
-  border-left: 0;
-}
-
-table tbody tr.highlight td {
-    background-color: #1e7e34;
-}
-
-thead tr td {
-    font-weight: bold;
 }
 
 /* css for the dataset page */
@@ -443,19 +304,7 @@ thead tr td {
 
 }
 
-._row {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-}
 
-._column {
-    display: flex;
-    flex-direction: column;
-    flex-basis: 100%;
-    flex: 1;
-}
 
 
 

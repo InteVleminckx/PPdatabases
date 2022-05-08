@@ -13,7 +13,7 @@ de datasets page
 
 
 def handelRequests(app, user_data_access, session, request):
-    # Remove en select dataset form
+    # Remove and select dataset form
     if request.method == 'GET':
 
         rqst = request.args.get('datasetSelection')
