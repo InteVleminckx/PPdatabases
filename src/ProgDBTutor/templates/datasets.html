@@ -93,7 +93,7 @@
                 </button>
             </div>
             <div class="_column">
-                <button class="c2_button" type="submit" role="button" id="delete_btn" name="delete_btn">
+                <button class="c2_button_" type="submit" role="button" id="delete_btn" name="delete_btn">
                     Delete dataset
                 </button>
             </div>
@@ -349,7 +349,7 @@ function sendData() {
 
         var dataUsers = [["date", "number of active users"]]
         for (i=0; i < statistics[0].activeUsers.length; i++){
-            var dateS = statistics[0].activeUsers[i].month
+            var dateS = statistics[0].activeUsers[i].date
             var userCount = statistics[0].activeUsers[i].count
 
             dataUsers.push([dateS, userCount])

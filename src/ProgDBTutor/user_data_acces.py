@@ -371,6 +371,11 @@ class UserDataAcces:
         self.dbconnect.commit()
         self.datasetId += 1
 
+        cursor.execute("DROP INDEX IF EXISTS interaction_index;")
+        self.dbconnect.commit()
+        cursor.execute("CREATE INDEX interaction_index ON Interaction(t_dat, customer_id, dataset_id);")
+        self.dbconnect.commit()
+
         print("Purchases: ", time.process_time() - start)
         print('end reading purchases')
 
@@ -602,16 +607,16 @@ class UserDataAcces:
 
 
     def getMaxAlgorithmId(self):
-        pass
-        cursor = self.dbconnect.get_cursor()
-        cursor.execute("SELECT MAX(result_id) \
-                                FROM Algorithm")
+            pass
+            cursor = self.dbconnect.get_cursor()
+            cursor.execute("SELECT MAX(result_id) \
+                                    FROM Algorithm")
 
-        row = cursor.fetchone()
-        if row[0] is None:
-            return 0
+            row = cursor.fetchone()
+            if row[0] is None:
+                return 0
 
-        return row[0]
+            return row[0]
 
     def createGraph(self):
         cursor = self.dbconnect.get_cursor()
