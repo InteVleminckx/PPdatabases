@@ -159,7 +159,7 @@
 
                                 </div>
                             <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="algoSubmit" role="button">
-                                Add dataset
+                                Add Algorithm
                             </button>
                         </div>
                     </div>
@@ -174,8 +174,8 @@
                         <table class="scroll-table" id="scrolltable" style="background-color: darkgray;">
                             <thead>
                                 <tr>
-                                    <td style="border-top: 0;">Dataset number</td>
-                                    <td style="border-top: 0;">Dataset name</td>
+                                    <td style="border-top: 0;">Algorithm number</td>
+                                    <td style="border-top: 0;">Algorithm name</td>
                                     <td style="color: red; border-top: 0;">Remove</td>
                                 </tr>
                             </thead>
@@ -197,7 +197,7 @@
     </div>
 
     <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="abtestSubmit" role="button">
-        Add dataset
+        Submit A/B-test
     </button>
 </div>
 
@@ -383,57 +383,9 @@
 
     function switchVisibleParameters() {
 
-        var select = document.getElementById('algoSelection');
-        var option = select.options[select.selectedIndex];
+    var select = document.getElementById('algoSelection');
+    var option = select.options[select.selectedIndex];
 
-    {#    if (option.value == 'popularity') {#}
-    {#        if (document.getElementById('popularity_par').style.opacity == '0') {#}
-    {#            document.getElementById('popularity_par').style.opacity = '1';#}
-    {#            document.getElementById('popularity_par').style.height = '100px';#}
-    {#            document.getElementById('popularity_par').style.width = '456px';#}
-    {##}
-    {#            document.getElementById('recency_par').style.opacity = '0';#}
-    {#            document.getElementById('recency_par').style.height = '0px';#}
-    {#            document.getElementById('recency_par').style.width = '0px';#}
-    {##}
-    {#            document.getElementById('itemknn_par').style.opacity = '0';#}
-    {#            document.getElementById('itemknn_par').style.height = '0px';#}
-    {#            document.getElementById('itemknn_par').style.width = '0px';#}
-    {##}
-    {#        }#}
-    {#    }#}
-    {#    else if (option.value == 'recency') {#}
-    {#        if (document.getElementById('recency_par').style.opacity == '0') {#}
-    {#            document.getElementById('popularity_par').style.opacity = '0';#}
-    {#            document.getElementById('popularity_par').style.height = '0px';#}
-    {#            document.getElementById('popularity_par').style.width = '0px';#}
-    {##}
-    {#            document.getElementById('recency_par').style.opacity = '1';#}
-    {#            document.getElementById('recency_par').style.height = '50px';#}
-    {#            document.getElementById('recency_par').style.width = '456px';#}
-    {##}
-    {#            document.getElementById('itemknn_par').style.opacity = '0';#}
-    {#            document.getElementById('itemknn_par').style.height = '0px';#}
-    {#            document.getElementById('itemknn_par').style.width = '0px';#}
-    {#        }#}
-    {#    }#}
-    {#    else if (option.value == 'itemknn') {#}
-    {#        if (document.getElementById('itemknn_par').style.opacity == '0') {#}
-    {#            document.getElementById('popularity_par').style.opacity = '0';#}
-    {#            document.getElementById('popularity_par').style.height = '0px';#}
-    {#            document.getElementById('popularity_par').style.width = '0px';#}
-    {##}
-    {#            document.getElementById('recency_par').style.opacity = '0';#}
-    {#            document.getElementById('recency_par').style.height = '0px';#}
-    {#            document.getElementById('recency_par').style.width = '0px';#}
-    {##}
-    {#            document.getElementById('itemknn_par').style.opacity = '1';#}
-    {#            document.getElementById('itemknn_par').style.height = '200px';#}
-    {#            document.getElementById('itemknn_par').style.width = '456px';#}
-    {#        }#}
-    {#    }#}
-    {##}
-    console.log(option.value);
     if (option.value == 'popularity') {
             if (document.getElementById('popularity_par').style.display == 'none') {
                 document.getElementById('popularity_par').style.display = 'block';
