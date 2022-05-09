@@ -2,6 +2,7 @@
 import datetime
 import json as jsn
 import sys
+from user_data_acces import *
 
 # from config import config_data
 # from db_connection import DBConnection
@@ -13,8 +14,8 @@ import sys
 import Popularity as popularity
 import recency_algorithm as receny
 
-def startAB(abtest_id, dataset_id, user_data_access):
-    abtest = user_data_access.getAB_Test(abtest_id)
+def startAB(abtest_id, dataset_id):
+    abtest = getAB_Test(abtest_id)
     result_ids = abtest.result_id
     startpoint = str(abtest.start_point)
     endpoint = str(abtest.end_point)
@@ -23,9 +24,9 @@ def startAB(abtest_id, dataset_id, user_data_access):
 
 
     for result_id in result_ids:
-        result = user_data_access.getResult(result_id)
+        result = getResult(result_id)
         algorithm_param = result.algorithm_param
-        algorithm = user_data_access.getAlgorithm(abtest_id, result_id)
+        algorithm = getAlgorithm(abtest_id, result_id)
 
         if algorithm.name == "popularity":
             retraininterval = int(algorithm.params["retraininterval"])
@@ -38,9 +39,9 @@ def startAB(abtest_id, dataset_id, user_data_access):
             recAlgo = receny.Recency(dataset_id, abtest_id, result_id, startpoint, endpoint, topk, stepsize, retraininterval, algorithm_param)
             recAlgo.recommend()
 
-def getAB_Pop_Active(abtest_id, dataset_id, user_data_access):
+def getAB_Pop_Active(abtest_id, dataset_id):
     dataset_id = 0
-    abtest = user_data_access.getAB_Test(abtest_id)
+    abtest = getAB_Test(abtest_id)
 
     curDate = abtest.start_point
 
@@ -48,8 +49,8 @@ def getAB_Pop_Active(abtest_id, dataset_id, user_data_access):
     users = list()
     while curDate <= abtest.end_point:
         curDate_str = str(curDate)[0:10]
-        numberOfItems = user_data_access.getNumberOfInteractions(dataset_id, curDate_str)
-        numberOfActiveUsers = user_data_access.getNumberOfActiveUsers(dataset_id, curDate_str)
+        numberOfItems = getNumberOfInteractions(dataset_id, curDate_str)
+        numberOfActiveUsers = getNumberOfActiveUsers(dataset_id, curDate_str)
 
         items.append({"date": curDate_str, "purchases": numberOfItems})
         users.append({"date": curDate_str, "active_users": numberOfActiveUsers})
@@ -65,11 +66,11 @@ def getAB_Pop_Active(abtest_id, dataset_id, user_data_access):
     print("var users = '{}' ".format(dictUsers))
     sys.stdout.close()
 
-def getCTR(abtest_id, dataset_id, user_data_access):
-    abtest = user_data_access.getAB_Test(abtest_id)
+def getCTR(abtest_id, dataset_id):
+    abtest = getAB_Test(abtest_id)
 
     curDate = abtest.start_point
-    results = user_data_access.getResultIds(abtest_id, dataset_id)
+    results = getResultIds(abtest_id, dataset_id)
 
     ctrs = []
     for result in results:
@@ -78,8 +79,8 @@ def getCTR(abtest_id, dataset_id, user_data_access):
             curDate_str = str(curDate)[0:10]
 
 
-            algorithm = user_data_access.getAlgorithm(abtest_id, result)
-            numberOfClicks = user_data_access.getClickTroughRate(abtest_id, result,dataset_id, curDate_str)
+            algorithm = getAlgorithm(abtest_id, result)
+            numberOfClicks = getClickTroughRate(abtest_id, result,dataset_id, curDate_str)
             ctr.append({"date": curDate_str, "clicks": numberOfClicks, "algo_name": algorithm.name, "params": algorithm.params})
             curDate += datetime.timedelta(days=1)
 
@@ -96,15 +97,15 @@ def getCTR(abtest_id, dataset_id, user_data_access):
 
 
 
-def getABtestResults(abtest_id, dataset_id, user_data_access):
+def getABtestResults(abtest_id, dataset_id):
 
-    abtest = user_data_access.getAB_Test(abtest_id)
+    abtest = getAB_Test(abtest_id)
     topk = abtest.topk
     start_point = abtest.start_point
     end_point = abtest.end_point
     f = open("ABtest.txt", "w")
 
-    cursor = user_data_access.dbconnect.get_cursor()
+    cursor = dbconnect.get_cursor()
     cursor.execute('SELECT DISTINCT result_id FROM Result WHERE dataset_id = %s and abtest_id = %s', (str(dataset_id), str(abtest_id)))
 
     resultIdList = list()

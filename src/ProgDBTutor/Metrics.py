@@ -1,6 +1,6 @@
 from config import config_data
 from db_connection import DBConnection
-from user_data_acces import UserDataAcces
+from user_data_acces import *
 
 from datetime import datetime
 from datetime import timedelta
@@ -8,7 +8,7 @@ from datetime import timedelta
 import time as tm
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-user_data_access = UserDataAcces(connection)
+#user_data_access = UserDataAcces(connection)
 
 
 class Metrics:

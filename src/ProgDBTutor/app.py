@@ -14,7 +14,7 @@ from rq import Queue
 
 # from config import config_data
 # from db_connection import DBConnection
-from user_data_acces import DataScientist #, UserDataAcces
+from user_data_acces import * # , UserDataAcces
 # from user_data_acces import UserDataAcces
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -28,7 +28,7 @@ from datetime import datetime, timedelta
 
 from config import config_data
 from db_connection import DBConnection
-from user_data_acces import UserDataAcces
+#from user_data_acces import UserDataAcces
 
 """
 Imports voor pages
@@ -45,7 +45,6 @@ app.secret_key = '*^*(*&)(*)(*afafafaSDD47j\3yX R~X@H!jmM]Lwf/,?KT'
 app_data = dict()
 app_data['app_name'] = config_data['app_name']
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-user_data_access = UserDataAcces(connection)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 algo_list = list()
@@ -62,7 +61,7 @@ tq = Queue(connection=rds)
 
 
 algo_id = 1
-abtest_id = user_data_access.getMaxABTestID()+1
+abtest_id = getMaxABTestID()+1
 
 
 # login_manager = LoginManager()
@@ -154,11 +153,11 @@ def services():
                         algo_id += 1
 
             elif s == 'abtestSubmit':
-                cursor = user_data_access.dbconnect.get_cursor()
+                cursor = connection.get_cursor()
 
                 # Params for foreign keys
                 creator = session['username']
-                cursor.execute('SELECT item_id, attribute FROM Dataset LIMIT 1')
+                cursor.execute('SELECT item_number, attribute FROM Articles LIMIT 1')
                 item = cursor.fetchone()
                 algorithm_param = ""
                 item_id = item[0]
@@ -178,8 +177,8 @@ def services():
                 i = 1
                 while i < algo_id:
                     # Add entry for ABtest table
-                    user_data_access.addAB_Test(abtest_id, i, start, end, stepsize, topk)
-                    #tq.enqueue(user_data_access.addAB_Test, abtest_id, i, start, end, stepsize, topk)
+                    #user_data_access.addAB_Test(abtest_id, i, start, end, stepsize, topk)
+                    tq.enqueue(addAB_Test, abtest_id, i, start, end, stepsize, topk)
 
                     # Add entries for Algorithm table
                     for j in range(len(algo_list)):
@@ -187,29 +186,34 @@ def services():
                             algorithm_param = algo_list[j][2]
                             #user_data_access.addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
                             # algo_list[j][3])
-                            tq.enqueue(user_data_access.addAlgorithm,abtest_id, i, algo_list[j][1], algo_list[j][2], algo_list[j][3])
+                            #tq.enqueue(user_data_access.addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
+                             #                                         algo_list[j][3])
+                            tq.enqueue(addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
+                                       algo_list[j][3])
 
                     # Add entry for result table
-                    user_data_access.addResult(abtest_id, i, dataset_id, item_id, attribute_dataset,algorithm_param, creator)
-                    #tq.enqueue(user_data_access.addResult, abtest_id, i, dataset_id, item_id, attribute_dataset,
-                    # algorithm_param, creator)
+                    #user_data_access.addResult(abtest_id, i, dataset_id, item_id, attribute_dataset,algorithm_param,
+                    # creator)
+                    tq.enqueue(addResult, abtest_id, i, dataset_id, item_id, attribute_dataset, algorithm_param,
+                               creator)
 
                     i += 1
 
                 # Remove algorithms from list and dicts
                 algo_list = []
                 algo_dict = {}
-                user_data_access.dbconnect.commit()
+                connection.commit()
                 #tq.enqueue(user_data_access.dbconnect.commit)
 
                 # Call function to start a/b tests
-                maxABtestID = user_data_access.getMaxABTestID()
-                abtest.startAB(user_data_access.getMaxABTestID(), dataset_id, user_data_access)
-                #tq.enqueue(abtest.startAB, maxABtestID,dataset_id, user_data_access)
-                abtest.getABtestResults(maxABtestID, dataset_id, user_data_access)
-                #tq.enqueue(abtest.getABtestResults, maxABtestID, dataset_id, user_data_access)
-                abtest.getAB_Pop_Active(maxABtestID, dataset_id, user_data_access)
-                #tq.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id, user_data_access)
+                maxABtestID = getMaxABTestID()
+                # abtest.startAB(maxABtestID, dataset_id, user_data_access)
+                # abtest.getABtestResults(maxABtestID, dataset_id, user_data_access)
+                # abtest.getAB_Pop_Active(maxABtestID, dataset_id, user_data_access)
+
+                tq.enqueue(abtest.startAB, maxABtestID,dataset_id)
+                tq.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
+                tq.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
 
                 abtest_id += 1
                 algo_id = 1
@@ -235,7 +239,7 @@ def services():
 @app.route("/datasets/<ds_id>", methods=['GET', 'POST'])
 def getData(ds_id):
     if request.method == 'GET':
-        return getDatasetInformation(user_data_access, ds_id)
+        return getDatasetInformation(ds_id)
     else:
         print("ZIE MIJ")
 
@@ -243,21 +247,21 @@ def getData(ds_id):
 @app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
 def datasets():
-    handelRequests(app, user_data_access, session, request)
-    dataset_names = user_data_access.getDatasets()
+    handelRequests(app, session, request)
+    dataset_names = getDatasets()
     #tq.enqueue(handelRequests, app, user_data_access, session, request)
 
     return render_template('datasets.html', app_data=app_data, names=dataset_names)
 
 @app.route("/datasetupload")
 def datasetupload(rowData):
-    cursor = user_data_access.dbconnect.get_cursor()
+    cursor = connection.get_cursor()
     # remove dataset(s) with id=rowData
     try:
         cursor.execute("DELETE FROM Dataset WHERE dataset_id = %s", (rowData))
-        user_data_access.dbconnect.commit()
+        connection.commit()
     except:
-        user_data_access.dbconnect.rollback()
+        connection.rollback()
 
     return redirect(url_for('datasets'))
 
@@ -265,26 +269,27 @@ def datasetupload(rowData):
 # @login_required
 def visualizations():
     labels, legend = [], []
-    current_abtest_id = user_data_access.getMaxABTestID()
-    cursor = user_data_access.dbconnect.get_cursor()
-    abtest = user_data_access.getAB_Test(current_abtest_id)
-    for r_id in abtest.result_id:
-        string = 'algorithm' + str(r_id)
-        legend.append(string)
+    current_abtest_id = getMaxABTestID()
+    cursor = connection.get_cursor()
+    abtest = getAB_Test(current_abtest_id)
+    if abtest:
+        for r_id in abtest.result_id:
+            string = 'algorithm' + str(r_id)
+            legend.append(string)
 
-    start_point = abtest.start_point
-    end_point = abtest.end_point
-    days_between = end_point - start_point
-    for day in range(days_between.days):
-        current_day = start_point.strftime("%Y-%m-%d")
-        current_day = str(datetime.strptime(current_day, '%Y-%m-%d') + timedelta(days=day))
-        labels.append(str(current_day)[0:10])
+        start_point = abtest.start_point
+        end_point = abtest.end_point
+        days_between = end_point - start_point
+        for day in range(days_between.days):
+            current_day = start_point.strftime("%Y-%m-%d")
+            current_day = str(datetime.strptime(current_day, '%Y-%m-%d') + timedelta(days=day))
+            labels.append(str(current_day)[0:10])
 
     return render_template('visualizations.html', app_data=app_data, labels=labels, legend=legend)
 
 @app.route("/testlist")
 def testlist():
-    cursor = user_data_access.dbconnect.get_cursor()
+    cursor = connection.get_cursor()
     cursor.execute("SELECT DISTINCT(abtest_id) FROM ABTest")
 
     testList = list()
@@ -303,7 +308,7 @@ def add_user():
     user_email = request.form.get('email')
     user_password = request.form.get('password')
 
-    cursor = user_data_access.dbconnect.get_cursor()
+    cursor = connection.get_cursor()
     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
     row = cursor.fetchone()
     # user = DataScientist.query.filter_by(username=user_username).first
@@ -314,7 +319,7 @@ def add_user():
     else:
         user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
         print('Adding {}'.format(user_obj.to_dct()))
-        user_obj = user_data_access.add_user(user_obj)
+        user_obj = add_user(user_obj)
         # login_user(user_obj, remember=True)
 
         flash('Account succesfully registered!', category='success')
@@ -333,12 +338,12 @@ def login_user():
         user_password = request.form.get('password')
 
         # user = DataScientist.query.filter_by(username=user_username).first
-        cursor = user_data_access.dbconnect.get_cursor()
+        cursor = connection.get_cursor()
         cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
         row = cursor.fetchone()
         if row is not None: # als de username is gevonden
             user = row[0]
-            cursor1 = user_data_access.dbconnect.get_cursor()
+            cursor1 = connection.get_cursor()
             cursor1.execute("SELECT password FROM authentication WHERE username = %s", (user_username,))
             password = cursor1.fetchone()[0]
             if check_password_hash(password, user_password) or (user_username == 'admin' and password == user_password):
