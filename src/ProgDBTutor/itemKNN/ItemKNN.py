@@ -60,7 +60,7 @@ class ItemKNN:
         # this will be a list
         recommendations = alg.recommend_all(histories, self.top_k)
 
-        return recommendations
+        return dict(zip(unique_user_ids, recommendations))
 
     # function will calculate when to retrain and how long it takes
     def recommend(self):
@@ -98,15 +98,15 @@ class ItemKNN:
         """
 
         trainWindow = (str(self.currentDate - self.windowSize)[0:10], str(self.currentDate)[0:10])
-        recommendations = self.iknn(*trainWindow)
-        if recommendations is not None:
+        recommendationDictionary = self.iknn(*trainWindow)
+        if recommendationDictionary is not None:
 
-            """ DO SOMETHING HERE"""
-            for item_id in recommendations:
-                item = user_data_access.getItem(str(item_id[0]), self.datasetID)
+            """ DO SOMETHING HERE """
+            for customer_id, recommendations in recommendationDictionary:
+                item = user_data_access.getItem(str(recommendations[0]), self.datasetID)
                 attribute_dataset = list(item.attributes.keys())[0]
                 attribute_costumer = list(user_data_access.getCustomer(-1, self.datasetID).attributes)[0]
-                user_data_access.addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id[0]),
+                user_data_access.addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(recommendations[0]),
                                                        attribute_dataset, attribute_costumer, start, end)
 
     def history_from_subset_interactions(self, interactions, amt_users=5) -> List[List]:

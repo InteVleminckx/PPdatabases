@@ -47,7 +47,8 @@ def addDataset(app, user_data_access, session):
 
 def removeDataset(user_data_access, session):
     if session['username'] == 'admin':  # checken of de user de admin is
-        pass
+        cursor = user_data_access.dbconnect.get_cursor()
+
     else:
         flash("You need admin privileges to delete a dataset", category='error')
 
