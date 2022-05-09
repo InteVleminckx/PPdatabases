@@ -370,6 +370,18 @@ input[type=text], input[type=datetime-local], .container select, textarea {
 
 }
 
+.c2_button_ {
+    /*width: 480px;*/
+    height: 35px;
+    background-color: #b8b5b5;
+    margin: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
 ._container3 {
     width: 1000px;
     /*height: 550px;*/

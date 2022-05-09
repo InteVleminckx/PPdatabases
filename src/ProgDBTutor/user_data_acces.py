@@ -1005,6 +1005,7 @@ def getAlgorithm(abtest_id, result_id):
 """
 This function gets the result from the database that has the same result id.
 """
+
 def getResult(result_id):
     global dbconnect
     cursor = dbconnect.get_cursor()

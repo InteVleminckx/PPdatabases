@@ -22,7 +22,7 @@ def handelRequests(app, session, request):
 
         # Delete hier de dataset
         if dlte is not None:
-            removeDataset(session)
+            removeDataset(user_data_access, session, rqst)
 
         # vernander alle waarder en grafiek op de pagina
         else:
@@ -46,7 +46,7 @@ def addDataset(app, session):
         flash("You need admin privileges to upload a dataset", category='error')
 
 
-def removeDataset(session):
+def removeDataset(user_data_access, session, dataset_id):
     if session['username'] == 'admin':  # checken of de user de admin is
         cursor = dbconnect.get_cursor()
 
@@ -104,29 +104,29 @@ def importPurchases(app, dataset_id):
 
 
 def getNumberOfUsers(cursor, dataset_id):
-    # We doen dit op deze manier omdat dit sneller is als distinct, want distinct sorteerd eerst heel de tabel
-    cursor.execute('CREATE OR REPLACE VIEW customers AS SELECT customer_number FROM Customer WHERE dataset_id = %s GROUP BY customer_number;', (str(dataset_id)))
-    cursor.execute('SELECT count(*) FROM customers;')
+
+    cursor.execute('SELECT attribute FROM customer where dataset_id = %s limit 1', str(dataset_id))
+    attr = cursor.fetchone()[0]
+
+    cursor.execute('SELECT count(*) FROM customer WHERE dataset_id = %s AND attribute = %s',
+                   (str(dataset_id), str(attr)))
     row = cursor.fetchone()
     if not row:
-        cursor.execute('DROP VIEW customers;')
         return 0
-    users = row[0] - 1
-    cursor.execute('DROP VIEW customers;')
-    return users
-
+    return row[0] - 1
 
 def getNumberOfArticles(cursor, dataset_id):
-    # We doen dit op deze manier omdat dit sneller is als distinct, want distinct sorteerd eerst heel de tabel
-    cursor.execute('CREATE OR REPLACE VIEW articlesC AS SELECT item_number FROM Articles WHERE dataset_id = %s GROUP BY item_number;', (str(dataset_id)))
-    cursor.execute('SELECT count(*) FROM articlesC;')
+
+    cursor.execute('SELECT attribute FROM Articles WHERE dataset_id = %s LIMIT 1', (str(dataset_id)))
+    attribute = cursor.fetchone()[0]
+
+    cursor.execute('SELECT count(*) FROM Articles WHERE dataset_id = %s AND attribute = %s', (str(dataset_id), str(attribute)))
     row = cursor.fetchone()
     if not row:
-        cursor.execute('DROP VIEW articlesC;')
         return 0
     articles = row[0]
-    cursor.execute('DROP VIEW articlesC;')
     return articles
+
 
 def getNumberOfInteractions(cursor, dataset_id):
     cursor.execute('SELECT count(*) FROM Interaction WHERE dataset_id = %s;', (str(dataset_id)))
@@ -136,24 +136,31 @@ def getNumberOfInteractions(cursor, dataset_id):
     return row[0]
 
 def getActiveUsers(cursor, dataset_id):
-    cursor.execute('CREATE OR REPLACE VIEW active AS SELECT customer_id, extract(YEAR FROM t_dat) AS year, extract(MONTH FROM t_dat) AS month FROM '
-                   'Interaction WHERE dataset_id = %s GROUP BY extract(YEAR FROM t_dat) , extract(MONTH FROM t_dat), customer_id;', str(dataset_id))
-    cursor.execute(' SELECT count(year), year, month AS date FROM active GROUP BY year, month; ')
-
+    cursor.execute('SELECT count(DISTINCT customer_id), t_dat FROM interaction WHERE dataset_id = %s GROUP BY t_dat;', (str(dataset_id)))
     rows = cursor.fetchall()
-    if not rows:
-        cursor.execute('DROP VIEW active;')
-        return None
-    rows = sorted(rows, key=lambda x: (x[2], x[1]))
     users = list()
+    curMonth = ""
+    prevMonth = ""
+    curCount = 0
     for row in rows:
-        users.append({'month': str(int(row[1])) + "-" + str(int(row[2])), 'count': row[0]})
-    cursor.execute('DROP VIEW active;')
+        date = str(row[1])[0:7]
+        if curMonth == "":
+            curMonth = date
+
+        if curMonth == date:
+            curCount += int(row[0])
+            prevMonth = curMonth
+
+        elif curMonth != date:
+            users.append({"date": prevMonth, "count": curCount})
+            curMonth = date
+            curCount = 0
+
     return users
 
 def getPriceDistribution(cursor, dataset_id):
-
-    cursor.execute('SELECT min(price) as min, max(price) as max, (max(price) - min(price))/20 as interval FROM Interaction WHERE dataset_id = %s', (str(dataset_id)))
+    return list()
+    cursor.execute('SELECT min(price) as min, max(price) as max, (max(price) - min(price))/10 as interval FROM Interaction WHERE dataset_id = %s', (str(dataset_id)))
     row = cursor.fetchone()
 
     if not row:
@@ -163,7 +170,7 @@ def getPriceDistribution(cursor, dataset_id):
 
     distributions = list()
 
-    for i in range(1,21):
+    for i in range(1,11):
         begin = min + interval*(i-1)
         end = min + interval*i
         if i == 1:
