@@ -114,8 +114,10 @@ def services():
     global algo_dict
     if 'loggedin' in session:
         if request.method == 'POST':
-            s = request.form.get('submit_button')
-            if s == 'algoSubmit':
+            a = request.form.get('algoSubmit')
+            ab = request.form.get('abtestSubmit')
+
+            if a == 'algoSubmit':
 
                 algo = request.form.get('algoSelection')
 
@@ -152,7 +154,7 @@ def services():
                         algo_dict[algo_id] = "itemknn"
                         algo_id += 1
 
-            elif s == 'abtestSubmit':
+            elif ab == 'abtestSubmit':
                 cursor = connection.get_cursor()
 
                 # Params for foreign keys
@@ -220,7 +222,7 @@ def services():
                 return redirect(url_for('visualizations'))
 
             # Remove the last add algorithm
-            elif s == "remove":
+            elif a == "remove":
                 algo_id -= 1
                 if algo_id == 0:
                     algo_id = 1
