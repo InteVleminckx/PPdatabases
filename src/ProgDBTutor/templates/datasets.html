@@ -360,31 +360,6 @@ function sendData() {
             drawGraph(dataUsers, "graph-active", "Number of active users")
             drawGraph(dataDist, "graph-distr", "Price distribution")
         });
-
-
-
-
-        {#for (const [key, value] of Object.entries(text)) {#}
-        {#    console.log(key, value);#}
-        {# } #}
-        {#if (text.hasOwnProperty("nr_of_customers")) {#}
-        {#    document.getElementById("nr_of_customers").innerHTML = text["nr_of_customers"];#}
-        {# } #}
-        {#else {#}
-        {#    document.getElementById("nr_of_customers").innerHTML = "0";#}
-        {# } #}
-        {#if (text.hasOwnProperty("nr_of_items")) {#}
-        {#    document.getElementById("nr_of_items").innerHTML = text["nr_of_items"];#}
-        {# } #}
-        {#else {#}
-        {#    document.getElementById("nr_of_items").innerHTML = "0";#}
-        {# } #}
-        {#if (text.hasOwnProperty("nr_of_interactions")) {#}
-        {#    document.getElementById("nr_of_interactions").innerHTML = text["nr_of_interactions"];#}
-        {# } #}
-        {#else {#}
-        {#    document.getElementById("nr_of_interactions").innerHTML = "0";#}
-        {# } #}
     });
 }
 
