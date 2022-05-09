@@ -876,6 +876,16 @@ def addPurchases(data_purchases, dataset_id):
     global datasetId
     datasetId += 1
 
+    cursor.execute("DROP INDEX IF EXISTS interaction_index;")
+    dbconnect.commit()
+    cursor.execute("CREATE INDEX interaction_index ON Interaction(t_dat, customer_id, dataset_id);")
+    dbconnect.commit()
+
+    cursor.execute("DROP INDEX IF EXISTS inter_price;")
+    dbconnect.commit()
+    cursor.execute("CREATE INDEX inter_price ON Interaction(t_dat, customer_id, dataset_id);")
+    dbconnect.commit()
+
     print("Purchases: ", time.process_time() - start)
     print('end reading purchases')
 
