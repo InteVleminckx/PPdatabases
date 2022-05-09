@@ -342,9 +342,10 @@ function sendData() {
 
         var dataDist = [["price range", "number of items"]]
         for (i=0; i < statistics[0].distributions.length; i++){
-            var range = statistics[0].distributions[i].range
+            var begin = statistics[0].distributions[i].begin
+            var end = statistics[0].distributions[i].end
             var priceCount = statistics[0].distributions[i].count
-            dataDist.push([range, priceCount])
+            dataDist.push([begin.toString() + "-" + end.toString(), priceCount])
         }
 
         var dataUsers = [["date", "number of active users"]]
