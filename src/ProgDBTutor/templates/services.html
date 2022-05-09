@@ -72,6 +72,8 @@
     <div class="abtestcontainer">
         <div class="_row">
             <div class="_column">
+                <h2>Add Algorithm</h2>
+
                 <form method="POST" action="" data-name="cForm">
 
                     <div class="abtestcontainer1">
@@ -89,33 +91,33 @@
                               <!-- General parameters Selection-->
 
                               <div class="row">
-                                <div class="col-25"><label for="startingpoint">Starting point</label></div>
-                                <div class="col-75"><input type="datetime-local" id="startingpoint" name="startingpoint" placeholder="Starting point" required></div>
+                                  <div class="col-25"><label for="startingpoint">Starting point</label></div>
+                                  <div class="col-75"><input type="datetime-local" id="startingpoint" name="startingpoint" placeholder="Starting point" required></div>
                               </div>
                               <div class="row">
-                                <div class="col-25"><label for="endpoint">End point</label></div>
-                                <div class="col-75"><input type="datetime-local" id="endpoint" name="endpoint" placeholder="End point" required></div>
+                                  <div class="col-25"><label for="endpoint">End point</label></div>
+                                  <div class="col-75"><input type="datetime-local" id="endpoint" name="endpoint" placeholder="End point" required></div>
                               </div>
                               <div class="row">
-                                <div class="col-25"><label for="stepsize">Stepsize</label></div>
-                                <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize" required></div>
+                                  <div class="col-25"><label for="stepsize">Stepsize</label></div>
+                                  <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize" required></div>
                               </div>
                               <div class="row">
-                                <div class="col-25"><label for="topk">Top-k</label></div>
-                                <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" required></div>
+                                  <div class="col-25"><label for="topk">Top-k</label></div>
+                                  <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" required></div>
                               </div>
 
                               <!-- Algorithm Selection-->
 
-                                <select class="_ds_select" id="algoSelection" name="algoSelection" onchange="switchVisibleParameters();">
-                                    <option value="popularity">popularity</option>
-                                    <option value="recency">recency</option>
-                                    <option value="itemknn">itemknn</option>
-                                </select>
+                              <select class="_ds_select" id="algoSelection" name="algoSelection" onchange="switchVisibleParameters();">
+                                  <option value="popularity">popularity</option>
+                                  <option value="recency">recency</option>
+                                  <option value="itemknn">itemknn</option>
+                              </select>
 
                               <!-- Algorithm-specific parameters Selection-->
 
-                                <p style="color: black; margin-top: 12px;">Set Parameters</p>
+                                <p style="color: black; margin-top: 12px;">Set Algorithm Parameters:</p>
 
                                 <div class="par_form">
                                     <div class="container1" id="popularity_par" style="border: 2px solid black; display: block;">
@@ -165,6 +167,8 @@
             </div>
 
             <div class="_column">
+                <h2>List of added algorithms</h2>
+
                 <div class="abtestcontainer1" style="background-color: white;">
                     <div class="greycontainer">
                         <table class="scroll-table" id="scrolltable" style="background-color: darkgray;">
@@ -175,7 +179,7 @@
                                     <td style="color: red; border-top: 0;">Remove</td>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style="height: 610px;">
                                 {% for key, value in algo_dict.items() %}
                                     <tr>
                                         <td>{{ key }}</td>

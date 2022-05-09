@@ -498,8 +498,21 @@
     /*height: 30px;*/
     background-color: #000000;
     justify-content: center;
+
     padding: 100px;
-    padding-top: 0;
+    padding-top: 40px;
+}
+
+.abtestpage h1 {
+    text-align: center;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.abtestcontainer h2 {
+    text-align: center;
+    color: white;
+    margin-top: 15px;
 }
 
 .abtestcontainer {
@@ -601,5 +614,6 @@ input[type=submit]:hover {
 .greycontainer {
     background-color: darkgray;
     padding-top: 5px;
+    border-radius: 5px;
 
 }
