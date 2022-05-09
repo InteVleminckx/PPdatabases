@@ -1,6 +1,6 @@
 from config import config_data
 from db_connection import DBConnection
-from user_data_acces import UserDataAcces
+from user_data_acces import *
 
 from datetime import datetime
 from datetime import timedelta
@@ -8,7 +8,7 @@ from datetime import timedelta
 import time as tm
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-user_data_access = UserDataAcces(connection)
+#user_data_access = UserDataAcces(connection)
 
 
 class Metrics:
@@ -47,10 +47,12 @@ class Metrics:
         # NUMBER OF ACTIVE USERS WHO BOUGHT AT LEAST 1 RECOMMENDED ITEM
         # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id
         query1 = (
-            "CREATE VIEW Active_Users AS SELECT DISTINCT I1.customer_id FROM Interaction I1 WHERE t_dat BETWEEN %s AND %s; \
-             CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_id FROM Recommendation R1; \
+            "CREATE VIEW Active_Users AS SELECT DISTINCT I1.customer_id FROM Interaction I1 WHERE t_dat BETWEEN %s AND %s ; \
+             CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_id FROM Recommendation R1 ; \
                 SELECT count(DISTINCT I.customer_id) FROM Interaction I \
-            WHERE I.customer_id IN (SELECT * FROM Active_Users) AND I.item_id IN (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ;",
+            WHERE I.customer_id IN (SELECT * FROM Active_Users) AND I.item_id IN (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
+             DROP VIEW Active_Users ; \
+             DROP VIEW Recommendations ; ",
             (startDate, endDate, startDate, endDate))
 
         # NUMBER OF ALL ACTIVE USERS
@@ -77,8 +79,10 @@ class Metrics:
         # NUMBER OF PURCHASES WHERE ITEM WAS RECOMMENDED
         # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id
         query1 = (
-            "CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_id FROM Recommendation R1; \
-             SELECT count(I.item_id) FROM Interaction I WHERE I.item_id in (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ;",
+            "CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_id FROM Recommendation R1 ; \
+             SELECT count(I.item_id) FROM Interaction I WHERE I.item_id in (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
+             DROP VIEW Recommendations ; "
+            ,
             (startDate, endDate))
 
         # NUMBER OF ALL PURCHASES
@@ -103,8 +107,9 @@ class Metrics:
         """
         # SUM OF PRICES OF ALL ITEMS BOUGHS WHERE ITEM WAS ALSO RECOMMENDED
         # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id
-        query1 = ("CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_id FROM Recommendation R1; \
-            SELECT sum(I.price) FROM Interaction I WHERE I.item_id in (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ;",
+        query1 = ("CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_id FROM Recommendation R1 ; \
+            SELECT sum(I.price) FROM Interaction I WHERE I.item_id in (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
+             DROP VIEW Recommendations ; ",
                   (startDate, endDate))
 
         # Average Revenue Per User

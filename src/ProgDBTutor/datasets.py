@@ -5,6 +5,7 @@ from flask import request, flash
 from werkzeug.utils import secure_filename
 import pandas as pd
 import os
+from user_data_acces import *
 
 """
 Deze python file bevat alle functionaliteit die nodig is voor het behandelen van events/berekingen voor
@@ -12,7 +13,7 @@ de datasets page
 """
 
 
-def handelRequests(app, user_data_access, session, request):
+def handelRequests(app, session, request):
     # Remove and select dataset form
     if request.method == 'GET':
 
@@ -30,31 +31,31 @@ def handelRequests(app, user_data_access, session, request):
 
     # Add dataset form
     elif request.method == 'POST':
-        addDataset(app, user_data_access, session)
+        addDataset(app, session)
     else:
         pass
 
 
-def addDataset(app, user_data_access, session):
+def addDataset(app, session):
     if session['username'] == 'admin':  # checken of de user de admin is
-        dataset_id = importDataset(user_data_access)
-        importArticles(app, user_data_access, dataset_id)
-        importCustomers(app, user_data_access, dataset_id)
-        importPurchases(app, user_data_access, dataset_id)
+        dataset_id = importDataset()
+        importArticles(app, dataset_id)
+        importCustomers(app, dataset_id)
+        importPurchases(app, dataset_id)
     else:
         flash("You need admin privileges to upload a dataset", category='error')
 
 
 def removeDataset(user_data_access, session, dataset_id):
     if session['username'] == 'admin':  # checken of de user de admin is
-        cursor = user_data_access.dbconnect.get_cursor()
+        cursor = dbconnect.get_cursor()
 
     else:
         flash("You need admin privileges to delete a dataset", category='error')
 
 
-def getDatasetInformation(user_data_access, dataset_id):
-    cursor = user_data_access.dbconnect.get_cursor()
+def getDatasetInformation(dataset_id):
+    cursor = dbconnect.get_cursor()
     numberOfUser = getNumberOfUsers(cursor, dataset_id)
     numberOfArticles = getNumberOfArticles(cursor, dataset_id)
     numberOfInteractions = getNumberOfInteractions(cursor, dataset_id)
@@ -64,24 +65,24 @@ def getDatasetInformation(user_data_access, dataset_id):
     dictNumbers = json.dumps(numbers)
     return dictNumbers
 
-def importDataset(user_data_access):
+def importDataset():
     datasetname = request.form['ds_name']
-    datasetId = int(user_data_access.getMaxDatasetID()) + 1
-    user_data_access.addDataset(datasetId, datasetname)
+    datasetId = int(getMaxDatasetID()) + 1
+    addDataset(datasetId, datasetname)
     return datasetId
 
 
-def importArticles(app, user_data_access, dataset_id):
+def importArticles(app, dataset_id):
     af = request.files['articles_file']
     uploaded_file = secure_filename(af.filename)
     af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     af.save(af_filename)
     data_articles = pd.read_csv(af_filename)
     # Add articles to database
-    user_data_access.addArticles(data_articles, dataset_id)
+    addArticles(data_articles, dataset_id)
 
 
-def importCustomers(app, user_data_access, dataset_id):
+def importCustomers(app, dataset_id):
     cf = request.files['customers_file']
     uploaded_file = secure_filename(cf.filename)
     cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
@@ -89,17 +90,17 @@ def importCustomers(app, user_data_access, dataset_id):
     data_customers = pd.read_csv(cf_filename)
     columns_customers = list(data_customers.columns.values)
     # Add customers to database
-    user_data_access.addCustomers(data_customers, columns_customers, dataset_id)
+    addCustomers(data_customers, columns_customers, dataset_id)
 
 
-def importPurchases(app, user_data_access, dataset_id):
+def importPurchases(app, dataset_id):
     pf = request.files['purchases_file']
     uploaded_file = secure_filename(pf.filename)
     pf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     pf.save(pf_filename)
     data_purchases = pd.read_csv(pf_filename)
     # Add purchases to database
-    user_data_access.addPurchases(data_purchases, dataset_id)
+    addPurchases(data_purchases, dataset_id)
 
 
 def getNumberOfUsers(cursor, dataset_id):

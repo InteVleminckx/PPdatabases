@@ -184,7 +184,7 @@
                                     <tr>
                                         <td>{{ key }}</td>
                                         <td>{{ value }}</td>
-                                        <td style="font-size: 20px;color: red;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>
+                                        <td style="font-size: 20px;color: red;cursor: pointer;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -195,7 +195,10 @@
         </div>
     </div>
     </div>
-{#    <input type="submit" name="submit_button" value="abtestSubmit">#}
+
+    <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="abtestSubmit" role="button">
+        Add dataset
+    </button>
 </div>
 
 {#<form method="POST" action="" data-name="cForm">#}
