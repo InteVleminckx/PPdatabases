@@ -22,7 +22,7 @@ def handelRequests(app, session, request):
 
         # Delete hier de dataset
         if dlte is not None:
-            removeDataset(user_data_access, session, rqst)
+            removeDataset(session, rqst)
 
         # vernander alle waarder en grafiek op de pagina
         else:
@@ -46,10 +46,11 @@ def addDataset(app, session):
         flash("You need admin privileges to upload a dataset", category='error')
 
 
-def removeDataset(user_data_access, session, dataset_id):
+def removeDataset(session, dataset_id):
     if session['username'] == 'admin':  # checken of de user de admin is
         cursor = dbconnect.get_cursor()
-
+        cursor.execute('DELETE FROM Dataset WHERE dataset_id = %s', (str(dataset_id)))
+        dbconnect.commit()
     else:
         flash("You need admin privileges to delete a dataset", category='error')
 
@@ -159,29 +160,54 @@ def getActiveUsers(cursor, dataset_id):
     return users
 
 def getPriceDistribution(cursor, dataset_id):
-    return list()
-    cursor.execute('SELECT min(price) as min, max(price) as max, (max(price) - min(price))/10 as interval FROM Interaction WHERE dataset_id = %s', (str(dataset_id)))
+
+    cursor.execute('SELECT min(price) as min, max(price) as max, (max(price) - min(price))/20 as interval FROM Interaction WHERE dataset_id = %s', (str(dataset_id)))
     row = cursor.fetchone()
-
-    if not row:
-        return None
-
     min, max, interval = row
+    cursor.execute('SELECT count(*), price FROM Interaction WHERE dataset_id = %s GROUP BY price', (str(dataset_id)))
+    rows = cursor.fetchall()
+    distr = list()
+    for i in range(1, 21):
+        begin = min + interval * (i - 1)
+        end = min + interval * i
+        distr.append({"begin": begin, "end": end , "count":0})
 
-    distributions = list()
+    for row in rows:
+        for i in range(1, 21):
+            begin = min + interval * (i - 1)
+            end = min + interval * i
+            if begin <= row[1] and row[1] <= end:
+                distr[i-1]["count"] += int(row[0])
+                break
 
-    for i in range(1,11):
-        begin = min + interval*(i-1)
-        end = min + interval*i
-        if i == 1:
-            cursor.execute('SELECT count(*), (%s,%s) AS range FROM Interaction WHERE price >= %s AND price <= %s', (str(begin),str(end),str(begin),str(end)))
-        else:
-            cursor.execute('SELECT count(*), (%s,%s) AS range FROM Interaction WHERE price > %s AND price <= %s', (str(begin),str(end),str(begin),str(end)))
-
-        row = cursor.fetchone()
-        if row:
-            distributions.append({'range':row[1], 'count':row[0]})
+    return distr
 
 
-    return distributions
+
+
+    # return list()
+    # cursor.execute('SELECT min(price) as min, max(price) as max, (max(price) - min(price))/10 as interval FROM Interaction WHERE dataset_id = %s', (str(dataset_id)))
+    # row = cursor.fetchone()
+    #
+    # if not row:
+    #     return None
+    #
+    # min, max, interval = row
+    #
+    # distributions = list()
+    #
+    # for i in range(1,11):
+    #     begin = min + interval*(i-1)
+    #     end = min + interval*i
+    #     if i == 1:
+    #         cursor.execute('SELECT count(*), (%s,%s) AS range FROM Interaction WHERE price >= %s AND price <= %s', (str(begin),str(end),str(begin),str(end)))
+    #     else:
+    #         cursor.execute('SELECT count(*), (%s,%s) AS range FROM Interaction WHERE price > %s AND price <= %s', (str(begin),str(end),str(begin),str(end)))
+    #
+    #     row = cursor.fetchone()
+    #     if row:
+    #         distributions.append({'range':row[1], 'count':row[0]})
+    #
+    #
+    # return distributions
 
