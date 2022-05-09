@@ -506,13 +506,13 @@
 .abtestpage h1 {
     text-align: center;
     color: white;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .abtestcontainer h2 {
     text-align: center;
     color: white;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .abtestcontainer {
@@ -535,7 +535,7 @@
     /*height: 160px;*/
     background-color: #b8b5b5;
     margin: 50px;
-    margin-top: 35px;
+    margin-top: 20px;
     border-radius: 10px;
     /*padding-top: 5px;*/
     /*width: 500px;*/
