@@ -483,7 +483,7 @@
 
 }
 
-.container1 select, .container2 select, container3 select {
+.container1 select, .container2 select, .container3 select {
   width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
@@ -549,7 +549,7 @@
 
 }
 
-input[type=text], input[type=datetime-local], .container___ select, textarea {
+input[type=text], input[type=datetime-local], input[type=date], .container___ select, textarea {
   width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
