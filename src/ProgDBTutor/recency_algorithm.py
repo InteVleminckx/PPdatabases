@@ -1,6 +1,6 @@
 from config import config_data
 from db_connection import DBConnection
-from user_data_acces import UserDataAcces
+from user_data_acces import *
 
 from datetime import datetime
 from datetime import timedelta
@@ -8,7 +8,7 @@ from datetime import timedelta
 import time as tm
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-user_data_access = UserDataAcces(connection)
+#user_data_access = UserDataAcces(connection)
 
 class Recency:
 
@@ -74,13 +74,13 @@ class Recency:
         """
 
 
-        recommendations = user_data_access.getRecencyItem(self.datasetID, start, end, self.top_k)
+        recommendations = getRecencyItem(self.datasetID, start, end, self.top_k)
         if recommendations is not None:
             for item_id in recommendations:
-                item = user_data_access.getItem(str(item_id[0]), self.datasetID)
+                item = getItem(str(item_id[0]), self.datasetID)
                 attribute_dataset = list(item.attributes.keys())[0]
-                attribute_costumer = list(user_data_access.getCustomer(-1, self.datasetID).attributes)[0]
-                user_data_access.addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id[0]),
+                attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
+                addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id[0]),
                                                        attribute_dataset, attribute_costumer, start, end)
 
 
