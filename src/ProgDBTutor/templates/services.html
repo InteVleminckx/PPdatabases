@@ -66,6 +66,7 @@
 {#    {% endif %}#}
 {#{% endwith %}#}
 
+<form id="dataForm" method="POST" action="" data-name="cForm">
 
 <div class="abtestpage" id="services">
     <h1>Setting up the A/B-test</h1>
@@ -74,10 +75,11 @@
             <div class="_column">
                 <h2>Add Algorithm</h2>
 
-                <form method="POST" action="" data-name="cForm">
-
-                    <div class="abtestcontainer1">
+                <div class="abtestcontainer1">
                         <div class="container___">
+
+{#                            <form id="dataForm" method="POST" action="" data-name="cForm">#}
+
 
                               <!-- Dataset Selection-->
 
@@ -92,11 +94,20 @@
 
                               <div class="row">
                                   <div class="col-25"><label for="startingpoint">Starting point</label></div>
-                                  <div class="col-75"><input type="date" id="startingpoint" name="startingpoint" placeholder="Starting point" value="2022-05-03" required></div>
+
+                                  {% if 'gen_par_start' in genParDict.keys() %}
+                                    <div class="col-75"><input type="date" id="startingpoint" name="startingpoint" placeholder="Starting point" value="{{ genParDict['gen_par_start'] }}" required></div>
+                                  {% else %}
+                                    <div class="col-75"><input type="date" id="startingpoint" name="startingpoint" placeholder="Starting point" value="2022-05-03" required></div>
+                                  {% endif %}
                               </div>
                               <div class="row">
                                   <div class="col-25"><label for="endpoint">End point</label></div>
+                                  {% if 'gen_par_start' in genParDict.keys() %}
                                   <div class="col-75"><input type="date" id="endpoint" name="endpoint" placeholder="End point" value="2022-05-09" required></div>
+                                    {% else %}
+
+                                  {% endif %}
                               </div>
                               <div class="row">
                                   <div class="col-25"><label for="stepsize">Stepsize</label></div>
@@ -106,6 +117,11 @@
                                   <div class="col-25"><label for="topk">Top-k</label></div>
                                   <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" required></div>
                               </div>
+
+{#                            </form>#}
+
+{#                            <form id="dataForm1" method="POST" action="">#}
+
 
                               <!-- Algorithm Selection-->
 
@@ -158,12 +174,16 @@
                                     </div>
 
                                 </div>
-                            <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="algoSubmit" role="button">
+{#                            <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="algoSubmit" role="button">#}
+{#                                Add Algorithm#}
+{#                            </button>#}
+                            <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" name="submit_button" value="algoSubmit" role="button" onclick="sendData();">
                                 Add Algorithm
                             </button>
+{#                            </form>#}
                         </div>
                     </div>
-                </form>
+
             </div>
 
             <div class="_column">
@@ -196,10 +216,11 @@
     </div>
     </div>
 
-    <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="abtestSubmit" role="button">
+    <button form="dataForm" style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="abtestSubmit" role="button">
         Submit A/B-test
     </button>
 </div>
+</form>
 
 {#<form method="POST" action="" data-name="cForm">#}
 {#<div class="_services" id="services">#}
@@ -365,11 +386,13 @@
     {#    document.getElementById('algoSelection').value = option.value;#}
 
     {#update();#}
-    var form = $('form[data-name="cForm"]');
-    form.find($("#startingpoint")).val("2020-01-01");
-    form.find($("#endpoint")).val("2020-09-01");
-    form.find($("#stepsize")).val("1");
-    form.find($("#topk")).val("5");
+
+
+    {#var form = $('form[data-name="cForm"]');#}
+    {#form.find($("#startingpoint")).val("2020-01-01");#}
+    {#form.find($("#endpoint")).val("2020-09-01");#}
+    {#form.find($("#stepsize")).val("1");#}
+    {#form.find($("#topk")).val("5");#}
 
 
     {#$(document).ready(function() {#}
@@ -415,6 +438,41 @@
             $('.alert').fadeOut('slow');
             }, 1000); // <-- time in milliseconds
         });
+
+    function sendData() {
+    let ds_id = document.getElementById("datasetSelection").value;
+    let gen_par_start = document.getElementById("startingpoint").value;
+    let gen_par_end = document.getElementById("endpoint").value;
+    let gen_par_stepsize = document.getElementById("stepsize").value;
+    let gen_par_topk = document.getElementById("topk").value;
+
+
+    fetch(`/services/addalgorithm`, {
+        headers : {
+            'Content-Type' : 'application/json'
+        },
+        method : 'POST',
+        body : JSON.stringify( {
+            'ds_id' : ds_id,
+            'gen_par_start' : gen_par_start,
+            'gen_par_end' : gen_par_end,
+            'gen_par_stepsize' : gen_par_stepsize,
+            'gen_par_topk' : gen_par_topk
+        })
+    }).then(function(response) {
+        return response.text();
+    }).then(function(text) {
+        console.log(text['ds_id'])
+        var dict = JSON.parse(text);
+
+        document.getElementById("datasetSelection").innerHTML = text['ds_id'];
+        document.getElementById("startingpoint").innerHTML = text['startingpoint'];
+        document.getElementById("endpoint").innerHTML = text['endpoint'];
+        document.getElementById("stepsize").innerHTML = text['stepsize'];
+        document.getElementById("topk").innerHTML = text['topk'];
+
+    });
+}
 
 </script>
 
