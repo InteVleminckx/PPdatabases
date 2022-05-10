@@ -28,7 +28,7 @@ from datetime import datetime, timedelta
 
 from config import config_data
 from db_connection import DBConnection
-#from user_data_acces import UserDataAcces
+# from user_data_acces import UserDataAcces
 
 """
 Imports voor pages
@@ -167,7 +167,7 @@ def services():
                 cursor.execute('SELECT item_number, attribute FROM Articles LIMIT 1')
                 item = cursor.fetchone()
                 algorithm_param = ""
-                item_id = item[0]
+                item_number = item[0]
                 attribute_dataset = item[1]
 
                 # General parameters for ABtest
@@ -184,25 +184,24 @@ def services():
                 i = 1
                 while i < algo_id:
                     # Add entry for ABtest table
-                    #user_data_access.addAB_Test(abtest_id, i, start, end, stepsize, topk)
-                    tq.enqueue(addAB_Test, abtest_id, i, start, end, stepsize, topk)
+                    addAB_Test(abtest_id, i, start, end, stepsize, topk)
+                    # tq.enqueue(addAB_Test, abtest_id, i, start, end, stepsize, topk)
 
                     # Add entries for Algorithm table
                     for j in range(len(algo_list)):
                         if algo_list[j][0] == i:
                             algorithm_param = algo_list[j][2]
-                            #user_data_access.addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
-                            # algo_list[j][3])
+                            addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
+                            algo_list[j][3])
                             #tq.enqueue(user_data_access.addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
                              #                                         algo_list[j][3])
-                            tq.enqueue(addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
-                                       algo_list[j][3])
+                            # tq.enqueue(addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
+                            #            algo_list[j][3])
 
                     # Add entry for result table
-                    #user_data_access.addResult(abtest_id, i, dataset_id, item_id, attribute_dataset,algorithm_param,
-                    # creator)
-                    tq.enqueue(addResult, abtest_id, i, dataset_id, item_id, attribute_dataset, algorithm_param,
-                               creator)
+                    addResult(abtest_id, i, dataset_id, algorithm_param, creator)
+                    # tq.enqueue(addResult, abtest_id, i, dataset_id, item_id, attribute_dataset, algorithm_param,
+                    #            creator)
 
                     i += 1
 
@@ -214,13 +213,13 @@ def services():
 
                 # Call function to start a/b tests
                 maxABtestID = getMaxABTestID()
-                # abtest.startAB(maxABtestID, dataset_id, user_data_access)
-                # abtest.getABtestResults(maxABtestID, dataset_id, user_data_access)
-                # abtest.getAB_Pop_Active(maxABtestID, dataset_id, user_data_access)
+                abtest.startAB(maxABtestID, dataset_id)
+                abtest.getABtestResults(maxABtestID, dataset_id)
+                abtest.getAB_Pop_Active(maxABtestID, dataset_id)
 
-                tq.enqueue(abtest.startAB, maxABtestID,dataset_id)
-                tq.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
-                tq.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
+                # tq.enqueue(abtest.startAB, maxABtestID,dataset_id)
+                # tq.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
+                # tq.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
 
                 abtest_id += 1
                 algo_id = 1
@@ -240,7 +239,8 @@ def services():
                         algo_list = algo_list[:-4]
                     del algo_dict[algo_id]
 
-        return render_template('services.html', app_data=app_data, algo_dict=algo_dict, genParDict=jsonData)
+        dataset_names = getDatasets()
+        return render_template('services.html', app_data=app_data, algo_dict=algo_dict, genParDict=jsonData, names=dataset_names)
 
     return redirect(url_for('login_user'))
 
@@ -280,24 +280,24 @@ def datasetupload(rowData):
 @app.route("/visualizations")
 # @login_required
 def visualizations():
-    labels, legend = [], []
-    current_abtest_id = getMaxABTestID()
-    cursor = connection.get_cursor()
-    abtest = getAB_Test(current_abtest_id)
-    if abtest:
-        for r_id in abtest.result_id:
-            string = 'algorithm' + str(r_id)
-            legend.append(string)
+    # labels, legend = [], []
+    # current_abtest_id = getMaxABTestID()
+    # cursor = connection.get_cursor()
+    # abtest = getAB_Test(current_abtest_id)
+    # if abtest:
+    #     for r_id in abtest.result_id:
+    #         string = 'algorithm' + str(r_id)
+    #         legend.append(string)
+    #
+    #     start_point = abtest.start_point
+    #     end_point = abtest.end_point
+    #     days_between = end_point - start_point
+    #     for day in range(days_between.days):
+    #         current_day = start_point.strftime("%Y-%m-%d")
+    #         current_day = str(datetime.strptime(current_day, '%Y-%m-%d') + timedelta(days=day))
+    #         labels.append(str(current_day)[0:10])
 
-        start_point = abtest.start_point
-        end_point = abtest.end_point
-        days_between = end_point - start_point
-        for day in range(days_between.days):
-            current_day = start_point.strftime("%Y-%m-%d")
-            current_day = str(datetime.strptime(current_day, '%Y-%m-%d') + timedelta(days=day))
-            labels.append(str(current_day)[0:10])
-
-    return render_template('visualizations.html', app_data=app_data, labels=labels, legend=legend)
+    return render_template('visualizations.html', app_data=app_data)
 
 #----------------- A/B-test list -----------------#
 
@@ -384,4 +384,6 @@ def logout():
 
 # RUN DEV SERVER
 if __name__ == "__main__":
+    # os.system("sudo -S systemctl start redis")
+    # os.system("rq worker &")
     app.run(HOST, debug=True)

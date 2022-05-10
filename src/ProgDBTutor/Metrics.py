@@ -48,7 +48,7 @@ class Metrics:
         # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id
         query1 = (
             "CREATE VIEW Active_Users AS SELECT DISTINCT I1.customer_id FROM Interaction I1 WHERE t_dat BETWEEN %s AND %s ; \
-             CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_id FROM Recommendation R1 ; \
+             CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 ; \
                 SELECT count(DISTINCT I.customer_id) FROM Interaction I \
             WHERE I.customer_id IN (SELECT * FROM Active_Users) AND I.item_id IN (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
              DROP VIEW Active_Users ; \
@@ -79,7 +79,7 @@ class Metrics:
         # NUMBER OF PURCHASES WHERE ITEM WAS RECOMMENDED
         # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id
         query1 = (
-            "CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_id FROM Recommendation R1 ; \
+            "CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 ; \
              SELECT count(I.item_id) FROM Interaction I WHERE I.item_id in (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
              DROP VIEW Recommendations ; "
             ,
@@ -107,7 +107,7 @@ class Metrics:
         """
         # SUM OF PRICES OF ALL ITEMS BOUGHS WHERE ITEM WAS ALSO RECOMMENDED
         # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id
-        query1 = ("CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_id FROM Recommendation R1 ; \
+        query1 = ("CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 ; \
             SELECT sum(I.price) FROM Interaction I WHERE I.item_id in (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
              DROP VIEW Recommendations ; ",
                   (startDate, endDate))

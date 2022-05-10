@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 import pandas as pd
 import os
 from user_data_acces import *
+from user_data_acces import addDataset as udaAddDataset
 
 """
 Deze python file bevat alle functionaliteit die nodig is voor het behandelen van events/berekingen voor
@@ -69,9 +70,8 @@ def getDatasetInformation(dataset_id):
 def importDataset():
     datasetname = request.form['ds_name']
     datasetId = int(getMaxDatasetID()) + 1
-    addDataset(datasetId, datasetname)
+    udaAddDataset(datasetId, datasetname)
     return datasetId
-
 
 def importArticles(app, dataset_id):
     af = request.files['articles_file']

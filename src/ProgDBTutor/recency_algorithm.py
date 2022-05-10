@@ -7,9 +7,6 @@ from datetime import timedelta
 
 import time as tm
 
-connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-#user_data_access = UserDataAcces(connection)
-
 class Recency:
 
     def __init__(self, dataset_id, abtest_id, result_id, _start, _end, K: int, stepSize: int, retrainInterval,
@@ -77,11 +74,8 @@ class Recency:
         recommendations = getRecencyItem(self.datasetID, start, end, self.top_k)
         if recommendations is not None:
             for item_id in recommendations:
-                item = getItem(str(item_id[0]), self.datasetID)
-                attribute_dataset = list(item.attributes.keys())[0]
                 attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
-                addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id[0]),
-                                                       attribute_dataset, attribute_costumer, start, end)
+                addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id[0]), attribute_costumer, start, end)
 
 
 # TESTCODE

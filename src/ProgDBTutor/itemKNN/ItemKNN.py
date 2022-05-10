@@ -103,11 +103,9 @@ class ItemKNN:
 
             """ DO SOMETHING HERE """
             for customer_id, recommendations in recommendationDictionary:
-                item = getItem(str(recommendations[0]), self.datasetID)
-                attribute_dataset = list(item.attributes.keys())[0]
                 attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
                 addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(recommendations[0]),
-                                                       attribute_dataset, attribute_costumer, start, end)
+                                                       attribute_costumer, start, end)
 
     def history_from_subset_interactions(self, interactions, amt_users=5) -> List[List]:
         """ Take the history of the first users in the dataset and return as list of lists"""

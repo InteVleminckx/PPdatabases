@@ -16,8 +16,6 @@ import time as tm
 from config import config_data
 from db_connection import DBConnection
 from user_data_acces import *
-connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-#user_data_access = UserDataAcces(connection)
 
 class Popularity:
 
@@ -63,11 +61,8 @@ class Popularity:
         recommendations = getPopularityItem(self.dataset_id, *trainWindow, self.topk)
         if recommendations is not None:
             for item_id, count in recommendations:
-                item = getItem(str(item_id), self.dataset_id)
-                attribute_dataset = list(item.attributes.keys())[0]
                 attribute_costumer = list(getCustomer(-1, self.dataset_id).attributes)[0]
-                addRecommendation(self.abtest_id, self.result_id, self.dataset_id, -1, str(item_id),
-                                                       attribute_dataset, attribute_costumer, *trainWindow)
+                addRecommendation(self.abtest_id, self.result_id, self.dataset_id, -1, str(item_id), attribute_costumer, *trainWindow)
 
     # def getdate(self, date):
     # 
