@@ -50,8 +50,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 algo_list = list()
 algo_dict = dict()
 
-engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
-db = scoped_session(sessionmaker(bind=engine))
+# engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
+# db = scoped_session(sessionmaker(bind=engine))
 
 #For threading
 rds = redis.Redis()
@@ -100,9 +100,15 @@ def main():
 def contact():
     return render_template('contact.html', app_data=app_data)
 
-@app.route("/services/start", methods=['GET', 'POST'])
-def start():
-    pass
+#----------------- A/B-test page -----------------#
+jsonData = dict()
+@app.route("/services/addalgorithm", methods=['GET', 'POST'])
+def addalgorithm():
+    if request.method == 'POST':
+        global jsonData
+        jsonData = request.get_json()
+        # print(jsonData)
+        return jsonData
 
 @app.route("/services", methods=['GET', 'POST'])
 # @login_required
@@ -114,10 +120,9 @@ def services():
     global algo_dict
     if 'loggedin' in session:
         if request.method == 'POST':
-            a = request.form.get('algoSubmit')
-            ab = request.form.get('abtestSubmit')
 
-            if a == 'algoSubmit':
+            s = request.form.get('submit_button')
+            if s == 'algoSubmit':
 
                 algo = request.form.get('algoSelection')
 
@@ -154,7 +159,7 @@ def services():
                         algo_dict[algo_id] = "itemknn"
                         algo_id += 1
 
-            elif ab == 'abtestSubmit':
+            elif s == 'abtestSubmit':
                 cursor = connection.get_cursor()
 
                 # Params for foreign keys
@@ -222,7 +227,7 @@ def services():
                 return redirect(url_for('visualizations'))
 
             # Remove the last add algorithm
-            elif a == "remove":
+            elif s == "remove":
                 algo_id -= 1
                 if algo_id == 0:
                     algo_id = 1
@@ -235,15 +240,18 @@ def services():
                         algo_list = algo_list[:-4]
                     del algo_dict[algo_id]
 
-        return render_template('services.html', app_data=app_data, algo_dict=algo_dict)
+        return render_template('services.html', app_data=app_data, algo_dict=algo_dict, genParDict=jsonData)
+
     return redirect(url_for('login_user'))
+
+#----------------- Dataset page -----------------#
 
 @app.route("/datasets/<ds_id>", methods=['GET', 'POST'])
 def getData(ds_id):
     if request.method == 'GET':
         return getDatasetInformation(ds_id)
     else:
-        print("ZIE MIJ")
+        pass
 
 
 @app.route("/datasets", methods=['GET', 'POST'])
@@ -267,6 +275,8 @@ def datasetupload(rowData):
 
     return redirect(url_for('datasets'))
 
+#----------------- A/B-test Visualization page -----------------#
+
 @app.route("/visualizations")
 # @login_required
 def visualizations():
@@ -289,6 +299,8 @@ def visualizations():
 
     return render_template('visualizations.html', app_data=app_data, labels=labels, legend=legend)
 
+#----------------- A/B-test list -----------------#
+
 @app.route("/testlist")
 def testlist():
     cursor = connection.get_cursor()
@@ -300,7 +312,7 @@ def testlist():
 
     return render_template('testlist.html', app_data=app_data, testList = testList)
 
-#----------------- User_DB -----------------#
+#----------------- User_Login -----------------#
 
 @app.route("/register", methods=['GET', 'POST'])
 def add_user():
