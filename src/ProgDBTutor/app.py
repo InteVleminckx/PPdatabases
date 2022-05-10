@@ -240,8 +240,6 @@ def services():
                         algo_list = algo_list[:-4]
                     del algo_dict[algo_id]
 
-        print(jsonData)
-        print(jsonData)
         return render_template('services.html', app_data=app_data, algo_dict=algo_dict, genParDict=jsonData)
 
     return redirect(url_for('login_user'))
