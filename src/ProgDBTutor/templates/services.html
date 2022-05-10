@@ -103,19 +103,27 @@
                               </div>
                               <div class="row">
                                   <div class="col-25"><label for="endpoint">End point</label></div>
-                                  {% if 'gen_par_start' in genParDict.keys() %}
-                                  <div class="col-75"><input type="date" id="endpoint" name="endpoint" placeholder="End point" value="2022-05-09" required></div>
-                                    {% else %}
-
+                                  {% if 'gen_par_end' in genParDict.keys() %}
+                                    <div class="col-75"><input type="date" id="endpoint" name="endpoint" placeholder="End point" value="{{ genParDict['gen_par_end'] }}" required></div>
+                                  {% else %}
+                                    <div class="col-75"><input type="date" id="endpoint" name="endpoint" placeholder="End point" value="2022-05-09" required></div>
                                   {% endif %}
                               </div>
                               <div class="row">
                                   <div class="col-25"><label for="stepsize">Stepsize</label></div>
-                                  <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize" required></div>
+                                  {% if 'gen_par_stepsize' in genParDict.keys() %}
+                                    <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize" value="{{ genParDict['gen_par_stepsize'] }}" required></div>
+                                  {% else %}
+                                    <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize" value="1" required></div>
+                                  {% endif %}
                               </div>
                               <div class="row">
                                   <div class="col-25"><label for="topk">Top-k</label></div>
-                                  <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" required></div>
+                                  {% if 'gen_par_topk' in genParDict.keys() %}
+                                    <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" value="{{ genParDict['gen_par_topk'] }}" required></div>
+                                  {% else %}
+                                    <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" value="5" required></div>
+                                  {% endif %}
                               </div>
 
 {#                            </form>#}
