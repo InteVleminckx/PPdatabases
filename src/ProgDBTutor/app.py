@@ -10,8 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 import redis
-from rq import Queue, Connection, Worker
-import os
+from rq import Queue
 
 # from config import config_data
 # from db_connection import DBConnection
@@ -51,15 +50,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 algo_list = list()
 algo_dict = dict()
 
-engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
-db = scoped_session(sessionmaker(bind=engine))
+# engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
+# db = scoped_session(sessionmaker(bind=engine))
 
 #For threading
-#os.system("kill `ps -A | grep redis | grep -v grep | awk '{ print $1 }'`")
-os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
-os.system("sudo systemctl start redis")
-#os.system("brew services restart redis")
-os.system("rq worker &")
 rds = redis.Redis()
 tq = Queue(connection=rds)
 
@@ -106,9 +100,15 @@ def main():
 def contact():
     return render_template('contact.html', app_data=app_data)
 
-@app.route("/services/start", methods=['GET', 'POST'])
-def start():
-    pass
+#----------------- A/B-test page -----------------#
+jsonData = dict()
+@app.route("/services/addalgorithm", methods=['GET', 'POST'])
+def addalgorithm():
+    if request.method == 'POST':
+        global jsonData
+        jsonData = request.get_json()
+        # print(jsonData)
+        return jsonData
 
 @app.route("/services", methods=['GET', 'POST'])
 # @login_required
@@ -120,6 +120,7 @@ def services():
     global algo_dict
     if 'loggedin' in session:
         if request.method == 'POST':
+
             s = request.form.get('submit_button')
             if s == 'algoSubmit':
 
@@ -239,16 +240,18 @@ def services():
                         algo_list = algo_list[:-4]
                     del algo_dict[algo_id]
 
-        return render_template('services.html', app_data=app_data, algo_dict=algo_dict)
+        return render_template('services.html', app_data=app_data, algo_dict=algo_dict, genParDict=jsonData)
+
     return redirect(url_for('login_user'))
+
+#----------------- Dataset page -----------------#
 
 @app.route("/datasets/<ds_id>", methods=['GET', 'POST'])
 def getData(ds_id):
     if request.method == 'GET':
         return getDatasetInformation(ds_id)
     else:
-        print("ZIE MIJ")
-    connection.commit()
+        pass
 
 
 @app.route("/datasets", methods=['GET', 'POST'])
@@ -272,6 +275,8 @@ def datasetupload(rowData):
 
     return redirect(url_for('datasets'))
 
+#----------------- A/B-test Visualization page -----------------#
+
 @app.route("/visualizations")
 # @login_required
 def visualizations():
@@ -294,6 +299,8 @@ def visualizations():
 
     return render_template('visualizations.html', app_data=app_data, labels=labels, legend=legend)
 
+#----------------- A/B-test list -----------------#
+
 @app.route("/testlist")
 def testlist():
     cursor = connection.get_cursor()
@@ -305,7 +312,7 @@ def testlist():
 
     return render_template('testlist.html', app_data=app_data, testList = testList)
 
-#----------------- User_DB -----------------#
+#----------------- User_Login -----------------#
 
 @app.route("/register", methods=['GET', 'POST'])
 def add_user():
@@ -377,8 +384,4 @@ def logout():
 
 # RUN DEV SERVER
 if __name__ == "__main__":
-    # os.system("sudo systemctl start redis")
     app.run(HOST, debug=True)
-    #os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
-    # os.system("sudo systemctl stop redis")
-    #os.system("brew services stop redis")
