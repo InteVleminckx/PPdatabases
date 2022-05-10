@@ -50,8 +50,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 algo_list = list()
 algo_dict = dict()
 
-# engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
-# db = scoped_session(sessionmaker(bind=engine))
+engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
+db = scoped_session(sessionmaker(bind=engine))
+
+os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
+os.system("sudo systemctl start redis")
+#os.system("brew services restart redis")
+os.system("rq worker &")
 
 #For threading
 rds = redis.Redis()
