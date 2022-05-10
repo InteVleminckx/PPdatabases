@@ -61,6 +61,7 @@ def getDatasetInformation(dataset_id):
     numberOfArticles = getNumberOfArticles(cursor, dataset_id)
     numberOfInteractions = getNumberOfInteractions(cursor, dataset_id)
     numbers = list()
+
     numbers.append({'users': numberOfUser, 'articles': numberOfArticles, 'interactions': numberOfInteractions, 'distributions': getPriceDistribution(cursor, dataset_id),
                     'activeUsers': getActiveUsers(cursor, dataset_id)})
     dictNumbers = json.dumps(numbers)
