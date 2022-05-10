@@ -4,12 +4,9 @@ import json as jsn
 import sys
 from user_data_acces import *
 
-# from config import config_data
-# from db_connection import DBConnection
-# from user_data_acces import UserDataAcces
-# connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-# user_data_access = UserDataAcces(connection)
-
+from config import config_data
+from db_connection import DBConnection
+from user_data_acces import *
 
 import Popularity as popularity
 import recency_algorithm as receny
@@ -21,7 +18,6 @@ def startAB(abtest_id, dataset_id):
     endpoint = str(abtest.end_point)
     stepsize = abtest.stepsize
     topk = abtest.topk
-
 
     for result_id in result_ids:
         result = getResult(result_id)
@@ -151,7 +147,7 @@ def getABtestResults(abtest_id, dataset_id):
         # f.write('\n')
 
         cursor.execute(
-            "SELECT item_id, end_point FROM Recommendation WHERE abtest_id = %s AND dataset_id = %s AND result_id= %s",
+            "SELECT item_number, end_point FROM Recommendation WHERE abtest_id = %s AND dataset_id = %s AND result_id= %s",
             (abtest_id, dataset_id, res))
 
         items = {}

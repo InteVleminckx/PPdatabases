@@ -84,10 +84,9 @@
                               <!-- Dataset Selection-->
 
                               <select class="ds_select" id="datasetSelection" name="datasetSelection">
-                                  <option value="dataset 0">dataset 0</option>
-                                  <option value="dataset 1">dataset 1</option>
-                                  <option value="dataset 2">dataset 2</option>
-                                  <option value="dataset 3">dataset 3</option>
+                                  {% for id, name in names %}
+                                    <option value="{{ id }}">dataset: {{ name }}</option>
+                                  {% endfor %}
                               </select>
 
                               <!-- General parameters Selection-->
@@ -98,7 +97,7 @@
                                   {% if 'gen_par_start' in genParDict.keys() %}
                                     <div class="col-75"><input type="date" id="startingpoint" name="startingpoint" placeholder="Starting point" value="{{ genParDict['gen_par_start'] }}" required></div>
                                   {% else %}
-                                    <div class="col-75"><input type="date" id="startingpoint" name="startingpoint" placeholder="Starting point" value="2022-05-03" required></div>
+                                    <div class="col-75"><input type="date" id="startingpoint" name="startingpoint" placeholder="Starting point" value="2020-01-01" required></div>
                                   {% endif %}
                               </div>
                               <div class="row">
@@ -106,7 +105,7 @@
                                   {% if 'gen_par_end' in genParDict.keys() %}
                                     <div class="col-75"><input type="date" id="endpoint" name="endpoint" placeholder="End point" value="{{ genParDict['gen_par_end'] }}" required></div>
                                   {% else %}
-                                    <div class="col-75"><input type="date" id="endpoint" name="endpoint" placeholder="End point" value="2022-05-09" required></div>
+                                    <div class="col-75"><input type="date" id="endpoint" name="endpoint" placeholder="End point" value="2020-01-09" required></div>
                                   {% endif %}
                               </div>
                               <div class="row">
