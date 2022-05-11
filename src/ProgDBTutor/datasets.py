@@ -90,9 +90,8 @@ def importCustomers(app, dataset_id):
     cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     cf.save(cf_filename)
     data_customers = pd.read_csv(cf_filename)
-    columns_customers = list(data_customers.columns.values)
     # Add customers to database
-    addCustomers(data_customers, columns_customers, dataset_id)
+    addCustomers(data_customers, dataset_id, [])
 
 
 def importPurchases(app, dataset_id):

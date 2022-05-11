@@ -252,7 +252,7 @@ def getDatasets():
     return dataset_names
 
 # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-def addArticles(data_articles, dataset_id):
+def addArticles(data_articles, dataset_id, types_list):
     global dbconnect
     #Duurt 1.30 min op deze manier
     print('start reading articles')
@@ -262,14 +262,16 @@ def addArticles(data_articles, dataset_id):
     insert_query = 'INSERT INTO Articles(item_number, val, attribute, type, dataset_id) VALUES %s'
 
     tuples_list = []
+    index = 0
     for column in data_articles.columns:
         subset = data_articles[[column]].copy()
         subset['column'] = column
         #TODO: zorg ervoor da hier het juiste type geselecteerd wordt en we zo dan het juiste type kunnen toewijden
-        subset['type'] = data_articles.dtypes[column].name
+        subset['type'] = types_list[index]
         subset['dataset_id'] = dataset_id
         tuples = list(subset.to_records())
         tuples_list.extend(tuples)
+        index += 1
 
     psycopg2.extras.execute_values(
         cursor, insert_query, tuples_list, template=None, page_size=100
@@ -296,7 +298,7 @@ def getItemAttribute(itemId, attr):
 
 
 # def addCustomer(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-def addCustomers(data_customers, columns_customers, dataset_id):
+def addCustomers(data_customers, dataset_id, types_list):
     global dbconnect
     cursor = dbconnect.get_cursor()
     start = time.process_time()
@@ -304,13 +306,15 @@ def addCustomers(data_customers, columns_customers, dataset_id):
     insert_query = 'INSERT INTO Customer(customer_number, val, attribute, type, dataset_id) VALUES %s;'
 
     tuples_list = []
+    index = 0
     for column in data_customers.columns:
         subset = data_customers[[column]].copy()
         subset['column'] = column
-        subset['type'] = data_customers.dtypes[column].name
+        subset['type'] = types_list[index]
         subset['dataset_id'] = dataset_id
         tuples = list(subset.to_records())
         tuples_list.extend(tuples)
+        index += 1
 
     # add default user
     tuples_list.append((-1, '-1', 'customer_id', 'default', dataset_id))
