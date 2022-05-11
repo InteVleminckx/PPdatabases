@@ -344,7 +344,7 @@ def add_user():
         flash('Account succesfully registered!', category='success')
         session['loggedin'] = True
         session['username'] = user_username
-        return redirect(url_for('services'))
+        return redirect(url_for('datasets'))
 
     return render_template('login.html', app_data=app_data)
 
