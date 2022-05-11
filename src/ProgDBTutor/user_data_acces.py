@@ -1,6 +1,6 @@
 import time
 
-import pandas
+import pandas as pd
 import numpy
 from psycopg2.extensions import register_adapter, AsIs
 import psycopg2.extras
@@ -252,10 +252,11 @@ def getDatasets():
     return dataset_names
 
 # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-def addArticles(data_articles, dataset_id, types_list):
+def addArticles(file_name, dataset_id, types_list):
     global dbconnect
     #Duurt 1.30 min op deze manier
     print('start reading articles')
+    data_articles = pd.read_csv(file_name)
     start = time.process_time()
     cursor = dbconnect.get_cursor()
     psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
@@ -267,11 +268,14 @@ def addArticles(data_articles, dataset_id, types_list):
         subset = data_articles[[column]].copy()
         subset['column'] = column
         #TODO: zorg ervoor da hier het juiste type geselecteerd wordt en we zo dan het juiste type kunnen toewijden
-        subset['type'] = types_list[index]
+        subset['type'] = 'test'
         subset['dataset_id'] = dataset_id
         tuples = list(subset.to_records())
         tuples_list.extend(tuples)
         index += 1
+
+    # data_articles.to_csv(file_name, index=False)
+    # cursor.execute('COPY Customer FROM %s DELIMITER %s CSV HEADER', (str(file_name), ','))
 
     psycopg2.extras.execute_values(
         cursor, insert_query, tuples_list, template=None, page_size=100
@@ -298,11 +302,13 @@ def getItemAttribute(itemId, attr):
 
 
 # def addCustomer(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-def addCustomers(data_customers, dataset_id, types_list):
+def addCustomers(file_name, dataset_id, types_list):
     global dbconnect
     cursor = dbconnect.get_cursor()
     start = time.process_time()
     print('start reading customers')
+    data_customers = pd.read_csv(file_name)
+    psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
     insert_query = 'INSERT INTO Customer(customer_number, val, attribute, type, dataset_id) VALUES %s;'
 
     tuples_list = []
@@ -310,7 +316,7 @@ def addCustomers(data_customers, dataset_id, types_list):
     for column in data_customers.columns:
         subset = data_customers[[column]].copy()
         subset['column'] = column
-        subset['type'] = types_list[index]
+        subset['type'] = 'test'
         subset['dataset_id'] = dataset_id
         tuples = list(subset.to_records())
         tuples_list.extend(tuples)
@@ -319,9 +325,8 @@ def addCustomers(data_customers, dataset_id, types_list):
     # add default user
     tuples_list.append((-1, '-1', 'customer_id', 'default', dataset_id))
 
-    print('end reading customers')
-    print(len(tuples_list))
-    print('start inserting customers')
+    # data_customers.to_csv(file_name, index=False)
+    # cursor.execute('COPY Customer FROM %s DELIMITER %s CSV HEADER', (str(file_name), ','))
     psycopg2.extras.execute_values(
         cursor, insert_query, tuples_list, template=None, page_size=100
     )
@@ -376,28 +381,24 @@ def getCustomersIDs(dataset_id):
 
 
 # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-def addPurchases(data_purchases, dataset_id):
+def addPurchases(file_name, dataset_id):
     global dbconnect
     global datasetId
     print('start reading purchases')
+    data_purchases = pd.read_csv(file_name)
     cursor = dbconnect.get_cursor()
     start = time.process_time()
-    psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
-    insert_query = 'INSERT INTO Interaction(t_dat, customer_id, item_id, price, dataset_id, attribute_customer)\
-                               VALUES %s'
 
     cursor.execute('SELECT attribute FROM customer WHERE dataset_id = %s AND customer_number = -1 LIMIT 1', str(dataset_id))
     customer = cursor.fetchone()
     customer_attribute = customer[0]
-    print(customer_attribute)
     data_purchases['dataset_id'] = dataset_id
     data_purchases['attribute_customer'] = customer_attribute
     data_purchases = data_purchases.drop_duplicates()
-    tuples_list = list(data_purchases.to_records(index=False))
+    data_purchases.to_csv(file_name, index=False, header=False)
 
-    psycopg2.extras.execute_values(
-        cursor, insert_query, tuples_list, template=None, page_size=100
-    )
+    f = open(file_name)
+    cursor.copy_from(f, 'Interaction', sep=',')
     dbconnect.commit()
     datasetId += 1
 

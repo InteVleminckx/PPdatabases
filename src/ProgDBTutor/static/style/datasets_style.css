@@ -242,7 +242,7 @@
     }
 }
 
-input[type=text], input[type=datetime-local], .container select, textarea {
+input[type=text], input[type=datetime-local], .container select, textarea{
   width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
@@ -459,6 +459,24 @@ input[type=text], input[type=datetime-local], .container select, textarea {
     border: 0;
     cursor: pointer;
     margin-top: 10px;
+}
+
+.attr_container {
+    height: 260px;
+    width: 310px;
+    background-color: #b8b5b5;
+    margin: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.attr_container h2 {
+    color: #03a9f4;
+    font-size: 24px;
+    /*margin-top: 10px;*/
+    /*margin-left: 10px;*/
+    text-align: center;
+    margin-top: 30px;
 }
 
 #btn1, #btn2, #btn3 {

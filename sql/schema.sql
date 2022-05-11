@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Recommendation, Result, Algorithm, ABTest, Interaction, Admin, DataScientist, Authentication, Customer, Dataset, Articles;
+DROP TABLE IF EXISTS Recommendation, Result, Algorithm, ABTest, Interaction, Admin, DataScientist, Authentication, Customer, Articles, Names, Dataset;
 
 -- Table that contains the dataset id's and their names
 CREATE TABLE Dataset (

@@ -179,13 +179,34 @@
             <div class="_row">
                 <div class="_column">
                     <div class="c3_button">
-                        <button type="submit" role="button">
-                            Add dataset
+                        <button type="button" role="button">
+                            Choose attribute types
                         </button>
                     </div>
                 </div>
             </div>
+            <div class="_row">
+                <div class="_column">
+                    <div class="attr_container">
+                        <h2> Articles </h2>
+                    </div>
+                </div>
+                <div class="_column">
+                    <div class="attr_container">
+                        <h2> Customers </h2>
+                    </div>
+                </div>
+            </div>
         </form>
+        <div class="_row">
+            <div class="_column">
+                <div class="c3_button">
+                    <button type="submit" role="button">
+                        Add dataset
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -395,6 +416,16 @@ function displayC3() {
     }
     else {
         c3.style.display = "none";
+    }
+}
+
+function displayC4() {
+    var c1 = document.getElementById("attr");
+    if (c1.style.display == "none") {
+        c1.style.display = "block";
+    }
+    else {
+        c1.style.display = "none";
     }
 }
 
