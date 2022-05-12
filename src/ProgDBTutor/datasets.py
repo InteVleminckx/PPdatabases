@@ -74,6 +74,14 @@ def importDataset():
     udaAddDataset(datasetId, datasetname)
     return datasetId
 
+def getCSVHeader(app, csv_filename):
+    df = request.files[csv_filename]
+    uploaded_file = secure_filename(df.filename)
+    filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+    df.save(filename)
+    header = pd.read_csv(filename, header=0, nrows=0).columns.tolist()
+    return header
+
 def importArticles(app, dataset_id):
     af = request.files['articles_file']
     uploaded_file = secure_filename(af.filename)
@@ -87,6 +95,7 @@ def importCustomers(app, dataset_id):
     uploaded_file = secure_filename(cf.filename)
     cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     cf.save(cf_filename)
+
     # Add customers to database
     addCustomers(cf_filename, dataset_id, [])
 
