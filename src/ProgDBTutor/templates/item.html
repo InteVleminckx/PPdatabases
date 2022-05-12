@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='user.css') }}">
+</head>
+<body>
+
+    <div class="container__usersection">
+
+<!--        info-->
+        <div class="container__info">
+            <div class="container__header_attributes">
+                <h2>DATASET: datasetname</h2>
+            </div>
+<!--            username-->
+            <div class="container__header_attributes">
+                <h2>USER: username</h2>
+            </div>
+            <div class="container__info_his_grp">
+                <main class="container__info_history">
+                    <div class="st_wrap_table" >
+                        <header class="history_table_header">
+                            <h2>Purchases of the user</h2>
+                            <div class="history_row">
+                                <div class="history_column_header">interval</div>
+                            </div>
+                        </header>
+                        <div class="history_table">
+                            <div class="history_table_items">
+                                <div class="history_table_rows">
+                                    <div class="history_column_item">It4343em1</div>
+                                    <div class="history_column_hasImage" style="color: red">&#9746</div>
+                                </div>
+                                <div class="history_table_rows">
+                                    <div class="history_column_item">It4343em1</div>
+                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
+                                </div>
+                                <div class="history_table_rows">
+                                    <div class="history_column_item">It4343em1</div>
+                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
+                                </div>
+                                <div class="history_table_rows">
+                                    <div class="history_column_item">It4343em1</div>
+                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
+                                </div>
+                                <div class="history_table_rows">
+                                    <div class="history_column_item">It4343em1</div>
+                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
+                                </div>
+                                <div class="history_table_rows">
+                                    <div class="history_column_item">It4343em1</div>
+                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
+                                </div>
+                                <div class="history_table_rows">
+                                    <div class="history_column_item">It4343em1</div>
+                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
+                                </div>
+                            </div>
+                            <div class="history_table_image">
+                                <img src="https://data.ua-ppdb.me/images/H_M/026/0266875001.jpg" alt="Item image" style='height: 90%; width: 90%; object-fit: contain'>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <div class="container__info_graph">
+
+                    <div class="container__graph">
+<!--                        Hier komt dan de grafiek moet overzicht van gekochte recommendations door de user-->
+                    </div>
+                    <div class="container__dateSlider">
+<!--                        Hier moet de slider komen om van interval te verwisselen-->
+                    </div>
+                </div>
+            </div>
+
+            <main class="container__info_topk">
+                <div class="st_wrap_table" data-table_id="0">
+                    <header class="topk_table_header">
+                        <h2>Algorithm name</h2>
+                        <div class="topk_row">
+                            <div class="topk_column_header">Recommended items</div>
+                        </div>
+                    </header>
+                    <div class="topk_table" style="background-color: rgb(0,255,248)">
+                        <div class="topk_table_rows">
+                            <div class="topk_column_item">It4343em1</div>
+                            <div class="topk_column_item">Item4352</div>
+                            <div class="topk_column_item">443</div>
+                        </div>
+                        <div class="topk_table_rows">
+                            <div class="topk_column_item">Item43454</div>
+                            <div class="topk_column_item">Item5</div>
+                            <div class="topk_column_item">Item6</div>
+                        </div>
+                        <div class="topk_table_rows">
+                            <div class="topk_column_item">It43434em7</div>
+                            <div class="topk_column_item">Item8</div>
+                            <div class="topk_column_item">Item119</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="st_wrap_table" data-table_id="1">
+                    <header class="topk_table_header">
+                        <h2>Algorithm name</h2>
+                        <div class="topk_row">
+                            <div class="topk_column_header">Recommended items</div>
+                        </div>
+                    </header>
+                    <div class="topk_table" style="background-color: rgb(255,115,0)">
+                        <div class="topk_table_rows">
+                            <div class="topk_column_item">Item1</div>
+                            <div class="topk_column_item">Item2</div>
+                            <div class="topk_column_item">Item3</div>
+                        </div>
+                        <div class="topk_table_rows">
+                            <div class="topk_column_item">Item4</div>
+                            <div class="topk_column_item">Item5</div>
+                            <div class="topk_column_item">Item6</div>
+                        </div>
+                        <div class="topk_table_rows">
+                            <div class="topk_column_item">Item7</div>
+                            <div class="topk_column_item">Item8</div>
+                            <div class="topk_column_item">Item9</div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+        </div>
+    </div>
+
+
+
+</body>
+</html>
