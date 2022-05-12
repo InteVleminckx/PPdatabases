@@ -54,7 +54,7 @@ engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
 
 os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
-os.system("sudo systemctl start redis")
+os.system("sudo systemctl restart redis")
 #os.system("brew services restart redis")
 os.system("rq worker &")
 
@@ -67,6 +67,13 @@ tq = Queue(connection=rds)
 
 algo_id = 1
 abtest_id = getMaxABTestID()+1
+
+file_attr_types = ["string", "float", "int", "image_url"]
+attributes = dict({'articles': list(), 'customers': list()})
+article_attr = ["aa", "ab", "ac", "ad"]
+customer_attr = ["ca", "cb", "cc", "cd"]
+attributes['articles'] = article_attr
+attributes['customers'] = customer_attr
 
 
 # login_manager = LoginManager()
@@ -266,7 +273,7 @@ def datasets():
     dataset_names = getDatasets()
     #tq.enqueue(handelRequests, app, user_data_access, session, request)
 
-    return render_template('datasets.html', app_data=app_data, names=dataset_names)
+    return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=file_attr_types, attributes=attributes)
 
 @app.route("/datasetupload")
 def datasetupload(rowData):
