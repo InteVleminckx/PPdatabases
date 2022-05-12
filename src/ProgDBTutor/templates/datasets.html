@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/sharedStyle.css') }}">
 
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
@@ -35,21 +36,26 @@
 <div class="giantcontainer">
 
     <form method="GET" action="" name="form1">
-    <div class="_container0">
+    <div class="_container0" id="_container0" style="display: block;">
         <div class="_row">
             <div class="_column">
-
-                    <select class="c0_select" id="datasetSelection" name="datasetSelection" onchange="sendData()">
-                        {% for id, name in names %}
-                            <option value="{{ id }}">dataset: {{ name }}</option>
-                        {% endfor %}
-                    </select>
-
+                <select class="c0_select" id="datasetSelection" name="datasetSelection" onchange="sendData()">
+                    {% for id, name in names %}
+                        <option value="{{ id }}">dataset: {{ name }}</option>
+                    {% endfor %}
+                </select>
             </div>
+
+            <div class="_column">
+                <button class="c0_button" role="button" id="add_btn" name="add_btn" onclick="toggleDatasetView();">
+                    Add dataset
+                </button>
+            </div>
+
         </div>
     </div>
 
-    <div class="_container1">
+    <div class="_container1" id="_container1" style="display: block;">
         <div class="_row">
             <div class="_column">
                 <div class="c1_statcontainer">
@@ -85,11 +91,11 @@
 
     </div>
 
-    <div class="_container2">
+    <div class="_container2" id="_container2" style="display: block;">
         <div class="_row">
             <div class="_column">
-                <button class="c2_button" role="button" id="add_btn" name="add_btn" onclick="displayC3()">
-                    Add dataset
+                <button class="c2_button_" role="button" id="add_btn" name="add_btn" onclick="">
+                    Go to A/B-test page with this dataset
                 </button>
             </div>
             <div class="_column">
@@ -101,44 +107,6 @@
     </div>
     </form>
     <div class="_container3" id="_container3" style="display: none;">
-{#        <form method="POST" action="" enctype="multipart/form-data" name="myForm">#}
-{#            <div class="_row">#}
-{#                <div class="_column">#}
-{#                    <div class="c3_namecontainer">#}
-{#                        <input type="text" id="ds_name" name="ds_name" placeholder="Enter dataset name" required>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#            <div class="_row">#}
-{#                <div class="_column">#}
-{#                    <div class="c3_filecontainer">#}
-{#                        <h2> Articles file</h2>#}
-{#                        <input type="file" id="articles_file" name="articles_file" placeholder="articles" accept=".csv" required>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="_column">#}
-{#                    <div class="c3_filecontainer">#}
-{#                        <h2> Purchases file</h2>#}
-{#                        <input type="file" id="purchases_file" name="purchases_file" placeholder="purchases" accept=".csv" required>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="_column">#}
-{#                    <div class="c3_filecontainer">#}
-{#                        <h2> Customers file</h2>#}
-{#                        <input type="file" id="customers_file" name="customers_file" placeholder="customers" accept=".csv" required>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#            <div class="_row">#}
-{#                <div class="_column">#}
-{#                    <div class="c3_button">#}
-{#                        <button type="submit">#}
-{#                            Add dataset#}
-{#                        </button>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </form>#}
         <form method="POST" action="" enctype="multipart/form-data" name="form2">
             <div class="_row">
                 <div class="_column">
@@ -147,6 +115,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="_row">
                 <div class="_column">
                     <div class="c3_filecontainer">
@@ -154,6 +123,35 @@
                         <div id="btn1" onclick="getFile1()"> Choose file </div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
                             <input type="file" id="articles_file" name="articles_file" value="upload1" accept=".csv" required onchange="sub1(this)">
+                        </div>
+                        <div class="typeformcontainer" id="typeformcontainer">
+                            <form method="POST" action="" id="typeform">
+                                {% for attr in attributes['articles'] %}
+                                    <div class="row">
+                                        <div class="col-25" style="width: 60%; text-align: left;"><label for="{{ attr }}">{{ attr }}</label></div>
+                                        <div class="col-75" style="width: 40%">
+                                            <select class="" id="" name="">
+                                                {% for atype in attr_types %}
+                                                    <option value="{{ atype }}">{{ atype }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+
+{#                                <div class="row">#}
+{#                                    <div class="col-25" style="width: 60%; text-align: left; font-size: 10px;"><label for="endpoint">verylongattributename1gyhki</label></div>#}
+{#                                    <div class="col-75" style="width: 40%">#}
+{#                                        <select class="" id="" name="">#}
+{#                                            {% for atype in attr_types %}#}
+{#                                                <option value="{{ atype }}">{{ atype }}</option>#}
+{#                                            {% endfor %}#}
+{#                                        </select>#}
+{#                                    </div>#}
+{#                                </div>#}
+
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -176,147 +174,54 @@
                     </div>
                 </div>
             </div>
+
+{#            <div class="_row">#}
+{#                <div class="_column">#}
+{#                    <div class="c3_typespeccontainer">#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="_column">#}
+{#                    <div class="c3_typespeccontainer">#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="_column">#}
+{#                    <div class="c3_typespeccontainer">#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+
             <div class="_row">
                 <div class="_column">
                     <div class="c3_button">
-                        <button type="button" role="button">
-                            Choose attribute types
+                        <button type="submit" role="button">
+                            Add dataset
+                        </button>
+                    </div>
+                </div>
+                <div class="_column">
+                    <div class="c3_button">
+                        <button type="submit" role="button" onclick="toggleDatasetView()">
+                            Cancel
                         </button>
                     </div>
                 </div>
             </div>
-            <div class="_row">
-                <div class="_column">
-                    <div class="attr_container">
-                        <h2> Articles </h2>
-                    </div>
-                </div>
-                <div class="_column">
-                    <div class="attr_container">
-                        <h2> Customers </h2>
-                    </div>
-                </div>
-            </div>
         </form>
-        <div class="_row">
-            <div class="_column">
-                <div class="c3_button">
-                    <button type="submit" role="button">
-                        Add dataset
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 
 </div>
 
 
-
-
-
-
-{#<div class="par_form">#}
-{#    <div class="container" style="border: 2px solid black; width: 600px; display: block; margin-right: auto; margin-left: auto;">#}
-{#        <form method="POST" action="" enctype="multipart/form-data">#}
-{##}
-{#            <div class="row">#}
-{#                <div class="col-25"><label for="name">Dataset name</label></div>#}
-{#                <div class="col-75"><input type="text" id="ds_name" name="ds_name" placeholder="Dataset name" required></div>#}
-{#            </div>#}
-{#            <div class="row">#}
-{#                <div class="col-25"><label for="articles_file">Articles file</label></div>#}
-{#                <div class="col-75"><input type="file" id="articles_file" name="articles_file" placeholder="articles" accept=".csv" required></div>#}
-{#            </div>#}
-{#            <div class="row">#}
-{#                <div class="col-25"><label for="purchases_file">Purchases file</label></div>#}
-{#                <div class="col-75"><input type="file" id="purchases_file" name="purchases_file" placeholder="purchases" accept=".csv" required></div>#}
-{#            </div>#}
-{#            <div class="row">#}
-{#                <div class="col-25"><label for="customers_file">Customers file</label></div>#}
-{#                <div class="col-75"><input type="file" id="customers_file" name="customers_file" placeholder="customers" accept=".csv" required></div>#}
-{#            </div>#}
-{#            <div align="center" class="___services__btn" style="margin-top: 20px;">#}
-{#                <button type="submit">#}
-{#                    Add dataset#}
-{#                </button>#}
-{#            </div>#}
-{#        </form>#}
-{#    </div>#}
-{#</div>#}
-{##}
-{#<!-- Dataset Section-->#}
-{##}
-{#<div class="dataset" id="dataset">#}
-{##}
-{#    <div class="_container">#}
-{##}
-{#        <div class="dataset_title" >Datasets</div>#}
-{#        <div class="dataset__btn">#}
-{#            <button>Remove Dataset</button>#}
-{#        </div>#}
-{#        <table class="scroll-table" id="scrolltable">#}
-{#            <thead>#}
-{#                <tr>#}
-{#                    <td>Dataset number</td>#}
-{#                    <td>Dataset name</td>#}
-{#                    <td style="color: red;">Remove</td>#}
-{#                </tr>#}
-{#            </thead>#}
-{#            <tbody>#}
-{#                {% for id in datasetList %}#}
-{#                    <tr>#}
-{#                        <td>dataset name</td>#}
-{#                        <td>{{ id }}</td>#}
-{#                        <td style="font-size: 20px;color: red;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-{#            </tbody>#}
-{#        </table>#}
-{#    </div>#}
-{##}
-{#    <p style="text-align: center">#}
-{#        Select a dataset and click on 'show statistics' to show the statistics of the dataset.<br>#}
-{#        A new dataset can be added with the 'Add Dataset' button in the top right.#}
-{#    </p>#}
-{#    <form method="GET" action="">#}
-{#        <select class="ds_select" id="datasetSelection" name="datasetSelection">#}
-{#            <option value="dataset 0">dataset 0</option>#}
-{#            <option value="dataset 1">dataset 1</option>#}
-{#            <option value="dataset 2">dataset 2</option>#}
-{#            <option value="dataset 3">dataset 3</option>#}
-{#            {% for id in datasetList %}#}
-{#                <option value="dataset {{ id }}">dataset {{ id }}</option>#}
-{#            {% endfor %}#}
-{#        </select>#}
-{#        <div>#}
-{#            <button type="submit" name="submit_button" value="datasetSubmit" class="showStatbtn">Show Statistics</button>#}
-{#        </div>#}
-{#    </form>#}
-{##}
-{##}
-{#    <div class="stat_container">#}
-{#        <p>Amount of items</p>#}
-{##}
-{#        <p>Amount of users</p>#}
-{##}
-{#        <p>Amount of interactions</p>#}
-{##}
-{#        <p>Price distributions</p>#}
-{##}
-{#        <p>Timestamps distributions</p>#}
-{#    </div>#}
-
-
-</div>
-
 <script>
     {#var row_id = 0;#}
 window.onload = sendData();
 
-$('#scrolltable tbody tr').click(function() {
-    $(this).addClass('highlight').siblings().removeClass('highlight');
-});
+{#$('#scrolltable tbody tr').click(function() {#}
+{#    $(this).addClass('highlight').siblings().removeClass('highlight');#}
+{#);#}
 
 function getFile1() {
     document.getElementById("articles_file").click();
@@ -409,27 +314,37 @@ function drawGraph(data, name, title_){
         chart.draw(dataitems, google.charts.Bar.convertOptions(options));
 }
 
-function displayC3() {
+{#function displayC3() {#}
+{#    var c3 = document.getElementById("_container3");#}
+{#    if (c3.style.display == "none") {#}
+{#        c3.style.display = "block";#}
+{#    }#}
+{#    else {#}
+{#        c3.style.display = "none";#}
+{#    }#}
+{##}
+
+function toggleDatasetView() {
+    var c0 = document.getElementById("_container0");
+    var c1 = document.getElementById("_container1");
+    var c2 = document.getElementById("_container2");
     var c3 = document.getElementById("_container3");
-    if (c3.style.display == "none") {
-        c3.style.display = "block";
-    }
-    else {
+    if (c0.style.display == "none") {
+        c0.style.display = "block";
+        c1.style.display = "block";
+        c2.style.display = "block";
         c3.style.display = "none";
     }
-}
-
-function displayC4() {
-    var c1 = document.getElementById("attr");
-    if (c1.style.display == "none") {
-        c1.style.display = "block";
-    }
     else {
+        c0.style.display = "none";
         c1.style.display = "none";
+        c2.style.display = "none";
+        c3.style.display = "block";
     }
+    {#event.preventDefault();#}
 }
 
-$('button.c2_button').click(function(e) {
+$('button.c0_button').click(function(e) {
     e.preventDefault();
 });
 

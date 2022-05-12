@@ -53,10 +53,10 @@ algo_dict = dict()
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
 
-# os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
-# os.system("sudo -S systemctl start redis")
+os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
+os.system("sudo systemctl restart redis")
 #os.system("brew services restart redis")
-# os.system("rq worker &")
+os.system("rq worker &")
 
 #For threading
 rds = redis.Redis()
@@ -67,6 +67,13 @@ tq = Queue(connection=rds)
 
 algo_id = 1
 abtest_id = getMaxABTestID()+1
+
+file_attr_types = ["string", "float", "int", "image_url"]
+attributes = dict({'articles': list(), 'customers': list()})
+article_attr = ["aa", "ab", "ac", "ad"]
+customer_attr = ["ca", "cb", "cc", "cd"]
+attributes['articles'] = article_attr
+attributes['customers'] = customer_attr
 
 
 # login_manager = LoginManager()
@@ -189,23 +196,24 @@ def services():
                 i = 1
                 while i < algo_id:
                     # Add entry for ABtest table
-                    # addAB_Test(abtest_id, i, start, end, stepsize, topk)
-                    tq.enqueue(addAB_Test, abtest_id, i, start, end, stepsize, topk)
+                    addAB_Test(abtest_id, i, start, end, stepsize, topk)
+                    # tq.enqueue(addAB_Test, abtest_id, i, start, end, stepsize, topk)
 
                     # Add entries for Algorithm table
                     for j in range(len(algo_list)):
                         if algo_list[j][0] == i:
                             algorithm_param = algo_list[j][2]
-                            # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
-                            # algo_list[j][3])
+                            addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
+                            algo_list[j][3])
                             #tq.enqueue(user_data_access.addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
                              #                                         algo_list[j][3])
-                            tq.enqueue(addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
-                                       algo_list[j][3])
+                            # tq.enqueue(addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
+                            #            algo_list[j][3])
 
                     # Add entry for result table
-                    # addResult(abtest_id, i, dataset_id, algorithm_param, creator)
-                    tq.enqueue(addResult, abtest_id, i, dataset_id, algorithm_param, creator)
+                    addResult(abtest_id, i, dataset_id, algorithm_param, creator)
+                    # tq.enqueue(addResult, abtest_id, i, dataset_id, item_id, attribute_dataset, algorithm_param,
+                    #            creator)
 
                     i += 1
 
@@ -217,13 +225,13 @@ def services():
 
                 # Call function to start a/b tests
                 maxABtestID = getMaxABTestID()
-                # abtest.startAB(maxABtestID, dataset_id)
-                # abtest.getABtestResults(maxABtestID, dataset_id)
-                # abtest.getAB_Pop_Active(maxABtestID, dataset_id)
+                abtest.startAB(maxABtestID, dataset_id)
+                abtest.getABtestResults(maxABtestID, dataset_id)
+                abtest.getAB_Pop_Active(maxABtestID, dataset_id)
 
-                tq.enqueue(abtest.startAB, maxABtestID,dataset_id)
-                tq.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
-                tq.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
+                # tq.enqueue(abtest.startAB, maxABtestID,dataset_id)
+                # tq.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
+                # tq.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
 
                 abtest_id += 1
                 algo_id = 1
@@ -265,7 +273,7 @@ def datasets():
     dataset_names = getDatasets()
     #tq.enqueue(handelRequests, app, user_data_access, session, request)
 
-    return render_template('datasets.html', app_data=app_data, names=dataset_names)
+    return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=file_attr_types, attributes=attributes)
 
 @app.route("/datasetupload")
 def datasetupload(rowData):

@@ -259,7 +259,7 @@ input[type=text], input[type=datetime-local], .container select, textarea{
 }
 
 ._container0 {
-    width: 400px;
+    width: 1000px;
     /*height: 30px;*/
     background-color: #534e4e;
     border-radius: 10px;
@@ -270,6 +270,7 @@ input[type=text], input[type=datetime-local], .container select, textarea{
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    flex-wrap: wrap;
     padding: 8px;
     margin-bottom: 10px;
 }
@@ -279,10 +280,25 @@ input[type=text], input[type=datetime-local], .container select, textarea{
     /*width: 280px;*/
     background-color: #b8b5b5;
     border-radius: 10px;
+
+    margin: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .c0_select {
-    width: 100%;
+}
+
+.c0_button {
+    /*width: 480px;*/
+    height: 35px;
+    background-color: #b8b5b5;
+    margin: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+
 }
 
 ._container1 {
@@ -358,18 +374,6 @@ input[type=text], input[type=datetime-local], .container select, textarea{
 
 }
 
-.c2_button {
-    /*width: 480px;*/
-    height: 35px;
-    background-color: #b8b5b5;
-    margin: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-
-}
-
 .c2_button_ {
     /*width: 480px;*/
     height: 35px;
@@ -412,7 +416,7 @@ input[type=text], input[type=datetime-local], .container select, textarea{
 }
 
 .c3_filecontainer {
-    height: 260px;
+    height: 500px;
     width: 310px;
     background-color: #b8b5b5;
     margin: 10px;
@@ -428,6 +432,7 @@ input[type=text], input[type=datetime-local], .container select, textarea{
     /*margin-left: 10px;*/
     text-align: center;
     margin-top: 30px;
+    margin-bottom: -30px;
 }
 
 .c3_filecontainer input {
@@ -435,6 +440,24 @@ input[type=text], input[type=datetime-local], .container select, textarea{
     font-size: 16px;
     margin-left: 10px;
     margin-top: 50px;
+}
+
+/*.c3_typespeccontainer {*/
+/*    height: 260px;*/
+/*    width: 310px;*/
+/*    background-color: #b8b5b5;*/
+/*    margin: 10px;*/
+/*    border-radius: 10px;*/
+/*    text-align: center;*/
+/*}*/
+
+.c3_filecontainer h2 {
+    color: #03a9f4;
+    font-size: 24px;
+    /*margin-top: 10px;*/
+    /*margin-left: 10px;*/
+    text-align: center;
+    margin-top: 30px;
 }
 
 .c3_button {
@@ -491,4 +514,25 @@ input[type=text], input[type=datetime-local], .container select, textarea{
     text-align: center;
     background-color: #dddddd;
     cursor: pointer;
+}
+
+.typeformcontainer {
+    width: 75%;
+    height: 280px;
+    background-color: white;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-top: 90px;
+    overflow-y: auto;
+
+}
+
+.typeformcontainer select {
+    width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
 }
