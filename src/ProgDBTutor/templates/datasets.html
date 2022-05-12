@@ -126,7 +126,7 @@
                         </div>
                         <div class="typeformcontainer" id="typeformcontainer">
                             <form method="POST" action="" id="typeform">
-                                {% for attr in attributes %}
+                                {% for attr in attributes['articles'] %}
                                     <div class="row">
                                         <div class="col-25" style="width: 60%; text-align: left;"><label for="{{ attr }}">{{ attr }}</label></div>
                                         <div class="col-75" style="width: 40%">
