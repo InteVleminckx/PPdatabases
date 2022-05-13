@@ -34,7 +34,7 @@ from db_connection import DBConnection
 Imports voor pages
 """
 from datasets import *
-from userpagina import *
+#from userpagina import *
 
 
 UPLOAD_FOLDER = './uploads'
@@ -64,13 +64,18 @@ rds = redis.Redis()
 datasetQueue = Queue('queue1', connection=rds)  #queue for dataset processes
 abTestQueue = Queue('queue2', connection=rds)   #queue for abTest processes
 
-
 # INITIALIZE SINGLETON SERVICES
 
 
 algo_id = 1
 abtest_id = getMaxABTestID()+1
-#blabla
+
+file_attr_types = ["string", "float", "int", "image_url"]
+attributes = dict({'articles': list(), 'customers': list()})
+article_attr = ["aa", "ab", "ac", "ad"]
+customer_attr = ["ca", "cb", "cc", "cd"]
+attributes['articles'] = article_attr
+attributes['customers'] = customer_attr
 
 
 # login_manager = LoginManager()
@@ -265,7 +270,7 @@ def datasets():
     handelRequests(app, session, request, datasetQueue)
     dataset_names = getDatasets()
 
-    return render_template('datasets.html', app_data=app_data, names=dataset_names)
+    return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=file_attr_types, attributes=attributes)
 
 @app.route("/datasetupload")
 def datasetupload(rowData):
