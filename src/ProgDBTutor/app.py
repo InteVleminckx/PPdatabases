@@ -34,7 +34,7 @@ from db_connection import DBConnection
 Imports voor pages
 """
 from datasets import *
-
+from userpagina import *
 
 
 UPLOAD_FOLDER = './uploads'
@@ -99,6 +99,9 @@ def main():
     #     print(i.username)
     # print('hallo2')
     l = session.get('loggedin', False)
+    #
+
+
     if l:
         return render_template('home.html', app_data=app_data, isLoggedin=session['loggedin'])
     else:
@@ -312,6 +315,19 @@ def testlist():
         testList.append(row[0])
 
     return render_template('testlist.html', app_data=app_data, testList = testList)
+
+
+#----------------- User section page -----------------#
+@app.route("/usersection")
+def usersection():
+    dataset_id = request.args.get("dataset_id")
+    customer_id = request.args.get("customer_id")
+    abtest_id = request.args.get("abtest_id")
+
+    recommendations, history, interval = getUserInformation(abtest_id, dataset_id, customer_id)
+    datasetname = getDatasetname(dataset_id)
+
+    return render_template('user.html', username=customer_id, datasetname=datasetname, history=history, url="", recommendations=recommendations, graphdata="", abtestInterval=interval)
 
 #----------------- User_Login -----------------#
 
