@@ -117,6 +117,7 @@
             </div>
 
             <div class="_row">
+
                 <div class="_column">
                     <div class="c3_filecontainer">
                         <h2> Articles file</h2>
@@ -124,37 +125,34 @@
                         <div style="height: 0px; width: 0px; overflow: hidden;">
                             <input type="file" id="articles_file" name="articles_file" value="upload1" accept=".csv" required onchange="sub1(this)">
                         </div>
+{#                        <form method="POST" action="" id="typeform1">#}
                         <div class="typeformcontainer" id="typeformcontainer">
-                            <form method="POST" action="" id="typeform">
-                                {% for attr in attributes['articles'] %}
-                                    <div class="row">
-                                        <div class="col-25" style="width: 60%; text-align: left;"><label for="{{ attr }}">{{ attr }}</label></div>
-                                        <div class="col-75" style="width: 40%">
-                                            <select class="" id="" name="">
-                                                {% for atype in attr_types %}
-                                                    <option value="{{ atype }}">{{ atype }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
+
+                            {% for attr in attributes['articles'] %}
+                                <div class="row">
+                                    <div class="col-25" style="width: 60%; text-align: left;"><label for="{{ attr }}">{{ attr }}</label></div>
+                                    <div class="col-75" style="width: 40%">
+                                        <select class="" id="" name="">
+                                            {% for atype in attr_types %}
+                                                <option value="{{ atype }}">{{ atype }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+{#                        </form>#}
+                        <div class="choosenamecontainer">
+                            <select class="" id="" name="">
+                                {% for attr in attributes['articles'] %}
+                                    <option value="{{ attr }}">{{ attr }}</option>
                                 {% endfor %}
-
-
-{#                                <div class="row">#}
-{#                                    <div class="col-25" style="width: 60%; text-align: left; font-size: 10px;"><label for="endpoint">verylongattributename1gyhki</label></div>#}
-{#                                    <div class="col-75" style="width: 40%">#}
-{#                                        <select class="" id="" name="">#}
-{#                                            {% for atype in attr_types %}#}
-{#                                                <option value="{{ atype }}">{{ atype }}</option>#}
-{#                                            {% endfor %}#}
-{#                                        </select>#}
-{#                                    </div>#}
-{#                                </div>#}
-
-                            </form>
+                            </select>
                         </div>
                     </div>
                 </div>
+
                 <div class="_column">
                     <div class="c3_filecontainer">
                         <h2> Purchases file</h2>
@@ -164,6 +162,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="_column">
                     <div class="c3_filecontainer">
                         <h2> Customers file</h2>
@@ -172,7 +171,7 @@
                             <input type="file" id="customers_file" name="customers_file" value="upload3" accept=".csv" required onchange="sub3(this)">
                         </div>
                         <div class="typeformcontainer" id="typeformcontainer">
-                            <form method="POST" action="" id="typeform">
+{#                            <form method="POST" action="" id="typeform2">#}
                                 {% for attr in attributes['customers'] %}
                                     <div class="row">
                                         <div class="col-25" style="width: 60%; text-align: left;"><label for="{{ attr }}">{{ attr }}</label></div>
@@ -185,7 +184,14 @@
                                         </div>
                                     </div>
                                 {% endfor %}
-                            </form>
+{#                            </form>#}
+                        </div>
+                        <div class="choosenamecontainer">
+                            <select class="" id="" name="">
+                                {% for attr in attributes['customers'] %}
+                                    <option value="{{ attr }}">{{ attr }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                 </div>
