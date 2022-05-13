@@ -74,36 +74,38 @@ def importDataset():
     udaAddDataset(datasetId, datasetname)
     return datasetId
 
+def getCSVHeader(app, csv_filename):
+    df = request.files[csv_filename]
+    uploaded_file = secure_filename(df.filename)
+    filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+    df.save(filename)
+    header = pd.read_csv(filename, header=0, nrows=0).columns.tolist()
+    return header
+
 def importArticles(app, dataset_id):
     af = request.files['articles_file']
     uploaded_file = secure_filename(af.filename)
     af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     af.save(af_filename)
-    data_articles = pd.read_csv(af_filename)
     # Add articles to database
-    addArticles(data_articles, dataset_id)
-
+    addArticles(af_filename, dataset_id, [])
 
 def importCustomers(app, dataset_id):
     cf = request.files['customers_file']
     uploaded_file = secure_filename(cf.filename)
     cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     cf.save(cf_filename)
-    data_customers = pd.read_csv(cf_filename)
-    columns_customers = list(data_customers.columns.values)
-    # Add customers to database
-    addCustomers(data_customers, columns_customers, dataset_id)
 
+    # Add customers to database
+    addCustomers(cf_filename, dataset_id, [])
 
 def importPurchases(app, dataset_id):
     pf = request.files['purchases_file']
     uploaded_file = secure_filename(pf.filename)
     pf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     pf.save(pf_filename)
-    data_purchases = pd.read_csv(pf_filename)
     # Add purchases to database
-    addPurchases(data_purchases, dataset_id)
-
+    addPurchases(pf_filename, dataset_id)
 
 def getNumberOfUsers(cursor, dataset_id):
 

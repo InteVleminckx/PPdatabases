@@ -1,9 +1,17 @@
-DROP TABLE IF EXISTS Recommendation, Result, Algorithm, ABTest, Interaction, Admin, DataScientist, Authentication, Customer, Dataset, Articles;
+DROP TABLE IF EXISTS Recommendation, Result, Algorithm, ABTest, Interaction, Admin, DataScientist, Authentication, Customer, Articles, Names, Dataset;
 
 -- Table that contains the dataset id's and their names
 CREATE TABLE Dataset (
     dataset_id INT NOT NULL PRIMARY KEY,
     dataset_name TEXT NOT NULL
+);
+
+-- Table to keep track of which attribute is used as a 'descriptor' to represent it in visualisations
+CREATE TABLE Names (
+    dataset_id INT NOT NULL,
+    table_name TEXT NOT NULL,
+    name TEXT NOT NULL,
+    PRIMARY KEY (dataset_id, table_name)
 );
 
 -- Table to keep track of the items/articles of the datasets
