@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="{{ url_for('static/style',filename='user_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/user_style.css') }}">
 </head>
 <body>
 
@@ -16,7 +16,7 @@
             </div>
 <!--            username-->
             <div class="container__header_attributes">
-                <h2>USER: {{ username }}</h2>
+                <h2>CUSTOMER ID: {{ username }}</h2>
             </div>
             <div class="container__info_his_grp">
                 <main class="container__info_history">
@@ -24,20 +24,20 @@
                         <header class="history_table_header">
                             <h2>Purchases of the user</h2>
                             <div class="history_row">
-                                <div class="history_column_header">interval</div>
+                                <div class="history_column_header">{{ abtestInterval }}</div>
                             </div>
                         </header>
                         <div class="history_table">
                             <div class="history_table_items">
-
-                                 {% for item, recommended in history %}
+                                    {#TODO: index moet nog aanpasbaar worden#}
+                                 {% for item, recommended in history[0] %}
                                     <div class="history_table_rows">
                                         <div class="history_column_item">{{ item }}</div>
 
                                         {% if recommended %}
-                                            <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
+                                            <div class="history_column_hasImage" style="color: #91ee05">&#9745</div>
                                         {% else %}
-                                            <div class="history_column_hasImage" style="color: red">&#9746</div>
+                                            <div class="history_column_hasImage" style="color: #b90000">&#9746</div>
                                         {% endif %}
 
                                     </div>
@@ -59,23 +59,21 @@
                     <div class="container__graph">
 <!--                        Hier komt dan de grafiek moet overzicht van gekochte recommendations door de user-->
                     </div>
-                    <div class="container__dateSlider">
-<!--                        Hier moet de slider komen om van interval te verwisselen-->
-                    </div>
                 </div>
             </div>
 
             <main class="container__info_topk">
                 {% set counter = namespace(value=0) %}
-                {% for name, color, recommendation in recommendations%}
+                    {#TODO: index moet nog aanpasbaar worden#}
+                {% for name, color, datum, recommendation in recommendations[0]%}
                     <div class="st_wrap_table" data-table_id="{{ counter.value }}">
                         <header class="topk_table_header">
-                            <h2>{{ name }}</h2>
+                            <h2>Algoritme: {{ name }}</h2>
                             <div class="topk_row">
-                                <div class="topk_column_header">Recommended items</div>
+                                <div class="topk_column_header">Calculation datum: {{ datum }}</div>
                             </div>
                         </header>
-                        <div class="topk_table" style="background-color: rgb({{ color }})">
+                        <div class="topk_table" style="background-color: {{ color }}">
                             {% for row in recommendation %}
                                 <div class="topk_table_rows">
                                     {% for item in row %}
@@ -88,6 +86,16 @@
                     </div>
                 {% endfor %}
             </main>
+
+            <div class="intervalPicker" style="background-color: #0cffff">
+                <div class="prevPick">
+
+                </div>
+                <div class="nexPick">
+
+                </div>
+            </div>
+
         </div>
     </div>
 
