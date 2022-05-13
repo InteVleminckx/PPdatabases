@@ -171,6 +171,22 @@
                         <div style="height: 0px; width: 0px; overflow: hidden;">
                             <input type="file" id="customers_file" name="customers_file" value="upload3" accept=".csv" required onchange="sub3(this)">
                         </div>
+                        <div class="typeformcontainer" id="typeformcontainer">
+                            <form method="POST" action="" id="typeform">
+                                {% for attr in attributes['customers'] %}
+                                    <div class="row">
+                                        <div class="col-25" style="width: 60%; text-align: left;"><label for="{{ attr }}">{{ attr }}</label></div>
+                                        <div class="col-75" style="width: 40%">
+                                            <select class="" id="" name="">
+                                                {% for atype in attr_types %}
+                                                    <option value="{{ atype }}">{{ atype }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -218,6 +234,14 @@
 <script>
     {#var row_id = 0;#}
 window.onload = sendData();
+
+if(document.getElementById("articles_file").value != "") {
+
+}
+
+if(document.getElementById("articles_file").value != "") {
+
+}
 
 {#$('#scrolltable tbody tr').click(function() {#}
 {#    $(this).addClass('highlight').siblings().removeClass('highlight');#}
