@@ -324,6 +324,23 @@ def testlist():
 
     return render_template('testlist.html', app_data=app_data, testList = testList)
 
+#----------------- User section page -----------------#
+@app.route("/usersection")
+def userSection():
+
+    """
+    aanmaken:
+        recommendations: [["algo1", "020,020,020", [[item1, item2, item3],[item1, item2, item3],[item1, item2, item3],[item1, item2, item3]]], ["algo2", "020,020,020", [[item1, item2, item3],[item1, item2, item3],[item1, item2, item3],[item1, item2, item3]]]]
+        history: [[item, true], [item, false], [item, true], [item, true]]
+        url: "https:..."
+        username: "name"
+        datasetname: "name"
+
+    """
+
+    return render_template('user.html', username="", datasetname="", history=[], url="", recommendations=[], graphdata="")
+
+
 #----------------- User_Login -----------------#
 
 @app.route("/register", methods=['GET', 'POST'])
