@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('static/style',filename='user_style.css') }}">
+</head>
+<body>
+
+    <div class="container__usersection">
+
+<!--        info-->
+        <div class="container__info">
+            <div class="container__header_attributes">
+                <h2>DATASET: {{ datasetname }}</h2>
+            </div>
+<!--            username-->
+            <div class="container__header_attributes">
+                <h2>USER: {{ username }}</h2>
+            </div>
+            <div class="container__info_his_grp">
+                <main class="container__info_history">
+                    <div class="st_wrap_table" >
+                        <header class="history_table_header">
+                            <h2>Purchases of the user</h2>
+                            <div class="history_row">
+                                <div class="history_column_header">interval</div>
+                            </div>
+                        </header>
+                        <div class="history_table">
+                            <div class="history_table_items">
+
+                                 {% for item, recommended in history %}
+                                    <div class="history_table_rows">
+                                        <div class="history_column_item">{{ item }}</div>
+
+                                        {% if recommended %}
+                                            <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
+                                        {% else %}
+                                            <div class="history_column_hasImage" style="color: red">&#9746</div>
+                                        {% endif %}
+
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="history_table_image">
+
+                                {% if url == ""%}
+                                    No image
+                                {% else %}
+                                    <img src="{{ url }}" alt="Item image" style='height: 90%; width: 90%; object-fit: contain'>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <div class="container__info_graph">
+
+                    <div class="container__graph">
+<!--                        Hier komt dan de grafiek moet overzicht van gekochte recommendations door de user-->
+                    </div>
+                    <div class="container__dateSlider">
+<!--                        Hier moet de slider komen om van interval te verwisselen-->
+                    </div>
+                </div>
+            </div>
+
+            <main class="container__info_topk">
+                {% set counter = namespace(value=0) %}
+                {% for name, color, recommendation in recommendations%}
+                    <div class="st_wrap_table" data-table_id="{{ counter.value }}">
+                        <header class="topk_table_header">
+                            <h2>{{ name }}</h2>
+                            <div class="topk_row">
+                                <div class="topk_column_header">Recommended items</div>
+                            </div>
+                        </header>
+                        <div class="topk_table" style="background-color: rgb({{ color }})">
+                            {% for row in recommendation %}
+                                <div class="topk_table_rows">
+                                    {% for item in row %}
+                                        <div class="topk_column_item">{{ item }}</div>
+                                    {% endfor%}
+                                </div>
+                            {% endfor %}
+                            {% set counter.value = counter.value + 1 %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </main>
+        </div>
+    </div>
+
+
+
+</body>
+</html>

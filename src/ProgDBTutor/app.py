@@ -53,10 +53,10 @@ algo_dict = dict()
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
 
-os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
-os.system("sudo systemctl restart redis")
+# os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
+# os.system("sudo systemctl restart redis")
 #os.system("brew services restart redis")
-os.system("rq worker &")
+# os.system("rq worker &")
 
 #For threading
 rds = redis.Redis()
@@ -323,6 +323,23 @@ def testlist():
         testList.append(row[0])
 
     return render_template('testlist.html', app_data=app_data, testList = testList)
+
+#----------------- User section page -----------------#
+@app.route("/usersection")
+def userSection():
+
+    """
+    aanmaken:
+        recommendations: [["algo1", "020,020,020", [[item1, item2, item3],[item1, item2, item3],[item1, item2, item3],[item1, item2, item3]]], ["algo2", "020,020,020", [[item1, item2, item3],[item1, item2, item3],[item1, item2, item3],[item1, item2, item3]]]]
+        history: [[item, true], [item, false], [item, true], [item, true]]
+        url: "https:..."
+        username: "name"
+        datasetname: "name"
+
+    """
+
+    return render_template('user.html', username="", datasetname="", history=[], url="", recommendations=[], graphdata="")
+
 
 #----------------- User_Login -----------------#
 
