@@ -1,6 +1,6 @@
 from config import config_data
 from db_connection import DBConnection
-from user_data_acces import UserDataAcces
+from user_data_acces import *
 
 from datetime import datetime
 from datetime import timedelta
@@ -8,9 +8,6 @@ import time as tm
 from typing import List
 
 from itemKNN.src.algorithm.iknn import ItemKNNAlgorithm, ItemKNNIterativeAlgorithm
-
-connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-user_data_access = UserDataAcces(connection)
 
 
 class ItemKNN:
@@ -43,7 +40,7 @@ class ItemKNN:
         alg = ItemKNNAlgorithm(k=self.K, normalize=self.normalize)
 
         """ MUST BE LIST OF TUPLES"""
-        interactions = user_data_access.getCustomerAndItemIDs(start, end, self.datasetID)
+        interactions = getCustomerAndItemIDs(start, end, self.datasetID)
 
         """ PARSE DATA FROM TUPLES """
         user_ids, item_ids = zip(*interactions)
@@ -104,11 +101,11 @@ class ItemKNN:
             """ DO SOMETHING HERE """
             for customer_id, recommendations in recommendationDictionary:
                 for item_id in recommendations:
-                    item = user_data_access.getItem(str(item_id), self.datasetID)
-                    attribute_dataset = list(item.attributes.keys())[0]
-                    attribute_costumer = list(user_data_access.getCustomer(-1, self.datasetID).attributes)[0]
-                    user_data_access.addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id),
-                                                       attribute_dataset, attribute_costumer, start, end)
+                    item = getItem(str(item_id), self.datasetID)
+                    # attribute_dataset = list(item.attributes.keys())[0]
+                    attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
+                    addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id),
+                                      attribute_costumer, start, end)
 
     def history_from_subset_interactions(self, interactions, amt_users=5) -> List[List]:
         """ Take the history of the first users in the dataset and return as list of lists """
