@@ -71,7 +71,7 @@ class Algorithm:
         """ Compute recommendations based on a list of historical item ids. """
         return self.recommend_all([history], top_k=top_k, retarget=retarget)[0]
 
-    def recommend_all(self, histories: List[List], top_k: int, retarget=False) -> List[List]:
+    def recommend_all(self, histories: List[List], top_k: int, retarget=True) -> List[List]:
         """ Compute recommendations based on a list of historical item ids for multiple users """
         # Build sparse matrix
         row_ind = list()

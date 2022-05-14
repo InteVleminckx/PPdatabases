@@ -1,16 +1,16 @@
-from ..config import config_data
-from ..db_connection import DBConnection
-from ..user_data_acces import *
+from config import config_data
+from db_connection import DBConnection
+from user_data_acces import UserDataAcces
 
 from datetime import datetime
 from datetime import timedelta
 import time as tm
 from typing import List
 
-from src.algorithm.iknn import ItemKNNAlgorithm, ItemKNNIterativeAlgorithm
+from itemKNN.src.algorithm.iknn import ItemKNNAlgorithm, ItemKNNIterativeAlgorithm
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-#user_data_access = UserDataAcces(connection)
+user_data_access = UserDataAcces(connection)
 
 
 class ItemKNN:
@@ -43,7 +43,7 @@ class ItemKNN:
         alg = ItemKNNAlgorithm(k=self.K, normalize=self.normalize)
 
         """ MUST BE LIST OF TUPLES"""
-        interactions = getCustomerAndItemIDs(start, end, self.datasetID)
+        interactions = user_data_access.getCustomerAndItemIDs(start, end, self.datasetID)
 
         """ PARSE DATA FROM TUPLES """
         user_ids, item_ids = zip(*interactions)
@@ -103,12 +103,15 @@ class ItemKNN:
 
             """ DO SOMETHING HERE """
             for customer_id, recommendations in recommendationDictionary:
-                attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
-                addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(recommendations[0]),
-                                                       attribute_costumer, start, end)
+                for item_id in recommendations:
+                    item = user_data_access.getItem(str(item_id), self.datasetID)
+                    attribute_dataset = list(item.attributes.keys())[0]
+                    attribute_costumer = list(user_data_access.getCustomer(-1, self.datasetID).attributes)[0]
+                    user_data_access.addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id),
+                                                       attribute_dataset, attribute_costumer, start, end)
 
     def history_from_subset_interactions(self, interactions, amt_users=5) -> List[List]:
-        """ Take the history of the first users in the dataset and return as list of lists"""
+        """ Take the history of the first users in the dataset and return as list of lists """
         user_histories = dict()
         for user_id, item_id in interactions:
             if len(user_histories) < amt_users:
