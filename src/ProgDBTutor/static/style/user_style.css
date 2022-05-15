@@ -1,6 +1,7 @@
 html, body{
     height: 750px;
     background-color: #E3E9F0;
+    font-family: 'Kumbh Sans', sans-serif;
 }
 
 .container__usersection {
@@ -145,8 +146,6 @@ html, body{
     width: 100%;
 }
 
-.history_column_item {
-}
 
 .history_column_hasImage {
     display: flex;
@@ -170,6 +169,10 @@ html, body{
     align-items: center;
 }
 
+#innerUrl {
+    height: 230px;
+}
+
 .history_column_item {
     padding: 10px;
     display: flex;
@@ -177,16 +180,14 @@ html, body{
     flex: 4;
     text-align: center;
     position: relative;
-
 }
+
 
 .history_table_items .history_table_rows:nth-child(even){
     /*background-color: rgb(255, 242, 181)*/
     border-top: 1px solid lightgray;
     border-bottom: 1px solid lightgray;
 }
-
-
 
 .history_column_image {
     padding: 10px;
@@ -196,7 +197,6 @@ html, body{
     position: relative;
     margin-right: 40px;
 }
-
 
 .container__info_graph {
     width: 600px;
@@ -212,7 +212,7 @@ html, body{
 
 .container__info_topk {
     margin-top: 5px;
-    height: 481px;
+    height: 501px;
     width: 600px;
     overflow: auto;
     background-color: #FFFFFF;
@@ -296,10 +296,122 @@ html, body{
 
 .intervalPicker {
     width: 600px;
+    margin-top: 20px;
     height: 50px;
 
-    /*background-color: #FFFFFF;*/
+    background-color: #FFFFFF;
     box-shadow: 0 0 20px -8px rgb(160 163 198);
     border: 0 solid #d9dee3;
     border-radius: 8px;
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+
+/* -- arrowLeft     -- */
+.arrowLeft {
+	/* duplicate the triange */
+	position: relative;
+	height: 0px; width: 0px;
+	border: 8px solid;
+	border-color:
+		darkorange
+		darkorange
+		transparent
+		transparent;
+	transform: rotate(-135deg);
+}
+
+.arrowLeft:before, .arrowLeft:after {
+	content: '';
+	display: block;
+	position: absolute;
+
+	/* set up more triangles */
+	height: 0; width: 0;
+
+	/* half the parent border
+	   rounded up */
+	border: 5px solid;
+}
+
+.arrowLeft:before {
+	border-color:
+		darkorange
+		transparent
+		transparent
+		darkorange;
+	display: block;
+	top: -1px; right: 0px;
+	transform-origin: top right;
+	transform: rotate(45deg);
+}
+
+.arrowLeft:after {
+	border-color:
+		transparent
+		darkorange
+		darkorange
+		transparent;
+	top: 0px; right: -1px;
+	transform-origin: top right;
+	transform: rotate(-45deg);
+}
+
+/* -- arrowRight     -- */
+
+.arrowRight {
+	/* duplicate the triange */
+	position: relative;
+	height: 0px; width: 0px;
+	border: 8px solid;
+	border-color:
+		darkorange
+		darkorange
+		transparent
+		transparent;
+	transform: rotate(45deg);
+}
+
+.arrowRight:before, .arrowRight:after {
+	content: '';
+	display: block;
+	position: absolute;
+
+	/* set up more triangles */
+	height: 0; width: 0;
+
+	/* half the parent border
+	   rounded up */
+	border: 5px solid;
+}
+
+.arrowRight:before {
+	border-color:
+		darkorange
+		transparent
+		transparent
+		darkorange;
+	display: block;
+	top: -1px; right: 0px;
+	transform-origin: top right;
+	transform: rotate(45deg);
+}
+
+.arrowRight:after {
+	border-color:
+		transparent
+		darkorange
+		darkorange
+		transparent;
+	top: 0px; right: -1px;
+	transform-origin: top right;
+	transform: rotate(-45deg);
+}
+
+#counterInterval {
+
+    font-size: 1.5rem;
 }

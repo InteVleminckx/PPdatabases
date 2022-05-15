@@ -1,3 +1,5 @@
+import json
+
 from user_data_acces import *
 import datetime
 
@@ -6,8 +8,8 @@ def getUserInformation(abtest_id, dataset_id, user_id):
     startAB, endAB = getAbInterval(abtest_id)
     historyUser = getPurchases(user_id, dataset_id, startAB, endAB)
     recommendationsPerInterval = getRecommendations(abtest_id, dataset_id, user_id)
-    colors = ["#9FE3FE", "#9CD0FE", "#9DBEFE", "#9CB5FE", "#9CB5FE", "#C2A5FF", "#D69DFF", "#DF9BFD", "#ED9BEB", "#F49CD3",
-             "#FEABB1", "#FECF9F", "#F7FCA8", "#D3FFA7", "#BEFEC4", "#BEFEC4"]
+    colors = ['#9FE3FE', '#9CD0FE', '#9DBEFE', '#9CB5FE', '#9CB5FE', '#C2A5FF', '#D69DFF', '#DF9BFD', '#ED9BEB', '#F49CD3',
+             '#FEABB1', '#FECF9F', '#F7FCA8', '#D3FFA7', '#BEFEC4', '#BEFEC4']
 
     maxcolor = len(colors)
 
@@ -44,7 +46,7 @@ def getUserInformation(abtest_id, dataset_id, user_id):
         for item in historyUser:
             breaked = False
             for algo in reco:
-                if str(item) in algo[3]:
+                if str(item[0]) in algo[3]:
                     ls.append([str(item), True])
                     breaked = True
                     break
@@ -54,12 +56,21 @@ def getUserInformation(abtest_id, dataset_id, user_id):
 
         historyUserAndRec.append(ls)
 
+    purchases = []
+
     for reco in gesorteerdeRecommendations:
+        purchase = []
         for i in range(len(reco)):
+            purchase_ = [reco[i][0], 0, "color: " + reco[i][1]]
             cur = reco[i][3]
             new = []
             items = []
             for j in range(len(cur)):
+
+                for item in historyUser:
+                    if cur[j] == str(item[0]):
+                        purchase_[1] += 1
+
                 items.append(cur[j])
                 if (j+1) % 3 == 0:
                     new.append(items)
@@ -68,7 +79,13 @@ def getUserInformation(abtest_id, dataset_id, user_id):
                 new.append(items)
             reco[i][3] = new
 
-    return gesorteerdeRecommendations, historyUserAndRec, startAB + " — " + endAB
+            purchase.append(purchase_)
+        purchases.append(purchase)
+
+    jsPur = json.dumps(purchases)
+    jsReco = json.dumps(gesorteerdeRecommendations)
+    jsHistory = json.dumps(historyUserAndRec)
+    return jsReco, jsHistory, startAB + " — " + endAB, jsPur
 
 def getAlgoritmes(abtest_id):
     cursor = dbconnect.get_cursor()
@@ -112,7 +129,11 @@ def getPurchases(user_id, dataset_id, start, end):
         return None
 
     for row in rows:
-        items.append(row[0])
+        item = getItem(row[0], dataset_id).attributes
+        val = ""
+        if "image_url" in item:
+            val = item["image_url"]
+        items.append([row[0], val])
 
     return items
 
