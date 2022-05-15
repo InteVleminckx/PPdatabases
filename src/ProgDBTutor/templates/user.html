@@ -1,9 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='style/user_style.css') }}">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 </head>
 <body>
 
@@ -20,86 +21,239 @@
             </div>
             <div class="container__info_his_grp">
                 <main class="container__info_history">
-                    <div class="st_wrap_table" >
-                        <header class="history_table_header">
-                            <h2>Purchases of the user</h2>
-                            <div class="history_row">
-                                <div class="history_column_header">{{ abtestInterval }}</div>
-                            </div>
-                        </header>
-                        <div class="history_table">
-                            <div class="history_table_items">
-                                    {#TODO: index moet nog aanpasbaar worden#}
-                                 {% for item, recommended in history[0] %}
-                                    <div class="history_table_rows">
-                                        <div class="history_column_item">{{ item }}</div>
+                    <section id="innerHistory">
 
-                                        {% if recommended %}
-                                            <div class="history_column_hasImage" style="color: #91ee05">&#9745</div>
-                                        {% else %}
-                                            <div class="history_column_hasImage" style="color: #b90000">&#9746</div>
-                                        {% endif %}
-
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            <div class="history_table_image">
-
-                                {% if url == ""%}
-                                    No image
-                                {% else %}
-                                    <img src="{{ url }}" alt="Item image" style='height: 90%; width: 90%; object-fit: contain'>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
+                    </section>
                 </main>
                 <div class="container__info_graph">
 
                     <div class="container__graph">
-<!--                        Hier komt dan de grafiek moet overzicht van gekochte recommendations door de user-->
+                        <div class="graph" id="purchasesGraph">
+
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <main class="container__info_topk">
-                {% set counter = namespace(value=0) %}
-                    {#TODO: index moet nog aanpasbaar worden#}
-                {% for name, color, datum, recommendation in recommendations[0]%}
-                    <div class="st_wrap_table" data-table_id="{{ counter.value }}">
-                        <header class="topk_table_header">
-                            <h2>Algoritme: {{ name }}</h2>
-                            <div class="topk_row">
-                                <div class="topk_column_header">Calculation datum: {{ datum }}</div>
-                            </div>
-                        </header>
-                        <div class="topk_table" style="background-color: {{ color }}">
-                            {% for row in recommendation %}
-                                <div class="topk_table_rows">
-                                    {% for item in row %}
-                                        <div class="topk_column_item">{{ item }}</div>
-                                    {% endfor%}
-                                </div>
-                            {% endfor %}
-                            {% set counter.value = counter.value + 1 %}
-                        </div>
-                    </div>
-                {% endfor %}
-            </main>
+            <div>
+                <main class="container__info_topk">
+                    <section id="innerAlgorithm">
 
-            <div class="intervalPicker" style="background-color: #0cffff">
-                <div class="prevPick">
+                    </section>
+                </main>
 
+            <div class="intervalPicker">
+                <div class="arrowLeft" onclick="update(-1)"></div>
+                <div class="counter">
+                    <section id="counterInterval"></section>
                 </div>
-                <div class="nexPick">
-
-                </div>
+                <div class="arrowRight" onclick="update(1)"></div>
+            </div>
             </div>
 
         </div>
     </div>
-
-
-
 </body>
+
+<script>
+    {#$('#history_table_items history_table_rows').click(function (){#}
+    {#    $(this).addClass('highlight').siblings().removeClass('highlight');#}
+    {# });#}
+
+    var value = 0;
+    var recommendations = JSON.parse({{ recommendations | tojson | safe}});
+    var maxValue = recommendations.length;
+    var history_ = JSON.parse({{ history | tojson | safe }});
+    var graph = JSON.parse({{ graphdata | tojson | safe }})
+    var ABinterval = '{{ abtestInterval }}';
+
+    window.onload = function () {
+        update(0);
+    }
+
+    function update(number){
+        value = value + number;
+        if (value < 0){
+            value = 0;
+        }
+        else if (value > maxValue - 1){
+            value = maxValue - 1;
+        }
+        let ticks_ = generateAlgoritmes(value);
+        generateHistory(value);
+        document.getElementById("counterInterval").innerHTML = (value+1).toString() + " / " + (recommendations.length).toString()
+        google.charts.load('current', {'packages':['corechart','bar']});
+        google.setOnLoadCallback(function () {
+            makeGraph(value, ticks_);
+        });
+    }
+
+    function generateAlgoritmes(value_){
+        var algos = document.getElementById("innerAlgorithm")
+        var counter = 0;
+        var html_ = ""
+
+        let ticks_ = [0];
+        let calcBools = false;
+
+        for (const [name, color, date, items] of recommendations[value_]){
+            html_ += "<div class=\"st_wrap_table\" data-table_id=\" + counter.toString() + \">";
+            html_ +=     "<header class=\"topk_table_header\">";
+            html_ +=         "<h2>Algoritme: " + name + "</h2>";
+            html_ +=         "<div class=\"topk_row\">";
+            html_ +=             "<div class=\"topk_column_header\">Calculation datum: " + date + " </div>";
+            html_ +=         "</div>";
+            html_ +=     "</header>";
+            html_ +=     "<div class=\"topk_table\" style=\"background-color: " + color + "\">";
+
+            let count = 1;
+            for (const row of items){
+                html_ +=     "<div class=\"topk_table_rows\">";
+                for (const item of row){
+
+                    if (!calcBools){
+                        ticks_.push(count);
+                        count += 1;
+                    }
+
+                    html_ +=     "<div class=\"topk_column_item\">" + item.toString() + " </div>";
+                }
+                html_ +=     "</div>";
+            }
+            calcBools = true;
+            html_ +=     "</div>";
+            counter += 1;
+            html_ += "</div>";
+        }
+
+        algos.innerHTML = html_;
+        return ticks_;
+    }
+
+    function generateHistory(value_){
+        var history = document.getElementById("innerHistory")
+        var html_ = ""
+
+        html_ += "<div class=\"st_wrap_table\" >"
+        html_ +=     "<header class=\"history_table_header\">"
+        html_ +=         "<h2>Purchases of the user</h2>"
+        html_ +=         "<div class=\"history_row\">"
+        html_ +=            "<div class=\"history_column_header\">" + ABinterval + "</div>"
+        html_ +=         "</div>"
+        html_ +=         "</header>"
+        html_ +=         "<div class=\"history_table\">"
+        html_ +=             "<div id=\"history_table_items\" class=\"history_table_items\">"
+
+        for (const [item, recommended] of history_[value_]){
+            var item_ = ""
+            var url_ = "";
+            let makedItem = false;
+            for (chr of item){
+                if (chr === '[' || chr === ']' || chr === " "){
+                    continue;
+                }
+                if (chr === ','){
+                    makedItem = true;
+                }
+                if (!makedItem && chr !== ','){
+                    item_ += chr;
+                }
+                else if (makedItem && chr !== ',' ){
+                    url_ += chr;
+                }
+            }
+
+            html_ +=             "<div id=\""+ item_ +"\" class=\"history_table_rows\">";
+            html_ +=                 "<div onclick='generateImage(\"" + item_ + "\")'  class=\"history_column_item\">" + item_ + "</div>";
+            if (recommended){
+                html_ +=             "<div class=\"history_column_hasImage\" style=\"color: #91ee05\">&#9745</div>";
+            }
+            else {
+                html_ +=             "<div class=\"history_column_hasImage\" style=\"color: #b90000\">&#9746</div>";
+            }
+            html_ +=             "</div>";
+        }
+        html_ +=         "</div>";
+        html_ +=         "<div class=\"history_table_image\">";
+        html_ +=             "<section id=innerUrl ></section>";
+        html_ +=         "</div>";
+        html_ +=     "</div>";
+        html_ += "</div>";
+        history.innerHTML = html_
+    }
+
+    function generateImage(itemURL){
+        for (const [item, recommended] of history_[0]){
+            var item_ = ""
+            var url_ = "";
+            let makedItem = false;
+            for (chr of item){
+                if (chr === '[' || chr === ']' || chr === " "){
+                    continue;
+                }
+                if (chr === ','){
+                    makedItem = true;
+                }
+                if (!makedItem && chr !== ','){
+                    item_ += chr;
+                }
+                else if (makedItem && chr !== ',' ){
+                    url_ += chr;
+                }
+            }
+
+            if (item_ === itemURL){
+                innerImg = document.getElementById("innerUrl")
+                if (url_ == ""){
+                    innerImg.innerHTML = "No image"
+                }
+                else {
+
+                    html_ = "<img src=";
+                    html_ += url_;
+                    html_ += " alt=\"Image\" style='height: 100%; width: 100%; object-fit: contain'>";
+                    innerImg.innerHTML =  html_;
+                }
+                break
+            }
+        }
+    }
+
+    function makeGraph(value_, ticks_){
+
+        var data_ = [['Algorithm', 'Bought', {role: 'style'}]]
+        for (row of graph[value_]) {
+            data_.push(row);
+
+        }
+        var dataitems = new google.visualization.arrayToDataTable(data_);
+
+        var options = {
+          chartArea: {
+              width: '85%'
+          },
+          legend: { position: 'none' },
+          chart: {
+            title: "Number of purchases per recommendation"
+          },
+          hAxis: {
+              title: 'Algorithms'
+            },
+          vAxis: {
+            title: 'Items bought',
+            ticks: ticks_
+          },
+          bar: { groupWidth: "100%" }
+        };
+
+        {#var chart = new google.charts.Bar(document.getElementById("purchasesGraph"));#}
+        {#// Convert the Classic options to Material options.#}
+        {#chart.draw(dataitems, google.charts.Bar.convertOptions(options));#}
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('purchasesGraph'));
+        chart.draw(dataitems, options);
+    }
+
+</script>
+
 </html>

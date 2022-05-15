@@ -34,7 +34,7 @@ from db_connection import DBConnection
 Imports voor pages
 """
 from datasets import *
-#from userpagina import *
+from userpagina import *
 
 
 UPLOAD_FOLDER = './uploads'
@@ -328,11 +328,11 @@ def usersection():
     dataset_id = request.args.get("dataset_id")
     customer_id = request.args.get("customer_id")
     abtest_id = request.args.get("abtest_id")
-
-    recommendations, history, interval = getUserInformation(abtest_id, dataset_id, customer_id)
+    value = 0
+    recommendations, history, interval, graph = getUserInformation(abtest_id, dataset_id, customer_id)
     datasetname = getDatasetname(dataset_id)
 
-    return render_template('user.html', username=customer_id, datasetname=datasetname, history=history, url="", recommendations=recommendations, graphdata="", abtestInterval=interval)
+    return render_template('user.html', username=customer_id, datasetname=datasetname, history=history, url="", recommendations=recommendations, graphdata=graph, abtestInterval=interval)
 
 #----------------- User_Login -----------------#
 
