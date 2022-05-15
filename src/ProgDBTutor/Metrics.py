@@ -16,6 +16,7 @@ class Metrics:
     def __init__(self, startDate, endDate):
         self.start = startDate
         self.end = endDate
+        self.connection = connection
 
     # METRIC: Purchases
     def getNrOfPurchases(self, startDate=None, endDate=None):
@@ -23,7 +24,15 @@ class Metrics:
             startDate = self.start
             endDate = self.end
 
-        query = ("SELECT count(*) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate))
+        cursor = self.connection.get_cursor()
+
+        # "SELECT count(*) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate)
+        cursor.execute("SELECT count(*) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate))
+
+        if cursor is None:
+            return cursor
+        return cursor.fetchone()[0]
+
 
     # METRIC: Active Users
     def getNrOfActiveUsers(self, startDate=None, endDate=None):
@@ -31,8 +40,15 @@ class Metrics:
             startDate = self.start
             endDate = self.end
 
-        query = (
-            "SELECT count(DISTINCT customer_id) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate))
+        cursor = self.connection.get_cursor()
+
+        # "SELECT count(DISTINCT customer_id) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate)
+        cursor.execute("SELECT count(DISTINCT customer_id) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;",
+                       (startDate, endDate))
+
+        if cursor is None:
+            return cursor
+        return cursor.fetchone()[0]
 
     def getClickThroughRate(self, startDate=None, endDate=None):
         if startDate is None and endDate is None:
@@ -116,3 +132,14 @@ class Metrics:
         ARPU = None
         pass
 
+
+start = "2020-01-01 20:00:00"
+end = "2020-02-01 20:00:00"
+
+test = Metrics(start, end)
+
+nrOfPurchases = test.getNrOfPurchases()
+print(nrOfPurchases)
+
+nrOfActiveUsers = test.getNrOfActiveUsers()
+print(nrOfActiveUsers)
