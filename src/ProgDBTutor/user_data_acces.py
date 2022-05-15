@@ -607,6 +607,19 @@ def getPopularityItem(dataset_id, begin_date, end_date, top_k):
         return None
     return recommendations
 
+def getItemPurchases(dataset_id, item_id, date):
+    global dbconnect
+    cursor = dbconnect.get_cursor()
+    cursor.execute("SELECT count(item_id) \
+                    FROM Interaction \
+                    WHERE dataset_id = %s AND item_id = %s AND t_dat = %s;", (str(dataset_id), str(item_id), date))
+    amount = cursor.fetchone()
+    if amount:
+        amount = amount[0]
+    else:
+        amount = None
+    return amount
+
 def getRecencyItem(dataset_id, interval_start, interval_end, top_k):
     global dbconnect
     cursor = dbconnect.get_cursor()
@@ -683,6 +696,17 @@ def getMaxAlgorithmId():
 
     return row[0]
 
+def getItemRecommendations(retrainDay, item_id, abtest_id, dataset_id):
+    global dbconnect
+    cursor = dbconnect.get_cursor()
+    algorithmsList = []
+    resultIDs = getResultIds(abtest_id, dataset_id)
+    for id in resultIDs:
+        cursor.execute('SELECT count(*) FROM Recommendation WHERE abtest_id = %s AND result_id = %s AND dataset_id = %s and item_number = %s and end_point = %s',
+                       (str(abtest_id), str(id), str(dataset_id), str(item_id), retrainDay))
+        amount = cursor.fetchone()[0]
+        algorithmsList.append(amount)
+    return algorithmsList
 
 # """
 # This function gets all the datascientists in the database.

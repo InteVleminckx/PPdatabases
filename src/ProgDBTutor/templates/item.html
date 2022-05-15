@@ -3,137 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='user.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='item.css') }}">
 </head>
 <body>
-
+<form method="POST" action="" name="form1">
     <div class="container__usersection">
-
-<!--        info-->
         <div class="container__info">
-            <div class="container__header_attributes">
-                <h2>DATASET: datasetname</h2>
-            </div>
-<!--            username-->
-            <div class="container__header_attributes">
-                <h2>USER: username</h2>
-            </div>
-            <div class="container__info_his_grp">
-                <main class="container__info_history">
-                    <div class="st_wrap_table" >
-                        <header class="history_table_header">
-                            <h2>Purchases of the user</h2>
-                            <div class="history_row">
-                                <div class="history_column_header">interval</div>
-                            </div>
-                        </header>
-                        <div class="history_table">
-                            <div class="history_table_items">
-                                <div class="history_table_rows">
-                                    <div class="history_column_item">It4343em1</div>
-                                    <div class="history_column_hasImage" style="color: red">&#9746</div>
-                                </div>
-                                <div class="history_table_rows">
-                                    <div class="history_column_item">It4343em1</div>
-                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
-                                </div>
-                                <div class="history_table_rows">
-                                    <div class="history_column_item">It4343em1</div>
-                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
-                                </div>
-                                <div class="history_table_rows">
-                                    <div class="history_column_item">It4343em1</div>
-                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
-                                </div>
-                                <div class="history_table_rows">
-                                    <div class="history_column_item">It4343em1</div>
-                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
-                                </div>
-                                <div class="history_table_rows">
-                                    <div class="history_column_item">It4343em1</div>
-                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
-                                </div>
-                                <div class="history_table_rows">
-                                    <div class="history_column_item">It4343em1</div>
-                                    <div class="history_column_hasImage" style="color: greenyellow">&#9745</div>
-                                </div>
-                            </div>
-                            <div class="history_table_image">
-                                <img src="https://data.ua-ppdb.me/images/H_M/026/0266875001.jpg" alt="Item image" style='height: 90%; width: 90%; object-fit: contain'>
-                            </div>
-                        </div>
-                    </div>
-                </main>
-                <div class="container__info_graph">
-
-                    <div class="container__graph">
-<!--                        Hier komt dan de grafiek moet overzicht van gekochte recommendations door de user-->
-                    </div>
-                    <div class="container__dateSlider">
-<!--                        Hier moet de slider komen om van interval te verwisselen-->
-                    </div>
+            <main class="container__column" id="col1">
+                <div class="container__info_item">
+                    <table class="item_table flex-fixhead-table">
+                        <thead>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for attr, val in attr_val %}
+                            <tr>
+                                <td data-label="Attribute">{{ attr }}</td>
+                                <td data-label="Value">{{ val }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-
-            <main class="container__info_topk">
-                <div class="st_wrap_table" data-table_id="0">
-                    <header class="topk_table_header">
-                        <h2>Algorithm name</h2>
-                        <div class="topk_row">
-                            <div class="topk_column_header">Recommended items</div>
-                        </div>
-                    </header>
-                    <div class="topk_table" style="background-color: rgb(0,255,248)">
-                        <div class="topk_table_rows">
-                            <div class="topk_column_item">It4343em1</div>
-                            <div class="topk_column_item">Item4352</div>
-                            <div class="topk_column_item">443</div>
-                        </div>
-                        <div class="topk_table_rows">
-                            <div class="topk_column_item">Item43454</div>
-                            <div class="topk_column_item">Item5</div>
-                            <div class="topk_column_item">Item6</div>
-                        </div>
-                        <div class="topk_table_rows">
-                            <div class="topk_column_item">It43434em7</div>
-                            <div class="topk_column_item">Item8</div>
-                            <div class="topk_column_item">Item119</div>
-                        </div>
-                    </div>
+                <div class="container__item_picture">
+                    {% if item_picture %}
+                        <img src="{{ item_picture }}" width="600px" height="350px" alt="Picture of an item">
+                    {% else %}
+                        <img src="" width="600px" height="350px" alt="Picture of an item">
+                    {% endif %}
                 </div>
-
-                <div class="st_wrap_table" data-table_id="1">
-                    <header class="topk_table_header">
-                        <h2>Algorithm name</h2>
-                        <div class="topk_row">
-                            <div class="topk_column_header">Recommended items</div>
-                        </div>
-                    </header>
-                    <div class="topk_table" style="background-color: rgb(255,115,0)">
-                        <div class="topk_table_rows">
-                            <div class="topk_column_item">Item1</div>
-                            <div class="topk_column_item">Item2</div>
-                            <div class="topk_column_item">Item3</div>
-                        </div>
-                        <div class="topk_table_rows">
-                            <div class="topk_column_item">Item4</div>
-                            <div class="topk_column_item">Item5</div>
-                            <div class="topk_column_item">Item6</div>
-                        </div>
-                        <div class="topk_table_rows">
-                            <div class="topk_column_item">Item7</div>
-                            <div class="topk_column_item">Item8</div>
-                            <div class="topk_column_item">Item9</div>
-                        </div>
-                    </div>
-                </div>
-
             </main>
-
+            <main class="container__column" id="col2">
+                <div class="container__selection">
+                    <div class="grid-container">
+                        <div class="grid-item_1">
+                            <select class="select" id="graph_select" name="graph_select">
+                                <option value="Popularity item">Popularity item</option>
+                                <option value="Recommendation count">Recommendation count</option>
+                                <option value="Recommendation correctness">Recommendation correctness</option>
+                            </select>
+                        </div>
+                        <div class="grid-item_1">
+                            <button class="_button" type="submit" role="button" id="submit_graph" name="submit_graph" onclick="graph()">
+                                Show graph
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid-container">
+                        <div class="grid-item_1">
+                            <input class="_date" type="date" placeholder="Begin" id="begin_time" name="begin_time" required>
+                        </div>
+                        <div class="grid-item_1">
+                            <input class="_date" type="date" placeholder="End" id="end_time" name="end_time" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="container__graph" id="item_graph"></div>
+            </main>
         </div>
     </div>
+</form>
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart', 'bar']});
+    document.getElementById("begin_time").value = "2020-01-01";
+    document.getElementById("end_time").value = "2020-01-09";
 
+    window.onload = function () {
+        graph();
+    }
 
+    function graph() {
+        google.setOnLoadCallback(drawGraph());
+    }
+
+    function drawGraph() {
+        var chart;
+        var options;
+        var data = JSON.parse({{ data1 | tojson | safe }});
+        var name =  '{{ name }}';
+        var title_ = '{{ title }}';
+
+        var dataitems = new google.visualization.arrayToDataTable(data);
+        if (title_ == "Popularity item") {
+            chart = new google.charts.Bar(document.getElementById(name));
+            options = {
+                chartArea: {
+                    width: '94%'
+                },
+                legend: {position: 'none'},
+                chart: {
+                    title: 'Popularity item',
+                    subtitle: 'indicates the amount of purchases of an item over time'
+                },
+                axes: {
+                    x: {
+                        0: {side: 'top'} // Top x-axis.
+                    }
+                },
+                bar: {groupWidth: "100%"}
+            };
+            // Convert the Classic options to Material options.
+            chart.draw(dataitems, google.charts.Bar.convertOptions(options));
+        }
+        else if (title_ == "Recommendation count") {
+            chart = new google.visualization.LineChart(document.getElementById(name));
+            options = {
+                chartArea: {
+                    width: '94%'
+                },
+                legend: {position: 'bottom'},
+                curveType: 'function',
+                chart: {
+                    title: 'Recommendation count',
+                    subtitle: 'Amount of recommendations for each algorithm over time'
+                },
+                axes: {
+                    x: {
+                        0: {side: 'top'} // Top x-axis.
+                    }
+                },
+                bar: {groupWidth: "100%"}
+            };
+            // Convert the Classic options to Material options.
+            chart.draw(dataitems, options);
+        }
+        else {
+            chart = new google.visualization.ColumnChart(document.getElementById(name));
+            options = {
+                chartArea: {
+                    width: '94%'
+                },
+                legend: {position: 'bottom'},
+                curveType: 'function',
+                chart: {
+                    title: 'Recommendation correctness',
+                    subtitle: 'recommendations on the left, purchases on the right'
+                },
+                axes: {
+                    x: {
+                        0: {side: 'top'} // Top x-axis.
+                    }
+                },
+                bar: {groupWidth: "100%"}
+            };
+            // Convert the Classic options to Material options.
+            chart.draw(dataitems, options);
+        }
+    }
+</script>
 </body>
 </html>

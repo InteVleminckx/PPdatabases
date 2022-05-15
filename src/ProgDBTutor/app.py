@@ -289,7 +289,7 @@ def datasetupload(rowData):
 
 #----------------- A/B-test Visualization page -----------------#
 
-@app.route("/visualizations")
+@app.route("/visualizations", methods=['GET', 'POST'])
 # @login_required
 def visualizations():
     # labels, legend = [], []
@@ -309,8 +309,109 @@ def visualizations():
     #         current_day = str(datetime.strptime(current_day, '%Y-%m-%d') + timedelta(days=day))
     #         labels.append(str(current_day)[0:10])
 
-    return render_template('visualizations.html', app_data=app_data)
+    # return render_template('visualizations.html', app_data=app_data)
+    abtest_id = 1
+    dataset_id = 1
+    item_id = 108775015
+    attrAndVal = []
+    image_url = ""
 
+    # Request all the attributes of this item from the database
+    item = getItem(item_id, dataset_id)
+    for key in item.attributes:
+        attrAndVal.append((key, item.attributes[key]))
+
+    # attrAndVal = [('customer_id', '012342'), ('product_code', '095620414'),
+    #               ('image_url', 'https://data.ua-ppdb.me/images/H_M/017/0179393001.jpg')]
+
+    # Request the image_url from the database
+    if 'image_url' in item.attributes:
+        image_url = item.attributes['image_url']
+    else:
+        image_url = None
+
+    # image_url = 'https://data.ua-ppdb.me/images/H_M/017/0179393001.jpg'
+
+    # See if we pressed the button to show the graph
+    # if request.method == 'POST':
+    graph_type = request.form.get('graph_select', None)
+    begin_date = request.form.get('begin_time', None)
+    end_date = request.form.get('end_time', None)
+    data = []
+
+    # Compute popularity item graph
+    if graph_type == 'Popularity item':
+        startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
+        endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        stepsize = datetime.timedelta(days=1)
+
+        # Add first row to data
+        data = [['Date', 'Purchases']]
+
+        while startPoint <= endPoint:
+            amountPurchases = getItemPurchases(dataset_id, item_id, str(startPoint)[0:10])
+            data.append([str(startPoint)[0:10], amountPurchases])
+            startPoint += stepsize
+
+        # data = [['Date', 'Purchases'], ['2020-01-01', 1236], ['2020-01-02', 2365], ['2020-01-03', 2659]]
+
+        data = json.dumps(data)
+
+        return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
+                               name='item_graph', title='Popularity item')
+
+    # Compute recommendation count graph
+    elif graph_type == 'Recommendation count':
+        startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
+        endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        stepsize = datetime.timedelta(days=1)
+
+        # Add first row that contains all algorithm names
+        firstRow = ['Date']
+        resultIDs = getResultIds(abtest_id, dataset_id)
+        for id in resultIDs:
+            firstRow.append('Algorithm' + str(id))
+        data.append(firstRow)
+
+        while startPoint <= endPoint:
+            amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
+            subdata = [str(startPoint)[0:10]]
+            for amount in amountRecommendations:
+                subdata.append(amount)
+                data.append(subdata)
+                startPoint += stepsize
+
+        # data = [['Date', 'algorithm1', 'algorithm2', 'algorithm3', 'algorithm4'],
+        #         ['2020-01-01', 1236, 2366, 1900, 6340], ['2020-01-02', 0, 0, 1465, 0], ['2020-01-03', 0, 5789, 0, 3640]]
+
+        data = json.dumps(data)
+        return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
+                               name='item_graph', title='Recommendation count')
+
+    # Compute recommendation correctness graph
+    elif graph_type == 'Recommendation correctness':
+        startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
+        endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        stepsize = datetime.timedelta(days=1)
+
+        # Add first row to data
+        data = [['Date', 'Recommendations', 'Purchases']]
+        while startPoint <= endPoint:
+            amountRecommendations = sum(getItemRecommendations(startPoint, item_id, abtest_id, dataset_id))
+            amountPurchases = getItemPurchases(dataset_id, item_id, startPoint)
+            data.append([str(startPoint)[0:10], amountRecommendations, amountPurchases])
+            startPoint += stepsize
+
+        # data = [['Galaxy', 'Distance', 'Brightness'], ['Canis Major Dwarf', 8000, 120],
+        #         ['Sagittarius Dwarf', 24000, 3000], ['Ursa Major II Dwarf', 30000, 8000],
+        #         ['Lg. Magellanic Cloud', 50000, 10000], ['Bootes I', 60000, 3610]]
+
+        data = json.dumps(data)
+        return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
+                               name='item_graph', title='Recommendation correctness')
+
+    return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=None,
+                           name=None, title=None)
 #----------------- A/B-test list -----------------#
 
 @app.route("/testlist")
