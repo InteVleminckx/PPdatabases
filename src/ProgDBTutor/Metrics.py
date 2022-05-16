@@ -76,7 +76,7 @@ class Metrics:
 
         if cursor is None:
             return 0
-        query1 = cursor.fetchall()
+        query1 = cursor.fetchone()[0]
 
         # NUMBER OF ALL ACTIVE USERS
         query2 = self.getNrOfActiveUsers(startDate, endDate)
@@ -148,3 +148,6 @@ print(nrOfPurchases)
 
 nrOfActiveUsers = test.getNrOfActiveUsers()
 print(nrOfActiveUsers)
+
+# CTR = test.getClickThroughRate(start, end, 1, 1, 1)
+# print(CTR)
