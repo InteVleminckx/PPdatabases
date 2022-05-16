@@ -261,8 +261,8 @@ input[type=text], input[type=datetime-local], .container select, textarea{
 ._container0 {
     width: 1000px;
     /*height: 30px;*/
-    background-color: #534e4e;
-    border-radius: 10px;
+    background-color: #F0F2FA;
+    border-radius: 8px;
 
     margin-left: auto;
     margin-right: auto;
@@ -271,19 +271,23 @@ input[type=text], input[type=datetime-local], .container select, textarea{
     align-items: center;
     justify-content: space-evenly;
     flex-wrap: wrap;
-    padding: 8px;
+    padding: 10px;
     margin-bottom: 10px;
 }
 
 ._container0 select {
     height: 35px;
     /*width: 280px;*/
-    background-color: #b8b5b5;
+    background-color: #FFFFFF;
     border-radius: 10px;
 
     margin: 10px;
     margin-top: 5px;
     margin-bottom: 5px;
+
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
+    border: 0 solid #d9dee3;
+    border-radius: 8px;
 }
 
 .c0_select {
@@ -292,53 +296,41 @@ input[type=text], input[type=datetime-local], .container select, textarea{
 .c0_button {
     /*width: 480px;*/
     height: 35px;
-    background-color: #b8b5b5;
+    background-color: #FFFFFF;
     margin: 10px;
     margin-top: 5px;
     margin-bottom: 5px;
     border-radius: 5px;
     cursor: pointer;
 
-}
-
-._container1 {
-    width: 1000px;
-    /*height: 550px;*/
-    background-color: #534e4e;
-    border-radius: 10px;
-
-    margin-left: auto;
-    margin-right: auto;
-
-    display: flex;
-    justify-content: space-evenly;
-
-    padding: 8px;
-    flex-wrap: wrap;
-
-    margin-bottom: 10px;
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
+    border: 0 solid #d9dee3;
+    border-radius: 8px;
 
 }
-
-
-
-
 
 .c1_statcontainer {
     /*width: 320px;*/
     height: 160px;
-    background-color: #b8b5b5;
+    background-color: #FFFFFF;
     margin: 10px;
     border-radius: 10px;
+
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
+    border: 0 solid #d9dee3;
+    border-radius: 8px;
 }
 
 .c1_graphcontainer {
     /*width: 480px;*/
     height: 260px;
-    background-color: #b8b5b5;
+    background-color: #FFFFFF;
     margin: 10px;
     border-radius: 10px;
 
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
+    border: 0 solid #d9dee3;
+    border-radius: 8px;
 }
 
 .c1_statcontainer h2 {
@@ -356,34 +348,15 @@ input[type=text], input[type=datetime-local], .container select, textarea{
 
 }
 
-._container2 {
-    width: 1000px;
-    /*height: 550px;*/
-    background-color: #534e4e;
-    border-radius: 10px;
-
-    margin-left: auto;
-    margin-right: auto;
-
-    display: flex;
-    justify-content: space-evenly;
-
-    padding: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-
-}
-
 .c2_button_ {
     /*width: 480px;*/
     height: 35px;
-    background-color: #b8b5b5;
+    background-color: #FFFFFF;
     margin: 10px;
     margin-top: 5px;
     margin-bottom: 5px;
     border-radius: 5px;
     cursor: pointer;
-
 }
 
 ._container3 {

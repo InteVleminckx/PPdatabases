@@ -13,6 +13,12 @@
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
+<style>
+    html, body {
+        background-color: #E3E9F0;
+    }
+</style>
+
 <body>
 
 <nav class="navbar" id="navbar">
@@ -52,9 +58,9 @@
             </div>
 
         </div>
-    </div>
+{#    </div>#}
 
-    <div class="_container1" id="_container1" style="display: block;">
+{#    <div class="_container1" id="_container1" style="display: block;">#}
         <div class="_row">
             <div class="_column">
                 <div class="c1_statcontainer">
@@ -87,9 +93,9 @@
                 </div>
             </div>
         </div>
-    </div>
+{#    </div>#}
 
-    <div class="_container2" id="_container2" style="display: block;">
+{#    <div class="_container2" id="_container2" style="display: block;">#}
         <div class="_row">
             <div class="_column">
                 <button class="c2_button_" role="button" id="add_btn" name="add_btn" onclick="">
@@ -281,7 +287,7 @@ function generateAttrHtml(data) {
 
         var attrNameElem = document.getElementById("articles_cname_section");
         _html = "";
-        _html += "<select class=\"\" id=\"\" name=\"\">";
+        _html += "<select class=\"\" id=\"articles_name_column\" name=\"articles_name_column\">";
         for (var attribute1 of articles_attr_list) {
             _html += "<option value=\"" + attribute1 + "\">" + attribute1 + "</option>";
         }
@@ -313,7 +319,7 @@ function generateAttrHtml(data) {
 
         attrNameElem = document.getElementById("customers_cname_section");
         _html = "";
-        _html += "<select class=\"\" id=\"\" name=\"\">";
+        _html += "<select class=\"\" id=\"customers_name_column\" name=\"customers_name_column\">";
         for (var attribute3 of articles_attr_list) {
             _html += "<option value=\"" + attribute3 + "\">" + attribute3 + "</option>";
         }
