@@ -264,6 +264,17 @@ def getData(ds_id):
 @app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
 def datasets():
+    type_list = {'articles_types': [], 'customers_types': []}
+    type_item = 0
+    while request.form.get(f"{type_item}"):
+        type_list['articles_types'].append(request.form.get(f"{type_item}"))
+        type_item += 1
+    type_item = -1
+    while request.form.get(f"{type_item}"):
+        type_list['customers_types'].append(request.form.get(f"{type_item}"))
+        type_item -= 1
+    print(type_list['articles_types'])
+    print(type_list['customers_types'])
     handelRequests(app, session, request, datasetQueue)
     dataset_names = getDatasets()
 
