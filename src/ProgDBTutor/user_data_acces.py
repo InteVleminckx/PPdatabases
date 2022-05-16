@@ -264,7 +264,7 @@ def getDatasetname(dataset_id):
 
 
 # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-def addArticles(file_name, dataset_id, types_list = []):
+def addArticles(file_name, dataset_id, types_list):
     global dbconnect
     #Duurt 1.30 min op deze manier
     print('start reading articles')
@@ -280,7 +280,7 @@ def addArticles(file_name, dataset_id, types_list = []):
         subset = data_articles[[column]].copy()
         subset['column'] = column
         #TODO: zorg ervoor da hier het juiste type geselecteerd wordt en we zo dan het juiste type kunnen toewijden
-        subset['type'] = 'test'
+        subset['type'] = types_list[index]
         subset['dataset_id'] = dataset_id
         tuples = list(subset.to_records())
         tuples_list.extend(tuples)
@@ -314,7 +314,7 @@ def getItemAttribute(itemId, attr):
 
 
 # def addCustomer(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-def addCustomers(file_name, dataset_id, types_list = []):
+def addCustomers(file_name, dataset_id, types_list):
     global dbconnect
     cursor = dbconnect.get_cursor()
     start = time.process_time()
@@ -618,6 +618,19 @@ def getPopularityItem(dataset_id, begin_date, end_date, top_k):
         return None
     return recommendations
 
+def getItemPurchases(dataset_id, item_id, date):
+    global dbconnect
+    cursor = dbconnect.get_cursor()
+    cursor.execute("SELECT count(item_id) \
+                    FROM Interaction \
+                    WHERE dataset_id = %s AND item_id = %s AND t_dat = %s;", (str(dataset_id), str(item_id), date))
+    amount = cursor.fetchone()
+    if amount:
+        amount = amount[0]
+    else:
+        amount = None
+    return amount
+
 def getRecencyItem(dataset_id, interval_start, interval_end, top_k):
     global dbconnect
     cursor = dbconnect.get_cursor()
@@ -700,6 +713,17 @@ def createDatasetIdIndex():
     cursor.execute("CREATE INDEX db_id_idx ON Dataset (dataset_id);")
     dbconnect.commit()
 
+def getItemRecommendations(retrainDay, item_id, abtest_id, dataset_id):
+    global dbconnect
+    cursor = dbconnect.get_cursor()
+    algorithmsList = []
+    resultIDs = getResultIds(abtest_id, dataset_id)
+    for id in resultIDs:
+        cursor.execute('SELECT count(*) FROM Recommendation WHERE abtest_id = %s AND result_id = %s AND dataset_id = %s and item_number = %s and end_point = %s',
+                       (str(abtest_id), str(id), str(dataset_id), str(item_id), retrainDay))
+        amount = cursor.fetchone()[0]
+        algorithmsList.append(amount)
+    return algorithmsList
 
 # """
 # This function gets all the datascientists in the database.
@@ -823,7 +847,6 @@ def createDatasetIdIndex():
 #     for column in data_articles.columns:
 #         subset = data_articles[[column]].copy()
 #         subset['column'] = column
-#         #TODO: zorg ervoor da hier het juiste type geselecteerd wordt en we zo dan het juiste type kunnen toewijden
 #         subset['type'] = data_articles.dtypes[column].name
 #         subset['dataset_id'] = dataset_id
 #         tuples = list(subset.to_records())
