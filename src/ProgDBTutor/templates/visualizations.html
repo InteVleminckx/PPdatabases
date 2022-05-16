@@ -1,211 +1,142 @@
 <html>
 <head>
 
+    <title>Recommended4you - Visualisation</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-
-	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static',filename='style/visualizations_style.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">
-
-
-	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
-	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/user_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/visualizations_style.css') }}">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    {#  Includes van inte voor de chart  #}
-{#    <script src="{{ url_for('static',filename='myCharts.js') }}"></script>#}
-    <script src="../static/metrics1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-{#    #}
-
+    <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 
 </head>
 <body>
 
+{#Navbar section#}
 <nav class="navbar" id="navbar">
-        <div class="navbar_container">
-            <div class="navbar_toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+    <div class="navbar_container">
+        <div class="navbar_toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="navbar_menu">
+            <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container__usersection">
+
+{#    AB-InfoSection#}
+    <div class="container__info">
+        <div class="split__container">
+            <div class="ab_container__info">
+                <div class="ab__split">
+                    <div class="ab__info">
+                        <p>AB-test ID:</p>
+                        <p id="abtest_id"></p>
+                    </div>
+                    <div class="ab__info">
+                        <p>Dataset name:</p>
+                        <p id="dataset_name"></p>
+                    </div>
+                    <div class="ab__info">
+                        <p>Startpoint:</p>
+                        <p id="startpoint"></p>
+                    </div>
+                </div>
+                <div class="ab__split">
+                    <div class="ab__info">
+                        <p>Stepsize:</p>
+                        <p id="stepsize"></p>
+                    </div>
+                    <div class="ab__info">
+                        <p>Top-k:</p>
+                        <p id="topk"></p>
+                    </div>
+                    <div class="ab__info">
+                        <p>Endpoint:</p>
+                        <p id="endpoint"></p>
+                    </div>
+                </div>
             </div>
-            <ul class="navbar_menu">
-                <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
-            </ul>
-        </div>
-    </nav>
+            <div class="ab_container__table">
 
-<div id="mySidenav" class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a href="#">User section</a>
-  <a href="#">Item section</a>
-  <a href="#">A/B-test section</a>
-  <a href="#">Metrics</a>
-</div>
+            </div>
+            <div class="ab_container__table">
+                <button onclick="window.location.href='{{ url_for('usersection', dataset_id=2, customer_id=14, abtest_id=3) }}';">User page</button>
+            </div>
+       </div>
+        <div class="split__container">
+            <div class="ab_container__info">
+                <div class="metric__info_purch_active">
+                    <h2>
+                        Total purchases:
+                    </h2>
+                    <p id="purchases">
 
-<div class="page">
+                    </p>
+                </div>
+                <div class="metric__info_purch_active">
+                    <h2>
+                        Active users:
+                    </h2>
+                    <p id="users">
 
-<span style="font-size:30px;cursor:pointer; position: fixed; left: 10px;color:white;" onclick="openNav()">&#9776;</span>
-
-<div class="card_section" id="user_section">
-    <h1>User section</h1>
-    <div class="card_wrapper">
-        <div class="card">
-        <div class="card">
-            <button onclick="window.location.href='{{ url_for('usersection', dataset_id=2, customer_id=14, abtest_id=3) }}';">User page</button>
-        </div>
-        <div class="card">
-
+                    </p>
+                </div>
+            </div>
+            <div class="metric_container__graph"></div>
+            <div class="metric_container__graph"></div>
+            <div class="metric_container__graph"></div>
         </div>
     </div>
-
 </div>
-
-<div style="position:absolute; width: 100%">
-    <hr style="position: relative; height: 2px; background-color: white; border: 0; margin-left: 10%; margin-right: 10%">
-</div>
-
-<div class="card_section" id="item_section">
-
-    <h1>Item section</h1>
-    <div class="card_wrapper">
-        <div class="card">
-
-        </div>
-        <div class="card">
-
-        </div>
-    </div>
-
-</div>
-
-<div style="position:absolute; width: 100%">
-    <hr style="position: relative; height: 2px; background-color: white; border: 0; margin-left: 10%; margin-right: 10%">
-</div>
-
-<div class="card_section" id="abtest_section">
-
-<h1>A/B-test section</h1>
-<div class="card_wrapper">
-    <div class="card">
-
-    </div>
-    <div class="card">
-
-    </div>
-</div>
-    <div>
-        <input type="file" id="input">
-    </div>
-</div>
-
-<div id="chart_div" style="width:800px; height:600px"></div>
-
-{#TODO: Dit moet nog op de juiste plaats komen te staan#}
-    <div style="width:1000px; height:800px">
-        <canvas id="myChart"></canvas>
-    </div>
-</div>
-
-</div>
+</body>
 
 <script>
 
-    drawChart();
 
-    console.log("script")
-    {#window.onload = runscript();#}
-function openNav() {
-    document.getElementById("mySidenav").style.width = "300px";
-}
-function closeNav() {
-  document.getElementById("mySidenav").style.width = "0";
-}
 
-function drawChart(){
-    console.log(items)
-    var purchs = JSON.parse(items);
-    var usersA = JSON.parse(users);
-    //Sorteren van de aankopen en users op datum
-    console.log(purchs)
-    purchs = purchs.sort((a,b) => new Date(b.date) - new Date(a.date))
-    usersA = usersA.sort((a,b) => new Date(b.date) - new Date(a.date))
-    //Nog omdraaien want gebeurd van groot naar klein
-    purchs = purchs.reverse();
-    usersA = usersA.reverse();
-    smallesDatePurch = new Date(purchs[0].date);
-    smallesDateUsers = new Date(usersA[0].date);
-    biggestDatePurch = new Date(purchs[purchs.length-1].date);
-    biggestDateUsers = new Date(usersA[usersA.length-1].date);
-    begin = new Date(Math.min.apply(null, [ smallesDatePurch, smallesDateUsers]))
-    end = new Date(Math.max.apply(null, [ biggestDatePurch, biggestDateUsers]))
-    var dates = []
-    var purchases = []
-    var datesPurch = []
-    var totalPurchases = 0
-    var users_ = []
-    var datesUsers = []
-    var totalUsers = 0
-    var allDates = []
-    //We vullen alle beschikbare date in
-    for (i=0; i < purchs.length; i++){
-        datesPurch.push(purchs[i].date)
-        purchases.push(purchs[i].purchases)
-        totalPurchases += purchs[i].purchases
+    document.getElementById("abtest_id").innerHTML = "";
+    document.getElementById("dataset_name").innerHTML = "";
+    document.getElementById("startpoint").innerHTML = "";
+    document.getElementById("stepsize").innerHTML = "";
+    document.getElementById("topk").innerHTML = "";
+    document.getElementById("endpoint").innerHTML = "";
+    document.getElementById("purchases").innerHTML = "";
+    document.getElementById("users").innerHTML = "";
+    fetchStatus();
+    var interval = null;
+    function fetchStatus() {
+        fetch(`/visualizations/update`)
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (text){
+                if (text !== ''){
+                    let items = JSON.parse(text)
+                    document.getElementById("purchases").innerHTML = items["purchases"].toString()
+                    document.getElementById("users").innerHTML = items["users"].toString()
+                    clearInterval(interval)
+                }
+
+            })
     }
-    for (i=0; i < usersA.length; i++){
-        datesUsers.push(usersA[i].date)
-        users_.push(usersA[i].active_users)
-        totalUsers += usersA[i].active_users
-    }
-    var count = 0
-    for (i=begin; i<=end; i.setDate(i.getDate() + 1)){
-        var curDate = i.toISOString().split('T')[0]
-        allDates.push(curDate)
 
-        if (!datesUsers.includes(curDate)){
-            users_.splice(count,0,0)
-        }
 
-        if (!datesPurch.includes(curDate)){
-            purchases.splice(count,0,0)
-        }
-        count++;
-    }
-    console.log(totalPurchases)
-    // document.write(jsonstr)
-    var ctx = document.getElementById("myChart");
-    var myChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: allDates,
-        datasets: [
-          {
-            data: purchases,
-              label :'Total purchases: ' + totalPurchases,
-              borderColor: "#3e95cd",
-              fill: false
-          },
-          {
-            data: users_,
-              label :'Total active users: ' + totalUsers,
-              borderColor: "#cd3e3e",
-              fill: false
-          },
-        ]
-      }
-    });
-}
-
+    window.addEventListener('load', function () {
+        let fetchInterval = 5000;
+        interval = setInterval(fetchStatus, fetchInterval)
+    })
 
 </script>
-
-</body>
 
 </html>
 
