@@ -80,6 +80,7 @@ def getCSVHeader(app, csv_filename):
     filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     df.save(filename)
     header = pd.read_csv(filename, header=0, nrows=0).columns.tolist()
+    # header_dict = {'header_attr': header}
     return header
 
 def importArticles(app, dataset_id):
