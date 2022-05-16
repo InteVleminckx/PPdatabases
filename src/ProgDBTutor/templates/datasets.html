@@ -249,7 +249,6 @@ $(function() {
                 console.log(data['customers_attr']);
                 generateAttrHtml(data);
 
-
             },
         });
     });
@@ -262,12 +261,12 @@ function generateAttrHtml(data) {
         var attrElem = document.getElementById("articles_attr_section");
         var _html = "";
         var articles_attr_list = data['articles_attr'];
-
+        var art_select_id = 0;
         for (var attribute of articles_attr_list) {
             _html += "<div class=\"row\">";
             _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute + "\">" + attribute + "</label></div>";
             _html += "<div class=\"col-75\" style=\"width: 40%\">";
-            _html += "<select class=\"\" id=\"\" name=\"\">";
+            _html += "<select class=\"\" id=\"" + art_select_id + "\" name=\"" + art_select_id + "\">";
             console.log(attr_types);
             for (var _type of attr_types) {
                 _html += "<option value=\"" + _type + "\">" + _type + "</option>\n";
@@ -275,6 +274,7 @@ function generateAttrHtml(data) {
             _html += "</select>";
             _html += "</div>";
             _html += "</div>";
+            art_select_id++;
         }
 
         attrElem.innerHTML = _html;
@@ -292,12 +292,13 @@ function generateAttrHtml(data) {
         attrElem = document.getElementById("customers_attr_section");
         _html = "";
         articles_attr_list = data['customers_attr'];
+        var cust_select_id = -1;
 
         for (var attribute2 of articles_attr_list) {
             _html += "<div class=\"row\">";
             _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute2 + "\">" + attribute2 + "</label></div>";
             _html += "<div class=\"col-75\" style=\"width: 40%\">";
-            _html += "<select class=\"\" id=\"\" name=\"\">";
+            _html += "<select class=\"\" id=\"" + cust_select_id + "\" name=\"" + cust_select_id + "\">";
             console.log(attr_types);
             for (var __type of attr_types) {
                 _html += "<option value=\"" + __type + "\">" + __type + "</option>\n";
@@ -305,6 +306,7 @@ function generateAttrHtml(data) {
             _html += "</select>";
             _html += "</div>";
             _html += "</div>";
+            cust_select_id--;
         }
 
         attrElem.innerHTML = _html;
