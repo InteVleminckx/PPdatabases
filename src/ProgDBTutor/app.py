@@ -275,7 +275,7 @@ def datasets():
     dataset_names = getDatasets()
     #tq.enqueue(handelRequests, app, user_data_access, session, request)
 
-    return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=file_attr_types)
+    return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=json.dumps(file_attr_types))
 
 @app.route("/fileupload", methods=['GET', 'POST'])
 def fileupload():
@@ -284,9 +284,11 @@ def fileupload():
         if request.files.get('articles_file').filename != '':
             headerList = getCSVHeader(app, 'articles_file')
             headerDict['articles_attr'] = headerList
+            headerDict['changed'] = 'articles_attr'
         if request.files.get('customers_file').filename != '':
             headerList = getCSVHeader(app, 'customers_file')
-            headerDict['customers_file'] = headerList
+            headerDict['customers_attr'] = headerList
+            headerDict['changed'] = 'customers_attr'
         # print(headerDict)
         return headerDict
 
