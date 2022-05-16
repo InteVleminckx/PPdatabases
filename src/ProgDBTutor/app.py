@@ -227,8 +227,8 @@ def services():
                 jobStart = abTestQueue.enqueue(abtest.startAB, maxABtestID,dataset_id)
                 jobABRes = abTestQueue.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
                 jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
-
-
+                jobs = [jobStart.id, jobABRes.id, jobPopAct.id]
+                session["jobs"] = jobs
                 abtest_id += 1
                 algo_id = 1
                 return redirect(url_for('visualizations'))
@@ -312,8 +312,22 @@ def datasetupload(rowData):
 
 @app.route("/visualizations")
 # @login_required
-def visualizations(jobStart, jobABRes, jobPopAct):
+def visualizations():
     return render_template('visualizations.html', app_data=app_data)
+
+@app.route("/visualizations/update")
+def visualizationsUpdate():
+    jobs = session["jobs"]
+    jobsDone = 0
+    for job in jobs:
+        if str(abTestQueue.fetch_job(job).get_status()) == "finished":
+            jobsDone += 1
+
+    if jobsDone == len(jobs):
+        return {"purchases": 1000, "users": 50}
+
+    return ""
+
 
 #----------------- A/B-test list -----------------#
 
@@ -408,6 +422,7 @@ def logout():
     # logout_user()
     session.pop('loggedin', None)
     session.pop('username', None)
+    session.pop('jobs', None)
     # session.pop('_flashes', None)
     return redirect(url_for('login_user'))
 

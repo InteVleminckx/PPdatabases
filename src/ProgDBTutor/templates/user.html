@@ -1,18 +1,38 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Recommended4you - Usersection</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/user_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 </head>
 <body>
+{#Navbar section#}
+    <nav class="navbar" id="navbar">
+        <div class="navbar_container">
+            <div class="navbar_toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar_menu">
+                <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
+                <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
+            </ul>
+        </div>
+    </nav>
 
     <div class="container__usersection">
 
-<!--        info-->
+        <!--        info-->
         <div class="container__info">
-            <div class="container__header_attributes">
+           <div class="container__header_attributes">
                 <h2>DATASET: {{ datasetname }}</h2>
             </div>
 <!--            username-->
@@ -62,10 +82,10 @@
 
     var value = 0;
     var recommendations = JSON.parse({{ recommendations | tojson | safe}});
-    var maxValue = recommendations.length;
     var history_ = JSON.parse({{ history | tojson | safe }});
     var graph = JSON.parse({{ graphdata | tojson | safe }})
     var ABinterval = '{{ abtestInterval }}';
+    var maxValue = recommendations.length;
 
     window.onload = function () {
         update(0);
@@ -229,6 +249,7 @@
         var dataitems = new google.visualization.arrayToDataTable(data_);
 
         var options = {
+          title: "Number of purchases per recommendation",
           chartArea: {
               width: '85%'
           },
