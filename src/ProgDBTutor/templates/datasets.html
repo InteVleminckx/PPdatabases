@@ -15,7 +15,6 @@
 </head>
 <body>
 
-
 <nav class="navbar" id="navbar">
     <div class="navbar_container">
         <div class="navbar_toggle" id="mobile-menu">
@@ -88,7 +87,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="_container2" id="_container2" style="display: block;">
@@ -107,7 +105,7 @@
     </div>
     </form>
     <div class="_container3" id="_container3" style="display: none;">
-        <form method="POST" action="" enctype="multipart/form-data" name="form2">
+        <form id="upload-files" method="POST" action="" enctype="multipart/form-data" name="form2">
             <div class="_row">
                 <div class="_column">
                     <div class="c3_namecontainer">
@@ -123,32 +121,16 @@
                         <h2> Articles file</h2>
                         <div id="btn1" onclick="getFile1()"> Choose file </div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" id="articles_file" name="articles_file" value="upload1" accept=".csv" required onchange="sub1(this)">
+                            <input type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub1(this);">
                         </div>
-{#                        <form method="POST" action="" id="typeform1">#}
-                        <div class="typeformcontainer" id="typeformcontainer">
-
-                            {% for attr in attributes['articles'] %}
-                                <div class="row">
-                                    <div class="col-25" style="width: 60%; text-align: left;"><label for="{{ attr }}">{{ attr }}</label></div>
-                                    <div class="col-75" style="width: 40%">
-                                        <select class="" id="" name="">
-                                            {% for atype in attr_types %}
-                                                <option value="{{ atype }}">{{ atype }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                            {% endfor %}
-
+                        <div class="typeformcontainer" id="typeformcontainer1">
+                            <section id="articles_attr_section">
+                            </section>
                         </div>
-{#                        </form>#}
                         <div class="choosenamecontainer">
-                            <select class="" id="" name="">
-                                {% for attr in attributes['articles'] %}
-                                    <option value="{{ attr }}">{{ attr }}</option>
-                                {% endfor %}
-                            </select>
+                            <h4> Column that should serve as name:</h4>
+                            <section id="articles_cname_section">
+                            </section>
                         </div>
                     </div>
                 </div>
@@ -158,7 +140,7 @@
                         <h2> Purchases file</h2>
                         <div id="btn2" onclick="getFile2()"> Choose file </div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" id="purchases_file" name="purchases_file" value="upload2" accept=".csv" required onchange="sub2(this)">
+                            <input type="file" id="purchases_file" name="purchases_file" value="" accept=".csv" required onchange="sub2(this)">
                         </div>
                     </div>
                 </div>
@@ -168,52 +150,20 @@
                         <h2> Customers file</h2>
                         <div id="btn3" onclick="getFile3()"> Choose file </div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" id="customers_file" name="customers_file" value="upload3" accept=".csv" required onchange="sub3(this)">
+                            <input type="file" id="customers_file" name="customers_file" value="" accept=".csv" required onchange="sub3(this)">
                         </div>
-                        <div class="typeformcontainer" id="typeformcontainer">
-{#                            <form method="POST" action="" id="typeform2">#}
-                                {% for attr in attributes['customers'] %}
-                                    <div class="row">
-                                        <div class="col-25" style="width: 60%; text-align: left;"><label for="{{ attr }}">{{ attr }}</label></div>
-                                        <div class="col-75" style="width: 40%">
-                                            <select class="" id="" name="">
-                                                {% for atype in attr_types %}
-                                                    <option value="{{ atype }}">{{ atype }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-{#                            </form>#}
+                        <div class="typeformcontainer" id="typeformcontainer2">
+                            <section id="customers_attr_section">
+                            </section>
                         </div>
                         <div class="choosenamecontainer">
-                            <select class="" id="" name="">
-                                {% for attr in attributes['customers'] %}
-                                    <option value="{{ attr }}">{{ attr }}</option>
-                                {% endfor %}
-                            </select>
+                            <h4> Column that should serve as name:</h4>
+                            <section id="customers_cname_section">
+                            </section>
                         </div>
                     </div>
                 </div>
             </div>
-
-{#            <div class="_row">#}
-{#                <div class="_column">#}
-{#                    <div class="c3_typespeccontainer">#}
-{##}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="_column">#}
-{#                    <div class="c3_typespeccontainer">#}
-{##}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="_column">#}
-{#                    <div class="c3_typespeccontainer">#}
-{##}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
 
             <div class="_row">
                 <div class="_column">
@@ -241,17 +191,134 @@
     {#var row_id = 0;#}
 window.onload = sendData();
 
-if(document.getElementById("articles_file").value != "") {
+var fileAttributes = {'articles': [], 'customers': []};
+var article_attr = ["aa", "ab", "ac", "ad", "ae", "af", "ag0bvb", "ah"];
+var customer_attr = ["ca", "cb", "cc", "cd"];
+fileAttributes['articles'] = article_attr;
+fileAttributes['customers'] = customer_attr;
 
+{#function checkFiles() {#}
+{##}
+{#if(document.getElementById("articles_file").value !== "") { // we uploaded a file#}
+{#    console.log("uploaded articles file");#}
+{#    getAttributes('articles_file');#}
+{##}
+{##}
+{#if(document.getElementById("customers_file").value !== "") {#}
+{#    getAttributes('customers_file');#}
+{##}
+{##}
+{##}
+{##}
+{#function getAttributes(filename) {#}
+{##}
+{##}
+{#    fetch(`/datasets/getfileattributes`, {#}
+{#        headers : {#}
+{#            'Content-Type' : 'application/json'#}
+{#        },#}
+{#        method : 'POST',#}
+{#        body : JSON.stringify( {#}
+{#            'filename' : filename#}
+{#        })#}
+{#    }).then(function(response) {#}
+{#        return response.text();#}
+{#    }).then(function(text) {#}
+        {#var dict = JSON.parse(text);#}
+{#        console.log(text);#}
+{#        fileAttributes['articles'] = text;#}
+{##}
+{##}
+{#    });#}
+{##}
+
+$(function() {
+    $('#articles_file, #customers_file').change(function() {
+        var form_data = new FormData($('#upload-files')[0]);
+        console.log(form_data);
+        $.ajax({
+            type: 'POST',
+            url: '/fileupload',
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                console.log("Successfully loaded file arguments!");
+                console.log(data['articles_attr']);
+                console.log(data['customers_attr']);
+                generateAttrHtml(data);
+
+
+            },
+        });
+    });
+});
+
+var attr_types = JSON.parse({{ attr_types | tojson | safe }});
+
+function generateAttrHtml(data) {
+    if (data['changed'] === 'articles_attr') {
+        var attrElem = document.getElementById("articles_attr_section");
+        var _html = "";
+        var articles_attr_list = data['articles_attr'];
+
+        for (var attribute of articles_attr_list) {
+            _html += "<div class=\"row\">";
+            _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute + "\">" + attribute + "</label></div>";
+            _html += "<div class=\"col-75\" style=\"width: 40%\">";
+            _html += "<select class=\"\" id=\"\" name=\"\">";
+            console.log(attr_types);
+            for (var _type of attr_types) {
+                _html += "<option value=\"" + _type + "\">" + _type + "</option>\n";
+            }
+            _html += "</select>";
+            _html += "</div>";
+            _html += "</div>";
+        }
+
+        attrElem.innerHTML = _html;
+
+        var attrNameElem = document.getElementById("articles_cname_section");
+        _html = "";
+        _html += "<select class=\"\" id=\"\" name=\"\">";
+        for (var attribute1 of articles_attr_list) {
+            _html += "<option value=\"" + attribute1 + "\">" + attribute1 + "</option>";
+        }
+        _html += "</select>";
+        attrNameElem.innerHTML = _html;
+    }
+    else {
+        attrElem = document.getElementById("customers_attr_section");
+        _html = "";
+        articles_attr_list = data['customers_attr'];
+
+        for (var attribute2 of articles_attr_list) {
+            _html += "<div class=\"row\">";
+            _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute2 + "\">" + attribute2 + "</label></div>";
+            _html += "<div class=\"col-75\" style=\"width: 40%\">";
+            _html += "<select class=\"\" id=\"\" name=\"\">";
+            console.log(attr_types);
+            for (var __type of attr_types) {
+                _html += "<option value=\"" + __type + "\">" + __type + "</option>\n";
+            }
+            _html += "</select>";
+            _html += "</div>";
+            _html += "</div>";
+        }
+
+        attrElem.innerHTML = _html;
+
+        attrNameElem = document.getElementById("customers_cname_section");
+        _html = "";
+        _html += "<select class=\"\" id=\"\" name=\"\">";
+        for (var attribute3 of articles_attr_list) {
+            _html += "<option value=\"" + attribute3 + "\">" + attribute3 + "</option>";
+        }
+        _html += "</select>";
+        attrNameElem.innerHTML = _html;
+    }
 }
-
-if(document.getElementById("articles_file").value != "") {
-
-}
-
-{#$('#scrolltable tbody tr').click(function() {#}
-{#    $(this).addClass('highlight').siblings().removeClass('highlight');#}
-{#);#}
 
 function getFile1() {
     document.getElementById("articles_file").click();
@@ -360,7 +427,7 @@ function toggleDatasetView() {
     var c1 = document.getElementById("_container1");
     var c2 = document.getElementById("_container2");
     var c3 = document.getElementById("_container3");
-    if (c0.style.display == "none") {
+    if (c0.style.display === "none") {
         c0.style.display = "block";
         c1.style.display = "block";
         c2.style.display = "block";

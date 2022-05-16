@@ -71,11 +71,13 @@ algo_id = 1
 abtest_id = getMaxABTestID()+1
 
 file_attr_types = ["string", "float", "int", "image_url"]
-attributes = dict({'articles': list(), 'customers': list()})
-article_attr = ["aa", "ab", "ac", "ad"]
-customer_attr = ["ca", "cb", "cc", "cd"]
-attributes['articles'] = article_attr
-attributes['customers'] = customer_attr
+# attributes = dict({'articles': list(), 'customers': list()})
+# article_attr = ["aa", "ab", "ac", "ad", "ae", "af", "ag0bvb", "ah"]
+# customer_attr = ["ca", "cb", "cc", "cd"]
+# attributes['articles'] = article_attr
+# attributes['customers'] = customer_attr
+
+jsonData = dict() # dictionary om de general parameters voor de ab-test pagina op te slaan
 
 
 # login_manager = LoginManager()
@@ -118,7 +120,7 @@ def contact():
     return render_template('contact.html', app_data=app_data)
 
 #----------------- A/B-test page -----------------#
-jsonData = dict()
+
 @app.route("/services/addalgorithm", methods=['GET', 'POST'])
 def addalgorithm():
     if request.method == 'POST':
@@ -270,7 +272,22 @@ def datasets():
     handelRequests(app, session, request, datasetQueue)
     dataset_names = getDatasets()
 
-    return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=file_attr_types, attributes=attributes)
+    return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=json.dumps(file_attr_types))
+
+@app.route("/fileupload", methods=['GET', 'POST'])
+def fileupload():
+    if request.method == 'POST':
+        headerDict = {}
+        if request.files.get('articles_file').filename != '':
+            headerList = getCSVHeader(app, 'articles_file')
+            headerDict['articles_attr'] = headerList
+            headerDict['changed'] = 'articles_attr'
+        if request.files.get('customers_file').filename != '':
+            headerList = getCSVHeader(app, 'customers_file')
+            headerDict['customers_attr'] = headerList
+            headerDict['changed'] = 'customers_attr'
+        # print(headerDict)
+        return headerDict
 
 @app.route("/datasetupload")
 def datasetupload(rowData):

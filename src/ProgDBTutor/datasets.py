@@ -76,7 +76,18 @@ def importDataset(tq):
     tq.enqueue(addDataset, datasetId, datasetname)
     return datasetId
 
+
+def getCSVHeader(app, csv_filename):
+    df = request.files[csv_filename]
+    uploaded_file = secure_filename(df.filename)
+    filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+    df.save(filename)
+    header = pd.read_csv(filename, header=0, nrows=0).columns.tolist()
+    # header_dict = {'header_attr': header}
+    return header
+
 def importArticles(app, dataset_id, tq): #\
+
     af = request.files['articles_file']
     uploaded_file = secure_filename(af.filename)
     af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
