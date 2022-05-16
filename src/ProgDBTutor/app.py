@@ -310,9 +310,9 @@ def visualizations():
     #         labels.append(str(current_day)[0:10])
 
     # return render_template('visualizations.html', app_data=app_data)
-    abtest_id = 1
+    abtest_id = getMaxABTestID()
     dataset_id = 1
-    item_id = 108775015
+    item_id = 706016001
     attrAndVal = []
     image_url = ""
 
