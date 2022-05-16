@@ -343,6 +343,9 @@ def addCustomers(file_name, dataset_id, types_list = []):
         cursor, insert_query, tuples_list, template=None, page_size=100
     )
 
+    cursor.execute("DROP INDEX IF EXISTS customer_id_idx;")
+    cursor.execute("CREATE INDEX customer_id_idx ON Customer (dataset_id);")
+
     dbconnect.commit()
 
     print("Customer: ", time.process_time() - start)
