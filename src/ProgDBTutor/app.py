@@ -213,7 +213,7 @@ def services():
                                         algo_list[j][3])
 
                     # Add entry for result table
-                    #addResult(abtest_id, i, dataset_id, algorithm_param, creator)
+                    # addResult(abtest_id, i, dataset_id, algorithm_param, creator)
                     abTestQueue.enqueue(addResult, abtest_id, i, dataset_id, algorithm_param, creator)
 
                     i += 1
@@ -389,11 +389,9 @@ def visualizations():
 
         while startPoint <= endPoint:
             amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
-            subdata = [str(startPoint)[0:10]]
-            for amount in amountRecommendations:
-                subdata.append(amount)
-                data.append(subdata)
-                startPoint += stepsize
+            subdata = [str(startPoint)[0:10]] + amountRecommendations
+            data.append(subdata)
+            startPoint += stepsize
 
         # data = [['Date', 'algorithm1', 'algorithm2', 'algorithm3', 'algorithm4'],
         #         ['2020-01-01', 1236, 2366, 1900, 6340], ['2020-01-02', 0, 0, 1465, 0], ['2020-01-03', 0, 5789, 0, 3640]]
