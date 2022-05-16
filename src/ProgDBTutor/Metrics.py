@@ -16,6 +16,7 @@ class Metrics:
     def __init__(self, startDate, endDate):
         self.start = startDate
         self.end = endDate
+        self.connection = connection
 
     # METRIC: Purchases
     def getNrOfPurchases(self, startDate=None, endDate=None):
@@ -23,7 +24,15 @@ class Metrics:
             startDate = self.start
             endDate = self.end
 
-        query = ("SELECT count(*) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate))
+        cursor = self.connection.get_cursor()
+
+        # "SELECT count(*) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate)
+        cursor.execute("SELECT count(*) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate))
+
+        if cursor is None:
+            return cursor
+        return cursor.fetchone()[0]
+
 
     # METRIC: Active Users
     def getNrOfActiveUsers(self, startDate=None, endDate=None):
@@ -31,13 +40,22 @@ class Metrics:
             startDate = self.start
             endDate = self.end
 
-        query = (
-            "SELECT count(DISTINCT customer_id) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate))
+        cursor = self.connection.get_cursor()
 
-    def getClickThroughRate(self, startDate=None, endDate=None):
+        # "SELECT count(DISTINCT customer_id) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate)
+        cursor.execute("SELECT count(DISTINCT customer_id) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;",
+                       (startDate, endDate))
+
+        if cursor is None:
+            return cursor
+        return cursor.fetchone()[0]
+
+    def getClickThroughRate(self, startDate, endDate, abtestID, resultID, datasetID):
         if startDate is None and endDate is None:
             startDate = self.start
             endDate = self.end
+
+        cursor = self.connection.get_cursor()
 
         """
         voor elke ACTIEVE consumer: kijk of die in die tijdsperiode minstens 1 aankoop hebben gemaakt die ook 
@@ -46,23 +64,26 @@ class Metrics:
         """
         # NUMBER OF ACTIVE USERS WHO BOUGHT AT LEAST 1 RECOMMENDED ITEM
         # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id
-        query1 = (
+        cursor.execute(
             "CREATE VIEW Active_Users AS SELECT DISTINCT I1.customer_id FROM Interaction I1 WHERE t_dat BETWEEN %s AND %s ; \
-             CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 ; \
+             CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 WHERE R1.abtest_id = %s \
+            and R1.result_id = %s and R1.dataset_id = %s and R1.start_point = %s and R1.end_point = %s; \
                 SELECT count(DISTINCT I.customer_id) FROM Interaction I \
             WHERE I.customer_id IN (SELECT * FROM Active_Users) AND I.item_id IN (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
              DROP VIEW Active_Users ; \
              DROP VIEW Recommendations ; ",
-            (startDate, endDate, startDate, endDate))
+            (startDate, endDate, abtestID, resultID, datasetID, startDate, endDate, startDate, endDate))
+
+        if cursor is None:
+            return 0
+        query1 = cursor.fetchone()[0]
 
         # NUMBER OF ALL ACTIVE USERS
-        query2 = (
-            "SELECT count(DISTINCT I.customer_id) FROM Interaction I WHERE t_dat BETWEEN %s AND %s ;",
-            (startDate, endDate))
+        query2 = self.getNrOfActiveUsers(startDate, endDate)
 
         # Click Through Rate = query1 / query2
-        CTR = None
-        pass
+        CTR = query1 / query2
+        return CTR
 
     def getAttributionRate(self, days, endDate):
         # hardcoded 7 or 30 days
@@ -116,3 +137,17 @@ class Metrics:
         ARPU = None
         pass
 
+
+start = "2020-01-01 20:00:00"
+end = "2020-02-01 20:00:00"
+
+test = Metrics(start, end)
+
+nrOfPurchases = test.getNrOfPurchases()
+print(nrOfPurchases)
+
+nrOfActiveUsers = test.getNrOfActiveUsers()
+print(nrOfActiveUsers)
+
+# CTR = test.getClickThroughRate(start, end, 1, 1, 1)
+# print(CTR)

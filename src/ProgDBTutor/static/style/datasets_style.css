@@ -416,7 +416,7 @@ input[type=text], input[type=datetime-local], .container select, textarea{
 }
 
 .c3_filecontainer {
-    height: 500px;
+    height: 640px;
     width: 310px;
     background-color: #b8b5b5;
     margin: 10px;
@@ -526,7 +526,29 @@ input[type=text], input[type=datetime-local], .container select, textarea{
     display: block;
     margin-top: 90px;
     overflow-y: auto;
+}
 
+.choosenamecontainer {
+    width: 75%;
+    height: 80px;
+    background-color: white;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-top: 20px;
+    overflow-y: hidden;
+}
+
+.choosenamecontainer select {
+    margin-top: 15px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
 }
 
 .typeformcontainer select {

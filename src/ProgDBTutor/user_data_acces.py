@@ -251,6 +251,18 @@ def getDatasets():
 
     return dataset_names
 
+def getDatasetname(dataset_id):
+
+    cursor = dbconnect.get_cursor()
+    cursor.execute("select dataset_name from dataset where dataset_id = %s;", (str(dataset_id)))
+
+    row = cursor.fetchone()
+    if row is None:
+        return None
+
+    return row[0]
+
+
 # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
 def addArticles(file_name, dataset_id, types_list):
     global dbconnect
@@ -398,7 +410,7 @@ def addPurchases(file_name, dataset_id):
     data_purchases.to_csv(file_name, index=False, header=False)
 
     f = open(file_name)
-    cursor.copy_from(f, 'Interaction', sep=',')
+    cursor.copy_from(f, 'interaction', sep=',')
     dbconnect.commit()
     datasetId += 1
 
@@ -545,8 +557,7 @@ def getResult(result_id):
     global dbconnect
     cursor = dbconnect.get_cursor()
     cursor.execute("SELECT abtest_id, result_id, dataset_id, algorithm_param, creator \
-                            FROM Result WHERE result_id = %s",
-                             (str(result_id)))
+                            FROM Result WHERE result_id = %s",(str(result_id),))
 
     row = cursor.fetchone()
     if not row:

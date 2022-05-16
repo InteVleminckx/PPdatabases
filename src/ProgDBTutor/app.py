@@ -34,11 +34,12 @@ from db_connection import DBConnection
 Imports voor pages
 """
 from datasets import *
-
+from userpagina import *
 
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'.csv'}
+
 
 app = Flask('Tutorial')
 app.secret_key = '*^*(*&)(*)(*afafafaSDD47j\3yX R~X@H!jmM]Lwf/,?KT'
@@ -53,14 +54,15 @@ algo_dict = dict()
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
 
-# os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
-# os.system("sudo systemctl restart redis")
+#os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
+#os.system("sudo systemctl restart redis")
 #os.system("brew services restart redis")
-# os.system("rq worker &")
+#os.system("rq worker &")
 
 #For threading
 rds = redis.Redis()
-tq = Queue(connection=rds)
+datasetQueue = Queue('queue1', connection=rds)  #queue for dataset processes
+abTestQueue = Queue('queue2', connection=rds)   #queue for abTest processes
 
 # INITIALIZE SINGLETON SERVICES
 
@@ -69,11 +71,13 @@ algo_id = 1
 abtest_id = getMaxABTestID()+1
 
 file_attr_types = ["string", "float", "int", "image_url"]
-attributes = dict({'articles': list(), 'customers': list()})
-article_attr = ["aa", "ab", "ac", "ad"]
-customer_attr = ["ca", "cb", "cc", "cd"]
-attributes['articles'] = article_attr
-attributes['customers'] = customer_attr
+# attributes = dict({'articles': list(), 'customers': list()})
+# article_attr = ["aa", "ab", "ac", "ad", "ae", "af", "ag0bvb", "ah"]
+# customer_attr = ["ca", "cb", "cc", "cd"]
+# attributes['articles'] = article_attr
+# attributes['customers'] = customer_attr
+
+jsonData = dict() # dictionary om de general parameters voor de ab-test pagina op te slaan
 
 
 # login_manager = LoginManager()
@@ -102,6 +106,9 @@ def main():
     #     print(i.username)
     # print('hallo2')
     l = session.get('loggedin', False)
+    #
+
+
     if l:
         return render_template('home.html', app_data=app_data, isLoggedin=session['loggedin'])
     else:
@@ -113,7 +120,7 @@ def contact():
     return render_template('contact.html', app_data=app_data)
 
 #----------------- A/B-test page -----------------#
-jsonData = dict()
+
 @app.route("/services/addalgorithm", methods=['GET', 'POST'])
 def addalgorithm():
     if request.method == 'POST':
@@ -176,11 +183,6 @@ def services():
 
                 # Params for foreign keys
                 creator = session['username']
-                cursor.execute('SELECT item_number, attribute FROM Articles LIMIT 1')
-                item = cursor.fetchone()
-                algorithm_param = ""
-                item_number = item[0]
-                attribute_dataset = item[1]
 
                 # General parameters for ABtest
                 start = request.form.get('startingpoint')
@@ -188,6 +190,8 @@ def services():
                 stepsize = request.form.get('stepsize')
                 topk = request.form.get('topk')
                 dataset = request.form.get('datasetSelection')
+                if not dataset:
+                    return redirect(url_for('visualizations'))
                 dataset_id = ""
                 for char in dataset:
                     if char.isdigit():
@@ -197,7 +201,7 @@ def services():
                 while i < algo_id:
                     # Add entry for ABtest table
                     addAB_Test(abtest_id, i, start, end, stepsize, topk)
-                    # tq.enqueue(addAB_Test, abtest_id, i, start, end, stepsize, topk)
+                    # abTestQueue.enqueue(addAB_Test, abtest_id, i, start, end, stepsize, topk)
 
                     # Add entries for Algorithm table
                     for j in range(len(algo_list)):
@@ -205,15 +209,12 @@ def services():
                             algorithm_param = algo_list[j][2]
                             addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
                             algo_list[j][3])
-                            #tq.enqueue(user_data_access.addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
-                             #                                         algo_list[j][3])
-                            # tq.enqueue(addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
-                            #            algo_list[j][3])
+                            abTestQueue.enqueue(addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
+                                        algo_list[j][3])
 
                     # Add entry for result table
-                    addResult(abtest_id, i, dataset_id, algorithm_param, creator)
-                    # tq.enqueue(addResult, abtest_id, i, dataset_id, item_id, attribute_dataset, algorithm_param,
-                    #            creator)
+                    #addResult(abtest_id, i, dataset_id, algorithm_param, creator)
+                    abTestQueue.enqueue(addResult, abtest_id, i, dataset_id, algorithm_param, creator)
 
                     i += 1
 
@@ -221,17 +222,16 @@ def services():
                 algo_list = []
                 algo_dict = {}
                 connection.commit()
-                #tq.enqueue(user_data_access.dbconnect.commit)
 
                 # Call function to start a/b tests
                 maxABtestID = getMaxABTestID()
-                abtest.startAB(maxABtestID, dataset_id)
-                abtest.getABtestResults(maxABtestID, dataset_id)
-                abtest.getAB_Pop_Active(maxABtestID, dataset_id)
+                #abtest.startAB(maxABtestID, dataset_id)
+                #abtest.getABtestResults(maxABtestID, dataset_id)
+                #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
 
-                # tq.enqueue(abtest.startAB, maxABtestID,dataset_id)
-                # tq.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
-                # tq.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
+                abTestQueue.enqueue(abtest.startAB, maxABtestID,dataset_id)
+                abTestQueue.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
+                abTestQueue.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
 
                 abtest_id += 1
                 algo_id = 1
@@ -269,11 +269,25 @@ def getData(ds_id):
 @app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
 def datasets():
-    handelRequests(app, session, request)
+    handelRequests(app, session, request, datasetQueue)
     dataset_names = getDatasets()
-    #tq.enqueue(handelRequests, app, user_data_access, session, request)
 
-    return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=file_attr_types, attributes=attributes)
+    return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=json.dumps(file_attr_types))
+
+@app.route("/fileupload", methods=['GET', 'POST'])
+def fileupload():
+    if request.method == 'POST':
+        headerDict = {}
+        if request.files.get('articles_file').filename != '':
+            headerList = getCSVHeader(app, 'articles_file')
+            headerDict['articles_attr'] = headerList
+            headerDict['changed'] = 'articles_attr'
+        if request.files.get('customers_file').filename != '':
+            headerList = getCSVHeader(app, 'customers_file')
+            headerDict['customers_attr'] = headerList
+            headerDict['changed'] = 'customers_attr'
+        # print(headerDict)
+        return headerDict
 
 @app.route("/datasetupload")
 def datasetupload(rowData):
@@ -425,6 +439,19 @@ def testlist():
 
     return render_template('testlist.html', app_data=app_data, testList = testList)
 
+
+#----------------- User section page -----------------#
+@app.route("/usersection")
+def usersection():
+    dataset_id = request.args.get("dataset_id")
+    customer_id = request.args.get("customer_id")
+    abtest_id = request.args.get("abtest_id")
+    value = 0
+    recommendations, history, interval, graph = getUserInformation(abtest_id, dataset_id, customer_id)
+    datasetname = getDatasetname(dataset_id)
+
+    return render_template('user.html', username=customer_id, datasetname=datasetname, history=history, url="", recommendations=recommendations, graphdata=graph, abtestInterval=interval)
+
 #----------------- User_Login -----------------#
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -452,7 +479,7 @@ def add_user():
         flash('Account succesfully registered!', category='success')
         session['loggedin'] = True
         session['username'] = user_username
-        return redirect(url_for('datasets'))
+        return redirect(url_for('services'))
 
     return render_template('login.html', app_data=app_data)
 
@@ -478,7 +505,7 @@ def login_user():
                 # login_user(user, remember=True)
                 session['loggedin'] = True
                 session['username'] = user
-                return redirect(url_for('datasets'))
+                return redirect(url_for('services'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -497,6 +524,5 @@ def logout():
 
 # RUN DEV SERVER
 if __name__ == "__main__":
-    # os.system("sudo -S systemctl start redis")
-    # os.system("rq worker &")
+    #os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
     app.run(HOST, debug=True)
