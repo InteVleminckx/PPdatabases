@@ -224,9 +224,10 @@ def services():
                 #abtest.getABtestResults(maxABtestID, dataset_id)
                 #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
 
-                abTestQueue.enqueue(abtest.startAB, maxABtestID,dataset_id)
-                abTestQueue.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
-                abTestQueue.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
+                jobStart = abTestQueue.enqueue(abtest.startAB, maxABtestID,dataset_id)
+                jobABRes = abTestQueue.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
+                jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
+
 
                 abtest_id += 1
                 algo_id = 1
@@ -311,7 +312,7 @@ def datasetupload(rowData):
 
 @app.route("/visualizations")
 # @login_required
-def visualizations():
+def visualizations(jobStart, jobABRes, jobPopAct):
     return render_template('visualizations.html', app_data=app_data)
 
 #----------------- A/B-test list -----------------#
