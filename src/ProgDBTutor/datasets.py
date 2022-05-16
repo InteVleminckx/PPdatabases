@@ -6,7 +6,6 @@ from werkzeug.utils import secure_filename
 import pandas as pd
 import os
 from user_data_acces import *
-from user_data_acces import addDataset as udaAddDataset
 
 """
 Deze python file bevat alle functionaliteit die nodig is voor het behandelen van events/berekingen voor
@@ -14,7 +13,7 @@ de datasets page
 """
 
 
-def handelRequests(app, session, request):
+def handelRequests(app, session, request, taskQueue):
     # Remove and select dataset form
     if request.method == 'GET':
 
@@ -23,7 +22,8 @@ def handelRequests(app, session, request):
 
         # Delete hier de dataset
         if dlte is not None:
-            removeDataset(session, rqst)
+            #removeDataset(session, rqst)
+            taskQueue.enqueue(removeDataset, session['username'], rqst, job_timeout=600)
 
         # vernander alle waarder en grafiek op de pagina
         else:
@@ -32,23 +32,24 @@ def handelRequests(app, session, request):
 
     # Add dataset form
     elif request.method == 'POST':
-        addDataset(app, session)
+        #taskQueue.enqueue(addDatasetHere, app, session)
+        addDatasetHere(app, session, taskQueue)
     else:
         pass
 
 
-def addDataset(app, session):
+def addDatasetHere(app, session, tq):
     if session['username'] == 'admin':  # checken of de user de admin is
-        dataset_id = importDataset()
-        importArticles(app, dataset_id)
-        importCustomers(app, dataset_id)
-        importPurchases(app, dataset_id)
+        dataset_id = importDataset(tq)
+        importArticles(app, dataset_id, tq)
+        importCustomers(app, dataset_id, tq)
+        importPurchases(app, dataset_id, tq)
     else:
         flash("You need admin privileges to upload a dataset", category='error')
 
 
-def removeDataset(session, dataset_id):
-    if session['username'] == 'admin':  # checken of de user de admin is
+def removeDataset(user, dataset_id):
+    if user == 'admin':  # checken of de user de admin is
         cursor = dbconnect.get_cursor()
         cursor.execute('DELETE FROM Dataset WHERE dataset_id = %s', (str(dataset_id)))
         dbconnect.commit()
@@ -68,11 +69,13 @@ def getDatasetInformation(dataset_id):
     dictNumbers = json.dumps(numbers)
     return dictNumbers
 
-def importDataset():
+def importDataset(tq):
     datasetname = request.form['ds_name']
     datasetId = int(getMaxDatasetID()) + 1
-    udaAddDataset(datasetId, datasetname)
+    #addDataset(datasetId, datasetname)
+    tq.enqueue(addDataset, datasetId, datasetname)
     return datasetId
+
 
 def getCSVHeader(app, csv_filename):
     df = request.files[csv_filename]
@@ -83,35 +86,58 @@ def getCSVHeader(app, csv_filename):
     # header_dict = {'header_attr': header}
     return header
 
-def importArticles(app, dataset_id):
+def importArticles(app, dataset_id, tq): #\
+
     af = request.files['articles_file']
     uploaded_file = secure_filename(af.filename)
     af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     af.save(af_filename)
+    data_articles = pd.read_csv(af_filename)
     # Add articles to database
-    addArticles(af_filename, dataset_id, [])
+    #addArticles(data_articles, dataset_id)
+    tq.enqueue(addArticles, data_articles, dataset_id, job_timeout=600)
 
-def importCustomers(app, dataset_id):
+
+def importCustomers(app, dataset_id, tq):
     cf = request.files['customers_file']
     uploaded_file = secure_filename(cf.filename)
     cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     cf.save(cf_filename)
-
+    data_customers = pd.read_csv(cf_filename)
+    columns_customers = list(data_customers.columns.values)
     # Add customers to database
-    addCustomers(cf_filename, dataset_id, [])
+    #addCustomers(data_customers, columns_customers, dataset_id)
+    tq.enqueue(addCustomers, data_customers, columns_customers, dataset_id, job_timeout=600)
 
-def importPurchases(app, dataset_id):
+
+def importPurchases(app, dataset_id, tq):
     pf = request.files['purchases_file']
     uploaded_file = secure_filename(pf.filename)
     pf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     pf.save(pf_filename)
+    data_purchases = pd.read_csv(pf_filename)
     # Add purchases to database
-    addPurchases(pf_filename, dataset_id)
+    #addPurchases(data_purchases, dataset_id)
+    tq.enqueue(addPurchases, data_purchases, dataset_id, job_timeout=1500)
+
+
+def getCSVHeader(app, csv_filename):
+    df = request.files[csv_filename]
+    uploaded_file = secure_filename(df.filename)
+    filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+    df.save(filename)
+    header = pd.read_csv(filename, header=0, nrows=0).columns.tolist()
+    return header
+
 
 def getNumberOfUsers(cursor, dataset_id):
 
     cursor.execute('SELECT attribute FROM customer where dataset_id = %s limit 1', str(dataset_id))
-    attr = cursor.fetchone()[0]
+    attr = cursor.fetchone()
+    if not attr:
+        return 0
+    else:
+        attr = attr[0]
 
     cursor.execute('SELECT count(*) FROM customer WHERE dataset_id = %s AND attribute = %s',
                    (str(dataset_id), str(attr)))
@@ -123,7 +149,11 @@ def getNumberOfUsers(cursor, dataset_id):
 def getNumberOfArticles(cursor, dataset_id):
 
     cursor.execute('SELECT attribute FROM Articles WHERE dataset_id = %s LIMIT 1', (str(dataset_id)))
-    attribute = cursor.fetchone()[0]
+    attribute = cursor.fetchone()
+    if not attribute:
+        return 0
+    else:
+        attribute = attribute[0]
 
     cursor.execute('SELECT count(*) FROM Articles WHERE dataset_id = %s AND attribute = %s', (str(dataset_id), str(attribute)))
     row = cursor.fetchone()
@@ -168,6 +198,8 @@ def getPriceDistribution(cursor, dataset_id):
     cursor.execute('SELECT min(price) as min, max(price) as max, (max(price) - min(price))/20 as interval FROM Interaction WHERE dataset_id = %s', (str(dataset_id)))
     row = cursor.fetchone()
     min, max, interval = row
+    if not min and not max and not interval:
+        return list()
     cursor.execute('SELECT count(*), price FROM Interaction WHERE dataset_id = %s GROUP BY price', (str(dataset_id)))
     rows = cursor.fetchall()
     distr = list()
