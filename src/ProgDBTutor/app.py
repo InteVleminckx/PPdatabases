@@ -54,11 +54,6 @@ algo_dict = dict()
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
 
-#os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
-#os.system("sudo systemctl restart redis")
-#os.system("brew services restart redis")
-#os.system("rq worker &")
-
 #For threading
 rds = redis.Redis()
 datasetQueue = Queue('queue1', connection=rds)  #queue for dataset processes
@@ -306,23 +301,6 @@ def datasetupload(rowData):
 @app.route("/visualizations")
 # @login_required
 def visualizations():
-    # labels, legend = [], []
-    # current_abtest_id = getMaxABTestID()
-    # cursor = connection.get_cursor()
-    # abtest = getAB_Test(current_abtest_id)
-    # if abtest:
-    #     for r_id in abtest.result_id:
-    #         string = 'algorithm' + str(r_id)
-    #         legend.append(string)
-    #
-    #     start_point = abtest.start_point
-    #     end_point = abtest.end_point
-    #     days_between = end_point - start_point
-    #     for day in range(days_between.days):
-    #         current_day = start_point.strftime("%Y-%m-%d")
-    #         current_day = str(datetime.strptime(current_day, '%Y-%m-%d') + timedelta(days=day))
-    #         labels.append(str(current_day)[0:10])
-
     return render_template('visualizations.html', app_data=app_data)
 
 #----------------- A/B-test list -----------------#

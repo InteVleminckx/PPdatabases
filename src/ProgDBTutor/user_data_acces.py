@@ -264,7 +264,7 @@ def getDatasetname(dataset_id):
 
 
 # def addArticles(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-def addArticles(file_name, dataset_id, types_list):
+def addArticles(file_name, dataset_id, types_list = []):
     global dbconnect
     #Duurt 1.30 min op deze manier
     print('start reading articles')
@@ -314,7 +314,7 @@ def getItemAttribute(itemId, attr):
 
 
 # def addCustomer(self,dataset_id, customer_id, FN, Active, club_member_status, fashion_news_frequency, age, postal_code):
-def addCustomers(file_name, dataset_id, types_list):
+def addCustomers(file_name, dataset_id, types_list = []):
     global dbconnect
     cursor = dbconnect.get_cursor()
     start = time.process_time()
@@ -683,7 +683,6 @@ def getMaxABTestID():
 
 def getMaxAlgorithmId():
     global dbconnect
-    pass
     cursor = dbconnect.get_cursor()
     cursor.execute("SELECT MAX(result_id) \
                             FROM Algorithm")
@@ -693,6 +692,13 @@ def getMaxAlgorithmId():
         return 0
 
     return row[0]
+
+def createDatasetIdIndex():
+    global dbconnect
+    cursor = dbconnect.get_cursor()
+    cursor.execute("DROP INDEX IF EXISTS db_id_idx;")
+    cursor.execute("CREATE INDEX db_id_idx ON Dataset (dataset_id);")
+    dbconnect.commit()
 
 
 # """
