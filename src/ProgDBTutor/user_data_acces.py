@@ -280,7 +280,7 @@ def addArticles(file_name, dataset_id, types_list):
         subset = data_articles[[column]].copy()
         subset['column'] = column
         #TODO: zorg ervoor da hier het juiste type geselecteerd wordt en we zo dan het juiste type kunnen toewijden
-        subset['type'] = 'test'
+        subset['type'] = types_list[index]
         subset['dataset_id'] = dataset_id
         tuples = list(subset.to_records())
         tuples_list.extend(tuples)
@@ -696,7 +696,6 @@ def getMaxABTestID():
 
 def getMaxAlgorithmId():
     global dbconnect
-    pass
     cursor = dbconnect.get_cursor()
     cursor.execute("SELECT MAX(result_id) \
                             FROM Algorithm")
@@ -706,6 +705,13 @@ def getMaxAlgorithmId():
         return 0
 
     return row[0]
+
+def createDatasetIdIndex():
+    global dbconnect
+    cursor = dbconnect.get_cursor()
+    cursor.execute("DROP INDEX IF EXISTS db_id_idx;")
+    cursor.execute("CREATE INDEX db_id_idx ON Dataset (dataset_id);")
+    dbconnect.commit()
 
 def getItemRecommendations(retrainDay, item_id, abtest_id, dataset_id):
     global dbconnect
@@ -841,7 +847,6 @@ def getItemRecommendations(retrainDay, item_id, abtest_id, dataset_id):
 #     for column in data_articles.columns:
 #         subset = data_articles[[column]].copy()
 #         subset['column'] = column
-#         #TODO: zorg ervoor da hier het juiste type geselecteerd wordt en we zo dan het juiste type kunnen toewijden
 #         subset['type'] = data_articles.dtypes[column].name
 #         subset['dataset_id'] = dataset_id
 #         tuples = list(subset.to_records())

@@ -13,7 +13,7 @@ de datasets page
 """
 
 
-def handelRequests(app, session, request, taskQueue):
+def handelRequests(app, session, request, taskQueue, type_list):
     # Remove and select dataset form
     if request.method == 'GET':
 
@@ -33,17 +33,18 @@ def handelRequests(app, session, request, taskQueue):
     # Add dataset form
     elif request.method == 'POST':
         #taskQueue.enqueue(addDatasetHere, app, session)
-        addDatasetHere(app, session, taskQueue)
+        addDatasetHere(app, session, taskQueue, type_list)
     else:
         pass
 
 
-def addDatasetHere(app, session, tq):
+def addDatasetHere(app, session, tq, type_list):
     if session['username'] == 'admin':  # checken of de user de admin is
         dataset_id = importDataset(tq)
-        importArticles(app, dataset_id, tq)
-        importCustomers(app, dataset_id, tq)
+        importArticles(app, dataset_id, tq, type_list)
+        importCustomers(app, dataset_id, tq, type_list)
         importPurchases(app, dataset_id, tq)
+        tq.enqueue(createDatasetIdIndex)
     else:
         flash("You need admin privileges to upload a dataset", category='error')
 
@@ -86,28 +87,25 @@ def getCSVHeader(app, csv_filename):
     # header_dict = {'header_attr': header}
     return header
 
-def importArticles(app, dataset_id, tq): #\
+def importArticles(app, dataset_id, tq, type_list): #\
 
     af = request.files['articles_file']
     uploaded_file = secure_filename(af.filename)
     af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     af.save(af_filename)
-    data_articles = pd.read_csv(af_filename)
     # Add articles to database
     #addArticles(data_articles, dataset_id)
-    tq.enqueue(addArticles, data_articles, dataset_id, job_timeout=600)
+    tq.enqueue(addArticles, af_filename, dataset_id, type_list['articles_types'], job_timeout=1200)
 
 
-def importCustomers(app, dataset_id, tq):
+def importCustomers(app, dataset_id, tq, type_list):
     cf = request.files['customers_file']
     uploaded_file = secure_filename(cf.filename)
     cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     cf.save(cf_filename)
-    data_customers = pd.read_csv(cf_filename)
-    columns_customers = list(data_customers.columns.values)
     # Add customers to database
     #addCustomers(data_customers, columns_customers, dataset_id)
-    tq.enqueue(addCustomers, data_customers, columns_customers, dataset_id, job_timeout=600)
+    tq.enqueue(addCustomers, cf_filename, dataset_id, type_list['customers_types'], job_timeout=1200)
 
 
 def importPurchases(app, dataset_id, tq):
@@ -115,10 +113,9 @@ def importPurchases(app, dataset_id, tq):
     uploaded_file = secure_filename(pf.filename)
     pf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     pf.save(pf_filename)
-    data_purchases = pd.read_csv(pf_filename)
     # Add purchases to database
     #addPurchases(data_purchases, dataset_id)
-    tq.enqueue(addPurchases, data_purchases, dataset_id, job_timeout=1500)
+    tq.enqueue(addPurchases, pf_filename, dataset_id, job_timeout=3600)
 
 
 def getCSVHeader(app, csv_filename):

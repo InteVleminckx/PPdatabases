@@ -81,16 +81,22 @@ class Metrics:
         # NUMBER OF ALL ACTIVE USERS
         query2 = self.getNrOfActiveUsers(startDate, endDate)
 
+        # can't divide by None or by 0
+        if query2 is None or query2 == 0:
+            return 0
+
         # Click Through Rate = query1 / query2
         CTR = query1 / query2
         return CTR
 
-    def getAttributionRate(self, days, endDate):
+    def getAttributionRate(self, days, endDate, abtestID, resultID, datasetID):
         # hardcoded 7 or 30 days
         if days not in [7, 30]:
             days = 7
 
         startDate = str(datetime.strptime(endDate, '%Y-%m-%d') - timedelta(days=days))
+
+        cursor = self.connection.get_cursor()
 
         """
         voor elke ACTIEVE consumer: kijk of die in die tijdsperiode aankopen hebben gemaakt die ook 
@@ -99,28 +105,42 @@ class Metrics:
         """
         # NUMBER OF PURCHASES WHERE ITEM WAS RECOMMENDED
         # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id
-        query1 = (
-            "CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 ; \
-             SELECT count(I.item_id) FROM Interaction I WHERE I.item_id in (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
-             DROP VIEW Recommendations ; "
-            ,
-            (startDate, endDate))
+        cursor.execute(
+            "CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 WHERE R1.abtest_id = %s \
+            and R1.result_id = %s and R1.dataset_id = %s and R1.start_point = %s and R1.end_point = %s; \
+            SELECT count(I.item_id) FROM Interaction I WHERE I.item_id in (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
+            DROP VIEW Recommendations ; ",
+            (abtestID, resultID, datasetID, startDate, endDate, startDate, endDate))
+
+        if cursor is None:
+            return 0
+        query1 = cursor.fetchone()[0]
 
         # NUMBER OF ALL PURCHASES
-        query2 = (
+        cursor.execute(
             "SELECT count(I.item_id) FROM Interaction I WHERE I.t_dat BETWEEN %s AND %s ;",
             (startDate, endDate))
 
-        # Attribution Rate = query1 / query2
-        AR = None
-        pass
+        if cursor is None:
+            return 0
+        query2 = cursor.fetchone()[0]
 
-    def getAverageRevenuePerUser(self, days, endDate):
+        # can't divide by None or by 0
+        if query2 is None or query2 == 0:
+            return 0
+
+        # Attribution Rate = query1 / query2
+        AR = query1 / query2
+        return AR
+
+    def getAverageRevenuePerUser(self, days, endDate, abtestID, resultID, datasetID):
         # hardcoded 7 or 30 days
         if days not in [7, 30]:
             days = 7
 
         startDate = str(datetime.strptime(endDate, '%Y-%m-%d') - timedelta(days=days))
+
+        cursor = self.connection.get_cursor()
 
         """
         Voor elke aankoop die is gemaakt en die ook in de top k recommended zat, vraag de prijs op en tel
@@ -128,14 +148,25 @@ class Metrics:
         """
         # SUM OF PRICES OF ALL ITEMS BOUGHS WHERE ITEM WAS ALSO RECOMMENDED
         # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id
-        query1 = ("CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 ; \
+        cursor.execute("CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 WHERE R1.abtest_id = %s \
+            and R1.result_id = %s and R1.dataset_id = %s and R1.start_point = %s and R1.end_point = %s; \
             SELECT sum(I.price) FROM Interaction I WHERE I.item_id in (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
              DROP VIEW Recommendations ; ",
-                  (startDate, endDate))
+                  (abtestID, resultID, datasetID, startDate, endDate, startDate, endDate))
 
-        # Average Revenue Per User
-        ARPU = None
-        pass
+        if cursor is None:
+            return 0
+        query1 = cursor.fetchone()[0]
+
+        query2 = self.getNrOfActiveUsers(startDate, endDate)
+
+        # can't divide by None or by 0
+        if query2 is None or query2 == 0:
+            return 0
+
+        # Average Revenue Per User = query1 / query2
+        ARPU = query1 / query2
+        return ARPU
 
 
 start = "2020-01-01 20:00:00"
@@ -151,3 +182,9 @@ print(nrOfActiveUsers)
 
 # CTR = test.getClickThroughRate(start, end, 1, 1, 1)
 # print(CTR)
+
+# AR = test.getAttributionRate(start, end, 1, 1, 1)
+# print(AR)
+
+# ARPU = test.getAverageRevenuePerUser(start, end, 1, 1, 1)
+# print(ARPU)

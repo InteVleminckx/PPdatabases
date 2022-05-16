@@ -11,6 +11,10 @@ from user_data_acces import *
 import Popularity as popularity
 import recency_algorithm as receny
 
+def deleteABTest(abtest_id):
+    cursor = dbconnect.get_cursor()
+    cursor.execute("DELETE FROM ABTest WHERE abtest_id = %s", (abtest_id))
+    cursor.commit()
 def startAB(abtest_id, dataset_id):
     abtest = getAB_Test(abtest_id)
     result_ids = abtest.result_id
