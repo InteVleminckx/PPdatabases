@@ -195,15 +195,15 @@ def services():
                 i = 1
                 while i < algo_id:
                     # Add entry for ABtest table
-                    addAB_Test(abtest_id, i, start, end, stepsize, topk)
-                    # abTestQueue.enqueue(addAB_Test, abtest_id, i, start, end, stepsize, topk)
+                    # addAB_Test(abtest_id, i, start, end, stepsize, topk)
+                    abTestQueue.enqueue(addAB_Test, abtest_id, i, start, end, stepsize, topk)
 
                     # Add entries for Algorithm table
                     for j in range(len(algo_list)):
                         if algo_list[j][0] == i:
                             algorithm_param = algo_list[j][2]
-                            addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
-                            algo_list[j][3])
+                            # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
+                            # algo_list[j][3])
                             abTestQueue.enqueue(addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
                                         algo_list[j][3])
 
@@ -224,14 +224,14 @@ def services():
                 #abtest.getABtestResults(maxABtestID, dataset_id)
                 #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
 
-                jobStart = abTestQueue.enqueue(abtest.startAB, maxABtestID,dataset_id)
+                jobStart = abTestQueue.enqueue(abtest.startAB, maxABtestID, dataset_id)
                 jobABRes = abTestQueue.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
                 jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
                 jobs = [jobStart.id, jobABRes.id, jobPopAct.id]
                 session["jobs"] = jobs
                 abtest_id += 1
                 algo_id = 1
-                return redirect(url_for('visualizations'))
+                return redirect(url_for('itemsection'))
 
             # Remove the last add algorithm
             elif s == "remove":
@@ -361,6 +361,97 @@ def usersection():
     datasetname = getDatasetname(dataset_id)
 
     return render_template('user.html', username=customer_id, datasetname=datasetname, history=history, url="", recommendations=recommendations, graphdata=graph, abtestInterval=interval)
+
+
+#----------------- User section page -----------------#
+@app.route("/itemsection", methods=['POST', 'GET'])
+def itemsection():
+    abtest_id = getMaxABTestID()
+    dataset_id = 1
+    item_id = 706016001
+    attrAndVal = []
+    image_url = ""
+
+    # Request all the attributes of this item from the database
+    item = getItem(item_id, dataset_id)
+    for key in item.attributes:
+        attrAndVal.append((key, item.attributes[key]))
+
+    # Request the image_url from the database
+    if 'image_url' in item.attributes:
+        image_url = item.attributes['image_url']
+    else:
+        image_url = None
+
+    # See if we pressed the button to show the graph
+    # if request.method == 'POST':
+    graph_type = request.form.get('graph_select', None)
+    begin_date = request.form.get('begin_time', None)
+    end_date = request.form.get('end_time', None)
+    data = []
+
+    # Compute popularity item graph
+    if graph_type == 'Popularity item':
+        startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
+        endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        stepsize = datetime.timedelta(days=1)
+
+        # Add first row to data
+        data = [['Date', 'Purchases']]
+
+        while startPoint <= endPoint:
+            amountPurchases = getItemPurchases(dataset_id, item_id, str(startPoint)[0:10])
+            data.append([str(startPoint)[0:10], amountPurchases])
+            startPoint += stepsize
+
+        data = json.dumps(data)
+        return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
+                               name='item_graph', title='Popularity item')
+
+    # Compute recommendation count graph
+    elif graph_type == 'Recommendation count':
+        startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
+        endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        stepsize = datetime.timedelta(days=1)
+
+        # Add first row that contains all algorithm names
+        firstRow = ['Date']
+        resultIDs = getResultIds(abtest_id, dataset_id)
+        for id in resultIDs:
+            firstRow.append('Algorithm' + str(id))
+        data.append(firstRow)
+
+        while startPoint <= endPoint:
+            amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
+            subdata = [str(startPoint)[0:10]] + amountRecommendations
+            data.append(subdata)
+            startPoint += stepsize
+
+        data = json.dumps(data)
+        return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
+                               name='item_graph', title='Recommendation count')
+
+    # Compute recommendation correctness graph
+    elif graph_type == 'Recommendation correctness':
+        startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
+        endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        stepsize = datetime.timedelta(days=1)
+
+        # Add first row to data
+        data = [['Date', 'Recommendations', 'Purchases']]
+        while startPoint <= endPoint:
+            amountRecommendations = sum(getItemRecommendations(startPoint, item_id, abtest_id, dataset_id))
+            amountPurchases = getItemPurchases(dataset_id, item_id, startPoint)
+            data.append([str(startPoint)[0:10], amountRecommendations, amountPurchases])
+            startPoint += stepsize
+
+        data = json.dumps(data)
+        return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
+                               name='item_graph', title='Recommendation correctness')
+
+    return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=None,
+                           name=None, title=None)
+
 
 #----------------- User_Login -----------------#
 
