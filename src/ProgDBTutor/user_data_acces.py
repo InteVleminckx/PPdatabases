@@ -279,7 +279,6 @@ def addArticles(file_name, dataset_id, types_list):
     for column in data_articles.columns:
         subset = data_articles[[column]].copy()
         subset['column'] = column
-        #TODO: zorg ervoor da hier het juiste type geselecteerd wordt en we zo dan het juiste type kunnen toewijden
         subset['type'] = types_list[index]
         subset['dataset_id'] = dataset_id
         tuples = list(subset.to_records())
