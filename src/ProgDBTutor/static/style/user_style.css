@@ -413,5 +413,12 @@ html, body{
 
 #counterInterval {
 
-    font-size: 1.5rem;
+    font-size: 1rem;
+}
+
+.counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
 }
