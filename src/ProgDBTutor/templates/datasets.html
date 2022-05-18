@@ -98,7 +98,7 @@
 {#    <div class="_container2" id="_container2" style="display: block;">#}
         <div class="_row">
             <div class="_column">
-                <button class="c2_button_" role="button" id="add_btn" name="add_btn" onclick="">
+                <button class="c2_button_" role="button" id="add_btn" name="add_btn" onclick="goToABTestPage();">
                     Go to A/B-test page with this dataset
                 </button>
             </div>
@@ -237,6 +237,13 @@ fileAttributes['customers'] = customer_attr;
 {##}
 {#    });#}
 {##}
+
+function goToABTestPage() {
+    var ds = document.getElementById("datasetSelection");
+    ds = ds.options[ds.selectedIndex].text
+    console.log(ds);
+    window.location.href="{{ url_for('services', selectedDataset='ds') }}".replace("ds", ds);
+}
 
 $(function() {
     $('#articles_file, #customers_file').change(function() {
@@ -432,19 +439,13 @@ function drawGraph(data, name, title_){
 
 function toggleDatasetView() {
     var c0 = document.getElementById("_container0");
-    var c1 = document.getElementById("_container1");
-    var c2 = document.getElementById("_container2");
     var c3 = document.getElementById("_container3");
     if (c0.style.display === "none") {
         c0.style.display = "block";
-        c1.style.display = "block";
-        c2.style.display = "block";
         c3.style.display = "none";
     }
     else {
         c0.style.display = "none";
-        c1.style.display = "none";
-        c2.style.display = "none";
         c3.style.display = "block";
     }
     {#event.preventDefault();#}
