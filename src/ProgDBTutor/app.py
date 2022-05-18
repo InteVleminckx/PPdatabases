@@ -414,7 +414,7 @@ def itemsection():
 
         data = json.dumps(data)
         return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
-                               name='item_graph', title='Popularity item')
+                               name='item_graph2', title='Popularity item')
 
     # Compute recommendation count graph
     elif graph_type == 'Recommendation count':
@@ -437,7 +437,7 @@ def itemsection():
 
         data = json.dumps(data)
         return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
-                               name='item_graph', title='Recommendation count')
+                               name='item_graph2', title='Recommendation count')
 
     # Compute recommendation correctness graph
     elif graph_type == 'Recommendation correctness':
@@ -475,7 +475,7 @@ def itemsection():
             end_counter += 1
 
         return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
-                               name='item_graph', title='Recommendation correctness', columns=columns, numbers=numbers)
+                               name='item_graph2', title='Recommendation correctness', columns=columns, numbers=numbers)
 
     return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=None,
                            name=None, title=None)

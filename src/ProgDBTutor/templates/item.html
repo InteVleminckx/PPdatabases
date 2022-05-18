@@ -7,7 +7,7 @@
 </head>
 <body>
 <form method="POST" action="" name="form1">
-    <div class="container__usersection">
+    <div class="container__itemsection">
         <div class="container__info">
             <main class="container__column" id="col1">
                 <div class="container__info_item">
@@ -63,6 +63,7 @@
                 </div>
                 <div class="container__graph" id="item_graph"></div>
             </main>
+            <div class="container__graph2" id="item_graph2"></div>
         </div>
     </div>
 </form>
@@ -99,7 +100,6 @@
                 legend: {position: 'none'},
                 chart: {
                     title: 'Popularity item',
-                    subtitle: 'indicates the amount of purchases of an item over time'
                 },
                 axes: {
                     x: {
@@ -119,27 +119,26 @@
                     width: '94%'
                 },
                 legend: {position: 'bottom'},
-                curveType: 'function',
                 chart: {
                     title: 'Recommendation count',
-                    subtitle: 'Amount of recommendations for each algorithm over time'
                 },
                 axes: {
                     x: {
                         0: {side: 'top'} // Top x-axis.
                     }
                 },
-                bar: {groupWidth: "100%"}
+                bar: {groupWidth: "100%"},
             };
             // Convert the Classic options to Material options.
             chart.draw(dataitems, options);
         }
         else {
-            dataitems = google.visualization.DataTable();
+            dataitems = new google.visualization.DataTable();
             dataitems.addColumn('string', 'Date');
             {% for item in columns %}
-                dataitems.addColumn('number', {{ item }});
+                dataitems.addColumn('number', '{{ item }}');
             {% endfor %}
+            dataitems.addRows(data)
             chart = new google.charts.Bar(document.getElementById(name));
             options = {
                 isStacked: true,
@@ -150,7 +149,6 @@
                 curveType: 'function',
                 chart: {
                     title: 'Recommendation correctness',
-                    subtitle: 'For each algorithm we look at the '
                 },
                 axes: {
                     x: {
@@ -160,7 +158,7 @@
                 series: {
 
                 },
-                bar: {groupWidth: "90%"}
+                bar: {groupWidth: "90%"},
             };
 
             // Adjust series
