@@ -439,19 +439,13 @@ function drawGraph(data, name, title_){
 
 function toggleDatasetView() {
     var c0 = document.getElementById("_container0");
-    var c1 = document.getElementById("_container1");
-    var c2 = document.getElementById("_container2");
     var c3 = document.getElementById("_container3");
     if (c0.style.display === "none") {
         c0.style.display = "block";
-        c1.style.display = "block";
-        c2.style.display = "block";
         c3.style.display = "none";
     }
     else {
         c0.style.display = "none";
-        c1.style.display = "none";
-        c2.style.display = "none";
         c3.style.display = "block";
     }
     {#event.preventDefault();#}
