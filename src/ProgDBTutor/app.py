@@ -329,14 +329,16 @@ def visualizations():
 
 @app.route("/visualizations/update")
 def visualizationsUpdate():
-    jobs = session["jobs"]
-    jobsDone = 0
-    for job in jobs:
-        if str(abTestQueue.fetch_job(job).get_status()) == "finished":
-            jobsDone += 1
 
-    if jobsDone == len(jobs):
-        return {"purchases": 1000, "users": 50}
+    if "jobs" in session:
+        jobs = session["jobs"]
+        jobsDone = 0
+        for job in jobs:
+            if str(abTestQueue.fetch_job(job).get_status()) == "finished":
+                jobsDone += 1
+
+        if jobsDone == len(jobs):
+            return {"purchases": 1000, "users": 50}
 
     return ""
 
