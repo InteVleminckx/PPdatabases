@@ -185,6 +185,7 @@ def services():
                 stepsize = request.form.get('stepsize')
                 topk = request.form.get('topk')
                 dataset = request.form.get('datasetSelection')
+                ABTestID = getMaxABTestID() + 1
                 if not dataset:
                     return redirect(url_for('visualizations'))
                 dataset_id = ""
@@ -196,7 +197,7 @@ def services():
                 while i < algo_id:
                     # Add entry for ABtest table
                     # addAB_Test(abtest_id, i, start, end, stepsize, topk)
-                    abTestQueue.enqueue(addAB_Test, abtest_id, i, start, end, stepsize, topk)
+                    abTestQueue.enqueue(addAB_Test, ABTestID, i, start, end, stepsize, topk)
 
                     # Add entries for Algorithm table
                     for j in range(len(algo_list)):
@@ -204,12 +205,12 @@ def services():
                             algorithm_param = algo_list[j][2]
                             # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
                             # algo_list[j][3])
-                            abTestQueue.enqueue(addAlgorithm, abtest_id, i, algo_list[j][1], algo_list[j][2],
+                            abTestQueue.enqueue(addAlgorithm, ABTestID, i, algo_list[j][1], algo_list[j][2],
                                         algo_list[j][3])
 
                     # Add entry for result table
                     #addResult(abtest_id, i, dataset_id, algorithm_param, creator)
-                    abTestQueue.enqueue(addResult, abtest_id, i, dataset_id, algorithm_param, creator)
+                    abTestQueue.enqueue(addResult, ABTestID, i, dataset_id, algorithm_param, creator)
 
                     i += 1
 
@@ -219,14 +220,13 @@ def services():
                 connection.commit()
 
                 # Call function to start a/b tests
-                maxABtestID = getMaxABTestID()
                 #abtest.startAB(maxABtestID, dataset_id)
                 #abtest.getABtestResults(maxABtestID, dataset_id)
                 #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
 
-                jobStart = abTestQueue.enqueue(abtest.startAB, maxABtestID, dataset_id)
-                jobABRes = abTestQueue.enqueue(abtest.getABtestResults, maxABtestID, dataset_id)
-                jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, maxABtestID, dataset_id)
+                jobStart = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id)
+                jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
+                jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
                 jobs = [jobStart.id, jobABRes.id, jobPopAct.id]
                 session["jobs"] = jobs
                 abtest_id += 1
