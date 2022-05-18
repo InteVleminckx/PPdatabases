@@ -95,7 +95,7 @@ def importArticles(app, dataset_id, tq, type_list): #\
     af.save(af_filename)
     # Add articles to database
     #addArticles(data_articles, dataset_id)
-    tq.enqueue(addArticles, af_filename, dataset_id, type_list['articles_types'], job_timeout=1200)
+    tq.enqueue(addArticles, af_filename, dataset_id, type_list, job_timeout=1200)
 
 
 def importCustomers(app, dataset_id, tq, type_list):
@@ -105,7 +105,7 @@ def importCustomers(app, dataset_id, tq, type_list):
     cf.save(cf_filename)
     # Add customers to database
     #addCustomers(data_customers, columns_customers, dataset_id)
-    tq.enqueue(addCustomers, cf_filename, dataset_id, type_list['customers_types'], job_timeout=1200)
+    tq.enqueue(addCustomers, cf_filename, dataset_id, type_list, job_timeout=1200)
 
 
 def importPurchases(app, dataset_id, tq):

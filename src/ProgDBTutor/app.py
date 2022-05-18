@@ -281,7 +281,7 @@ def datasets():
         while request.form.get(f"{type_item}"):
             type_list['customers_types'].append(request.form.get(f"{type_item}"))
             type_item -= 1
-        art_col_name = request.form.get("articles_cname_section")
+        art_col_name = request.form.get("articles_name_column")
         if art_col_name:
             type_list['articles_name_column'] = art_col_name
         cust_col_name = request.form.get("customers_name_column")
@@ -408,8 +408,8 @@ def itemsection():
         data = [['Date', 'Purchases']]
 
         while startPoint <= endPoint:
-            amountPurchases = getItemPurchases(dataset_id, item_id, str(startPoint)[0:10])
-            data.append([str(startPoint)[0:10], amountPurchases])
+            amountCorrectRecommendations = getItemPurchases(dataset_id, item_id, str(startPoint)[0:10])
+            data.append([str(startPoint)[0:10], amountCorrectRecommendations])
             startPoint += stepsize
 
         data = json.dumps(data)
@@ -431,7 +431,7 @@ def itemsection():
 
         while startPoint <= endPoint:
             amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
-            subdata = [str(startPoint)[0:10]] + amountRecommendations
+            subdata = [str(startPoint)[0:10]] + [amountRecommendations]
             data.append(subdata)
             startPoint += stepsize
 
@@ -445,17 +445,36 @@ def itemsection():
         endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
         stepsize = datetime.timedelta(days=1)
 
-        # Add first row to data
-        data = [['Date', 'Recommendations', 'Purchases']]
-        while startPoint <= endPoint:
-            amountRecommendations = sum(getItemRecommendations(startPoint, item_id, abtest_id, dataset_id))
-            amountPurchases = getItemPurchases(dataset_id, item_id, startPoint)
-            data.append([str(startPoint)[0:10], amountRecommendations, amountPurchases])
-            startPoint += stepsize
+        # Determine the columns that we need to use in the index.html
+        columns = []
+        resultIDs = getResultIds(abtest_id, dataset_id)
+        for id in resultIDs:
+            columns.append('Algorithm' + str(id) + ' recommendations')
+            columns.append('Algorithm' + str(id) + ' correct recommendations')
 
+        # Determine the data that we need for the graph
+        while startPoint <= endPoint:
+            temp_data = [str(startPoint)[0:10]]
+            amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
+            amountCorrectRecommendations = getRecommendationCorrectness(startPoint, item_id, abtest_id, dataset_id)
+            for index in range(len(amountRecommendations)):
+                temp_data += [amountRecommendations[index]] + [amountCorrectRecommendations[index]]
+            data += [temp_data]
+            startPoint += stepsize
         data = json.dumps(data)
+
+        numbers = []
+        begin_counter = 2
+        end_counter = 1
+        for i in range(len(resultIDs)-1):
+            numbers.append([begin_counter, end_counter])
+            begin_counter += 1
+            numbers.append([begin_counter, end_counter])
+            begin_counter += 1
+            end_counter += 1
+
         return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
-                               name='item_graph', title='Recommendation correctness')
+                               name='item_graph', title='Recommendation correctness', columns=columns, numbers=numbers)
 
     return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=None,
                            name=None, title=None)

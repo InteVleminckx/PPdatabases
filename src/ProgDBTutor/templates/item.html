@@ -87,9 +87,10 @@
         var data = JSON.parse({{ data1 | tojson | safe }});
         var name =  '{{ name }}';
         var title_ = '{{ title }}';
+        var dataitems;
 
-        var dataitems = new google.visualization.arrayToDataTable(data);
         if (title_ == "Popularity item") {
+            dataitems = new google.visualization.arrayToDataTable(data);
             chart = new google.charts.Bar(document.getElementById(name));
             options = {
                 chartArea: {
@@ -111,6 +112,7 @@
             chart.draw(dataitems, google.charts.Bar.convertOptions(options));
         }
         else if (title_ == "Recommendation count") {
+            dataitems = new google.visualization.arrayToDataTable(data);
             chart = new google.visualization.LineChart(document.getElementById(name));
             options = {
                 chartArea: {
@@ -133,8 +135,14 @@
             chart.draw(dataitems, options);
         }
         else {
-            chart = new google.visualization.ColumnChart(document.getElementById(name));
+            dataitems = google.visualization.DataTable();
+            dataitems.addColumn('string', 'Date');
+            {% for item in columns %}
+                dataitems.addColumn('number', {{ item }});
+            {% endfor %}
+            chart = new google.charts.Bar(document.getElementById(name));
             options = {
+                isStacked: true,
                 chartArea: {
                     width: '94%'
                 },
@@ -142,17 +150,26 @@
                 curveType: 'function',
                 chart: {
                     title: 'Recommendation correctness',
-                    subtitle: 'recommendations on the left, purchases on the right'
+                    subtitle: 'For each algorithm we look at the '
                 },
                 axes: {
                     x: {
                         0: {side: 'top'} // Top x-axis.
                     }
                 },
-                bar: {groupWidth: "100%"}
+                series: {
+
+                },
+                bar: {groupWidth: "90%"}
             };
+
+            // Adjust series
+            {% for item in numbers %}
+                options.series[{{ item[0] }}] = {targetAxisIndex: {{ item[1] }}};
+            {% endfor %}
+
             // Convert the Classic options to Material options.
-            chart.draw(dataitems, options);
+            chart.draw(dataitems, google.charts.Bar.convertOptions(options));
         }
     }
 </script>

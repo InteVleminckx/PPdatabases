@@ -279,7 +279,7 @@ def addArticles(file_name, dataset_id, types_list):
     for column in data_articles.columns:
         subset = data_articles[[column]].copy()
         subset['column'] = column
-        subset['type'] = types_list[index]
+        subset['type'] = types_list['articles_types'][index]
         subset['dataset_id'] = dataset_id
         tuples = list(subset.to_records())
         tuples_list.extend(tuples)
@@ -330,7 +330,7 @@ def addCustomers(file_name, dataset_id, types_list):
     for column in data_customers.columns:
         subset = data_customers[[column]].copy()
         subset['column'] = column
-        subset['type'] = 'test'
+        subset['type'] = types_list['customers_types'][index]
         subset['dataset_id'] = dataset_id
         tuples = list(subset.to_records())
         tuples_list.extend(tuples)
@@ -344,7 +344,7 @@ def addCustomers(file_name, dataset_id, types_list):
     psycopg2.extras.execute_values(
         cursor, insert_query, tuples_list, template=None, page_size=100
     )
-    cursor.execute('INSERT INTO Names(dataset_id, table_name, name) VALUES (%s, %s, %s);', (str(dataset_id), 'articles', types_list['customers_name_column']))
+    cursor.execute('INSERT INTO Names(dataset_id, table_name, name) VALUES (%s, %s, %s);', (str(dataset_id), 'customers', types_list['customers_name_column']))
 
     cursor.execute("CREATE INDEX customer_id_idx ON Customer (dataset_id);")
 
@@ -724,11 +724,38 @@ def getItemRecommendations(retrainDay, item_id, abtest_id, dataset_id):
     algorithmsList = []
     resultIDs = getResultIds(abtest_id, dataset_id)
     for id in resultIDs:
-        cursor.execute('SELECT count(*) FROM Recommendation WHERE abtest_id = %s AND result_id = %s AND dataset_id = %s and item_number = %s and end_point = %s',
+        cursor.execute('SELECT count(*) FROM Recommendation WHERE abtest_id = %s AND result_id = %s AND dataset_id = %s AND item_number = %s AND end_point = %s',
                        (str(abtest_id), str(id), str(dataset_id), str(item_id), retrainDay))
         amount = cursor.fetchone()[0]
+
+        # For popularity and recency we need to multiply the amount of recommendations with the amount of active users
+        # because we only save 1 record in the database
+        algorithm = getAlgorithm(abtest_id, id)
+        if algorithm.name == 'popularity' or algorithm.name == 'recency':
+            amountActiveUsers = getNumberOfActiveUsers(dataset_id, retrainDay)
+            amount = amount * amountActiveUsers
         algorithmsList.append(amount)
+
     return algorithmsList
+
+def getRecommendationCorrectness(retrainDay, item_id, abtest_id, dataset_id):
+    global dbconnect
+    cursor = dbconnect.get_cursor()
+    algorithmsList = []
+    resultIDs = getResultIds(abtest_id, dataset_id)
+    for id in resultIDs:
+        cursor.execute("CREATE OR REPLACE VIEW recommendations as SELECT item_number as item_number FROM Recommendation WHERE abtest_id = %s AND \
+                        result_id = %s AND dataset_id = %s AND item_number = %s AND end_point = %s;",
+                        (str(abtest_id), str(id), str(dataset_id), str(item_id), retrainDay))
+        dbconnect.commit()
+        cursor.execute("SELECT count(*) FROM Interaction WHERE item_id = %s AND t_dat = %s AND dataset_id = %s AND \
+                       item_id IN (SELECT item_number FROM recommendations;",
+                       (str(item_id), retrainDay, str(dataset_id)))
+        amount = cursor.fetchone()[0]
+        algorithmsList.append(amount)
+
+    return algorithmsList
+
 
 # """
 # This function gets all the datascientists in the database.
