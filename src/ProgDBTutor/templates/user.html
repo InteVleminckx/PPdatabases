@@ -42,14 +42,14 @@
             <div class="container__info_his_grp">
                 <main class="container__info_history">
                     <section id="innerHistory">
-
+                        LOADING USER HISTORY...
                     </section>
                 </main>
                 <div class="container__info_graph">
 
                     <div class="container__graph">
                         <div class="graph" id="purchasesGraph">
-
+                            LOADING GRAPH...
                         </div>
                     </div>
                 </div>
@@ -58,14 +58,14 @@
             <div>
                 <main class="container__info_topk">
                     <section id="innerAlgorithm">
-
+                        LOADING ALGORITHMS...
                     </section>
                 </main>
 
             <div class="intervalPicker">
                 <div class="arrowLeft" onclick="update(-1)"></div>
                 <div class="counter">
-                    <section id="counterInterval"></section>
+                    <section id="counterInterval">LOADING INTERVAL...</section>
                 </div>
                 <div class="arrowRight" onclick="update(1)"></div>
             </div>
@@ -76,20 +76,41 @@
 </body>
 
 <script>
-    {#$('#history_table_items history_table_rows').click(function (){#}
-    {#    $(this).addClass('highlight').siblings().removeClass('highlight');#}
-    {# });#}
 
+    var interval = null;
     var value = 0;
-    var recommendations = JSON.parse({{ recommendations | tojson | safe}});
-    var history_ = JSON.parse({{ history | tojson | safe }});
-    var graph = JSON.parse({{ graphdata | tojson | safe }})
-    var ABinterval = '{{ abtestInterval }}';
-    var maxValue = recommendations.length;
-    var top_kList = JSON.parse({{ topkList | tojson | safe }})
-    window.onload = function () {
-        update(0);
+    var recommendations = null;
+    var history_ = null;
+    var graph = null;
+    var ABinterval = null;
+    var maxValue = 0;
+    var top_kList = null;
+
+    function fetchStatus() {
+
+        fetch(`/usersection/update`)
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (info) {
+                var returnDict = JSON.parse(info)
+                if (Object.keys(returnDict).length > 0) {
+                    recommendations = JSON.parse(returnDict["recommendations"])
+                    history_ = JSON.parse(returnDict["history"])
+                    graph = JSON.parse(returnDict["graph"])
+                    ABinterval = returnDict["interval"]
+                    maxValue = recommendations.length;
+                    top_kList = JSON.parse(returnDict["topkListprint"])
+                    clearInterval(interval)
+                    update(0)
+                }
+
+            })
     }
+    window.addEventListener('load', function () {
+        let fetchInterval = 1000;
+        interval = setInterval(fetchStatus, fetchInterval)
+    })
 
     function update(number){
         value = value + number;
@@ -99,9 +120,11 @@
         else if (value > maxValue - 1){
             value = maxValue - 1;
         }
+
+        {#console.log(recommendations)#}
+        document.getElementById("counterInterval").innerHTML = (value+1).toString() + " / " + (recommendations.length).toString()
         generateAlgoritmes(value);
         generateHistory(value);
-        document.getElementById("counterInterval").innerHTML = (value+1).toString() + " / " + (recommendations.length).toString()
         google.charts.load('current', {'packages':['corechart','bar']});
         google.setOnLoadCallback(function () {
             makeGraph(value);
@@ -112,7 +135,7 @@
         var algos = document.getElementById("innerAlgorithm")
         var counter = 0;
         var html_ = ""
-
+        document.getElementById("counterInterval").innerHTML += "    —    " + recommendations[value_][0]["date"]
         let ticks_ = [0];
         let calcBools = false;
 
@@ -120,7 +143,7 @@
             {#console.log(reco["name"], reco["date"], reco["recommendations"], reco["color"]);#}
             html_ += "<div class=\"st_wrap_table\" data-table_id=\" + counter.toString() + \">";
             html_ +=     "<header class=\"topk_table_header\">";
-            html_ +=         "<h2>Algoritme: " + reco["name"] + "</h2>";
+            html_ +=         "<h2>Algorithm: " + reco["name"] + "</h2>";
             html_ +=         "<div class=\"topk_row\">";
             html_ +=             "<div class=\"topk_column_header\"> Algorithm number: " + reco["result_id"] + " </div>";
             html_ +=         "</div>";
@@ -128,8 +151,8 @@
             html_ +=     "<div class=\"topk_table\" style=\"background-color: " + reco["color"] + "\">";
 
             let count = 0;
+            console.log(reco)
             for (const item of reco["recommendations"]){
-                {#console.log(row)#}
 
                 if (count == 0){
                     html_ +=     "<div class=\"topk_table_rows\">";
@@ -204,7 +227,7 @@
     }
 
     function makeGraph(value_, ticks_){
-
+        document.getElementById("purchasesGraph").innerHTML = ""
         var data_ = [['Algorithm', 'Bought', {role: 'style'}]]
         for (const row of graph[value_]) {
             data_.push(row);

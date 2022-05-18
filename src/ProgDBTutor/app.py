@@ -359,16 +359,27 @@ def testlist():
 
 
 #----------------- User section page -----------------#
+
+@app.route("/usersection/update")
+def usersectionUpdate():
+    if "userpage" in session:
+        userpage = session["userpage"]
+        job  = abTestQueue.fetch_job(userpage)
+        if str(job.get_status()) == "finished":
+            recommendations, history, interval, graph, topkListprint = job.return_value
+            return {"recommendations":recommendations, "history": history, "interval":interval, "graph":graph, "topkListprint": topkListprint}
+    return {}
+
 @app.route("/usersection")
 def usersection():
     dataset_id = request.args.get("dataset_id")
     customer_id = request.args.get("customer_id")
     abtest_id = request.args.get("abtest_id")
-    value = 0
-    recommendations, history, interval, graph, topkList = getUserInformation(abtest_id, dataset_id, customer_id)
+    userJob = abTestQueue.enqueue(getUserInformation, abtest_id, dataset_id, customer_id)
+    session["userpage"] = userJob.id
     datasetname = getDatasetname(dataset_id)
 
-    return render_template('user.html', username=customer_id, datasetname=datasetname, history=history, url="", recommendations=recommendations, graphdata=graph, abtestInterval=interval, topkList=topkList)
+    return render_template('user.html', username=customer_id, datasetname=datasetname)
 
 
 #----------------- User section page -----------------#
