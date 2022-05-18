@@ -86,7 +86,7 @@
     var graph = JSON.parse({{ graphdata | tojson | safe }})
     var ABinterval = '{{ abtestInterval }}';
     var maxValue = recommendations.length;
-
+    var top_kList = JSON.parse({{ topkList | tojson | safe }})
     window.onload = function () {
         update(0);
     }
@@ -99,12 +99,12 @@
         else if (value > maxValue - 1){
             value = maxValue - 1;
         }
-        let ticks_ = generateAlgoritmes(value);
+        generateAlgoritmes(value);
         generateHistory(value);
         document.getElementById("counterInterval").innerHTML = (value+1).toString() + " / " + (recommendations.length).toString()
         google.charts.load('current', {'packages':['corechart','bar']});
         google.setOnLoadCallback(function () {
-            makeGraph(value, ticks_);
+            makeGraph(value);
         });
     }
 
@@ -116,38 +116,40 @@
         let ticks_ = [0];
         let calcBools = false;
 
-        for (const [name, color, date, items] of recommendations[value_]){
+        for (const reco of recommendations[value_]){
+            {#console.log(reco["name"], reco["date"], reco["recommendations"], reco["color"]);#}
             html_ += "<div class=\"st_wrap_table\" data-table_id=\" + counter.toString() + \">";
             html_ +=     "<header class=\"topk_table_header\">";
-            html_ +=         "<h2>Algoritme: " + name + "</h2>";
+            html_ +=         "<h2>Algoritme: " + reco["name"] + "</h2>";
             html_ +=         "<div class=\"topk_row\">";
-            html_ +=             "<div class=\"topk_column_header\">Calculation datum: " + date + " </div>";
+            html_ +=             "<div class=\"topk_column_header\"> Algorithm number: " + reco["result_id"] + " </div>";
             html_ +=         "</div>";
             html_ +=     "</header>";
-            html_ +=     "<div class=\"topk_table\" style=\"background-color: " + color + "\">";
+            html_ +=     "<div class=\"topk_table\" style=\"background-color: " + reco["color"] + "\">";
 
-            let count = 1;
-            for (const row of items){
-                html_ +=     "<div class=\"topk_table_rows\">";
-                for (const item of row){
+            let count = 0;
+            for (const item of reco["recommendations"]){
+                {#console.log(row)#}
 
-                    if (!calcBools){
-                        ticks_.push(count);
-                        count += 1;
-                    }
-
-                    html_ +=     "<div class=\"topk_column_item\">" + item.toString() + " </div>";
+                if (count == 0){
+                    html_ +=     "<div class=\"topk_table_rows\">";
                 }
-                html_ +=     "</div>";
+                html_ +=     "<div class=\"topk_column_item\">" + item + " </div>";
+                count += 1
+
+                if (count == 3) {
+                    count = 0
+                    html_ +=     "</div>";
+                }
             }
+            html_ += "</div>"
             calcBools = true;
-            html_ +=     "</div>";
             counter += 1;
             html_ += "</div>";
         }
 
         algos.innerHTML = html_;
-        return ticks_;
+
     }
 
     function generateHistory(value_){
@@ -164,28 +166,12 @@
         html_ +=         "<div class=\"history_table\">"
         html_ +=             "<div id=\"history_table_items\" class=\"history_table_items\">"
 
-        for (const [item, recommended] of history_[value_]){
-            var item_ = ""
-            var url_ = "";
-            let makedItem = false;
-            for (chr of item){
-                if (chr === '[' || chr === ']' || chr === " "){
-                    continue;
-                }
-                if (chr === ','){
-                    makedItem = true;
-                }
-                if (!makedItem && chr !== ','){
-                    item_ += chr;
-                }
-                else if (makedItem && chr !== ',' ){
-                    url_ += chr;
-                }
-            }
+        for (const item of history_[value_]){
 
-            html_ +=             "<div id=\""+ item_ +"\" class=\"history_table_rows\">";
-            html_ +=                 "<div onclick='generateImage(\"" + item_ + "\")'  class=\"history_column_item\">" + item_ + "</div>";
-            if (recommended){
+
+            html_ +=             "<div id=\""+ item["item"] +"\" class=\"history_table_rows\">";
+            html_ +=                 "<div onclick='generateImage(\"" + item["url"] + "\")'  class=\"history_column_item\">" + item["item"] + "</div>";
+            if (item["purchased"]){
                 html_ +=             "<div class=\"history_column_hasImage\" style=\"color: #91ee05\">&#9745</div>";
             }
             else {
@@ -203,49 +189,28 @@
     }
 
     function generateImage(itemURL){
-        for (const [item, recommended] of history_[0]){
-            var item_ = ""
-            var url_ = "";
-            let makedItem = false;
-            for (chr of item){
-                if (chr === '[' || chr === ']' || chr === " "){
-                    continue;
-                }
-                if (chr === ','){
-                    makedItem = true;
-                }
-                if (!makedItem && chr !== ','){
-                    item_ += chr;
-                }
-                else if (makedItem && chr !== ',' ){
-                    url_ += chr;
-                }
-            }
 
-            if (item_ === itemURL){
-                innerImg = document.getElementById("innerUrl")
-                if (url_ == ""){
-                    innerImg.innerHTML = "No image"
-                }
-                else {
-
-                    html_ = "<img src=";
-                    html_ += url_;
-                    html_ += " alt=\"Image\" style='height: 100%; width: 100%; object-fit: contain'>";
-                    innerImg.innerHTML =  html_;
-                }
-                break
-            }
+        innerImg = document.getElementById("innerUrl")
+        if (itemURL == ""){
+            innerImg.innerHTML = "No image"
         }
+        else {
+            html_ = "<img src=";
+            html_ += itemURL;
+            html_ += " alt=\"Image\" style='height: 100%; width: 100%; object-fit: contain'>";
+            innerImg.innerHTML =  html_;
+        }
+
     }
 
     function makeGraph(value_, ticks_){
 
         var data_ = [['Algorithm', 'Bought', {role: 'style'}]]
-        for (row of graph[value_]) {
+        for (const row of graph[value_]) {
             data_.push(row);
 
         }
+        console.log(data_)
         var dataitems = new google.visualization.arrayToDataTable(data_);
 
         var options = {
@@ -262,7 +227,7 @@
             },
           vAxis: {
             title: 'Items bought',
-            ticks: ticks_
+            ticks: top_kList
           },
           bar: { groupWidth: "100%" }
         };

@@ -5,101 +5,106 @@ import datetime
 
 def getUserInformation(abtest_id, dataset_id, user_id):
     algoritmes = getAlgoritmes(abtest_id)
-    startAB, endAB = getAbInterval(abtest_id)
+    startAB, endAB, steps, topk = getAbInterval(abtest_id)
     historyUser = getPurchases(user_id, dataset_id, startAB, endAB)
     recommendationsPerInterval = getRecommendations(abtest_id, dataset_id, user_id)
     colors = ['#9FE3FE', '#9CD0FE', '#9DBEFE', '#9CB5FE', '#9CB5FE', '#C2A5FF', '#D69DFF', '#DF9BFD', '#ED9BEB', '#F49CD3',
              '#FEABB1', '#FECF9F', '#F7FCA8', '#D3FFA7', '#BEFEC4', '#BEFEC4']
 
     maxcolor = len(colors)
-
-    recosSort = []
+    colorsID = {}
+    recosSort = {}
     for key in recommendationsPerInterval:
-        recosSort.append(key)
+        if key[1] in recosSort:
+            recosSort[key[1]].append(key[0])
+        else:
+            recosSort[key[1]] = [key[0]]
+    j = 1
+    for key in recosSort:
+        recosSort[key].sort()
+        recosSort[key].reverse()
+        colorsID[j] = colors[(j-1)%maxcolor]
+        j+=1
 
-    recosSort.sort(key=lambda date: datetime.datetime.strptime(date[0], '%Y-%m-%d'))
-    colorCount = 0
-    gesorteerdeRecommendations = []
-    it = 0
-    for algoritme in algoritmes:
-        resultCount = 0
-        for reco in recosSort:
-            if algoritme["result_id"] == reco[1]:
-                if it == 0:
-                    gesorteerdeRecommendations.append([[algoritme["name"], colors[colorCount], reco[0], recommendationsPerInterval[reco]]])
-                else:
-                    if resultCount > len(gesorteerdeRecommendations)-1:
-                        gesorteerdeRecommendations.append(
-                            [[algoritme["name"], colors[colorCount], reco[0], recommendationsPerInterval[reco]]])
-                    else:
-                        gesorteerdeRecommendations[resultCount].append([algoritme["name"], colors[colorCount], reco[0], recommendationsPerInterval[reco]])
-                resultCount += 1
+    # We gaan per stepsize de recommendations groeperen, we doen de "simulatie" na te bootsen
 
-        colorCount += 1
-        if colorCount == maxcolor:
-            colorCount = 0
-        it = 1
+    startDate = datetime.datetime.strptime(startAB, "%Y-%m-%d")
+    endDate = datetime.datetime.strptime(endAB, "%Y-%m-%d")
+    stepsize = datetime.timedelta(days=steps)
 
-    historyUserAndRec = []
-    for reco in gesorteerdeRecommendations:
-        ls = []
-        for item in historyUser:
-            breaked = False
-            for algo in reco:
-                if str(item[0]) in algo[3]:
-                    ls.append([str(item), True])
-                    breaked = True
-                    break
-
-            if not breaked:
-                ls.append([str(item), False])
-
-        historyUserAndRec.append(ls)
-
+    recommendations = []
+    history = []
     purchases = []
 
-    for reco in gesorteerdeRecommendations:
-        purchase = []
-        for i in range(len(reco)):
-            purchase_ = [reco[i][0], 0, "color: " + reco[i][1]]
-            cur = reco[i][3]
-            new = []
-            items = []
-            for j in range(len(cur)):
+    while startDate <= endDate:
+        colorCount = 0
+        stepReco = []
+        hisUser = [None] * len(historyUser)
+        purch = {}
 
-                for item in historyUser:
-                    if cur[j] == str(item[0]):
-                        purchase_[1] += 1
+        for reco in recosSort:
+            print("")
+            for date in recosSort[reco]:
+                if startDate < datetime.datetime.strptime(date, "%Y-%m-%d"):
+                    continue
+                else:
+                    print("")
+                    reco_ = recommendationsPerInterval[(date, reco)]
+                    name = algoritmes[reco]
+                    stepReco.append({"name": name, "date": str(startDate)[0:10], "recommendations" : reco_, "result_id": reco, "color": colorsID[reco]})
 
-                items.append(cur[j])
-                if (j+1) % 3 == 0:
-                    new.append(items)
-                    items = []
-            if len(items) > 0:
-                new.append(items)
-            reco[i][3] = new
+                    for i, his in enumerate(historyUser):
+                        if str(his[0]) in reco_:
 
-            purchase.append(purchase_)
-        purchases.append(purchase)
+                            if (name, reco) in purch:
+                                purch[(name, reco)][0] += 1
+                            else:
+                                purch[(name, reco)] = [1, colorsID[reco]]
+
+                            hisUser[i] = {"item": str(his[0]), "url": his[1], "purchased":True}
+                        else:
+                            if hisUser[i] is None:
+                                hisUser[i] = {"item": str(his[0]), "url": his[1], "purchased": False}
+                    break
+
+            colorCount += 1
+            if colorCount == maxcolor:
+                colorCount = 0
+
+        stepReco.sort(key=lambda x:x["result_id"])
+        recommendations.append(stepReco)
+        history.append(hisUser)
+        purch = dict(sorted(purch.items(), key=lambda x:x[0][1]))
+        purch_ = []
+        for pur in purch:
+            purch_.append([pur[0], purch[pur][0], purch[pur][1]])
+        purchases.append(purch_)
+        startDate += stepsize
+
 
     jsPur = json.dumps(purchases)
-    jsReco = json.dumps(gesorteerdeRecommendations)
-    jsHistory = json.dumps(historyUserAndRec)
-    return jsReco, jsHistory, startAB + " — " + endAB, jsPur
+    jsReco = json.dumps(recommendations)
+    jsHistory = json.dumps(history)
+    topk_ = []
+    for i in range(topk+1):
+        topk_.append(i)
+    jsTopk = json.dumps(topk_)
+    return jsReco, jsHistory, startAB + " — " + endAB, jsPur, jsTopk
 
 def getAlgoritmes(abtest_id):
     cursor = dbconnect.get_cursor()
 
     cursor.execute("select result_id, name from algorithm where abtest_id = %s group by result_id, name;",
                    (str(abtest_id)))
-    algoritmes = []
+    algoritmes = {}
     rows = cursor.fetchall()
 
     if rows is None:
         return None
 
     for row in rows:
-        algoritmes.append({"name": row[1], "result_id": row[0]})
+        algoritmes[row[0]] = row[1]
+        # algoritmes.append({"name": row[1], "result_id": row[0]})
 
     return algoritmes
 
@@ -107,14 +112,16 @@ def getAlgoritmes(abtest_id):
 def getAbInterval(abtest_id):
     cursor = dbconnect.get_cursor()
 
-    cursor.execute("select start_point, end_point from abtest where abtest_id = %s limit 1;", (str(abtest_id)))
+    cursor.execute("select start_point, end_point, stepsize, topk from abtest where abtest_id = %s limit 1;", (str(abtest_id)))
     interval = cursor.fetchone()
     if interval is None:
         return None
 
     start = str(interval[0])[0:10]
     end = str(interval[1])[0:10]
-    return start, end
+    stepsize = interval[2]
+    topk = interval[3]
+    return start, end, stepsize, topk
 
 
 def getPurchases(user_id, dataset_id, start, end):

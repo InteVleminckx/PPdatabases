@@ -364,10 +364,10 @@ def usersection():
     customer_id = request.args.get("customer_id")
     abtest_id = request.args.get("abtest_id")
     value = 0
-    recommendations, history, interval, graph = getUserInformation(abtest_id, dataset_id, customer_id)
+    recommendations, history, interval, graph, topkList = getUserInformation(abtest_id, dataset_id, customer_id)
     datasetname = getDatasetname(dataset_id)
 
-    return render_template('user.html', username=customer_id, datasetname=datasetname, history=history, url="", recommendations=recommendations, graphdata=graph, abtestInterval=interval)
+    return render_template('user.html', username=customer_id, datasetname=datasetname, history=history, url="", recommendations=recommendations, graphdata=graph, abtestInterval=interval, topkList=topkList)
 
 #----------------- User_Login -----------------#
 
