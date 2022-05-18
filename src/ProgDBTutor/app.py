@@ -133,6 +133,11 @@ def services():
     global abtest_id
     global algo_dict
     if 'loggedin' in session:
+        print(request.args)
+        if request.args.get('selectedDataset') is not None:
+            print(request.args.get('selectedDataset'))
+            print(request.args.get('selectedDataset'))
+
         if request.method == 'POST':
 
             s = request.form.get('submit_button')
@@ -374,7 +379,7 @@ def add_user():
         flash('Account succesfully registered!', category='success')
         session['loggedin'] = True
         session['username'] = user_username
-        return redirect(url_for('services'))
+        return redirect(url_for('datasets'))
 
     return render_template('login.html', app_data=app_data)
 
@@ -400,7 +405,7 @@ def login_user():
                 # login_user(user, remember=True)
                 session['loggedin'] = True
                 session['username'] = user
-                return redirect(url_for('services'))
+                return redirect(url_for('datasets'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
