@@ -279,8 +279,7 @@ def addArticles(file_name, dataset_id, types_list):
     for column in data_articles.columns:
         subset = data_articles[[column]].copy()
         subset['column'] = column
-        #TODO: zorg ervoor da hier het juiste type geselecteerd wordt en we zo dan het juiste type kunnen toewijden
-        subset['type'] = types_list[index]
+        subset['type'] = types_list['articles_types'][index]
         subset['dataset_id'] = dataset_id
         tuples = list(subset.to_records())
         tuples_list.extend(tuples)
@@ -292,6 +291,7 @@ def addArticles(file_name, dataset_id, types_list):
     psycopg2.extras.execute_values(
         cursor, insert_query, tuples_list, template=None, page_size=100
     )
+    cursor.execute('INSERT INTO Names(dataset_id, table_name, name) VALUES (%s, %s, %s);', (str(dataset_id), 'articles', types_list['articles_name_column']))
     dbconnect.commit()
 
     print("Articles: ", time.process_time() - start)
@@ -319,6 +319,8 @@ def addCustomers(file_name, dataset_id, types_list):
     cursor = dbconnect.get_cursor()
     start = time.process_time()
     print('start reading customers')
+    cursor.execute("DROP INDEX IF EXISTS customer_id_idx;")
+    dbconnect.commit()
     data_customers = pd.read_csv(file_name)
     psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
     insert_query = 'INSERT INTO Customer(customer_number, val, attribute, type, dataset_id) VALUES %s;'
@@ -328,7 +330,7 @@ def addCustomers(file_name, dataset_id, types_list):
     for column in data_customers.columns:
         subset = data_customers[[column]].copy()
         subset['column'] = column
-        subset['type'] = 'test'
+        subset['type'] = types_list['customers_types'][index]
         subset['dataset_id'] = dataset_id
         tuples = list(subset.to_records())
         tuples_list.extend(tuples)
@@ -342,8 +344,8 @@ def addCustomers(file_name, dataset_id, types_list):
     psycopg2.extras.execute_values(
         cursor, insert_query, tuples_list, template=None, page_size=100
     )
+    cursor.execute('INSERT INTO Names(dataset_id, table_name, name) VALUES (%s, %s, %s);', (str(dataset_id), 'customers', types_list['customers_name_column']))
 
-    cursor.execute("DROP INDEX IF EXISTS customer_id_idx;")
     cursor.execute("CREATE INDEX customer_id_idx ON Customer (dataset_id);")
 
     dbconnect.commit()
@@ -403,6 +405,10 @@ def addPurchases(file_name, dataset_id):
     data_purchases = pd.read_csv(file_name)
     cursor = dbconnect.get_cursor()
     start = time.process_time()
+    cursor.execute("DROP INDEX IF EXISTS interaction_index;")
+    dbconnect.commit()
+    cursor.execute("DROP INDEX IF EXISTS inter_price;")
+    dbconnect.commit()
 
     cursor.execute('SELECT attribute FROM customer WHERE dataset_id = %s AND customer_number = -1 LIMIT 1', str(dataset_id))
     customer = cursor.fetchone()
@@ -417,13 +423,9 @@ def addPurchases(file_name, dataset_id):
     dbconnect.commit()
     datasetId += 1
 
-    cursor.execute("DROP INDEX IF EXISTS interaction_index;")
-    dbconnect.commit()
     cursor.execute("CREATE INDEX interaction_index ON Interaction(t_dat, customer_id, dataset_id);")
     dbconnect.commit()
 
-    cursor.execute("DROP INDEX IF EXISTS inter_price;")
-    dbconnect.commit()
     cursor.execute("CREATE INDEX inter_price ON Interaction(t_dat, customer_id, dataset_id);")
     dbconnect.commit()
 
@@ -503,7 +505,7 @@ This function gets an AB-test from the database that corresponds with the given 
 def getAB_Test(abtestId):
     global dbconnect
     cursor = dbconnect.get_cursor()
-    cursor.execute('SELECT abtest_id, result_id, start_point, end_point, stepsize, topk FROM ABTest WHERE abtest_id = %s', (str(abtestId),))
+    cursor.execute('SELECT abtest_id, result_id, start_point, end_point, stepsize, topk FROM ABTest WHERE abtest_id = %s', (str(abtestId)))
 
     res = []
     rows = None
@@ -722,11 +724,38 @@ def getItemRecommendations(retrainDay, item_id, abtest_id, dataset_id):
     algorithmsList = []
     resultIDs = getResultIds(abtest_id, dataset_id)
     for id in resultIDs:
-        cursor.execute('SELECT count(*) FROM Recommendation WHERE abtest_id = %s AND result_id = %s AND dataset_id = %s and item_number = %s and end_point = %s',
+        cursor.execute('SELECT count(*) FROM Recommendation WHERE abtest_id = %s AND result_id = %s AND dataset_id = %s AND item_number = %s AND end_point = %s',
                        (str(abtest_id), str(id), str(dataset_id), str(item_id), retrainDay))
         amount = cursor.fetchone()[0]
+
+        # For popularity and recency we need to multiply the amount of recommendations with the amount of active users
+        # because we only save 1 record in the database
+        algorithm = getAlgorithm(abtest_id, id)
+        if algorithm.name == 'popularity' or algorithm.name == 'recency':
+            amountActiveUsers = getNumberOfActiveUsers(dataset_id, retrainDay)
+            amount = amount * amountActiveUsers
         algorithmsList.append(amount)
+
     return algorithmsList
+
+def getRecommendationCorrectness(retrainDay, item_id, abtest_id, dataset_id):
+    global dbconnect
+    cursor = dbconnect.get_cursor()
+    algorithmsList = []
+    resultIDs = getResultIds(abtest_id, dataset_id)
+    for id in resultIDs:
+        cursor.execute("CREATE OR REPLACE VIEW recommendations as SELECT item_number as item_number FROM Recommendation WHERE abtest_id = %s AND \
+                        result_id = %s AND dataset_id = %s AND item_number = %s AND end_point = %s;",
+                        (str(abtest_id), str(id), str(dataset_id), str(item_id), retrainDay))
+        dbconnect.commit()
+        cursor.execute("SELECT count(*) FROM Interaction WHERE item_id = %s AND t_dat = %s AND dataset_id = %s AND \
+                       item_id IN (SELECT item_number FROM recommendations);",
+                       (str(item_id), retrainDay, str(dataset_id)))
+        amount = cursor.fetchone()[0]
+        algorithmsList.append(amount)
+
+    return algorithmsList
+
 
 # """
 # This function gets all the datascientists in the database.
