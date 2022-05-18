@@ -749,7 +749,7 @@ def getRecommendationCorrectness(retrainDay, item_id, abtest_id, dataset_id):
                         (str(abtest_id), str(id), str(dataset_id), str(item_id), retrainDay))
         dbconnect.commit()
         cursor.execute("SELECT count(*) FROM Interaction WHERE item_id = %s AND t_dat = %s AND dataset_id = %s AND \
-                       item_id IN (SELECT item_number FROM recommendations;",
+                       item_id IN (SELECT item_number FROM recommendations);",
                        (str(item_id), retrainDay, str(dataset_id)))
         amount = cursor.fetchone()[0]
         algorithmsList.append(amount)

@@ -431,7 +431,7 @@ def itemsection():
 
         while startPoint <= endPoint:
             amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
-            subdata = [str(startPoint)[0:10]] + [amountRecommendations]
+            subdata = [str(startPoint)[0:10]] + amountRecommendations
             data.append(subdata)
             startPoint += stepsize
 
@@ -458,8 +458,9 @@ def itemsection():
             amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
             amountCorrectRecommendations = getRecommendationCorrectness(startPoint, item_id, abtest_id, dataset_id)
             for index in range(len(amountRecommendations)):
-                temp_data += [amountRecommendations[index]] + [amountCorrectRecommendations[index]]
-            data += [temp_data]
+                temp_data.append(amountRecommendations[index])
+                temp_data.append(amountCorrectRecommendations[index])
+            data.append(temp_data)
             startPoint += stepsize
         data = json.dumps(data)
 
