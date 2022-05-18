@@ -265,24 +265,25 @@ def getData(ds_id):
 @app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
 def datasets():
-    type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '', 'customers_name_column': ''}
-    type_item = 0
-    while request.form.get(f"{type_item}"):
-        type_list['articles_types'].append(request.form.get(f"{type_item}"))
-        type_item += 1
-    type_item = -1
-    while request.form.get(f"{type_item}"):
-        type_list['customers_types'].append(request.form.get(f"{type_item}"))
-        type_item -= 1
-    art_col_name = request.form.get("articles_cname_section")
-    if art_col_name:
-        type_list['articles_name_column'] = art_col_name
-    cust_col_name = request.form.get("customers_name_column")
-    if cust_col_name:
-        type_list['customers_name_column'] = cust_col_name
-
-    print(type_list['articles_types'])
-    print(type_list['customers_types'])
+    type_list = {}
+    if request.method == 'POST':
+        type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '', 'customers_name_column': ''}
+        type_item = 0
+        while request.form.get(f"{type_item}"):
+            type_list['articles_types'].append(request.form.get(f"{type_item}"))
+            type_item += 1
+        type_item = -1
+        while request.form.get(f"{type_item}"):
+            type_list['customers_types'].append(request.form.get(f"{type_item}"))
+            type_item -= 1
+        art_col_name = request.form.get("articles_cname_section")
+        if art_col_name:
+            type_list['articles_name_column'] = art_col_name
+        cust_col_name = request.form.get("customers_name_column")
+        if cust_col_name:
+            type_list['customers_name_column'] = cust_col_name
+        print(type_list['articles_types'])
+        print(type_list['customers_types'])
     handelRequests(app, session, request, datasetQueue, type_list)
     dataset_names = getDatasets()
 

@@ -8,7 +8,7 @@ CREATE TABLE Dataset (
 
 -- Table to keep track of which attribute is used as a 'descriptor' to represent it in visualisations
 CREATE TABLE Names (
-    dataset_id INT NOT NULL,
+    dataset_id INT NOT NULL REFERENCES Dataset(dataset_id) ON UPDATE CASCADE ON DELETE CASCADE,
     table_name TEXT NOT NULL,
     name TEXT NOT NULL,
     PRIMARY KEY (dataset_id, table_name)

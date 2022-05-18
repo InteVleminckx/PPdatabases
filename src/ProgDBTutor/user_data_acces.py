@@ -291,6 +291,7 @@ def addArticles(file_name, dataset_id, types_list):
     psycopg2.extras.execute_values(
         cursor, insert_query, tuples_list, template=None, page_size=100
     )
+    cursor.execute('INSERT INTO Names(dataset_id, table_name, name) VALUES (%s, %s, %s);', (str(dataset_id), 'articles', types_list['articles_name_column']))
     dbconnect.commit()
 
     print("Articles: ", time.process_time() - start)
@@ -318,6 +319,8 @@ def addCustomers(file_name, dataset_id, types_list):
     cursor = dbconnect.get_cursor()
     start = time.process_time()
     print('start reading customers')
+    cursor.execute("DROP INDEX IF EXISTS customer_id_idx;")
+    dbconnect.commit()
     data_customers = pd.read_csv(file_name)
     psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
     insert_query = 'INSERT INTO Customer(customer_number, val, attribute, type, dataset_id) VALUES %s;'
@@ -341,8 +344,8 @@ def addCustomers(file_name, dataset_id, types_list):
     psycopg2.extras.execute_values(
         cursor, insert_query, tuples_list, template=None, page_size=100
     )
+    cursor.execute('INSERT INTO Names(dataset_id, table_name, name) VALUES (%s, %s, %s);', (str(dataset_id), 'articles', types_list['customers_name_column']))
 
-    cursor.execute("DROP INDEX IF EXISTS customer_id_idx;")
     cursor.execute("CREATE INDEX customer_id_idx ON Customer (dataset_id);")
 
     dbconnect.commit()
@@ -402,6 +405,10 @@ def addPurchases(file_name, dataset_id):
     data_purchases = pd.read_csv(file_name)
     cursor = dbconnect.get_cursor()
     start = time.process_time()
+    cursor.execute("DROP INDEX IF EXISTS interaction_index;")
+    dbconnect.commit()
+    cursor.execute("DROP INDEX IF EXISTS inter_price;")
+    dbconnect.commit()
 
     cursor.execute('SELECT attribute FROM customer WHERE dataset_id = %s AND customer_number = -1 LIMIT 1', str(dataset_id))
     customer = cursor.fetchone()
@@ -416,13 +423,9 @@ def addPurchases(file_name, dataset_id):
     dbconnect.commit()
     datasetId += 1
 
-    cursor.execute("DROP INDEX IF EXISTS interaction_index;")
-    dbconnect.commit()
     cursor.execute("CREATE INDEX interaction_index ON Interaction(t_dat, customer_id, dataset_id);")
     dbconnect.commit()
 
-    cursor.execute("DROP INDEX IF EXISTS inter_price;")
-    dbconnect.commit()
     cursor.execute("CREATE INDEX inter_price ON Interaction(t_dat, customer_id, dataset_id);")
     dbconnect.commit()
 
