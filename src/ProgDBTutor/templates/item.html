@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='style/item_style.css') }}">
+    <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 </head>
 <body>
-<form method="POST" action="" name="form1">
+<form method="POST" action="" name="form1" id="form1">
     <div class="container__itemsection">
         <div class="container__info">
             <main class="container__column" id="col1">
@@ -47,17 +48,17 @@
                             </select>
                         </div>
                         <div class="grid-item_1">
-                            <button class="_button" type="submit" role="button" id="submit_graph" name="submit_graph" onclick="graph()">
+                            <button class="_button" role="button" id="submit_graph" name="submit_graph">
                                 Show graph
                             </button>
                         </div>
                     </div>
                     <div class="grid-container">
                         <div class="grid-item_1">
-                            <input class="_date" type="date" placeholder="Begin" id="begin_time" name="begin_time" required>
+                            <input class="_date" type="date" placeholder="Begin" id="begin_time" name="begin_time" value="2020-01-01" required>
                         </div>
                         <div class="grid-item_1">
-                            <input class="_date" type="date" placeholder="End" id="end_time" name="end_time" required>
+                            <input class="_date" type="date" placeholder="End" id="end_time" name="end_time" value="2020-01-09" required>
                         </div>
                     </div>
                 </div>
@@ -70,28 +71,42 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart', 'bar']});
-    document.getElementById("begin_time").value = "2020-01-01";
-    document.getElementById("end_time").value = "2020-01-09";
 
-    window.onload = function () {
-        graph();
+   $(function() {
+       $('#submit_graph').click(function(e) {
+           var form_data = new FormData($('#form1')[0]);
+           console.log(form_data);
+           $.ajax({
+               type: 'POST',
+               url: '/itemsection_graph',
+               data: form_data,
+               contentType: false,
+               cache: false,
+               processData: false,
+               success: function(data) {
+                   graph(data);
+                },
+            });
+       });
+   });
+
+    $('button._button').click(function (e){
+        e.preventDefault();
+    })
+
+    function graph(data) {
+        google.setOnLoadCallback(drawGraph(data));
     }
 
-    function graph() {
-        google.setOnLoadCallback(drawGraph());
-    }
-
-    function drawGraph() {
+    function drawGraph(data) {
         var chart;
         var options;
-        var data = JSON.parse({{ data1 | tojson | safe }});
-        var name =  '{{ name }}';
-        var title_ = '{{ title }}';
         var dataitems;
+        var d = data;
 
-        if (title_ == "Popularity item") {
-            dataitems = new google.visualization.arrayToDataTable(data);
-            chart = new google.charts.Bar(document.getElementById(name));
+        if (d['graph_type'] == "Popularity item") {
+            dataitems = new google.visualization.arrayToDataTable(d['data']);
+            chart = new google.charts.Bar(document.getElementById(d['name']));
             options = {
                 chartArea: {
                     width: '94%'
@@ -110,9 +125,9 @@
             // Convert the Classic options to Material options.
             chart.draw(dataitems, google.charts.Bar.convertOptions(options));
         }
-        else if (title_ == "Recommendation count") {
-            dataitems = new google.visualization.arrayToDataTable(data);
-            chart = new google.visualization.LineChart(document.getElementById(name));
+        else if (d['graph_type'] == "Recommendation count") {
+            dataitems = new google.visualization.arrayToDataTable(d['data']);
+            chart = new google.visualization.LineChart(document.getElementById(d['name']));
             options = {
                 chartArea: {
                     width: '94%'
@@ -131,14 +146,17 @@
             // Convert the Classic options to Material options.
             chart.draw(dataitems, options);
         }
-        else {
+        else if (d['graph_type'] == "Recommendation correctness") {
             dataitems = new google.visualization.DataTable();
             dataitems.addColumn('string', 'Date');
-            {% for item in columns %}
-                dataitems.addColumn('number', '{{ item }}');
-            {% endfor %}
-            dataitems.addRows(data)
-            chart = new google.charts.Bar(document.getElementById(name));
+            for (var x of d['columns']) {
+                dataitems.addColumn('number', x);
+            }
+{#            {% for item in d['columns'] %}#}
+{#                dataitems.addColumn('number', '{{ item }}');#}
+{#            {% endfor %}#}
+            dataitems.addRows(d['data'])
+            chart = new google.charts.Bar(document.getElementById(d['name']));
             options = {
                 isStacked: true,
                 chartArea: {
@@ -165,12 +183,15 @@
             };
 
             // Adjust series
-            {% for item in numbers %}
-                options.series[{{ item[0] }}] = {targetAxisIndex: {{ item[1] }}};
-            {% endfor %}
+            for (var y of d['numbers']) {
+                options.series[y[0]] = {targetAxisIndex: y[1]};
+            }
+{#            {% for item in d['numbers'] %}#}
+{#                options.series[{{ item[0] }}] = {targetAxisIndex: {{ item[1] }}};#}
+{#            {% endfor %}#}
 
             options.vAxis.viewWindow.min = 0;
-            options.vAxis.viewWindow.max = {{ maxYValue }};
+            options.vAxis.viewWindow.max = d['maxYValue'];
 
             // Convert the Classic options to Material options.
             chart.draw(dataitems, google.charts.Bar.convertOptions(options));
