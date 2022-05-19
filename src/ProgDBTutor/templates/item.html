@@ -28,15 +28,15 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="container__item_picture">
-                    {% if item_picture %}
-                        <img src="{{ item_picture }}" width="600px" height="350px" alt="Picture of an item">
-                    {% else %}
-                        <img src="" width="600px" height="350px" alt="Picture of an item">
-                    {% endif %}
-                </div>
             </main>
             <main class="container__column" id="col2">
+                <div class="container__item_picture">
+                    {% if item_picture %}
+                        <img src="{{ item_picture }}" width="600px" height="400px" alt="Picture of an item">
+                    {% else %}
+                        <img src="" width="600px" height="400px" alt="Picture of an item">
+                    {% endif %}
+                </div>
                 <div class="container__selection">
                     <div class="grid-container">
                         <div class="grid-item_1">
@@ -61,9 +61,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="container__graph" id="item_graph"></div>
             </main>
-            <div class="container__graph2" id="item_graph2"></div>
+            <div class="container__graph" id="item_graph"></div>
         </div>
     </div>
 </form>
@@ -155,6 +154,10 @@
                         0: {side: 'top'} // Top x-axis.
                     }
                 },
+                vAxis: {
+                    viewWindow: {
+                    }
+                },
                 series: {
 
                 },
@@ -165,6 +168,9 @@
             {% for item in numbers %}
                 options.series[{{ item[0] }}] = {targetAxisIndex: {{ item[1] }}};
             {% endfor %}
+
+            options.vAxis.viewWindow.min = 0;
+            options.vAxis.viewWindow.max = {{ maxYValue }};
 
             // Convert the Classic options to Material options.
             chart.draw(dataitems, google.charts.Bar.convertOptions(options));

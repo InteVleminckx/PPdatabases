@@ -414,7 +414,7 @@ def itemsection():
 
         data = json.dumps(data)
         return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
-                               name='item_graph2', title='Popularity item')
+                               name='item_graph', title='Popularity item')
 
     # Compute recommendation count graph
     elif graph_type == 'Recommendation count':
@@ -437,7 +437,7 @@ def itemsection():
 
         data = json.dumps(data)
         return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
-                               name='item_graph2', title='Recommendation count')
+                               name='item_graph', title='Recommendation count')
 
     # Compute recommendation correctness graph
     elif graph_type == 'Recommendation correctness':
@@ -453,6 +453,7 @@ def itemsection():
             columns.append('Algorithm' + str(id) + ' correct recommendations')
 
         # Determine the data that we need for the graph
+        maxYValue = 0
         while startPoint <= endPoint:
             temp_data = [str(startPoint)[0:10]]
             amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
@@ -460,6 +461,9 @@ def itemsection():
             for index in range(len(amountRecommendations)):
                 temp_data.append(amountRecommendations[index])
                 temp_data.append(amountCorrectRecommendations[index])
+                sum = amountRecommendations[index] + amountCorrectRecommendations[index]
+                if sum > maxYValue:
+                    maxYValue = sum
             data.append(temp_data)
             startPoint += stepsize
         data = json.dumps(data)
@@ -474,8 +478,10 @@ def itemsection():
             begin_counter += 1
             end_counter += 1
 
+
         return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
-                               name='item_graph2', title='Recommendation correctness', columns=columns, numbers=numbers)
+                               name='item_graph', title='Recommendation correctness', columns=columns, numbers=numbers,
+                               maxYValue=maxYValue)
 
     return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=None,
                            name=None, title=None)

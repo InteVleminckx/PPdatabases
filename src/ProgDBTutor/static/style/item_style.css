@@ -32,8 +32,7 @@ html, body {
 
 .container__info_item {
     width: 600px;
-    height: 250px;
-
+    height: 600px;
     overflow: auto;
     background-color: #FFFFFF;
     box-shadow: 0 0 20px -8px rgb(160 163 198);
@@ -45,8 +44,7 @@ html, body {
 
 .container__item_picture {
     width: 600px;
-    height: 350px;
-
+    height: 400px;
     overflow-x:hidden;
     overflow-y:hidden;
     background-color: #FFFFFF;
@@ -58,20 +56,6 @@ html, body {
 }
 
 .container__graph {
-    width: 600px;
-    height: 440px;
-    overflow: auto;
-    background-color: #FFFFFF;
-    box-shadow: 0 0 20px -8px rgb(160 163 198);
-    overflow-x: hidden;
-    overflow-y: hidden;
-    border: 0 solid #d9dee3;
-    color: rgb(27,30,36);
-    border-radius: 8px;
-    margin-top: 20px;
-}
-
-.container__graph2 {
     width: 1250px;
     height: 600px;
     overflow: auto;
@@ -88,18 +72,19 @@ html, body {
 .container__selection {
     width: 600px;
     height: 160px;
-
     overflow: auto;
     background-color: #FFFFFF;
     box-shadow: 0 0 20px -8px rgb(160 163 198);
     border: 0 solid #d9dee3;
     color: rgb(27,30,36);
     border-radius: 8px;
-    margin-top: 20px;
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
 }
 
 .item_table {
-    height: 250px;
     display: flex;
     flex-direction: column;
     border: 1px solid lightgray;
@@ -158,7 +143,7 @@ html, body {
 }
 .flex-fixhead-table tbody {
     overflow: auto;
-    height: 50vh;
+    height: 564px;
 }
 
 .grid-container {
