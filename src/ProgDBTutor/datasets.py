@@ -65,8 +65,10 @@ def getDatasetInformation(dataset_id):
     numberOfInteractions = getNumberOfInteractions(cursor, dataset_id)
     numbers = list()
 
+    activeUsers, interactionsPermonth = getActiveUsers(cursor, dataset_id)
+
     numbers.append({'users': numberOfUser, 'articles': numberOfArticles, 'interactions': numberOfInteractions, 'distributions': getPriceDistribution(cursor, dataset_id),
-                    'activeUsers': getActiveUsers(cursor, dataset_id)})
+                    'activeUsers': activeUsers, 'interactionPerMonth' : interactionsPermonth})
     dictNumbers = json.dumps(numbers)
     return dictNumbers
 
@@ -168,12 +170,14 @@ def getNumberOfInteractions(cursor, dataset_id):
     return row[0]
 
 def getActiveUsers(cursor, dataset_id):
-    cursor.execute('SELECT count(DISTINCT customer_id), t_dat FROM interaction WHERE dataset_id = %s GROUP BY t_dat;', (str(dataset_id)))
+    cursor.execute('SELECT count(DISTINCT customer_id), t_dat, count(*) FROM interaction WHERE dataset_id = %s GROUP BY t_dat;', (str(dataset_id)))
     rows = cursor.fetchall()
     users = list()
+    purchases = list()
     curMonth = ""
     prevMonth = ""
     curCount = 0
+    curPurch = 0
     for row in rows:
         date = str(row[1])[0:7]
         if curMonth == "":
@@ -181,14 +185,17 @@ def getActiveUsers(cursor, dataset_id):
 
         if curMonth == date:
             curCount += int(row[0])
+            curPurch += int(row[2])
             prevMonth = curMonth
 
         elif curMonth != date:
             users.append({"date": prevMonth, "count": curCount})
+            purchases.append({"date": prevMonth, "count": curPurch})
             curMonth = date
             curCount = 0
+            curPurch = 0
 
-    return users
+    return users, purchases
 
 def getPriceDistribution(cursor, dataset_id):
 

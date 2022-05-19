@@ -387,10 +387,19 @@ function sendData() {
             dataUsers.push([dateS, userCount])
         }
 
+        var dataInteractions = [["date", "number of interactions"]]
+        for (i=0; i < statistics[0].interactionPerMonth.length; i++){
+            var dateS = statistics[0].interactionPerMonth[i].date
+            var interactionCount = statistics[0].interactionPerMonth[i].count
+
+            dataInteractions.push([dateS, interactionCount])
+        }
+
         google.charts.load('current', {'packages':['bar']});
         google.setOnLoadCallback(function () {
             drawGraph(dataUsers, "graph-active", "Number of active users")
             drawGraph(dataDist, "graph-distr", "Price distribution")
+            drawGraph(dataInteractions, "graph-ts", "Number of interactions")
         });
     });
 }
