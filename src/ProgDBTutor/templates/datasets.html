@@ -98,8 +98,8 @@
 {#    <div class="_container2" id="_container2" style="display: block;">#}
         <div class="_row">
             <div class="_column">
-                <button class="c2_button_" role="button" id="add_btn" name="add_btn" onclick="goToABTestPage();">
-                    Go to A/B-test page with this dataset
+                <button class="c2_button_" role="button" id="abtestpagelink" name="abtestpagelink" >
+                    <a class="abtestlink" id="abtestlink" href="services"> Go to A/B-test page with this dataset </a>
                 </button>
             </div>
             <div class="_column">
@@ -195,54 +195,40 @@
 
 <script>
     {#var row_id = 0;#}
-window.onload = sendData();
+window.onload = sendData();goToABTestPage();
 
-var fileAttributes = {'articles': [], 'customers': []};
-var article_attr = ["aa", "ab", "ac", "ad", "ae", "af", "ag0bvb", "ah"];
-var customer_attr = ["ca", "cb", "cc", "cd"];
-fileAttributes['articles'] = article_attr;
-fileAttributes['customers'] = customer_attr;
-
-{#function checkFiles() {#}
-{##}
-{#if(document.getElementById("articles_file").value !== "") { // we uploaded a file#}
-{#    console.log("uploaded articles file");#}
-{#    getAttributes('articles_file');#}
-{##}
-{##}
-{#if(document.getElementById("customers_file").value !== "") {#}
-{#    getAttributes('customers_file');#}
-{##}
-{##}
-{##}
-{##}
-{#function getAttributes(filename) {#}
-{##}
-{##}
-{#    fetch(`/datasets/getfileattributes`, {#}
-{#        headers : {#}
-{#            'Content-Type' : 'application/json'#}
-{#        },#}
-{#        method : 'POST',#}
-{#        body : JSON.stringify( {#}
-{#            'filename' : filename#}
-{#        })#}
-{#    }).then(function(response) {#}
-{#        return response.text();#}
-{#    }).then(function(text) {#}
-        {#var dict = JSON.parse(text);#}
-{#        console.log(text);#}
-{#        fileAttributes['articles'] = text;#}
-{##}
-{##}
-{#    });#}
-{##}
+{#var fileAttributes = {'articles': [], 'customers': []};#}
+{#var article_attr = ["aa", "ab", "ac", "ad", "ae", "af", "ag0bvb", "ah"];#}
+{#var customer_attr = ["ca", "cb", "cc", "cd"];#}
+{#fileAttributes['articles'] = article_attr;#}
+{#fileAttributes['customers'] = customer_attr;#}
 
 function goToABTestPage() {
     var ds = document.getElementById("datasetSelection");
-    ds = ds.options[ds.selectedIndex].text
+    ds = ds.options[ds.selectedIndex].value
     console.log(ds);
-    window.location.href="{{ url_for('services', selectedDataset='ds') }}".replace("ds", ds);
+    var link = document.getElementById('abtestlink');
+    link.href += '?selected_ds_id=' + ds;
+
+
+    {#window.location.href="{{ url_for('services', selectedDataset='ds') }}".replace("ds", ds);#}
+    {#window.location.href="{{ url_for('services', selected_ds_id='ds') }}".replace("ds", ds);#}
+    {#$.ajax({#}
+    {#        type: 'POST',#}
+    {#        url: '/datasets/redirectabtestpage',#}
+    {#        data: {'ds_id' : ds},#}
+    {#        contentType: false,#}
+    {#        cache: false,#}
+    {#        processData: false,#}
+    {#        dataType: 'json',#}
+    {#        success: function(data) {#}
+    {#            console.log("Success!");#}
+    {#        },#}
+    {#    });#}
+    {#e.preventDefault();#}
+    {#window.location.href = "https://www.google.com";#}
+    {#window.location.reload();#}
+
 }
 
 $(function() {
@@ -466,21 +452,6 @@ $('button.c0_button').click(function(e) {
 {#    #}
 
 </script>
-
-<!-- Services Section-->
-<!--{#    <div class="dataset" id="dataset">#}-->
-<!--{##}-->
-<!--{#        <h1>Recommendation algorithms</h1>#}-->
-<!--{#        <div class="dataset__wrapper">#}-->
-<!--{#            <div class="dataset__card">#}-->
-<!--{#                <h2>Popularity</h2>#}-->
-<!--{#                <p></p>#}-->
-<!--{#                <div class="dataset__btn">#}-->
-<!--{#                    <button>Start Setup</button>#}-->
-<!--{#                </div>#}-->
-<!--{#            </div>#}-->
-<!--{#        </div>#}-->
-<!--{#    </div>#}-->
 
 </body>
 </html>

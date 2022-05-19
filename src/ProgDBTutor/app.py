@@ -124,19 +124,31 @@ def addalgorithm():
         # print(jsonData)
         return jsonData
 
+# @app.route("/datasets/redirectabtestpage", methods=['GET', 'POST'])
+# def redirectabtestpage():
+#     ds_id = request.values
+#     print(request.values.get('ds_id'))
+#     print(ds_id)
+#     return redirect(url_for('services', selected_ds_id=ds_id))
+
 @app.route("/services", methods=['GET', 'POST'])
+@app.route("/services/<selected_ds_id>", methods=['GET', 'POST'])
 # @login_required
-def services():
+def services(selected_ds_id=None):
     global algo_id
     global algo_list
     global algo_dict
     global abtest_id
     global algo_dict
+
     if 'loggedin' in session:
         print(request.args)
+        print(request.args.get('selected_ds_id'))
+        print("aaaaaaaaaaaaaaaaaaaaaaah")
         if request.args.get('selectedDataset') is not None:
-            print(request.args.get('selectedDataset'))
-            print(request.args.get('selectedDataset'))
+            # print(request.args.get('selectedDataset'))
+            # print(request.args.get('selectedDataset'))
+            pass
 
         if request.method == 'POST':
 
@@ -251,7 +263,8 @@ def services():
                     elif algo_dict[algo_id] == 'itemknn':
                         algo_list = algo_list[:-4]
                     del algo_dict[algo_id]
-
+        elif request.method == 'GET':
+            pass
         dataset_names = getDatasets()
         return render_template('services.html', app_data=app_data, algo_dict=algo_dict, genParDict=jsonData, names=dataset_names)
 
@@ -266,33 +279,32 @@ def getData(ds_id):
     else:
         pass
 
-
 @app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
 def datasets():
-    type_list = {}
-    if request.method == 'POST':
-        type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '', 'customers_name_column': ''}
-        type_item = 0
-        while request.form.get(f"{type_item}"):
-            type_list['articles_types'].append(request.form.get(f"{type_item}"))
-            type_item += 1
-        type_item = -1
-        while request.form.get(f"{type_item}"):
-            type_list['customers_types'].append(request.form.get(f"{type_item}"))
-            type_item -= 1
-        art_col_name = request.form.get("articles_name_column")
-        if art_col_name:
-            type_list['articles_name_column'] = art_col_name
-        cust_col_name = request.form.get("customers_name_column")
-        if cust_col_name:
-            type_list['customers_name_column'] = cust_col_name
-        print(type_list['articles_types'])
-        print(type_list['customers_types'])
-    handelRequests(app, session, request, datasetQueue, type_list)
-    dataset_names = getDatasets()
+    if 'loggedin' in session:
+        type_list = {}
+        if request.method == 'POST':
+            type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '', 'customers_name_column': ''}
+            type_item = 0
+            while request.form.get(f"{type_item}"):
+                type_list['articles_types'].append(request.form.get(f"{type_item}"))
+                type_item += 1
+            type_item = -1
+            while request.form.get(f"{type_item}"):
+                type_list['customers_types'].append(request.form.get(f"{type_item}"))
+                type_item -= 1
+            art_col_name = request.form.get("articles_name_column")
+            if art_col_name:
+                type_list['articles_name_column'] = art_col_name
+            cust_col_name = request.form.get("customers_name_column")
+            if cust_col_name:
+                type_list['customers_name_column'] = cust_col_name
+        handelRequests(app, session, request, datasetQueue, type_list)
+        dataset_names = getDatasets()
 
-    return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=json.dumps(file_attr_types))
+        return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=json.dumps(file_attr_types))
+    return redirect(url_for('login_user'))
 
 @app.route("/fileupload", methods=['GET', 'POST'])
 def fileupload():
