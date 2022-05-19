@@ -63,7 +63,7 @@
 {#    <div class="_container1" id="_container1" style="display: block;">#}
         <div class="_row">
             <div class="_column">
-                <div class="c1_statcontainer">
+                <div class="c1_statcontainer" style="margin-left: 50px;">
                     <h2>Number of customers:</h2>
                     <p id="nr_of_customers">0</p>
                 </div>
@@ -75,7 +75,7 @@
                 </div>
             </div>
             <div class="_column">
-                <div class="c1_statcontainer">
+                <div class="c1_statcontainer" style="margin-right: 50px;">
                     <h2>Number of interactions:</h2>
                     <p id="nr_of_interactions">0</p>
                 </div>
@@ -83,12 +83,17 @@
         </div>
         <div class="_row">
             <div class="_column">
+                <div class="c1_graphcontainer" style="margin-left: 50px;" id="graph-ts">
+
+                </div>
+            </div>
+            <div class="_column">
                 <div class="c1_graphcontainer" id="graph-active">
 
                 </div>
             </div>
             <div class="_column">
-                <div class="c1_graphcontainer" id="graph-distr">
+                <div class="c1_graphcontainer" style="margin-right: 50px;" id="graph-distr">
 
                 </div>
             </div>
@@ -98,12 +103,12 @@
 {#    <div class="_container2" id="_container2" style="display: block;">#}
         <div class="_row">
             <div class="_column">
-                <button class="c2_button_" role="button" id="abtestpagelink" name="abtestpagelink" >
+                <button class="c2_button_" style="margin-left: 50px;" role="button" id="abtestpagelink" name="abtestpagelink" >
                     <a class="abtestlink" id="abtestlink" href="services"> Go to A/B-test page with this dataset </a>
                 </button>
             </div>
             <div class="_column">
-                <button class="c2_button_" type="submit" role="button" id="delete_btn" name="delete_btn">
+                <button class="c2_button_" style="margin-right: 50px;" type="submit" role="button" id="delete_btn" name="delete_btn">
                     Delete dataset
                 </button>
             </div>
@@ -114,7 +119,7 @@
         <form id="upload-files" method="POST" action="" enctype="multipart/form-data" name="form2">
             <div class="_row">
                 <div class="_column">
-                    <div class="c3_namecontainer">
+                    <div class="c3_namecontainer" style="margin-left: 50px;margin-right: 50px">
                         <input type="text" id="ds_name" name="ds_name" placeholder="Enter dataset name" required>
                     </div>
                 </div>
@@ -123,7 +128,7 @@
             <div class="_row">
 
                 <div class="_column">
-                    <div class="c3_filecontainer">
+                    <div class="c3_filecontainer" style="margin-left: 50px;">
                         <h2> Articles file</h2>
                         <div id="btn1" onclick="getFile1()"> Choose file </div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
@@ -152,7 +157,7 @@
                 </div>
 
                 <div class="_column">
-                    <div class="c3_filecontainer">
+                    <div class="c3_filecontainer" style="margin-right: 50px;">
                         <h2> Customers file</h2>
                         <div id="btn3" onclick="getFile3()"> Choose file </div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
@@ -173,14 +178,14 @@
 
             <div class="_row">
                 <div class="_column">
-                    <div class="c3_button">
+                    <div class="c3_button" style="margin-left: 50px">
                         <button type="submit" role="button">
                             Add dataset
                         </button>
                     </div>
                 </div>
                 <div class="_column">
-                    <div class="c3_button">
+                    <div class="c3_button" style="margin-right: 50px">
                         <button type="submit" role="button" onclick="toggleDatasetView()">
                             Cancel
                         </button>
