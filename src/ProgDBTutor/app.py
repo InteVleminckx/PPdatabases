@@ -286,6 +286,9 @@ def getData(ds_id):
 # @login_required
 def datasets():
     if 'loggedin' in session:
+
+        print("rrrrrrrrrrrrrrrrrrr")
+
         type_list = {}
         if request.method == 'POST':
             type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '', 'customers_name_column': ''}
@@ -303,6 +306,7 @@ def datasets():
             cust_col_name = request.form.get("customers_name_column")
             if cust_col_name:
                 type_list['customers_name_column'] = cust_col_name
+
         handelRequests(app, session, request, datasetQueue, type_list)
         dataset_names = getDatasets()
 
@@ -311,6 +315,7 @@ def datasets():
 
 @app.route("/fileupload", methods=['GET', 'POST'])
 def fileupload():
+
     if request.method == 'POST':
         headerDict = {}
         if request.files.get('articles_file').filename != '':

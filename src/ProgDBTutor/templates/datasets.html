@@ -40,7 +40,7 @@
 
 <div class="giantcontainer">
 
-    <form method="GET" action="" name="form1">
+    <form method="GET" action="" id="c0_form" name="form1">
     <div class="_container0" id="_container0" style="display: block;">
         <div class="_row">
             <div class="_column">
@@ -116,6 +116,9 @@
         </div>
     </div>
     </form>
+
+
+
     <div class="_container3" id="_container3" style="display: none;">
         <form id="upload-files" method="POST" action="" enctype="multipart/form-data" name="form2">
             <div class="_row">
@@ -131,9 +134,9 @@
                 <div class="_column">
                     <div class="c3_filecontainer" style="margin-left: 50px;">
                         <h2> Articles file</h2>
-                        <div id="btn1" onclick="getFile1()"> Choose file </div>
+                        <div id="btn1" onclick="getFile('articles_file')"> Choose file </div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub1(this);">
+                            <input type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub(this, 'btn1');">
                         </div>
                         <div class="typeformcontainer" id="typeformcontainer1">
                             <section id="articles_attr_section">
@@ -150,9 +153,9 @@
                 <div class="_column">
                     <div class="c3_filecontainer">
                         <h2> Purchases file</h2>
-                        <div id="btn2" onclick="getFile2()"> Choose file </div>
+                        <div id="btn2" onclick="getFile('purchases_file')"> Choose file </div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" id="purchases_file" name="purchases_file" value="" accept=".csv" required onchange="sub2(this)">
+                            <input type="file" id="purchases_file" name="purchases_file" value="" accept=".csv" required onchange="sub(this, 'btn2')">
                         </div>
                     </div>
                 </div>
@@ -160,9 +163,9 @@
                 <div class="_column">
                     <div class="c3_filecontainer" style="margin-right: 50px;">
                         <h2> Customers file</h2>
-                        <div id="btn3" onclick="getFile3()"> Choose file </div>
+                        <div id="btn3" onclick="getFile('customers_file')"> Choose file </div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" id="customers_file" name="customers_file" value="" accept=".csv" required onchange="sub3(this)">
+                            <input type="file" id="customers_file" name="customers_file" value="" accept=".csv" required onchange="sub(this, 'btn3')">
                         </div>
                         <div class="typeformcontainer" id="typeformcontainer2">
                             <section id="customers_attr_section">
@@ -187,7 +190,7 @@
                 </div>
                 <div class="_column">
                     <div class="c3_button" style="margin-right: 50px">
-                        <button type="submit" role="button" onclick="toggleDatasetView()">
+                        <button role="button" onclick="toggleDatasetView()">
                             Cancel
                         </button>
                     </div>
@@ -200,14 +203,7 @@
 
 
 <script>
-    {#var row_id = 0;#}
 window.onload = sendData();goToABTestPage();
-
-{#var fileAttributes = {'articles': [], 'customers': []};#}
-{#var article_attr = ["aa", "ab", "ac", "ad", "ae", "af", "ag0bvb", "ah"];#}
-{#var customer_attr = ["ca", "cb", "cc", "cd"];#}
-{#fileAttributes['articles'] = article_attr;#}
-{#fileAttributes['customers'] = customer_attr;#}
 
 function goToABTestPage() {
     var ds = document.getElementById("datasetSelection");
@@ -215,25 +211,6 @@ function goToABTestPage() {
     console.log(ds);
     var link = document.getElementById('abtestlink');
     link.href += '?selected_ds_id=' + ds;
-
-
-    {#window.location.href="{{ url_for('services', selectedDataset='ds') }}".replace("ds", ds);#}
-    {#window.location.href="{{ url_for('services', selected_ds_id='ds') }}".replace("ds", ds);#}
-    {#$.ajax({#}
-    {#        type: 'POST',#}
-    {#        url: '/datasets/redirectabtestpage',#}
-    {#        data: {'ds_id' : ds},#}
-    {#        contentType: false,#}
-    {#        cache: false,#}
-    {#        processData: false,#}
-    {#        dataType: 'json',#}
-    {#        success: function(data) {#}
-    {#            console.log("Success!");#}
-    {#        },#}
-    {#    });#}
-    {#e.preventDefault();#}
-    {#window.location.href = "https://www.google.com";#}
-    {#window.location.reload();#}
 
 }
 
@@ -327,34 +304,14 @@ function generateAttrHtml(data) {
     }
 }
 
-function getFile1() {
-    document.getElementById("articles_file").click();
-}
-function getFile2() {
-    document.getElementById("purchases_file").click();
-}
-function getFile3() {
-    document.getElementById("customers_file").click();
+function getFile(elem) {
+    document.getElementById(elem).click();
 }
 
-function sub1(obj) {
+function sub(obj, button) {
     var file = obj.value;
     var filename = file.split("\\");
-    document.getElementById("btn1").innerHTML = filename[filename.length - 1];
-    event.preventDefault();
-}
-
-function sub2(obj) {
-    var file = obj.value;
-    var filename = file.split("\\");
-    document.getElementById("btn2").innerHTML = filename[filename.length - 1];
-    event.preventDefault();
-}
-
-function sub3(obj) {
-    var file = obj.value;
-    var filename = file.split("\\");
-    document.getElementById("btn3").innerHTML = filename[filename.length - 1];
+    document.getElementById(button).innerHTML = filename[filename.length - 1];
     event.preventDefault();
 }
 
@@ -428,16 +385,6 @@ function drawGraph(data, name, title_){
         chart.draw(dataitems, google.charts.Bar.convertOptions(options));
 }
 
-{#function displayC3() {#}
-{#    var c3 = document.getElementById("_container3");#}
-{#    if (c3.style.display == "none") {#}
-{#        c3.style.display = "block";#}
-{#    }#}
-{#    else {#}
-{#        c3.style.display = "none";#}
-{#    }#}
-{##}
-
 function toggleDatasetView() {
     var c0 = document.getElementById("_container0");
     var c3 = document.getElementById("_container3");
@@ -449,22 +396,12 @@ function toggleDatasetView() {
         c0.style.display = "none";
         c3.style.display = "block";
     }
-    {#event.preventDefault();#}
+    event.preventDefault();
 }
 
 $('button.c0_button').click(function(e) {
     e.preventDefault();
 });
-
-{#function selectRow() {#}
-{#    row_id = event.target.id;#}
-
-{##}
-{#function sendTableData() {#}
-{#    var data = document.getElementById(row_id).querySelectorAll(".row_data");#}
-{#    var id = data[0].innerHTML;#}
-{#    var name = data[1].innerHTML;#}
-{#    #}
 
 </script>
 

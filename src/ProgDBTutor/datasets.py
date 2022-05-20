@@ -25,18 +25,10 @@ def handelRequests(app, session, request, taskQueue, type_list):
             #removeDataset(session, rqst)
             taskQueue.enqueue(removeDataset, session['username'], rqst, job_timeout=600)
 
-        # vernander alle waarder en grafiek op de pagina
-        else:
-            # return getDatasetInformation(user_data_access, dataset_id)
-            pass
-
     # Add dataset form
     elif request.method == 'POST':
         #taskQueue.enqueue(addDatasetHere, app, session)
         addDatasetHere(app, session, taskQueue, type_list)
-    else:
-        pass
-
 
 def addDatasetHere(app, session, tq, type_list):
     if session['username'] == 'admin':  # checken of de user de admin is
