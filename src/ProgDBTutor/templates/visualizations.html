@@ -114,7 +114,7 @@
     document.getElementById("endpoint").innerHTML = "";
     document.getElementById("purchases").innerHTML = "";
     document.getElementById("users").innerHTML = "";
-    fetchStatus();
+    {#fetchStatus();#}
     var interval = null;
     function fetchStatus() {
         fetch(`/visualizations/update`)
@@ -122,22 +122,19 @@
                 return response.text();
             })
             .then(function (text){
-                if (text !== ''){
-                    let info = JSON.parse(text)
-
-                        document.getElementById("abtest_id").innerHTML = info["abtest_id"];
-                        document.getElementById("dataset_name").innerHTML = info["datasetname"];
-                        document.getElementById("startpoint").innerHTML = info["startpoint"];
-                        document.getElementById("stepsize").innerHTML = info["stepsize"];
-                        document.getElementById("topk").innerHTML = info["topk"];
-                        document.getElementById("endpoint").innerHTML = info["endpoint"];
-                        google.charts.load('current', {packages: ['corechart', 'line']});
-                        google.charts.setOnLoadCallback(drawCurveTypes);
-                        let dataUsersPurch = JSON.parse(info["graphPurchAndUsers"])
-                        drawActUsersAndPurchChart(dataUsersPurch)
-
-                    {#document.getElementById("purchases").innerHTML = items["purchases"].toString()#}
-                    {#document.getElementById("users").innerHTML = items["users"].toString()#}
+                let info = JSON.parse(text)
+                if (Object.keys(info).length > 0){
+                    document.getElementById("abtest_id").innerHTML = info["abtest_id"];
+                    document.getElementById("dataset_name").innerHTML = info["datasetname"];
+                    document.getElementById("startpoint").innerHTML = info["startpoint"];
+                    document.getElementById("stepsize").innerHTML = info["stepsize"];
+                    document.getElementById("topk").innerHTML = info["topk"];
+                    document.getElementById("endpoint").innerHTML = info["endpoint"];
+                    {#console.log(info)#}
+                    let dataUsersPurch = info["graphPurchAndUsers"]
+                    google.charts.load('current', {packages: ['corechart', 'line']});
+                    google.charts.setOnLoadCallback(drawActUsersAndPurchChart);
+                    drawActUsersAndPurchChart(dataUsersPurch)
                     clearInterval(interval)
                 }
 
@@ -148,17 +145,20 @@
     function drawActUsersAndPurchChart(dataUsersPurch){
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'X');
-        data.addColumn('date', 'Purchases');
-        data.addColumn('date', 'Active users');
+        data.addColumn('number', 'Purchases');
+        data.addColumn('number', 'Active users');
 
         let dataGraph = []
-
-        for (day of dataUsersPurch){
-            let info = JSON.parse(dataUsersPurch[day]);
-            dataGraph.push([new Date(day), info["purchases"], info['users']])
+        {#console.log(dataUsersPurch)#}
+        for (const [key, value] of Object.entries(dataUsersPurch)){
+            {#console.log(day)#}
+            {#console.log(key, value)#}
+            dataGraph.push([new Date(key), parseInt(value["purchases"]), parseInt(value['users'])])
         }
 
+        console.log(dataGraph)
         data.addRows(dataGraph);
+        console.log(data)
 
         var options = {
         hAxis: {
