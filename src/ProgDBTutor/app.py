@@ -36,7 +36,7 @@ Imports voor pages
 """
 from datasets import *
 from userpagina import *
-
+from visualisation import *
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'.csv'}
@@ -242,14 +242,16 @@ def services(selected_ds_id=None):
                 #abtest.getABtestResults(maxABtestID, dataset_id)
                 #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
 
-                jobStart = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id)
-                jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
-                jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
-                jobs = [jobStart.id, jobABRes.id, jobPopAct.id]
-                session["jobs"] = jobs
+                jobABtests = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id)
+                # jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
+                # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
+                jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, abtest_id, dataset_id)
+
+                session["abVisualistation"] = jobABvisualisations.id
                 abtest_id += 1
                 algo_id = 1
-                return redirect(url_for('itemsection'))
+                # return redirect(url_for('itemsection'))
+                return redirect(url_for('visualizations'))
 
             # Remove the last add algorithm
             elif s == "remove":
@@ -344,17 +346,13 @@ def visualizations():
 @app.route("/visualizations/update")
 def visualizationsUpdate():
 
-    if "jobs" in session:
-        jobs = session["jobs"]
-        jobsDone = 0
-        for job in jobs:
-            if str(abTestQueue.fetch_job(job).get_status()) == "finished":
-                jobsDone += 1
-
-        if jobsDone == len(jobs):
-            return {"purchases": 1000, "users": 50}
-
-    return ""
+    if "abVisualistation" in session:
+        job = session["abVisualistation"]
+        job = abTestQueue.fetch_job(job)
+        if job is not None:
+            if str(job.get_status()) == "finished":
+                return job.return_value
+    return {}
 
 
 #----------------- A/B-test list -----------------#
@@ -377,10 +375,11 @@ def testlist():
 def usersectionUpdate():
     if "userpage" in session:
         userpage = session["userpage"]
-        job  = abTestQueue.fetch_job(userpage)
-        if str(job.get_status()) == "finished":
-            recommendations, history, interval, graph, topkListprint = job.return_value
-            return {"recommendations":recommendations, "history": history, "interval":interval, "graph":graph, "topkListprint": topkListprint}
+        job = abTestQueue.fetch_job(userpage)
+        if job is not None:
+            if str(job.get_status()) == "finished":
+                recommendations, history, interval, graph, topkListprint = job.return_value
+                return {"recommendations":recommendations, "history": history, "interval":interval, "graph":graph, "topkListprint": topkListprint}
     return {}
 
 @app.route("/usersection")
@@ -576,7 +575,8 @@ def logout():
     # logout_user()
     session.pop('loggedin', None)
     session.pop('username', None)
-    session.pop('jobs', None)
+    session.pop('abVisualistation', None)
+    session.pop('userpage', None)
     # session.pop('_flashes', None)
     return redirect(url_for('login_user'))
 
