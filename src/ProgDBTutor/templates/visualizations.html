@@ -92,7 +92,9 @@
                     </p>
                 </div>
             </div>
-            <div class="metric_container__graph"></div>
+            <div class="metric_container__graph">
+                <selection id="user_purch_graph"></selection>
+            </div>
             <div class="metric_container__graph"></div>
             <div class="metric_container__graph"></div>
         </div>
@@ -121,13 +123,57 @@
             })
             .then(function (text){
                 if (text !== ''){
-                    let items = JSON.parse(text)
-                    document.getElementById("purchases").innerHTML = items["purchases"].toString()
-                    document.getElementById("users").innerHTML = items["users"].toString()
+                    let info = JSON.parse(text)
+
+                        document.getElementById("abtest_id").innerHTML = info["abtest_id"];
+                        document.getElementById("dataset_name").innerHTML = info["datasetname"];
+                        document.getElementById("startpoint").innerHTML = info["startpoint"];
+                        document.getElementById("stepsize").innerHTML = info["stepsize"];
+                        document.getElementById("topk").innerHTML = info["topk"];
+                        document.getElementById("endpoint").innerHTML = info["endpoint"];
+                        google.charts.load('current', {packages: ['corechart', 'line']});
+                        google.charts.setOnLoadCallback(drawCurveTypes);
+                        let dataUsersPurch = JSON.parse(info["graphPurchAndUsers"])
+                        drawActUsersAndPurchChart(dataUsersPurch)
+
+                    {#document.getElementById("purchases").innerHTML = items["purchases"].toString()#}
+                    {#document.getElementById("users").innerHTML = items["users"].toString()#}
                     clearInterval(interval)
                 }
 
             })
+    }
+
+
+    function drawActUsersAndPurchChart(dataUsersPurch){
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'X');
+        data.addColumn('date', 'Purchases');
+        data.addColumn('date', 'Active users');
+
+        let dataGraph = []
+
+        for (day of dataUsersPurch){
+            let info = JSON.parse(dataUsersPurch[day]);
+            dataGraph.push([new Date(day), info["purchases"], info['users']])
+        }
+
+        data.addRows(dataGraph);
+
+        var options = {
+        hAxis: {
+          title: 'Date'
+        },
+        vAxis: {
+          title: 'Numbers'
+        },
+        colors: ['#0032ff', '#b90000'],
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('user_purch_graph'));
+
+      chart.draw(data, options);
+
     }
 
 
