@@ -358,6 +358,25 @@ function sub3(obj) {
     event.preventDefault();
 }
 
+{#fetchStatus();#}
+var interval = null;
+function fetchStatus() {
+    fetch(`/dataset/update`)
+        .then(function (text){
+            if (text == 'done'){
+                sendData()
+                clearInterval(interval)
+            }
+
+        })
+}
+
+
+window.addEventListener('load', function () {
+    let fetchInterval = 5000;
+    interval = setInterval(fetchStatus, fetchInterval)
+})
+
 function sendData() {
     let id = document.getElementById("datasetSelection").value;
 
@@ -449,7 +468,7 @@ function toggleDatasetView() {
         c0.style.display = "none";
         c3.style.display = "block";
     }
-    {#event.preventDefault();#}
+    event.preventDefault();
 }
 
 $('button.c0_button').click(function(e) {

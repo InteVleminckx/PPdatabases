@@ -33,7 +33,7 @@ def handelRequests(app, session, request, taskQueue, type_list):
     # Add dataset form
     elif request.method == 'POST':
         #taskQueue.enqueue(addDatasetHere, app, session)
-        addDatasetHere(app, session, taskQueue, type_list)
+        return addDatasetHere(app, session, taskQueue, type_list)
     else:
         pass
 
@@ -41,10 +41,11 @@ def handelRequests(app, session, request, taskQueue, type_list):
 def addDatasetHere(app, session, tq, type_list):
     if session['username'] == 'admin':  # checken of de user de admin is
         dataset_id = importDataset(tq)
-        importArticles(app, dataset_id, tq, type_list)
-        importCustomers(app, dataset_id, tq, type_list)
-        importPurchases(app, dataset_id, tq)
+        id1 = importArticles(app, dataset_id, tq, type_list)
+        id2 = importCustomers(app, dataset_id, tq, type_list)
+        id3 = importPurchases(app, dataset_id, tq)
         tq.enqueue(createDatasetIdIndex)
+        return [id1, id2, id3]
     else:
         flash("You need admin privileges to upload a dataset", category='error')
 
@@ -97,7 +98,8 @@ def importArticles(app, dataset_id, tq, type_list): #\
     af.save(af_filename)
     # Add articles to database
     #addArticles(data_articles, dataset_id)
-    tq.enqueue(addArticles, af_filename, dataset_id, type_list, job_timeout=1200)
+    job = tq.enqueue(addArticles, af_filename, dataset_id, type_list, job_timeout=1200)
+    return job.id
 
 
 def importCustomers(app, dataset_id, tq, type_list):
@@ -107,7 +109,8 @@ def importCustomers(app, dataset_id, tq, type_list):
     cf.save(cf_filename)
     # Add customers to database
     #addCustomers(data_customers, columns_customers, dataset_id)
-    tq.enqueue(addCustomers, cf_filename, dataset_id, type_list, job_timeout=1200)
+    job = tq.enqueue(addCustomers, cf_filename, dataset_id, type_list, job_timeout=1200)
+    return job.id
 
 
 def importPurchases(app, dataset_id, tq):
@@ -117,8 +120,8 @@ def importPurchases(app, dataset_id, tq):
     pf.save(pf_filename)
     # Add purchases to database
     #addPurchases(data_purchases, dataset_id)
-    tq.enqueue(addPurchases, pf_filename, dataset_id, job_timeout=3600)
-
+    job = tq.enqueue(addPurchases, pf_filename, dataset_id, job_timeout=3600)
+    return job.id
 
 def getCSVHeader(app, csv_filename):
     df = request.files[csv_filename]
