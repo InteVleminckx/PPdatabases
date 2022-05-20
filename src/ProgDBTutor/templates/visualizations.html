@@ -92,9 +92,7 @@
                     </p>
                 </div>
             </div>
-            <div class="metric_container__graph">
-                <selection id="user_purch_graph"></selection>
-            </div>
+            <div class="metric_container__graph" id="user_purch_graph"></div>
             <div class="metric_container__graph"></div>
             <div class="metric_container__graph"></div>
         </div>
@@ -130,6 +128,8 @@
                     document.getElementById("stepsize").innerHTML = info["stepsize"];
                     document.getElementById("topk").innerHTML = info["topk"];
                     document.getElementById("endpoint").innerHTML = info["endpoint"];
+                    document.getElementById("purchases").innerHTML = info["totalPurchases"];
+                    document.getElementById("users").innerHTML = info["totalUsers"];
                     {#console.log(info)#}
                     let dataUsersPurch = info["graphPurchAndUsers"]
                     google.charts.load('current', {packages: ['corechart', 'line']});
@@ -149,10 +149,7 @@
         data.addColumn('number', 'Active users');
 
         let dataGraph = []
-        {#console.log(dataUsersPurch)#}
         for (const [key, value] of Object.entries(dataUsersPurch)){
-            {#console.log(day)#}
-            {#console.log(key, value)#}
             dataGraph.push([new Date(key), parseInt(value["purchases"]), parseInt(value['users'])])
         }
 
@@ -161,13 +158,15 @@
         console.log(data)
 
         var options = {
-        hAxis: {
-          title: 'Date'
-        },
-        vAxis: {
-          title: 'Numbers'
-        },
+        pointSize: 3,
+        title: 'Purchases and active users per day.',
+        chartArea: {
+          width: '80%'
+         },
+        width: '100%',
+        height: '100%',
         colors: ['#0032ff', '#b90000'],
+        legend: { position: 'bottom' }
       };
 
       var chart = new google.visualization.LineChart(document.getElementById('user_purch_graph'));
@@ -178,7 +177,7 @@
 
 
     window.addEventListener('load', function () {
-        let fetchInterval = 5000;
+        let fetchInterval = 1000;
         interval = setInterval(fetchStatus, fetchInterval)
     })
 
