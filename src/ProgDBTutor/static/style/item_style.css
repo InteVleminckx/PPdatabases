@@ -3,8 +3,10 @@ html, body {
     background-color: #E3E9F0;
 }
 
+.main__header {
+    text-align: center;
+}
 .container__itemsection {
-    margin-top: 35px;
     margin-bottom: 50px;
     height: 1350px;
     padding: 10px;
