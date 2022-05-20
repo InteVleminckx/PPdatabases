@@ -1,5 +1,6 @@
 # TUTORIAL Len Feremans, Sandy Moens and Joey De Pauw
 # see tutor https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
+import json
 import time
 
 from flask import Flask, request, session, jsonify, flash, redirect, url_for
@@ -393,8 +394,98 @@ def usersection():
 
     return render_template('user.html', username=customer_id, datasetname=datasetname)
 
+@app.route("/itemsection_graph", methods=['POST', 'GET'])
+def itemsection_graph():
+    if request.method == 'POST':
+        abtest_id = getMaxABTestID()
+        dataset_id = 1
+        item_id = 706016001
 
-#----------------- User section page -----------------#
+        numbers = []
+        maxYValue = 0
+        columns = []
+
+        graph_type = request.form.get('graph_select', None)
+        begin_date = request.form.get('begin_time', None)
+        end_date = request.form.get('end_time', None)
+        data = []
+
+        # Compute popularity item graph
+        if graph_type == 'Popularity item':
+            startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
+            endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            stepsize = datetime.timedelta(days=1)
+
+            # Add first row to data
+            data = [['Date', 'Purchases']]
+
+            while startPoint <= endPoint:
+                amountCorrectRecommendations = getItemPurchases(dataset_id, item_id, str(startPoint)[0:10])
+                data.append([str(startPoint)[0:10], amountCorrectRecommendations])
+                startPoint += stepsize
+
+        # Compute recommendation count graph
+        elif graph_type == 'Recommendation count':
+            startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
+            endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            stepsize = datetime.timedelta(days=1)
+
+            # Add first row that contains all algorithm names
+            firstRow = ['Date']
+            resultIDs = getResultIds(abtest_id, dataset_id)
+            for id in resultIDs:
+                firstRow.append('Algorithm' + str(id))
+            data.append(firstRow)
+
+            while startPoint <= endPoint:
+                amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
+                subdata = [str(startPoint)[0:10]] + amountRecommendations
+                data.append(subdata)
+                startPoint += stepsize
+
+        # Compute recommendation correctness graph
+        elif graph_type == 'Recommendation correctness':
+            startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
+            endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            stepsize = datetime.timedelta(days=1)
+
+            # Determine the columns that we need to use in the index.html
+            resultIDs = getResultIds(abtest_id, dataset_id)
+            for id in resultIDs:
+                columns.append('Algorithm' + str(id) + ' recommendations')
+                columns.append('Algorithm' + str(id) + ' correct recommendations')
+
+            # Determine the data that we need for the graph
+            while startPoint <= endPoint:
+                temp_data = [str(startPoint)[0:10]]
+                amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
+                amountCorrectRecommendations = getRecommendationCorrectness(startPoint, item_id, abtest_id, dataset_id)
+                for index in range(len(amountRecommendations)):
+                    temp_data.append(amountRecommendations[index])
+                    temp_data.append(amountCorrectRecommendations[index])
+                    sum = amountRecommendations[index] + amountCorrectRecommendations[index]
+                    if sum > maxYValue:
+                        maxYValue = sum
+                data.append(temp_data)
+                startPoint += stepsize
+
+            begin_counter = 2
+            end_counter = 1
+            for i in range(len(resultIDs) - 1):
+                numbers.append([begin_counter, end_counter])
+                begin_counter += 1
+                numbers.append([begin_counter, end_counter])
+                begin_counter += 1
+                end_counter += 1
+
+        d = {'graph_type': graph_type, 'data': data, 'numbers': numbers, 'maxYValue': maxYValue, 'name': 'item_graph',
+             'columns': columns}
+
+        print(request.form, d)
+
+        return d
+
+#----------------- Item section page -----------------#
 @app.route("/itemsection", methods=['POST', 'GET'])
 def itemsection():
     abtest_id = getMaxABTestID()
@@ -413,92 +504,6 @@ def itemsection():
         image_url = item.attributes['image_url']
     else:
         image_url = None
-
-    # See if we pressed the button to show the graph
-    # if request.method == 'POST':
-    graph_type = request.form.get('graph_select', None)
-    begin_date = request.form.get('begin_time', None)
-    end_date = request.form.get('end_time', None)
-    data = []
-
-    # Compute popularity item graph
-    if graph_type == 'Popularity item':
-        startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
-        endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
-        stepsize = datetime.timedelta(days=1)
-
-        # Add first row to data
-        data = [['Date', 'Purchases']]
-
-        while startPoint <= endPoint:
-            amountCorrectRecommendations = getItemPurchases(dataset_id, item_id, str(startPoint)[0:10])
-            data.append([str(startPoint)[0:10], amountCorrectRecommendations])
-            startPoint += stepsize
-
-        data = json.dumps(data)
-        return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
-                               name='item_graph', title='Popularity item')
-
-    # Compute recommendation count graph
-    elif graph_type == 'Recommendation count':
-        startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
-        endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
-        stepsize = datetime.timedelta(days=1)
-
-        # Add first row that contains all algorithm names
-        firstRow = ['Date']
-        resultIDs = getResultIds(abtest_id, dataset_id)
-        for id in resultIDs:
-            firstRow.append('Algorithm' + str(id))
-        data.append(firstRow)
-
-        while startPoint <= endPoint:
-            amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
-            subdata = [str(startPoint)[0:10]] + amountRecommendations
-            data.append(subdata)
-            startPoint += stepsize
-
-        data = json.dumps(data)
-        return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
-                               name='item_graph', title='Recommendation count')
-
-    # Compute recommendation correctness graph
-    elif graph_type == 'Recommendation correctness':
-        startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
-        endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
-        stepsize = datetime.timedelta(days=1)
-
-        # Determine the columns that we need to use in the index.html
-        columns = []
-        resultIDs = getResultIds(abtest_id, dataset_id)
-        for id in resultIDs:
-            columns.append('Algorithm' + str(id) + ' recommendations')
-            columns.append('Algorithm' + str(id) + ' correct recommendations')
-
-        # Determine the data that we need for the graph
-        while startPoint <= endPoint:
-            temp_data = [str(startPoint)[0:10]]
-            amountRecommendations = getItemRecommendations(startPoint, item_id, abtest_id, dataset_id)
-            amountCorrectRecommendations = getRecommendationCorrectness(startPoint, item_id, abtest_id, dataset_id)
-            for index in range(len(amountRecommendations)):
-                temp_data.append(amountRecommendations[index])
-                temp_data.append(amountCorrectRecommendations[index])
-            data.append(temp_data)
-            startPoint += stepsize
-        data = json.dumps(data)
-
-        numbers = []
-        begin_counter = 2
-        end_counter = 1
-        for i in range(len(resultIDs)-1):
-            numbers.append([begin_counter, end_counter])
-            begin_counter += 1
-            numbers.append([begin_counter, end_counter])
-            begin_counter += 1
-            end_counter += 1
-
-        return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=data,
-                               name='item_graph', title='Recommendation correctness', columns=columns, numbers=numbers)
 
     return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=None,
                            name=None, title=None)
