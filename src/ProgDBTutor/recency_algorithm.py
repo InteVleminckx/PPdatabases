@@ -70,10 +70,13 @@ class Recency:
         then it will get the recommendations for that interval
         """
 
-
+        # i = 1
+        # print("RECENCY")
         recommendations = getRecencyItem(self.datasetID, start, end, self.top_k)
         if recommendations is not None:
             for item_id in recommendations:
+                # print(i)
+                # i += 1
                 attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
                 addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id[0]), attribute_costumer, start, end)
 
