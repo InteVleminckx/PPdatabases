@@ -8,6 +8,7 @@ import os
 from user_data_acces import *
 from Metrics import *
 
+
 def getInfoVisualisationPage(abtest_id, dataset_id):
     cursor = dbconnect.get_cursor()
     cursor.execute("select start_point, end_point, stepsize, topk from abtest where abtest_id = %s limit 1;", (str(abtest_id),))
@@ -24,8 +25,12 @@ def getInfoVisualisationPage(abtest_id, dataset_id):
     datasetName = getDatasetname(dataset_id)
     graphPurchasesAndUsers,totalUsers, totalPurch = getPurchasesAndActiveUsersOverTime(startPoint, endPoint)
 
+    algorithms = getAlgortihms(abtest_id)
+
     return {"abtest_id": abtest_id, "startpoint":startPoint, "endpoint":endPoint, "datasetname": datasetName,
-            "stepsize": stepsize, "topk": topk, "graphPurchAndUsers" : graphPurchasesAndUsers, "totalUsers": totalUsers, "totalPurchases": totalPurch}
+            "stepsize": stepsize, "topk": topk, "graphPurchAndUsers" : graphPurchasesAndUsers, "totalUsers": totalUsers, "totalPurchases": totalPurch,
+            "algorithms": algorithms}
+
 
 def getPurchasesAndActiveUsersOverTime(start, end):
 
@@ -45,3 +50,21 @@ def getPurchasesAndActiveUsersOverTime(start, end):
         totalPurch += int(row[1])
 
     return info, str(totalusers), str(totalPurch)
+
+
+def getAlgortihms(abtest_id):
+    cursor = dbconnect.get_cursor()
+    cursor.execute("select result_id from abtest where abtest_id = %s", (str(abtest_id),))
+
+    results = cursor.fetchall()
+    if results is None:
+        return False
+
+    algorithms = {}
+
+    for result in results:
+        algo = getAlgorithm(abtest_id, result[0])
+        print(algo.params)
+        algorithms[str(result[0])] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
+
+    return algorithms

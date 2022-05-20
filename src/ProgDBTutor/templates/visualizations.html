@@ -66,8 +66,15 @@
                     </div>
                 </div>
             </div>
-            <div class="ab_container__table">
-
+            <div class="ab_container__table" id="algorithmTable">
+                <div class="ab_container__table_row" style="background-color: #d2d8de">
+                    <div class="ab_container__table_column" style="font-weight: bold; width: 50px" >Number</div>
+                    <div class="ab_container__table_column" style="font-weight: bold" >Name</div>
+                    <div class="ab_container__table_column" style="font-weight: bold" >K</div>
+                    <div class="ab_container__table_column" style="font-weight: bold" >Windowsize</div>
+                    <div class="ab_container__table_column" style="font-weight: bold" >Normalize</div>
+                    <div class="ab_container__table_column" style="font-weight: bold" >Retraininterval</div>
+                </div>
             </div>
             <div class="ab_container__table">
                 <button onclick="window.location.href='{{ url_for('usersection', dataset_id=1, customer_id=14, abtest_id=1) }}';">User page</button>
@@ -130,14 +137,15 @@
                     document.getElementById("endpoint").innerHTML = info["endpoint"];
                     document.getElementById("purchases").innerHTML = info["totalPurchases"];
                     document.getElementById("users").innerHTML = info["totalUsers"];
-                    {#console.log(info)#}
                     let dataUsersPurch = info["graphPurchAndUsers"]
+                    let algorihtms = info["algorithms"]
+                    console.log(algorihtms)
                     google.charts.load('current', {packages: ['corechart', 'line']});
                     google.charts.setOnLoadCallback(drawActUsersAndPurchChart);
-                    drawActUsersAndPurchChart(dataUsersPurch)
+                    drawActUsersAndPurchChart(dataUsersPurch);
+                    constructAlgorithmTable(algorihtms);
                     clearInterval(interval)
                 }
-
             })
     }
 
@@ -172,6 +180,48 @@
       var chart = new google.visualization.LineChart(document.getElementById('user_purch_graph'));
 
       chart.draw(data, options);
+
+    }
+
+    function constructAlgorithmTable(dataAlgo){
+        console.log(dataAlgo)
+        html_ = ""
+        for (const [key, value] of Object.entries(dataAlgo)){
+
+            html_ += "<div class=\"ab_container__table_row\">"
+            html_ += "    <div class=\"ab_container__table_column\" style='width: 50px' >" + value["result_id"].toString() + "</div>"
+            html_ += "    <div class=\"ab_container__table_column\">" + value["name"] + "</div>"
+
+            let params = value["params"]
+
+            if (params.hasOwnProperty("k")){
+                html_ += "    <div class=\"ab_container__table_column\">"+ params["k"] +"</div>"
+            }
+            else {
+                html_ += "    <div class=\"ab_container__table_column\"></div>"
+            }
+            if (params.hasOwnProperty("windowsize")){
+                html_ += "    <div class=\"ab_container__table_column\">"+ params["windowsize"] +"</div>"
+            }
+            else {
+                html_ += "    <div class=\"ab_container__table_column\"></div>"
+            }
+            if (params.hasOwnProperty("normalize")){
+                html_ += "    <div class=\"ab_container__table_column\">"+ params["normalize"] +"</div>"
+            }
+            else {
+                html_ += "    <div class=\"ab_container__table_column\"></div>"
+            }
+            if (params.hasOwnProperty("retraininterval")){
+                html_ += "    <div class=\"ab_container__table_column\">"+ params["retraininterval"] +"</div>"
+            }
+            else {
+                html_ += "    <div class=\"ab_container__table_column\"></div>"
+            }
+            html_ += "</div>"
+        }
+
+        document.getElementById("algorithmTable").innerHTML += html_
 
     }
 
