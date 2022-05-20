@@ -88,6 +88,9 @@ html, body{
 
 
 .metric_container__graph {
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
     width: 600px;
     height: 267px;
     background-color: #FFFFFF;
