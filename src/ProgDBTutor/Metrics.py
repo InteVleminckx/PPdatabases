@@ -61,24 +61,29 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID):
 
     print(endDate, abtestID, resultID, datasetID)
 
-    cursor.execute('select distinct customer_id from interaction where t_dat between %s and %s limit 2;',
+    cursor.execute('select distinct customer_id from interaction where t_dat between %s and %s;',
                    (str(startDate), str(endDate)))
     rows = cursor.fetchall()
     if rows is None:
         return None
 
+    ctr = 0
+
     for row in rows:
-        print(row[0])
         cursor.execute(
             "select item_number from recommendation where ( abtest_id = %s and result_id = %s and dataset_id = %s and (customer_id = -1 or customer_id = %s) and start_point < %s and %s <= end_point);",
             (str(abtestID), str(resultID), str(datasetID), str(row[0]), str(endDate), str(endDate)))
 
-        print(cursor.query)
         recos = cursor.fetchall()
-        print(recos)
-        # for reco in recos:
-        #     print(reco)
-        print('\n')
+        cursor.execute("select item_id from interaction where dataset_id = %s and t_dat between %s and %s and customer_id = %s;", (str(datasetID),str(startDate), str(endDate), str(row[0])))
+        purch = cursor.fetchall()
+
+        for pur in purch:
+            if pur in recos:
+                ctr += 1
+                break
+
+    return round(ctr/len(rows), 2)
 
     # """
     # voor elke ACTIEVE consumer: kijk of die in die tijdsperiode minstens 1 aankoop hebben gemaakt die ook
