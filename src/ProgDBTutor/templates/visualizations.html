@@ -140,12 +140,13 @@
                     let dataUsersPurch = info["graphPurchAndUsers"]
                     let algorihtms = info["algorithms"]
                     let ctr = info["ctr"]
+                    let arad = info["ar@d"]
                     console.log(algorihtms)
                     google.charts.load('current', {packages: ['corechart', 'line']});
                     google.charts.setOnLoadCallback(drawActUsersAndPurchChart);
                     drawActUsersAndPurchChart(dataUsersPurch);
                     constructAlgorithmTable(algorihtms);
-                    drawCTRandARAD(ctr)
+                    drawCTRandARAD(ctr, arad)
                     clearInterval(interval)
                 }
             })
@@ -185,7 +186,7 @@
 
     }
 
-     function drawCTRandARAD(ctrAndAradData){
+     function drawCTRandARAD(ctr, arad){
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'X');
 
@@ -195,7 +196,7 @@
          let dates = []
          {#let data_ = []#}
          let count = 0
-         for (const [key, value] of Object.entries(ctrAndAradData)){
+         for (const [key, value] of Object.entries(ctr)){
             data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
 
             if (count == 0){
@@ -207,19 +208,31 @@
             }
 
         }
+        for (const [key, value] of Object.entries(arad)){
+            data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
+        }
 
-        console.log(dates)
+        {#console.log(dates)#}
 
-        console.log(ctrAndAradData)
-         count = 0
-        for (const [key, value] of Object.entries(ctrAndAradData)){
+        {#console.log(ctr)#}
+
+        count = 0
+        for (const [key, value] of Object.entries(ctr)){
             for (const [key2, value2] of Object.entries(value["values"])){
                 console.log(value2)
                     dates[count].push(value2)
                     count += 1
             }
             count = 0
-         }
+        }
+        for (const [key, value] of Object.entries(arad)){
+            for (const [key2, value2] of Object.entries(value["values"])){
+                console.log(value2)
+                    dates[count].push(value2)
+                    count += 1
+            }
+            count = 0
+        }
 
         console.log(dates)
 

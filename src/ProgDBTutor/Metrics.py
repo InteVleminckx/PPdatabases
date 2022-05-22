@@ -85,39 +85,6 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID):
 
     return round(ctr/len(rows), 2)
 
-    # """
-    # voor elke ACTIEVE consumer: kijk of die in die tijdsperiode minstens 1 aankoop hebben gemaakt die ook
-    # recommended was. Stel dat consumer 1, 5 dingen kocht, en minstens 1 daarvan is van de recommendation
-    # dan zet je de CTR voor die user op 1.
-    # """
-    # # NUMBER OF ACTIVE USERS WHO BOUGHT AT LEAST 1 RECOMMENDED ITEM
-    # # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id -> OK NOW
-    # cursor.execute(
-    #     "CREATE VIEW Active_Users AS SELECT DISTINCT I1.customer_id FROM Interaction I1 WHERE t_dat BETWEEN %s AND %s ; \
-    #      CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 WHERE R1.abtest_id = %s \
-    #     and R1.result_id = %s and R1.dataset_id = %s and R1.start_point = %s and R1.end_point = %s; \
-    #         SELECT count(DISTINCT I.customer_id) FROM Interaction I \
-    #     WHERE I.customer_id IN (SELECT * FROM Active_Users) AND I.item_id IN (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
-    #      DROP VIEW Active_Users ; \
-    #      DROP VIEW Recommendations ; ",
-    #     (startDate, endDate, abtestID, resultID, datasetID, startDate, endDate, startDate, endDate))
-    #
-    # if cursor is None:
-    #     return 0
-    # query1 = cursor.fetchone()[0]
-    #
-    # # NUMBER OF ALL ACTIVE USERS
-    # query2 = getNrOfActiveUsers(startDate, endDate)
-    #
-    # # can't divide by None or by 0
-    # if query2 is None or query2 == 0:
-    #     return 0
-    #
-    # # Click Through Rate = query1 / query2
-    # CTR = query1 / query2
-    # return CTR
-
-
 def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
     # hardcoded 7 or 30 days
     if days not in [7, 30]:
@@ -130,8 +97,8 @@ def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
     cursor = connection.get_cursor()
 
     # customer_id's of all active customers from interval [startDate+1 , endDate] (geen dubbele startDate's)
-    cursor.execute("SELECT DISTINCT I.customer_id FROM Interaction I \
-                    WHERE I.t_dat BETWEEN %s AND %s",
+    cursor.execute("SELECT DISTINCT i.customer_id FROM Interaction i \
+                    WHERE i.t_dat BETWEEN %s AND %s",
                    (afterStartDate, endDate))
 
     if cursor is None:
@@ -145,17 +112,17 @@ def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
     for ID in customerIDs:
 
         # geef het aantal voorgestelde aankopen van die user over het interval
-        cursor.execute("SELECT R1.item_number FROM Recommendation R1 \
-                        WHERE R1.abtest_id = %s AND R1.result_id = %s AND R1.dataset_id = %s \
-                        AND R1.start_point < %s AND R1.end_point >= %s \
-                        AND (R1.customer_id = %s OR R1.customer_id = -1); ",
+        cursor.execute("SELECT r1.item_number FROM Recommendation r1 \
+                        WHERE r1.abtest_id = %s AND r1.result_id = %s AND r1.dataset_id = %s \
+                        AND r1.start_point < %s AND r1.end_point >= %s \
+                        AND (r1.customer_id = %s OR r1.customer_id = -1); ",
                        (abtestID, resultID, datasetID, startDate, endDate, ID[0]))
 
         recommendations = cursor.fetchall()
 
         # geef het aantal aankopen van die user over het interval
-        cursor.execute("SELECT I.item_id FROM Interaction I \
-                        WHERE I.customed_id = %s AND I.dataset_id = %s AND I.t_dat BETWEEN %s AND %s; ",
+        cursor.execute("SELECT i.item_id FROM Interaction i \
+                        WHERE i.customer_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s; ",
                        (ID[0], datasetID, afterStartDate, endDate))
 
         purchases = cursor.fetchall()
@@ -171,7 +138,8 @@ def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
         returnList[1][ID[0]] = customer_AR
 
     AR = 0
-    for key, value in returnList[1]:
+    print(returnList[1])
+    for key, value in returnList[1].items():
         AR += returnList[1][key]
     AR = AR / len(returnList[1])
 
@@ -192,8 +160,8 @@ def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
     cursor = connection.get_cursor()
 
     # customer_id's of all active customers from interval [startDate+1 , endDate] (geen dubbele startDate's)
-    cursor.execute("SELECT DISTINCT I.customer_id FROM Interaction I \
-                        WHERE I.t_dat BETWEEN %s AND %s",
+    cursor.execute("SELECT DISTINCT i.customer_id FROM Interaction i \
+                        WHERE i.t_dat BETWEEN %s AND %s",
                    (afterStartDate, endDate))
 
     if cursor is None:
@@ -207,17 +175,17 @@ def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
     for ID in customerIDs:
 
         # geef het aantal voorgestelde aankopen van die user over het interval
-        cursor.execute("SELECT R1.item_number FROM Recommendation R1 \
-                            WHERE R1.abtest_id = %s AND R1.result_id = %s AND R1.dataset_id = %s \
-                            AND R1.start_point < %s AND R1.end_point >= %s \
-                            AND (R1.customer_id = %s OR R1.customer_id = -1); ",
+        cursor.execute("SELECT r1.item_number FROM Recommendation r1 \
+                            WHERE r1.abtest_id = %s AND r1.result_id = %s AND r1.dataset_id = %s \
+                            AND r1.start_point < %s AND r1.end_point >= %s \
+                            AND (r1.customer_id = %s OR r1.customer_id = -1); ",
                        (abtestID, resultID, datasetID, startDate, endDate, ID[0]))
 
         recommendations = cursor.fetchall()
 
         # geef het aantal aankopen van die user over het interval + prijs van elke aankoop
-        cursor.execute("SELECT I.item_id, I.price FROM Interaction I \
-                            WHERE I.customed_id = %s AND I.dataset_id = %s AND I.t_dat BETWEEN %s AND %s; ",
+        cursor.execute("SELECT i.item_id, i.price FROM Interaction i \
+                            WHERE i.customed_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s; ",
                        (ID[0], datasetID, afterStartDate, endDate))
 
         purchases = cursor.fetchall()
