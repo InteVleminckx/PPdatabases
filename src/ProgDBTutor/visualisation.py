@@ -63,12 +63,14 @@ def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
 
     ctr = {}
     ard = {}
+    argRevPr = {}
     for result in results:
         algo = getAlgorithm(abtest_id, result[0])
         algorithms[str(result[0])] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
-        ctr_, arad = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
+        ctr_, arad, argRev = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
         ctr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
         ard[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
+        argRevPr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
 
     return algorithms, ctr, ard
 
@@ -91,7 +93,8 @@ def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
         avrgRev = getAverageRevenuePerUser(7, curDate, abtest_id, result_id, dataset_id)
         ctr[str(curDate)[0:10]] = res
         ard[str(curDate)[0:10]] = arad[0]
+        argRev[str(curDate)[0:10]] = avrgRev[0]
         prevDate = curDate + timedelta(days=1)
         curDate += stepsize
 
-    return ctr, ard
+    return ctr, ard, argRev
