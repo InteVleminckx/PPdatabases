@@ -1,19 +1,16 @@
-from config import config_data
-from db_connection import DBConnection
-from user_data_acces import *
-
 from datetime import datetime
 from datetime import timedelta
 
-import time as tm
+from user_data_acces import *
 
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-#user_data_access = UserDataAcces(connection)
+# user_data_access = UserDataAcces(connection)
 
 
 """TEST"""
 start = "2020-01-01 20:00:00"
 end = "2020-02-01 20:00:00"
+
 
 # METRIC: Purchases
 def getNrOfPurchases(startDate=None, endDate=None):
@@ -47,6 +44,7 @@ def getNrOfActiveUsers(startDate=None, endDate=None):
         return cursor
     return cursor.fetchone()[0]
 
+
 def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID):
     if startDate is None and endDate is None:
         startDate = start
@@ -54,37 +52,62 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID):
 
     cursor = connection.get_cursor()
 
-    """
-    voor elke ACTIEVE consumer: kijk of die in die tijdsperiode minstens 1 aankoop hebben gemaakt die ook 
-    recommended was. Stel dat consumer 1, 5 dingen kocht, en minstens 1 daarvan is van de recommendation
-    dan zet je de CTR voor die user op 1.        
-    """
-    # NUMBER OF ACTIVE USERS WHO BOUGHT AT LEAST 1 RECOMMENDED ITEM
-    # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id -> OK NOW
-    cursor.execute(
-        "CREATE VIEW Active_Users AS SELECT DISTINCT I1.customer_id FROM Interaction I1 WHERE t_dat BETWEEN %s AND %s ; \
-         CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 WHERE R1.abtest_id = %s \
-        and R1.result_id = %s and R1.dataset_id = %s and R1.start_point = %s and R1.end_point = %s; \
-            SELECT count(DISTINCT I.customer_id) FROM Interaction I \
-        WHERE I.customer_id IN (SELECT * FROM Active_Users) AND I.item_id IN (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
-         DROP VIEW Active_Users ; \
-         DROP VIEW Recommendations ; ",
-        (startDate, endDate, abtestID, resultID, datasetID, startDate, endDate, startDate, endDate))
+    startDate = str(startDate)[0:10]
+    endDate = str(endDate)[0:10]
 
-    if cursor is None:
-        return 0
-    query1 = cursor.fetchone()[0]
+    print(endDate, abtestID, resultID, datasetID)
 
-    # NUMBER OF ALL ACTIVE USERS
-    query2 = getNrOfActiveUsers(startDate, endDate)
+    cursor.execute('select distinct customer_id from interaction where t_dat between %s and %s limit 2;',
+                   (str(startDate), str(endDate)))
+    rows = cursor.fetchall()
+    if rows is None:
+        return None
 
-    # can't divide by None or by 0
-    if query2 is None or query2 == 0:
-        return 0
+    for row in rows:
+        print(row[0])
+        cursor.execute(
+            "select item_number from recommendation where ( abtest_id = %s and result_id = %s and dataset_id = %s and (customer_id = -1 or customer_id = %s) and start_point < %s and %s <= end_point);",
+            (str(abtestID), str(resultID), str(datasetID), str(row[0]), str(endDate), str(endDate)))
 
-    # Click Through Rate = query1 / query2
-    CTR = query1 / query2
-    return CTR
+        print(cursor.query)
+        recos = cursor.fetchall()
+        print(recos)
+        # for reco in recos:
+        #     print(reco)
+        print('\n')
+
+    # """
+    # voor elke ACTIEVE consumer: kijk of die in die tijdsperiode minstens 1 aankoop hebben gemaakt die ook
+    # recommended was. Stel dat consumer 1, 5 dingen kocht, en minstens 1 daarvan is van de recommendation
+    # dan zet je de CTR voor die user op 1.
+    # """
+    # # NUMBER OF ACTIVE USERS WHO BOUGHT AT LEAST 1 RECOMMENDED ITEM
+    # # TODO make sure R1 is the Recommendation we want to test by making WHERE some_id = some_other_id -> OK NOW
+    # cursor.execute(
+    #     "CREATE VIEW Active_Users AS SELECT DISTINCT I1.customer_id FROM Interaction I1 WHERE t_dat BETWEEN %s AND %s ; \
+    #      CREATE VIEW Recommendations AS SELECT DISTINCT R1.item_number FROM Recommendation R1 WHERE R1.abtest_id = %s \
+    #     and R1.result_id = %s and R1.dataset_id = %s and R1.start_point = %s and R1.end_point = %s; \
+    #         SELECT count(DISTINCT I.customer_id) FROM Interaction I \
+    #     WHERE I.customer_id IN (SELECT * FROM Active_Users) AND I.item_id IN (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
+    #      DROP VIEW Active_Users ; \
+    #      DROP VIEW Recommendations ; ",
+    #     (startDate, endDate, abtestID, resultID, datasetID, startDate, endDate, startDate, endDate))
+    #
+    # if cursor is None:
+    #     return 0
+    # query1 = cursor.fetchone()[0]
+    #
+    # # NUMBER OF ALL ACTIVE USERS
+    # query2 = getNrOfActiveUsers(startDate, endDate)
+    #
+    # # can't divide by None or by 0
+    # if query2 is None or query2 == 0:
+    #     return 0
+    #
+    # # Click Through Rate = query1 / query2
+    # CTR = query1 / query2
+    # return CTR
+
 
 def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
     # hardcoded 7 or 30 days
@@ -130,6 +153,7 @@ def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
     AR = query1 / query2
     return AR
 
+
 def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
     # hardcoded 7 or 30 days
     if days not in [7, 30]:
@@ -149,7 +173,7 @@ def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
         and R1.result_id = %s and R1.dataset_id = %s and R1.start_point = %s and R1.end_point = %s; \
         SELECT sum(I.price) FROM Interaction I WHERE I.item_id in (SELECT * FROM Recommendations) AND I.t_dat BETWEEN %s AND %s ; \
          DROP VIEW Recommendations ; ",
-              (abtestID, resultID, datasetID, startDate, endDate, startDate, endDate))
+                   (abtestID, resultID, datasetID, startDate, endDate, startDate, endDate))
 
     if cursor is None:
         return 0

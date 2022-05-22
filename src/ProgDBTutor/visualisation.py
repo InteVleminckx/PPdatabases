@@ -1,4 +1,4 @@
-import datetime
+# import datetime
 import json
 
 from flask import request, flash
@@ -25,7 +25,7 @@ def getInfoVisualisationPage(abtest_id, dataset_id):
     datasetName = getDatasetname(dataset_id)
     graphPurchasesAndUsers,totalUsers, totalPurch = getPurchasesAndActiveUsersOverTime(startPoint, endPoint)
 
-    algorithms = getAlgortihms(abtest_id)
+    algorithms = getAlgortihms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
 
     return {"abtest_id": abtest_id, "startpoint":startPoint, "endpoint":endPoint, "datasetname": datasetName,
             "stepsize": stepsize, "topk": topk, "graphPurchAndUsers" : graphPurchasesAndUsers, "totalUsers": totalUsers, "totalPurchases": totalPurch,
@@ -52,7 +52,7 @@ def getPurchasesAndActiveUsersOverTime(start, end):
     return info, str(totalusers), str(totalPurch)
 
 
-def getAlgortihms(abtest_id):
+def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
     cursor = dbconnect.get_cursor()
     cursor.execute("select result_id from abtest where abtest_id = %s", (str(abtest_id),))
 
@@ -62,9 +62,27 @@ def getAlgortihms(abtest_id):
 
     algorithms = {}
 
+    ctr = {}
+
     for result in results:
         algo = getAlgorithm(abtest_id, result[0])
-        print(algo.params)
         algorithms[str(result[0])] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
+        getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
 
     return algorithms
+
+def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
+
+    curDate = datetime.strptime(startpoint, "%Y-%m-%d")
+    end = datetime.strptime(endpoint, "%Y-%m-%d")
+    stepsize = timedelta(days=int(stepsize))
+    # print("oke")
+    prevDate = curDate
+
+    while curDate <= end:
+        # print("oke")
+        print(curDate)
+        getClickThroughRate(prevDate, curDate, abtest_id, result_id, dataset_id)
+
+        prevDate = curDate + timedelta(days=1)
+        curDate += stepsize
