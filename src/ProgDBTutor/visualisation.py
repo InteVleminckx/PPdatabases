@@ -25,12 +25,11 @@ def getInfoVisualisationPage(abtest_id, dataset_id):
     datasetName = getDatasetname(dataset_id)
     graphPurchasesAndUsers,totalUsers, totalPurch = getPurchasesAndActiveUsersOverTime(startPoint, endPoint)
 
-    algorithms = getAlgortihms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
+    algorithms, ctr = getAlgortihms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
 
     return {"abtest_id": abtest_id, "startpoint":startPoint, "endpoint":endPoint, "datasetname": datasetName,
             "stepsize": stepsize, "topk": topk, "graphPurchAndUsers" : graphPurchasesAndUsers, "totalUsers": totalUsers, "totalPurchases": totalPurch,
-            "algorithms": algorithms}
-
+            "algorithms": algorithms, "ctr": ctr}
 
 def getPurchasesAndActiveUsersOverTime(start, end):
 
@@ -67,9 +66,10 @@ def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
     for result in results:
         algo = getAlgorithm(abtest_id, result[0])
         algorithms[str(result[0])] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
-        getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
+        ctr_ = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
+        ctr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
 
-    return algorithms
+    return algorithms, ctr
 
 def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
 
@@ -79,10 +79,16 @@ def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
     # print("oke")
     prevDate = curDate
 
+    ctr = {}
+
     while curDate <= end:
         # print("oke")
-        print(curDate)
-        getClickThroughRate(prevDate, curDate, abtest_id, result_id, dataset_id)
+        # print(curDate)
+        res = getClickThroughRate(prevDate, curDate, abtest_id, result_id, dataset_id)
+
+        ctr[str(curDate)[0:10]] = res
 
         prevDate = curDate + timedelta(days=1)
         curDate += stepsize
+
+    return ctr
