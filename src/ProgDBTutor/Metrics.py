@@ -91,7 +91,7 @@ def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
         days = 7
 
     startDate = str(datetime.strptime(str(endDate)[0:10], '%Y-%m-%d') - timedelta(days=days))
-    afterStartDate = str(datetime.strptime(str(startDate)[0:10], '%Y-%m-%d') + timedelta(days=1))
+    # afterStartDate = str(datetime.strptime(str(startDate)[0:10], '%Y-%m-%d') + timedelta(days=1))
     endDate = str(endDate)[0:10]
 
     cursor = connection.get_cursor()
@@ -99,7 +99,7 @@ def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
     # customer_id's of all active customers from interval [startDate+1 , endDate] (geen dubbele startDate's)
     cursor.execute("SELECT DISTINCT i.customer_id FROM Interaction i \
                     WHERE i.t_dat BETWEEN %s AND %s",
-                   (afterStartDate, endDate))
+                   (startDate, endDate))
 
     if cursor is None:
         return [0, {}]
@@ -123,7 +123,7 @@ def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
         # geef het aantal aankopen van die user over het interval
         cursor.execute("SELECT i.item_id FROM Interaction i \
                         WHERE i.customer_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s; ",
-                       (ID[0], datasetID, afterStartDate, endDate))
+                       (ID[0], datasetID, startDate, endDate))
 
         purchases = cursor.fetchall()
 
@@ -154,7 +154,7 @@ def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
         days = 7
 
     startDate = str(datetime.strptime(str(endDate)[0:10], '%Y-%m-%d') - timedelta(days=days))
-    afterStartDate = str(datetime.strptime(str(startDate)[0:10], '%Y-%m-%d') + timedelta(days=1))
+    # afterStartDate = str(datetime.strptime(str(startDate)[0:10], '%Y-%m-%d') + timedelta(days=1))
     endDate = str(endDate)[0:10]
 
     cursor = connection.get_cursor()
@@ -162,7 +162,7 @@ def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
     # customer_id's of all active customers from interval [startDate+1 , endDate] (geen dubbele startDate's)
     cursor.execute("SELECT DISTINCT i.customer_id FROM Interaction i \
                         WHERE i.t_dat BETWEEN %s AND %s",
-                   (afterStartDate, endDate))
+                   (startDate, endDate))
 
     if cursor is None:
         return [0, {}]
@@ -186,7 +186,7 @@ def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
         # geef het aantal aankopen van die user over het interval + prijs van elke aankoop
         cursor.execute("SELECT i.item_id, i.price FROM Interaction i \
                             WHERE i.customed_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s; ",
-                       (ID[0], datasetID, afterStartDate, endDate))
+                       (ID[0], datasetID, startDate, endDate))
 
         purchases = cursor.fetchall()
 
