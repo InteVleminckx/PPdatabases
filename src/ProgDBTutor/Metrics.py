@@ -138,7 +138,7 @@ def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
         returnList[1][ID[0]] = customer_AR
 
     AR = 0
-    print(returnList[1])
+    # print(returnList[1])
     for key, value in returnList[1].items():
         AR += returnList[1][key]
     AR = AR / len(returnList[1])
@@ -185,7 +185,7 @@ def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
 
         # geef het aantal aankopen van die user over het interval + prijs van elke aankoop
         cursor.execute("SELECT i.item_id, i.price FROM Interaction i \
-                            WHERE i.customed_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s; ",
+                            WHERE i.customer_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s; ",
                        (ID[0], datasetID, startDate, endDate))
 
         purchases = cursor.fetchall()
@@ -201,7 +201,7 @@ def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
         returnList[1][ID[0]] = customer_ARPU
 
     ARPU = 0
-    for key, value in returnList[1]:
+    for key, value in returnList[1].items():
         ARPU += returnList[1][key]
     ARPU = ARPU / len(returnList[1])
 
@@ -210,11 +210,11 @@ def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
     return returnList
 
 
-nrOfPurchases = getNrOfPurchases(start, end)
-print(nrOfPurchases)
-
-nrOfActiveUsers = getNrOfActiveUsers(start, end)
-print(nrOfActiveUsers)
+# nrOfPurchases = getNrOfPurchases(start, end)
+# print(nrOfPurchases)
+#
+# nrOfActiveUsers = getNrOfActiveUsers(start, end)
+# print(nrOfActiveUsers)
 
 # CTR = test.getClickThroughRate(start, end, 1, 1, 1)
 # print(CTR)
