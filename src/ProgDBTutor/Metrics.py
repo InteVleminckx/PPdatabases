@@ -85,76 +85,136 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID):
 
     return round(ctr/len(rows), 2)
 
-def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
+# def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
+#     # hardcoded 7 or 30 days
+#     if days not in [7, 30]:
+#         days = 7
+#
+#     startDate = str(datetime.strptime(str(endDate)[0:10], '%Y-%m-%d') - timedelta(days=days))
+#     # afterStartDate = str(datetime.strptime(str(startDate)[0:10], '%Y-%m-%d') + timedelta(days=1))
+#     endDate = str(endDate)[0:10]
+#
+#     cursor = connection.get_cursor()
+#
+#     # customer_id's of all active customers from interval [startDate+1 , endDate] (geen dubbele startDate's)
+#     cursor.execute("SELECT DISTINCT i.customer_id FROM Interaction i \
+#                     WHERE i.t_dat BETWEEN %s AND %s",
+#                    (startDate, endDate))
+#
+#     if cursor is None:
+#         return [0, {}]
+#     customerIDs = cursor.fetchall()
+#
+#     # returnList[0] is de AR voor alle users
+#     # returnList[1] is een dict met als keys de customer id en values de AR voor een user
+#     returnList = [0, {}]
+#
+#     for ID in customerIDs:
+#
+#         # geef het aantal voorgestelde aankopen van die user over het interval
+#         cursor.execute("SELECT r1.item_number FROM Recommendation r1 \
+#                         WHERE r1.abtest_id = %s AND r1.result_id = %s AND r1.dataset_id = %s \
+#                         AND r1.start_point < %s AND r1.end_point >= %s \
+#                         AND (r1.customer_id = %s OR r1.customer_id = -1); ",
+#                        (abtestID, resultID, datasetID, startDate, endDate, ID[0]))
+#
+#         recommendations = cursor.fetchall()
+#
+#         # geef het aantal aankopen van die user over het interval
+#         cursor.execute("SELECT i.item_id FROM Interaction i \
+#                         WHERE i.customer_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s; ",
+#                        (ID[0], datasetID, startDate, endDate))
+#
+#         purchases = cursor.fetchall()
+#
+#         customer_AR = 0
+#         for purchase in purchases:
+#             if purchase in recommendations:
+#                 customer_AR += 1
+#
+#         # getal tussen 0 en 1
+#         customer_AR = customer_AR / len(purchases)
+#
+#         returnList[1][ID[0]] = customer_AR
+#
+#     AR = 0
+#     # print(returnList[1])
+#     for key, value in returnList[1].items():
+#         AR += returnList[1][key]
+#     AR = AR / len(returnList[1])
+#
+#     returnList[0] = AR
+#
+#     return returnList
+#
+#
+# def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
+#     # hardcoded 7 or 30 days
+#     if days not in [7, 30]:
+#         days = 7
+#
+#     startDate = str(datetime.strptime(str(endDate)[0:10], '%Y-%m-%d') - timedelta(days=days))
+#     # afterStartDate = str(datetime.strptime(str(startDate)[0:10], '%Y-%m-%d') + timedelta(days=1))
+#     endDate = str(endDate)[0:10]
+#
+#     cursor = connection.get_cursor()
+#
+#     # customer_id's of all active customers from interval [startDate+1 , endDate] (geen dubbele startDate's)
+#     cursor.execute("SELECT DISTINCT i.customer_id FROM Interaction i \
+#                         WHERE i.t_dat BETWEEN %s AND %s",
+#                    (startDate, endDate))
+#
+#     if cursor is None:
+#         return [0, {}]
+#     customerIDs = cursor.fetchall()
+#
+#     # returnList[0] is de ARPU voor alle users
+#     # returnList[1] is een dict met als keys de customer id en values de ARPU voor een user
+#     returnList = [0, {}]
+#
+#     for ID in customerIDs:
+#
+#         # geef het aantal voorgestelde aankopen van die user over het interval
+#         cursor.execute("SELECT r1.item_number FROM Recommendation r1 \
+#                             WHERE r1.abtest_id = %s AND r1.result_id = %s AND r1.dataset_id = %s \
+#                             AND r1.start_point < %s AND r1.end_point >= %s \
+#                             AND (r1.customer_id = %s OR r1.customer_id = -1); ",
+#                        (abtestID, resultID, datasetID, startDate, endDate, ID[0]))
+#
+#         recommendations = cursor.fetchall()
+#
+#         # geef het aantal aankopen van die user over het interval + prijs van elke aankoop
+#         cursor.execute("SELECT i.item_id, i.price FROM Interaction i \
+#                             WHERE i.customer_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s; ",
+#                        (ID[0], datasetID, startDate, endDate))
+#
+#         purchases = cursor.fetchall()
+#
+#         customer_ARPU = 0
+#         for row in purchases:
+#             if row[0] in recommendations:
+#                 customer_ARPU += row[1]
+#
+#         # getal tussen 0 en 1
+#         customer_ARPU = customer_ARPU / len(purchases)
+#
+#         returnList[1][ID[0]] = customer_ARPU
+#
+#     ARPU = 0
+#     for key, value in returnList[1].items():
+#         ARPU += returnList[1][key]
+#     ARPU = ARPU / len(returnList[1])
+#
+#     returnList[0] = ARPU
+#
+#     return returnList
+
+def getAR_and_ARPU(days, endDate, abtestID, resultID, datasetID):
     # hardcoded 7 or 30 days
     if days not in [7, 30]:
         days = 7
 
     startDate = str(datetime.strptime(str(endDate)[0:10], '%Y-%m-%d') - timedelta(days=days))
-    # afterStartDate = str(datetime.strptime(str(startDate)[0:10], '%Y-%m-%d') + timedelta(days=1))
-    endDate = str(endDate)[0:10]
-
-    cursor = connection.get_cursor()
-
-    # customer_id's of all active customers from interval [startDate+1 , endDate] (geen dubbele startDate's)
-    cursor.execute("SELECT DISTINCT i.customer_id FROM Interaction i \
-                    WHERE i.t_dat BETWEEN %s AND %s",
-                   (startDate, endDate))
-
-    if cursor is None:
-        return [0, {}]
-    customerIDs = cursor.fetchall()
-
-    # returnList[0] is de AR voor alle users
-    # returnList[1] is een dict met als keys de customer id en values de AR voor een user
-    returnList = [0, {}]
-
-    for ID in customerIDs:
-
-        # geef het aantal voorgestelde aankopen van die user over het interval
-        cursor.execute("SELECT r1.item_number FROM Recommendation r1 \
-                        WHERE r1.abtest_id = %s AND r1.result_id = %s AND r1.dataset_id = %s \
-                        AND r1.start_point < %s AND r1.end_point >= %s \
-                        AND (r1.customer_id = %s OR r1.customer_id = -1); ",
-                       (abtestID, resultID, datasetID, startDate, endDate, ID[0]))
-
-        recommendations = cursor.fetchall()
-
-        # geef het aantal aankopen van die user over het interval
-        cursor.execute("SELECT i.item_id FROM Interaction i \
-                        WHERE i.customer_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s; ",
-                       (ID[0], datasetID, startDate, endDate))
-
-        purchases = cursor.fetchall()
-
-        customer_AR = 0
-        for purchase in purchases:
-            if purchase in recommendations:
-                customer_AR += 1
-
-        # getal tussen 0 en 1
-        customer_AR = customer_AR / len(purchases)
-
-        returnList[1][ID[0]] = customer_AR
-
-    AR = 0
-    # print(returnList[1])
-    for key, value in returnList[1].items():
-        AR += returnList[1][key]
-    AR = AR / len(returnList[1])
-
-    returnList[0] = AR
-
-    return returnList
-
-
-def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
-    # hardcoded 7 or 30 days
-    if days not in [7, 30]:
-        days = 7
-
-    startDate = str(datetime.strptime(str(endDate)[0:10], '%Y-%m-%d') - timedelta(days=days))
-    # afterStartDate = str(datetime.strptime(str(startDate)[0:10], '%Y-%m-%d') + timedelta(days=1))
     endDate = str(endDate)[0:10]
 
     cursor = connection.get_cursor()
@@ -165,12 +225,13 @@ def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
                    (startDate, endDate))
 
     if cursor is None:
-        return [0, {}]
+        return None
     customerIDs = cursor.fetchall()
 
     # returnList[0] is de ARPU voor alle users
     # returnList[1] is een dict met als keys de customer id en values de ARPU voor een user
-    returnList = [0, {}]
+    returnARPU = [0, {}]
+    returnAR = [0, {}]
 
     for ID in customerIDs:
 
@@ -191,24 +252,37 @@ def getAverageRevenuePerUser(days, endDate, abtestID, resultID, datasetID):
         purchases = cursor.fetchall()
 
         customer_ARPU = 0
+        customer_AR = 0
         for row in purchases:
             if row[0] in recommendations:
                 customer_ARPU += row[1]
+                customer_AR += 1
 
         # getal tussen 0 en 1
         customer_ARPU = customer_ARPU / len(purchases)
+        customer_AR = customer_AR / len(purchases)
 
-        returnList[1][ID[0]] = customer_ARPU
+        returnARPU[1][ID[0]] = customer_ARPU
+        returnAR[1][ID[0]] = customer_AR
 
+    # calculate general values
     ARPU = 0
-    for key, value in returnList[1].items():
-        ARPU += returnList[1][key]
-    ARPU = ARPU / len(returnList[1])
 
-    returnList[0] = ARPU
+    for key, value in returnARPU[1].items():
+        ARPU += returnARPU[1][key]
+    ARPU = ARPU / len(returnARPU[1])
 
-    return returnList
+    returnARPU[0] = ARPU
 
+    AR = 0
+
+    for key, value in returnAR[1].items():
+        AR += returnAR[1][key]
+    AR = AR / len(returnAR[1])
+
+    returnAR[0] = AR
+
+    return returnAR, returnARPU
 
 # nrOfPurchases = getNrOfPurchases(start, end)
 # print(nrOfPurchases)
