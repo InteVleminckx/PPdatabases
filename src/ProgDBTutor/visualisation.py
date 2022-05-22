@@ -25,11 +25,11 @@ def getInfoVisualisationPage(abtest_id, dataset_id):
     datasetName = getDatasetname(dataset_id)
     graphPurchasesAndUsers,totalUsers, totalPurch = getPurchasesAndActiveUsersOverTime(startPoint, endPoint)
 
-    algorithms, ctr = getAlgortihms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
+    algorithms, ctr, arad = getAlgortihms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
 
     return {"abtest_id": abtest_id, "startpoint":startPoint, "endpoint":endPoint, "datasetname": datasetName,
             "stepsize": stepsize, "topk": topk, "graphPurchAndUsers" : graphPurchasesAndUsers, "totalUsers": totalUsers, "totalPurchases": totalPurch,
-            "algorithms": algorithms, "ctr": ctr}
+            "algorithms": algorithms, "ctr": ctr, "ar@d": arad}
 
 def getPurchasesAndActiveUsersOverTime(start, end):
 
@@ -62,14 +62,15 @@ def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
     algorithms = {}
 
     ctr = {}
-
+    ard = {}
     for result in results:
         algo = getAlgorithm(abtest_id, result[0])
         algorithms[str(result[0])] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
-        ctr_ = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
+        ctr_, arad = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
         ctr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
+        ard[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
 
-    return algorithms, ctr
+    return algorithms, ctr, ard
 
 def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
 
@@ -80,15 +81,17 @@ def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
     prevDate = curDate
 
     ctr = {}
-
+    ard = {}
+    argRev = {}
     while curDate <= end:
         # print("oke")
         # print(curDate)
         res = getClickThroughRate(prevDate, curDate, abtest_id, result_id, dataset_id)
-
+        arad = getAttributionRate(7, curDate, abtest_id, result_id, dataset_id)
+        avrgRev = getAverageRevenuePerUser(7, curDate, abtest_id, result_id, dataset_id)
         ctr[str(curDate)[0:10]] = res
-
+        ard[str(curDate)[0:10]] = arad[0]
         prevDate = curDate + timedelta(days=1)
         curDate += stepsize
 
-    return ctr
+    return ctr, ard
