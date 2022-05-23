@@ -168,7 +168,6 @@ def services(selected_ds_id=None):
             pass
 
         if request.method == 'POST':
-            print("i am in trouble")
 
             dataDict = request.get_json()
             form_data = dataDict['form_data']
@@ -189,69 +188,53 @@ def services(selected_ds_id=None):
             dataset = request.form.get('datasetSelection')
             ABTestID = getMaxABTestID() + 1
             if not dataset:
-                pass
-
-            if s == 'abtestSubmit':
-                cursor = connection.get_cursor()
-
-                # Params for foreign keys
-                creator = session['username']
-
-                # General parameters for ABtest
-                start = request.form.get('startingpoint')
-                end = request.form.get('endpoint')
-                stepsize = request.form.get('stepsize')
-                topk = request.form.get('topk')
-                dataset = request.form.get('datasetSelection')
-                ABTestID = getMaxABTestID() + 1
-                if not dataset:
-                    return redirect(url_for('visualizations'))
-                dataset_id = ""
-                for char in dataset:
-                    if char.isdigit():
-                        dataset_id += char
-
-                i = 1
-                while i < algo_id:
-                    # Add entry for ABtest table
-                    # addAB_Test(abtest_id, i, start, end, stepsize, topk)
-                    abTestQueue.enqueue(addAB_Test, ABTestID, i, start, end, stepsize, topk)
-
-                    # Add entries for Algorithm table
-                    for j in range(len(algo_list)):
-                        if algo_list[j][0] == i:
-                            algorithm_param = algo_list[j][2]
-                            # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
-                            # algo_list[j][3])
-                            abTestQueue.enqueue(addAlgorithm, ABTestID, i, algo_list[j][1], algo_list[j][2],
-                                        algo_list[j][3])
-
-                    # Add entry for result table
-                    #addResult(abtest_id, i, dataset_id, algorithm_param, creator)
-                    abTestQueue.enqueue(addResult, ABTestID, i, dataset_id, algorithm_param, creator)
-
-                    i += 1
-
-                # Remove algorithms from list and dicts
-                algo_list = []
-                algo_dict = {}
-                connection.commit()
-
-                # Call function to start a/b tests
-                #abtest.startAB(maxABtestID, dataset_id)
-                #abtest.getABtestResults(maxABtestID, dataset_id)
-                #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
-
-                jobABtests = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id)
-                # jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
-                # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
-                jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
-
-                session["abVisualistation"] = jobABvisualisations.id
-                # abtest_id += 1
-                # algo_id = 1
-                # return redirect(url_for('itemsection'))
                 return redirect(url_for('visualizations'))
+            dataset_id = ""
+            for char in dataset:
+                if char.isdigit():
+                    dataset_id += char
+
+            i = 1
+            while i < algo_id:
+                # Add entry for ABtest table
+                # addAB_Test(abtest_id, i, start, end, stepsize, topk)
+                abTestQueue.enqueue(addAB_Test, ABTestID, i, start, end, stepsize, topk)
+
+                # Add entries for Algorithm table
+                for j in range(len(algo_list)):
+                    if algo_list[j][0] == i:
+                        algorithm_param = algo_list[j][2]
+                        # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
+                        # algo_list[j][3])
+                        abTestQueue.enqueue(addAlgorithm, ABTestID, i, algo_list[j][1], algo_list[j][2],
+                                    algo_list[j][3])
+
+                # Add entry for result table
+                #addResult(abtest_id, i, dataset_id, algorithm_param, creator)
+                abTestQueue.enqueue(addResult, ABTestID, i, dataset_id, algorithm_param, creator)
+
+                i += 1
+
+            # Remove algorithms from list and dicts
+            algo_list = []
+            algo_dict = {}
+            connection.commit()
+
+            # Call function to start a/b tests
+            #abtest.startAB(maxABtestID, dataset_id)
+            #abtest.getABtestResults(maxABtestID, dataset_id)
+            #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
+
+            jobABtests = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id)
+            # jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
+            # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
+            jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
+
+            session["abVisualistation"] = jobABvisualisations.id
+            # abtest_id += 1
+            # algo_id = 1
+            # return redirect(url_for('itemsection'))
+            return redirect(url_for('visualizations'))
 
             # dataset_id = ""
             # for char in dataset:
