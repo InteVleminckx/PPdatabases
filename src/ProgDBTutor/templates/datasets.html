@@ -81,7 +81,7 @@
                 </div>
             </div>
         </div>
-        <div class="_row">
+        <div class="_row" id="dashboard_div">
             <div class="_column">
                 <div class="c1_graphcontainer"  style="margin-left: 50px;" id="graph-active">
 
@@ -311,6 +311,27 @@ function sub(obj, button) {
     document.getElementById(button).innerHTML = filename[filename.length - 1];
     event.preventDefault();
 }
+
+fetchStatus();
+var interval = null;
+function fetchStatus() {
+    fetch(`/datasets/update`)
+{#        .then(function (response) {
+                return response.text();
+            })#}
+        .then(function (text){
+            if (text === 'done'){
+                sendData()
+                clearInterval(interval)
+            }
+        })
+}
+
+
+window.addEventListener('load', function () {
+    let fetchInterval = 5000;
+    interval = setInterval(fetchStatus, fetchInterval)
+})
 
 function sendData() {
     let id = document.getElementById("datasetSelection").value;

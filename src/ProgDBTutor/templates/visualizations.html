@@ -100,7 +100,7 @@
                 </div>
             </div>
             <div class="metric_container__graph" id="user_purch_graph"></div>
-            <div class="metric_container__graph"></div>
+            <div class="metric_container__graph" id="ctr_arad_graph"></div>
             <div class="metric_container__graph"></div>
         </div>
     </div>
@@ -139,11 +139,14 @@
                     document.getElementById("users").innerHTML = info["totalUsers"];
                     let dataUsersPurch = info["graphPurchAndUsers"]
                     let algorihtms = info["algorithms"]
+                    let ctr = info["ctr"]
+                    let arad = info["ar@d"]
                     console.log(algorihtms)
                     google.charts.load('current', {packages: ['corechart', 'line']});
                     google.charts.setOnLoadCallback(drawActUsersAndPurchChart);
                     drawActUsersAndPurchChart(dataUsersPurch);
                     constructAlgorithmTable(algorihtms);
+                    drawCTRandARAD(ctr, arad)
                     clearInterval(interval)
                 }
             })
@@ -178,6 +181,78 @@
       };
 
       var chart = new google.visualization.LineChart(document.getElementById('user_purch_graph'));
+
+      chart.draw(data, options);
+
+    }
+
+     function drawCTRandARAD(ctr, arad){
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'X');
+
+        let dataGraph = []
+
+        {# Eerst de kollomen toevoegen #}
+         let dates = []
+         {#let data_ = []#}
+         let count = 0
+         for (const [key, value] of Object.entries(ctr)){
+            data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
+
+            if (count == 0){
+                for (const [key2, value2] of Object.entries(value["values"])){
+                    dates.push([new Date(key2)])
+                    {#data_.push([])#}
+                }
+                count += 1
+            }
+
+        }
+        for (const [key, value] of Object.entries(arad)){
+            data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
+        }
+
+        {#console.log(dates)#}
+
+        {#console.log(ctr)#}
+
+        count = 0
+        for (const [key, value] of Object.entries(ctr)){
+            for (const [key2, value2] of Object.entries(value["values"])){
+                console.log(value2)
+                    dates[count].push(value2)
+                    count += 1
+            }
+            count = 0
+        }
+        for (const [key, value] of Object.entries(arad)){
+            for (const [key2, value2] of Object.entries(value["values"])){
+                console.log(value2)
+                    dates[count].push(value2)
+                    count += 1
+            }
+            count = 0
+        }
+
+        console.log(dates)
+
+        {#console.log(dataGraph)#}
+        data.addRows(dates);
+        {#console.log(data)#}
+
+        var options = {
+        pointSize: 3,
+        title: 'CTR and ARAD',
+        chartArea: {
+          width: '80%'
+         },
+        width: '100%',
+        height: '100%',
+        colors: ['#9FE3FE', '#9CD0FE', '#9DBEFE', '#9CB5FE', '#9CB5FE', '#C2A5FF', '#D69DFF', '#DF9BFD', '#ED9BEB', '#F49CD3','#FEABB1', '#FECF9F', '#F7FCA8', '#D3FFA7', '#BEFEC4', '#BEFEC4'],
+        legend: { position: 'bottom' }
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('ctr_arad_graph'));
 
       chart.draw(data, options);
 
