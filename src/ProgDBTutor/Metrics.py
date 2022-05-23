@@ -49,46 +49,106 @@ def getNrOfActiveUsers(startDate=None, endDate=None):
     return cursor.fetchone()[0]
 
 
-def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID):
-    if startDate is None and endDate is None:
-        startDate = start
-        endDate = end
+def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, stepsize):
 
     cursor = connection.get_cursor()
+    print("startctr")
 
-    startDate = str(startDate)[0:10]
-    endDate = str(endDate)[0:10]
+    cursor.execute(
+        'select i.t_dat, i.customer_id, i.item_id from interaction i where i.dataset_id = %s and i.t_dat between %s and %s and exists(select * from recommendation r where'
+        ' r.item_number = i.item_id and ( r.customer_id = i.customer_id  or r.customer_id = -1) and r.start_point < i.t_dat and i.t_dat <= r.end_point  and r.abtest_id = %s and r.result_id = %s and r.dataset_id = %s) '
+        'order by customer_id;',
+        (str(datasetID), str(startDate), str(endDate), str(abtestID), str(resultID), str(datasetID))
+    )
 
-    print(endDate, abtestID, resultID, datasetID)
+    interactions = cursor.fetchall()
 
-    cursor.execute('select distinct customer_id from interaction where t_dat between %s and %s;',
-                   (str(startDate), str(endDate)))
-    rows = cursor.fetchall()
-    if rows is None:
-        return None
+    info_recommendation = {}
 
-    ctr = 0
+    for interaction in interactions:
+        if str(interaction[0])[0:10] not in info_recommendation:
+            info_recommendation[str(interaction[0])[0:10]] = {}
 
-    print(endDate)
-    for row in rows:
-        cursor.execute(
-            "select item_number from recommendation where ( abtest_id = %s and result_id = %s and dataset_id = %s and (customer_id = -1 or customer_id = %s) and start_point < %s and %s <= end_point);",
-            (str(abtestID), str(resultID), str(datasetID), str(row[0]), str(endDate), str(endDate)))
+        if str(interaction[1]) not in info_recommendation[str(interaction[0])[0:10]]:
+            info_recommendation[str(interaction[0])[0:10]][str(interaction[1])] = []
 
-        recos = cursor.fetchall()
-        cursor.execute(
-            "select item_id from interaction where dataset_id = %s and t_dat between %s and %s and customer_id = %s;",
-            (str(datasetID), str(startDate), str(endDate), str(row[0])))
-        purch = cursor.fetchall()
+        info_recommendation[str(interaction[0])[0:10]][str(interaction[1])].append(str(interaction[2]))
 
-        for pur in purch:
-            if pur in recos:
-                ctr += 1
-                break
+    # print(info_recommendation)
 
-    return round(ctr / len(rows), 2)
+    cursor.execute('select t_dat, customer_id, item_id from interaction where t_dat between %s and %s and dataset_id = %s;',
+                   (str(startDate), str(endDate), str(datasetID)))
 
+    interactions = cursor.fetchall()
+    
+    info_interactions = {}
 
+    for interaction in interactions:
+        if str(interaction[0])[0:10] not in info_interactions:
+            info_interactions[str(interaction[0])[0:10]] = {}
+
+        if str(interaction[1]) not in info_interactions[str(interaction[0])[0:10]]:
+            info_interactions[str(interaction[0])[0:10]][str(interaction[1])] = []
+
+        info_interactions[str(interaction[0])[0:10]][str(interaction[1])].append(str(interaction[2]))
+
+    # print(info_interactions)
+    
+    ctr = {}
+    
+    curDate = datetime.strptime(startDate, "%Y-%m-%d")
+    end = datetime.strptime(endDate, "%Y-%m-%d")
+    stepsize_ = timedelta(days=int(stepsize))
+    
+    while curDate <= end:
+        
+        ctrCount = 0
+        if int(stepsize) > 1:
+
+            start = curDate - stepsize_
+
+            while start <= curDate:
+                count_ = 0
+                date = str(start)[0:10]
+                if date in info_recommendation:
+                    actv_cus = len(info_interactions[date])
+                    for customer, items in info_interactions[date].items():
+                        # We controleren eerst of de de user al in de recommendations zit, zoja check de items nog
+                        # Moeten ook nog de datum controleren
+                        if date in info_recommendation:
+                            if str(customer) in info_recommendation[date]:
+                                # nu nog de items controleren
+                                for item in items:
+                                    if str(item) in info_recommendation[date][str(customer)]:
+                                        count_ += 1
+
+                    ctrCount += count_/actv_cus
+
+                start += timedelta(days=1)
+
+            ctr[str(curDate)[0:10]] = (round(ctrCount/int(stepsize),2))
+
+        else:
+            date = str(curDate)[0:10]
+            actv_cus = 1
+            if date in info_recommendation:
+                actv_cus = len(info_interactions[date])
+                for customer, items in info_interactions[date].items():
+                    #We controleren eerst of de de user al in de recommendations zit, zoja check de items nog
+                    #Moeten ook nog de datum controleren
+                    if date in info_recommendation:
+                        if str(customer) in info_recommendation[date]:
+                            #nu nog de items controleren
+                            for item in items:
+                                if str(item) in info_recommendation[date][str(customer)]:
+                                    ctrCount += 1
+
+            ctr[date] = (round(ctrCount/actv_cus, 2))
+
+        curDate += stepsize_
+
+    return ctr
+    
 # def getAttributionRate(days, endDate, abtestID, resultID, datasetID):
 #     # hardcoded 7 or 30 days
 #     if days not in [7, 30]:
@@ -213,6 +273,7 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID):
 #
 #     return returnList
 
+
 def test(days, startDate, endDate, abtestID, resultID, datasetID, stepSize):
     # hardcoded 7 or 30 days
     if days not in [7, 30]:
@@ -293,6 +354,8 @@ def test(days, startDate, endDate, abtestID, resultID, datasetID, stepSize):
 
 
 def getAR_and_ARPU(days, endDate, abtestID, resultID, datasetID):
+    return (0, 0), (0, 0)
+
     # hardcoded 7 or 30 days
     if days not in [7, 30]:
         days = 7

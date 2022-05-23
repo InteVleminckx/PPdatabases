@@ -69,8 +69,8 @@ def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
         algorithms[str(result[0])] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
         ctr_, arad, argRev = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
         ctr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
-        ard[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
-        argRevPr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
+        # ard[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
+        # argRevPr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
 
     return algorithms, ctr, ard
 
@@ -78,22 +78,23 @@ def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
 
     curDate = datetime.strptime(startpoint, "%Y-%m-%d")
     end = datetime.strptime(endpoint, "%Y-%m-%d")
-    stepsize = timedelta(days=int(stepsize))
     # print("oke")
     prevDate = curDate
 
-    ctr = {}
     ard = {}
     argRev = {}
-    while curDate <= end:
+
+    res = getClickThroughRate(startpoint, endpoint, abtest_id, result_id, dataset_id, stepsize)
+
+    # while curDate <= end:
         # print("oke")
         # print(curDate)
-        res = getClickThroughRate(prevDate, curDate, abtest_id, result_id, dataset_id)
-        arad, avrgRev = getAR_and_ARPU(7, curDate, abtest_id, result_id, dataset_id)
-        ctr[str(curDate)[0:10]] = res
-        ard[str(curDate)[0:10]] = arad[0]
-        argRev[str(curDate)[0:10]] = avrgRev[0]
-        prevDate = curDate + timedelta(days=1)
-        curDate += stepsize
+        # res = getClickThroughRate(prevDate, curDate, abtest_id, result_id, dataset_id)
+        # arad, avrgRev = getAR_and_ARPU(7, curDate, abtest_id, result_id, dataset_id)
+        # ctr[str(curDate)[0:10]] = res
+        # ard[str(curDate)[0:10]] = arad[0]
+        # argRev[str(curDate)[0:10]] = avrgRev[0]
+        # prevDate = curDate + timedelta(days=1)
+        # curDate += stepsize
 
-    return ctr, ard, argRev
+    return res, ard, argRev
