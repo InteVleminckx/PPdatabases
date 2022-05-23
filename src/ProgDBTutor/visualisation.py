@@ -25,11 +25,11 @@ def getInfoVisualisationPage(abtest_id, dataset_id):
     datasetName = getDatasetname(dataset_id)
     graphPurchasesAndUsers,totalUsers, totalPurch = getPurchasesAndActiveUsersOverTime(startPoint, endPoint)
 
-    algorithms, ctr, arad = getAlgortihms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
+    algorithms, ctr, arad, arpuad = getAlgortihms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
 
     return {"abtest_id": abtest_id, "startpoint":startPoint, "endpoint":endPoint, "datasetname": datasetName,
             "stepsize": stepsize, "topk": topk, "graphPurchAndUsers" : graphPurchasesAndUsers, "totalUsers": totalUsers, "totalPurchases": totalPurch,
-            "algorithms": algorithms, "ctr": ctr, "ar@d": arad}
+            "algorithms": algorithms, "ctr": ctr, "ar@d": arad, "arpu@d": arpuad}
 
 def getPurchasesAndActiveUsersOverTime(start, end):
 
@@ -69,10 +69,10 @@ def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
         algorithms[str(result[0])] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
         ctr_, arad, argRev = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
         ctr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
-        # ard[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
-        # argRevPr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
+        ard[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
+        argRevPr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
 
-    return algorithms, ctr, ard
+    return algorithms, ctr, ard, argRevPr
 
 def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
 
@@ -81,11 +81,8 @@ def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
     # print("oke")
     prevDate = curDate
 
-    ard = {}
-    argRev = {}
-
-    res = getClickThroughRate(startpoint, endpoint, abtest_id, result_id, dataset_id, stepsize)
-
+    ctr = getClickThroughRate(startpoint, endpoint, abtest_id, result_id, dataset_id, stepsize)
+    arad, arpuad = test(7, startpoint, endpoint, abtest_id, result_id, dataset_id, int(stepsize))
     # while curDate <= end:
         # print("oke")
         # print(curDate)
@@ -97,4 +94,4 @@ def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
         # prevDate = curDate + timedelta(days=1)
         # curDate += stepsize
 
-    return res, ard, argRev
+    return ctr, arad, arpuad
