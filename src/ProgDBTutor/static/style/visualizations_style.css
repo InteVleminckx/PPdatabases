@@ -69,6 +69,7 @@ html, body{
     border: 0 solid #d9dee3;
     border-radius: 8px;
     margin-bottom: 50px;
+    overflow-y: scroll;
 }
 
 .metric__info_purch_active {
@@ -102,8 +103,9 @@ html, body{
 }
 
 .metric__info_purch_active h2 {
-    margin-left: 5px;
-    margin-top: 5px;
+    margin-left: 8px;
+    margin-top: 8px;
+    color: #03a9f4;
 }
 
 .metric__info_purch_active p {
@@ -111,5 +113,23 @@ html, body{
     justify-content: center;
     display: flex;
     line-height: 85px;
-    font-size: 1.3rem;
+    font-size: 32px;
+    color: black;
+}
+
+.ab_container__table_row {
+    width: 580px;
+    /*margin-left: 3px;*/
+    height: 40px;
+    border-bottom: lightgray solid 1px;
+    background-color: #E3E9F0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+}
+
+.ab_container__table_column {
+    width: 100px;
 }

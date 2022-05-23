@@ -245,7 +245,7 @@ def services(selected_ds_id=None):
                 jobABtests = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id)
                 # jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
                 # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
-                jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, abtest_id, dataset_id)
+                jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, abtest_id, dataset_id, job_timeout=600)
 
                 session["abVisualistation"] = jobABvisualisations.id
                 abtest_id += 1

@@ -66,8 +66,15 @@
                     </div>
                 </div>
             </div>
-            <div class="ab_container__table">
-
+            <div class="ab_container__table" id="algorithmTable">
+                <div class="ab_container__table_row" style="background-color: #d2d8de">
+                    <div class="ab_container__table_column" style="font-weight: bold; width: 50px" >Number</div>
+                    <div class="ab_container__table_column" style="font-weight: bold" >Name</div>
+                    <div class="ab_container__table_column" style="font-weight: bold" >K</div>
+                    <div class="ab_container__table_column" style="font-weight: bold" >Windowsize</div>
+                    <div class="ab_container__table_column" style="font-weight: bold" >Normalize</div>
+                    <div class="ab_container__table_column" style="font-weight: bold" >Retraininterval</div>
+                </div>
             </div>
             <div class="ab_container__table">
                 <button onclick="window.location.href='{{ url_for('usersection', dataset_id=1, customer_id=14, abtest_id=1) }}';">User page</button>
@@ -92,10 +99,8 @@
                     </p>
                 </div>
             </div>
-            <div class="metric_container__graph">
-                <selection id="user_purch_graph"></selection>
-            </div>
-            <div class="metric_container__graph"></div>
+            <div class="metric_container__graph" id="user_purch_graph"></div>
+            <div class="metric_container__graph" id="ctr_arad_graph"></div>
             <div class="metric_container__graph"></div>
         </div>
     </div>
@@ -130,14 +135,20 @@
                     document.getElementById("stepsize").innerHTML = info["stepsize"];
                     document.getElementById("topk").innerHTML = info["topk"];
                     document.getElementById("endpoint").innerHTML = info["endpoint"];
-                    {#console.log(info)#}
+                    document.getElementById("purchases").innerHTML = info["totalPurchases"];
+                    document.getElementById("users").innerHTML = info["totalUsers"];
                     let dataUsersPurch = info["graphPurchAndUsers"]
+                    let algorihtms = info["algorithms"]
+                    let ctr = info["ctr"]
+                    let arad = info["ar@d"]
+                    console.log(algorihtms)
                     google.charts.load('current', {packages: ['corechart', 'line']});
                     google.charts.setOnLoadCallback(drawActUsersAndPurchChart);
-                    drawActUsersAndPurchChart(dataUsersPurch)
+                    drawActUsersAndPurchChart(dataUsersPurch);
+                    constructAlgorithmTable(algorihtms);
+                    drawCTRandARAD(ctr, arad)
                     clearInterval(interval)
                 }
-
             })
     }
 
@@ -149,10 +160,7 @@
         data.addColumn('number', 'Active users');
 
         let dataGraph = []
-        {#console.log(dataUsersPurch)#}
         for (const [key, value] of Object.entries(dataUsersPurch)){
-            {#console.log(day)#}
-            {#console.log(key, value)#}
             dataGraph.push([new Date(key), parseInt(value["purchases"]), parseInt(value['users'])])
         }
 
@@ -161,13 +169,15 @@
         console.log(data)
 
         var options = {
-        hAxis: {
-          title: 'Date'
-        },
-        vAxis: {
-          title: 'Numbers'
-        },
+        pointSize: 3,
+        title: 'Purchases and active users per day.',
+        chartArea: {
+          width: '80%'
+         },
+        width: '100%',
+        height: '100%',
         colors: ['#0032ff', '#b90000'],
+        legend: { position: 'bottom' }
       };
 
       var chart = new google.visualization.LineChart(document.getElementById('user_purch_graph'));
@@ -176,9 +186,123 @@
 
     }
 
+     function drawCTRandARAD(ctr, arad){
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'X');
+
+        let dataGraph = []
+
+        {# Eerst de kollomen toevoegen #}
+         let dates = []
+         {#let data_ = []#}
+         let count = 0
+         for (const [key, value] of Object.entries(ctr)){
+            data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
+
+            if (count == 0){
+                for (const [key2, value2] of Object.entries(value["values"])){
+                    dates.push([new Date(key2)])
+                    {#data_.push([])#}
+                }
+                count += 1
+            }
+
+        }
+        for (const [key, value] of Object.entries(arad)){
+            data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
+        }
+
+        {#console.log(dates)#}
+
+        {#console.log(ctr)#}
+
+        count = 0
+        for (const [key, value] of Object.entries(ctr)){
+            for (const [key2, value2] of Object.entries(value["values"])){
+                console.log(value2)
+                    dates[count].push(value2)
+                    count += 1
+            }
+            count = 0
+        }
+        for (const [key, value] of Object.entries(arad)){
+            for (const [key2, value2] of Object.entries(value["values"])){
+                console.log(value2)
+                    dates[count].push(value2)
+                    count += 1
+            }
+            count = 0
+        }
+
+        console.log(dates)
+
+        {#console.log(dataGraph)#}
+        data.addRows(dates);
+        {#console.log(data)#}
+
+        var options = {
+        pointSize: 3,
+        title: 'CTR and ARAD',
+        chartArea: {
+          width: '80%'
+         },
+        width: '100%',
+        height: '100%',
+        colors: ['#9FE3FE', '#9CD0FE', '#9DBEFE', '#9CB5FE', '#9CB5FE', '#C2A5FF', '#D69DFF', '#DF9BFD', '#ED9BEB', '#F49CD3','#FEABB1', '#FECF9F', '#F7FCA8', '#D3FFA7', '#BEFEC4', '#BEFEC4'],
+        legend: { position: 'bottom' }
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('ctr_arad_graph'));
+
+      chart.draw(data, options);
+
+    }
+
+    function constructAlgorithmTable(dataAlgo){
+        console.log(dataAlgo)
+        html_ = ""
+        for (const [key, value] of Object.entries(dataAlgo)){
+
+            html_ += "<div class=\"ab_container__table_row\">"
+            html_ += "    <div class=\"ab_container__table_column\" style='width: 50px' >" + value["result_id"].toString() + "</div>"
+            html_ += "    <div class=\"ab_container__table_column\">" + value["name"] + "</div>"
+
+            let params = value["params"]
+
+            if (params.hasOwnProperty("k")){
+                html_ += "    <div class=\"ab_container__table_column\">"+ params["k"] +"</div>"
+            }
+            else {
+                html_ += "    <div class=\"ab_container__table_column\"></div>"
+            }
+            if (params.hasOwnProperty("windowsize")){
+                html_ += "    <div class=\"ab_container__table_column\">"+ params["windowsize"] +"</div>"
+            }
+            else {
+                html_ += "    <div class=\"ab_container__table_column\"></div>"
+            }
+            if (params.hasOwnProperty("normalize")){
+                html_ += "    <div class=\"ab_container__table_column\">"+ params["normalize"] +"</div>"
+            }
+            else {
+                html_ += "    <div class=\"ab_container__table_column\"></div>"
+            }
+            if (params.hasOwnProperty("retraininterval")){
+                html_ += "    <div class=\"ab_container__table_column\">"+ params["retraininterval"] +"</div>"
+            }
+            else {
+                html_ += "    <div class=\"ab_container__table_column\"></div>"
+            }
+            html_ += "</div>"
+        }
+
+        document.getElementById("algorithmTable").innerHTML += html_
+
+    }
+
 
     window.addEventListener('load', function () {
-        let fetchInterval = 5000;
+        let fetchInterval = 1000;
         interval = setInterval(fetchStatus, fetchInterval)
     })
 

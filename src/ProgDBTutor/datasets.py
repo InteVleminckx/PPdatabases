@@ -181,22 +181,38 @@ def getActiveUsers(cursor, dataset_id):
     prevMonth = ""
     curCount = 0
     curPurch = 0
+    # for row in rows:
+    #     date = str(row[1])[0:7]
+    #     if curMonth == "":
+    #         curMonth = date
+    #
+    #     if curMonth == date:
+    #         curCount += int(row[0])
+    #         curPurch += int(row[2])
+    #         prevMonth = curMonth
+    #
+    #     elif curMonth != date:
+    #         users.append({"date": prevMonth, "count": curCount})
+    #         purchases.append({"date": prevMonth, "count": curPurch})
+    #         curMonth = date
+    #         curCount = 0
+    #         curPurch = 0
     for row in rows:
-        date = str(row[1])[0:7]
-        if curMonth == "":
-            curMonth = date
+        date = str(row[1])[0:10]
+        # if curMonth == "":
+        #     curMonth = date
 
-        if curMonth == date:
-            curCount += int(row[0])
-            curPurch += int(row[2])
-            prevMonth = curMonth
+        # if curMonth == date:
+        curCount = int(row[0])
+        curPurch = int(row[2])
+            # prevMonth = curMonth
 
-        elif curMonth != date:
-            users.append({"date": prevMonth, "count": curCount})
-            purchases.append({"date": prevMonth, "count": curPurch})
-            curMonth = date
-            curCount = 0
-            curPurch = 0
+        # elif curMonth != date:
+        users.append({"date": date, "count": curCount})
+        purchases.append({"date": date, "count": curPurch})
+            # curMonth = date
+            # curCount = 0
+            # curPurch = 0
 
     return users, purchases
 

@@ -1,4 +1,4 @@
-import datetime
+# import datetime
 import json
 
 from flask import request, flash
@@ -8,9 +8,10 @@ import os
 from user_data_acces import *
 from Metrics import *
 
+
 def getInfoVisualisationPage(abtest_id, dataset_id):
     cursor = dbconnect.get_cursor()
-    cursor.execute("select start_point, end_point, stepsize, topk from abtest where abtest_id = %s limit 1;", (str(abtest_id)))
+    cursor.execute("select start_point, end_point, stepsize, topk from abtest where abtest_id = %s limit 1;", (str(abtest_id),))
     row = cursor.fetchone()
 
     if row is None:
@@ -22,10 +23,13 @@ def getInfoVisualisationPage(abtest_id, dataset_id):
     topk = str(row[3])
 
     datasetName = getDatasetname(dataset_id)
-    graphPurchasesAndUsers = getPurchasesAndActiveUsersOverTime(startPoint, endPoint)
+    graphPurchasesAndUsers,totalUsers, totalPurch = getPurchasesAndActiveUsersOverTime(startPoint, endPoint)
+
+    algorithms, ctr, arad = getAlgortihms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
 
     return {"abtest_id": abtest_id, "startpoint":startPoint, "endpoint":endPoint, "datasetname": datasetName,
-            "stepsize": stepsize, "topk": topk, "graphPurchAndUsers" : graphPurchasesAndUsers}
+            "stepsize": stepsize, "topk": topk, "graphPurchAndUsers" : graphPurchasesAndUsers, "totalUsers": totalUsers, "totalPurchases": totalPurch,
+            "algorithms": algorithms, "ctr": ctr, "ar@d": arad}
 
 def getPurchasesAndActiveUsersOverTime(start, end):
 
@@ -37,7 +41,59 @@ def getPurchasesAndActiveUsersOverTime(start, end):
         return None
 
     info = {}
+    totalusers = 0
+    totalPurch = 0
     for row in rows:
         info[str(row[2])[0:10]] = {"purchases": str(row[1]), "users": str(row[0])}
+        totalusers += int(row[0])
+        totalPurch += int(row[1])
 
-    return info
+    return info, str(totalusers), str(totalPurch)
+
+
+def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
+    cursor = dbconnect.get_cursor()
+    cursor.execute("select result_id from abtest where abtest_id = %s", (str(abtest_id),))
+
+    results = cursor.fetchall()
+    if results is None:
+        return False
+
+    algorithms = {}
+
+    ctr = {}
+    ard = {}
+    argRevPr = {}
+    for result in results:
+        algo = getAlgorithm(abtest_id, result[0])
+        algorithms[str(result[0])] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
+        ctr_, arad, argRev = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
+        ctr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
+        ard[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
+        argRevPr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
+
+    return algorithms, ctr, ard
+
+def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
+
+    curDate = datetime.strptime(startpoint, "%Y-%m-%d")
+    end = datetime.strptime(endpoint, "%Y-%m-%d")
+    stepsize = timedelta(days=int(stepsize))
+    # print("oke")
+    prevDate = curDate
+
+    ctr = {}
+    ard = {}
+    argRev = {}
+    while curDate <= end:
+        # print("oke")
+        # print(curDate)
+        res = getClickThroughRate(prevDate, curDate, abtest_id, result_id, dataset_id)
+        arad, avrgRev = getAR_and_ARPU(7, curDate, abtest_id, result_id, dataset_id)
+        ctr[str(curDate)[0:10]] = res
+        ard[str(curDate)[0:10]] = arad[0]
+        argRev[str(curDate)[0:10]] = avrgRev[0]
+        prevDate = curDate + timedelta(days=1)
+        curDate += stepsize
+
+    return ctr, ard, argRev
