@@ -358,16 +358,18 @@ function sub3(obj) {
     event.preventDefault();
 }
 
-{#fetchStatus();#}
+fetchStatus();
 var interval = null;
 function fetchStatus() {
-    fetch(`/dataset/update`)
+    fetch(`/datasets/update`)
+{#        .then(function (response) {
+                return response.text();
+            })#}
         .then(function (text){
-            if (text == 'done'){
+            if (text === 'done'){
                 sendData()
                 clearInterval(interval)
             }
-
         })
 }
 

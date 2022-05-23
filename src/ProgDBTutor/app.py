@@ -311,7 +311,7 @@ def datasets():
         return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=json.dumps(file_attr_types))
     return redirect(url_for('login_user'))
 
-@app.route("/dataset/update")
+@app.route("/datasets/update")
 def datasetUpdate():
     print('HIER')
     if 'jobsDataset' in session:
@@ -325,6 +325,7 @@ def datasetUpdate():
 
         if finished == len(jobs) and finished != 0:
             return 'done'
+    return 'notDone'
 
 @app.route("/fileupload", methods=['GET', 'POST'])
 def fileupload():
@@ -600,4 +601,4 @@ def logout():
 # RUN DEV SERVER
 if __name__ == "__main__":
     #os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
-    app.run(HOST, debug=True)
+    app.run(HOST, debug=False)
