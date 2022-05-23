@@ -223,19 +223,16 @@ def test(days, startDate, endDate, abtestID, resultID, datasetID, stepSize):
 
     cursor = connection.get_cursor()
 
-    customerIDs = []
+    intervalDates = []
 
-    # initial values
+    # initial values: date2 is altijd voor date1
     date1 = endDate
     date2 = str(datetime.strptime(str(date1)[0:10], '%Y-%m-%d') - timedelta(days=stepSize))[0:10]
     _end = datetime.strptime(str(endDate)[0:10], '%Y-%m-%d') - timedelta(days=days)
 
     while _end < datetime.strptime(str(date2)[0:10], '%Y-%m-%d'):
-        cursor.execute("SELECT DISTINCT customer_id FROM Interaction WHERE t_dat BETWEEN %s AND %s",
-                       (date2, date1))
 
-        customerID = cursor.fetchall()
-        customerIDs.append(customerID)
+        intervalDates.append([date2, date1])
 
         # update
         date1 = date2
@@ -289,7 +286,44 @@ def test(days, startDate, endDate, abtestID, resultID, datasetID, stepSize):
         DATA[row[1]][1].append(row[0])      # date
         DATA[row[1]][2].append(False)       # bool: was_recommended
 
-    return returnAR, returnARPU
+    returnValue = []
+
+    for interval in intervalDates:
+        AR = 0
+        ARPU = 0
+        nrOfPurchases = 0
+
+        # ga over alle customers
+        for key, value in DATA.items():
+
+            # ga over de data van een bepaalde customer
+            for items in DATA[key]:
+
+                t_dat = datetime.strptime(str(items[1]), '%Y-%m-%d')
+
+                # als die customer een aankoop heeft binnen het interval -> doe er iets mee
+                if datetime.strptime(str(interval[0])[0:10], '%Y-%m-%d') < t_dat <= datetime.strptime(str(interval[1])[0:10], '%Y-%m-%d'):
+                    nrOfPurchases += 1
+
+                    # als de item recommended was
+                    if items[2]:
+                        AR += 1
+                        ARPU += items[3]    # items[3] holds the price of the purchase
+
+        if nrOfPurchases != 0:
+            AR = AR / nrOfPurchases
+            ARPU = ARPU / nrOfPurchases
+
+        returnValue.append([interval, AR, ARPU])
+
+    """
+    returnValue is een lijst van lijsten.
+    in elke lijst zit op 
+    index 0: het interval
+    index 1: de Attribution Rate voor dat interval
+    index 2: de Average Revenue Per User voor dat interval
+    """
+    return returnValue
 
 
 def getAR_and_ARPU(days, endDate, abtestID, resultID, datasetID):
