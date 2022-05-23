@@ -218,7 +218,7 @@
     </div>
     </div>
 
-    <button form="dataForm" style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" id="abtestSubmit" name="submit_button" value="abtestSubmit" role="button">
+    <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" id="abtestSubmit" name="submit_button" value="abtestSubmit" role="button">
         Submit A/B-test
     </button>
 </div>
@@ -377,6 +377,7 @@ $(function() {
             cache: false,
             processData: false,
             success: function(data) {
+                window.location.href = "{{ url_for('visualizations') }}";
                 {#algo_id = data['algo_id'];#}
                 {#algo_list = data['algo_list'];#}
                 {#algo_dict = data['algo_dict'];#}
