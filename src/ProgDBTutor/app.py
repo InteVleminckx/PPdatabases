@@ -189,6 +189,105 @@ def services(selected_ds_id=None):
             dataset = request.form.get('datasetSelection')
             ABTestID = getMaxABTestID() + 1
             if not dataset:
+
+            s = request.form.get('submit_button')
+            if s == 'algoSubmit':
+
+                algo = request.form.get('algoSelection')
+
+                if algo == "popularity":
+                    windowsize = request.form.get('windowsize', None)
+                    retraininterval = request.form.get('retraininterval1', None)
+                    if windowsize == "" or retraininterval == "":
+                        flash('Algorithm parameters not fully filled in.', category='error')
+                    else:
+                        algo_list.append((algo_id, "popularity", "windowsize", windowsize))
+                        algo_list.append((algo_id, "popularity", "retraininterval", retraininterval))
+                        algo_dict[algo_id] = "popularity"
+                        algo_id += 1
+                elif algo == "recency":
+                    retraininterval = request.form.get('retraininterval2', None)
+                    if retraininterval == "":
+                        flash('Algorithm parameters not fully filled in.', category='error')
+                    else:
+                        algo_list.append((algo_id, "recency", "retraininterval", retraininterval))
+                        algo_dict[algo_id] = "recency"
+                        algo_id += 1
+                elif algo == "itemknn":
+                    k = request.form.get('k')
+                    window = request.form.get('window')
+                    normalize = request.form.get('normalize')
+                    retraininterval = request.form.get('retraininterval3')
+                    if k == None or window == "" or normalize == "" or retraininterval == "":
+                        flash('Algorithm parameters not fully filled in.', category='error')
+                    else:
+                        algo_list.append((algo_id, "itemknn", "k", k))
+                        algo_list.append((algo_id, "itemknn", "window", window))
+                        algo_list.append((algo_id, "itemknn", "normalize", normalize))
+                        algo_list.append((algo_id, "itemknn", "retraininterval", retraininterval))
+                        algo_dict[algo_id] = "itemknn"
+                        algo_id += 1
+
+            elif s == 'abtestSubmit':
+                cursor = connection.get_cursor()
+
+                # Params for foreign keys
+                creator = session['username']
+
+                # General parameters for ABtest
+                start = request.form.get('startingpoint')
+                end = request.form.get('endpoint')
+                stepsize = request.form.get('stepsize')
+                topk = request.form.get('topk')
+                dataset = request.form.get('datasetSelection')
+                ABTestID = getMaxABTestID() + 1
+                if not dataset:
+                    return redirect(url_for('visualizations'))
+                dataset_id = ""
+                for char in dataset:
+                    if char.isdigit():
+                        dataset_id += char
+
+                i = 1
+                while i < algo_id:
+                    # Add entry for ABtest table
+                    # addAB_Test(abtest_id, i, start, end, stepsize, topk)
+                    abTestQueue.enqueue(addAB_Test, ABTestID, i, start, end, stepsize, topk)
+
+                    # Add entries for Algorithm table
+                    for j in range(len(algo_list)):
+                        if algo_list[j][0] == i:
+                            algorithm_param = algo_list[j][2]
+                            # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
+                            # algo_list[j][3])
+                            abTestQueue.enqueue(addAlgorithm, ABTestID, i, algo_list[j][1], algo_list[j][2],
+                                        algo_list[j][3])
+
+                    # Add entry for result table
+                    #addResult(abtest_id, i, dataset_id, algorithm_param, creator)
+                    abTestQueue.enqueue(addResult, ABTestID, i, dataset_id, algorithm_param, creator)
+
+                    i += 1
+
+                # Remove algorithms from list and dicts
+                algo_list = []
+                algo_dict = {}
+                connection.commit()
+
+                # Call function to start a/b tests
+                #abtest.startAB(maxABtestID, dataset_id)
+                #abtest.getABtestResults(maxABtestID, dataset_id)
+                #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
+
+                jobABtests = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id)
+                # jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
+                # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
+                jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, abtest_id, dataset_id, job_timeout=600)
+
+                session["abVisualistation"] = jobABvisualisations.id
+                abtest_id += 1
+                algo_id = 1
+                # return redirect(url_for('itemsection'))
                 return redirect(url_for('visualizations'))
             dataset_id = ""
             for char in dataset:
@@ -292,10 +391,29 @@ def datasets():
                 type_list['customers_name_column'] = cust_col_name
 
         handelRequests(app, session, request, datasetQueue, type_list)
+        jobs = handelRequests(app, session, request, datasetQueue, type_list)
+        if jobs:
+            session['jobsDataset'] = jobs
         dataset_names = getDatasets()
 
         return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=json.dumps(file_attr_types))
     return redirect(url_for('login_user'))
+
+@app.route("/datasets/update")
+def datasetUpdate():
+    print('HIER')
+    if 'jobsDataset' in session:
+        jobs = session["jobsDataset"]
+        finished = 0
+        for job in jobs:
+            j = datasetQueue.fetch_job(job)
+            if j is not None:
+                if str(j.get_status()) == "finished":
+                    finished += 1
+
+        if finished == len(jobs) and finished != 0:
+            return 'done'
+    return 'notDone'
 
 @app.route("/fileupload", methods=['GET', 'POST'])
 def fileupload():
@@ -572,4 +690,4 @@ def logout():
 # RUN DEV SERVER
 if __name__ == "__main__":
     #os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
-    app.run(HOST, debug=True)
+    app.run(HOST, debug=False)
