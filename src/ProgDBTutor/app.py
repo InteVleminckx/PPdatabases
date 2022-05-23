@@ -153,14 +153,14 @@ def addalgorithm():
                 algo_id += 1
 
         data_dict = {'algo_id':algo_id, 'algo_list':algo_list, 'algo_dict':algo_dict}
-        print("success")
-        print(data_dict)
+        # print("success")
+        # print(data_dict)
         return data_dict
 
 @app.route("/services", methods=['GET', 'POST'])
-@app.route("/services/<selected_ds_id>", methods=['GET', 'POST'])
+# @app.route("/services/<selected_ds_id>", methods=['GET', 'POST'])
 # @login_required
-def services(selected_ds_id=None):
+def services():
 
     if 'loggedin' in session:
         print(request.args)
@@ -170,6 +170,13 @@ def services(selected_ds_id=None):
         if request.method == 'POST':
 
             dataDict = request.get_json()
+            print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            print(request.data)
+            print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+            print(request.values)
+            print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+            print(dataDict)
+
             form_data = dataDict['form_data']
             algo_id = dataDict['algo_id']
             algo_list = dataDict['algo_list']
@@ -181,11 +188,11 @@ def services(selected_ds_id=None):
             creator = session['username']
 
             # General parameters for ABtest
-            start = request.form.get('startingpoint')
-            end = request.form.get('endpoint')
-            stepsize = request.form.get('stepsize')
-            topk = request.form.get('topk')
-            dataset = request.form.get('datasetSelection')
+            start = form_data['startingpoint']
+            end = form_data['endpoint']
+            stepsize = form_data['stepsize']
+            topk = form_data['topk']
+            dataset = form_data['datasetSelection']
             ABTestID = getMaxABTestID() + 1
             if not dataset:
                 return redirect(url_for('visualizations'))
@@ -234,7 +241,7 @@ def services(selected_ds_id=None):
             # abtest_id += 1
             # algo_id = 1
             # return redirect(url_for('itemsection'))
-            return redirect(url_for('visualizations'))
+            # return redirect(url_for('visualizations')) #TODO if not work turn on
 
             # dataset_id = ""
             # for char in dataset:
