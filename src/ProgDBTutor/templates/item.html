@@ -116,10 +116,8 @@
                 chart: {
                     title: 'Popularity item',
                 },
-                axes: {
-                    x: {
-                        0: {side: 'top'} // Top x-axis.
-                    }
+                vAxis: {
+                    title: 'Amount of purchases'
                 },
                 bar: {groupWidth: "100%"}
             };
@@ -137,10 +135,8 @@
                 chart: {
                     title: 'Recommendation count',
                 },
-                axes: {
-                    x: {
-                        0: {side: 'top'} // Top x-axis.
-                    }
+                vAxis: {
+                    title: 'Amount of recommendations'
                 },
                 bar: {groupWidth: "100%"},
             };
@@ -153,9 +149,6 @@
             for (var x of d['columns']) {
                 dataitems.addColumn('number', x);
             }
-{#            {% for item in d['columns'] %}#}
-{#                dataitems.addColumn('number', '{{ item }}');#}
-{#            {% endfor %}#}
             dataitems.addRows(d['data'])
             chart = new google.charts.Bar(document.getElementById(d['name']));
             options = {
@@ -167,11 +160,6 @@
                 curveType: 'function',
                 chart: {
                     title: 'Recommendation correctness',
-                },
-                axes: {
-                    x: {
-                        0: {side: 'top'} // Top x-axis.
-                    }
                 },
                 vAxis: {
                     viewWindow: {
@@ -187,9 +175,6 @@
             for (var y of d['numbers']) {
                 options.series[y[0]] = {targetAxisIndex: y[1]};
             }
-{#            {% for item in d['numbers'] %}#}
-{#                options.series[{{ item[0] }}] = {targetAxisIndex: {{ item[1] }}};#}
-{#            {% endfor %}#}
 
             options.vAxis.viewWindow.min = 0;
             options.vAxis.viewWindow.max = d['maxYValue'];
