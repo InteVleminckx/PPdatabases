@@ -89,8 +89,7 @@ def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
         # print("oke")
         # print(curDate)
         res = getClickThroughRate(prevDate, curDate, abtest_id, result_id, dataset_id)
-        arad = getAttributionRate(7, curDate, abtest_id, result_id, dataset_id)
-        avrgRev = getAverageRevenuePerUser(7, curDate, abtest_id, result_id, dataset_id)
+        arad, avrgRev = getAR_and_ARPU(7, curDate, abtest_id, result_id, dataset_id)
         ctr[str(curDate)[0:10]] = res
         ard[str(curDate)[0:10]] = arad[0]
         argRev[str(curDate)[0:10]] = avrgRev[0]
