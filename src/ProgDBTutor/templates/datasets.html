@@ -207,7 +207,7 @@ window.onload = sendData();goToABTestPage();
 
 function goToABTestPage() {
     var ds = document.getElementById("datasetSelection");
-    ds = ds.options[ds.selectedIndex].value
+    ds = ds.value
     console.log(ds);
     var link = document.getElementById('abtestlink');
     link.href += '?selected_ds_id=' + ds;

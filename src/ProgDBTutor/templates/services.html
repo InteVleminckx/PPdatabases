@@ -310,10 +310,6 @@ $(function() {
         }
         console.log(data_dict);
 
-        {#form_data.append('algo_id', JSON.stringify(algo_id))#}
-        {#form_data.append('algo_list', JSON.stringify(algo_list))#}
-        {#form_data.append('algo_dict', JSON.stringify(algo_dict))#}
-
         $.ajax({
             type: 'POST',
             url: '/services/addalgorithm',
@@ -325,6 +321,9 @@ $(function() {
                 algo_id = data['algo_id'];
                 algo_list = data['algo_list'];
                 algo_dict = data['algo_dict'];
+                console.log(algo_id);
+                console.log(algo_list);
+                console.log(algo_dict);
                 generateAttrHtml(data);
             },
         });
@@ -336,7 +335,7 @@ function generateAttrHtml(data) {
     var attrElem = document.getElementById("tablesection");
     var _html = "";
     var algo_num = data['algo_id']-1;
-    var lastAlgoAdded = data['algo_dict'][algo_num]; // Object.keys(data).length.toString()
+    var lastAlgoAdded = data['algo_dict'][algo_num.toString()]; // Object.keys(data).length.toString()
     console.log(lastAlgoAdded);
 
     _html += "<tr>";
@@ -355,6 +354,37 @@ $('button.algosubmit').click(function(e) {
 
 $('button.abtestSubmit').click(function(e) {
     algo_id = 1;
+});
+
+$(function() {
+    $('#abtestSubmit').click(function() {
+        {#var form_data = new FormData($('#dataForm')[0]);#}
+        var form_data = $('#dataForm').serializeArray();
+        data_dict = {'form_data':{}, 'algo_id':algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict};
+        {#console.log(form_data);#}
+        for (var el of form_data) {
+            data_dict['form_data'][el['name']] = el['value'];
+        }
+        console.log(data_dict);
+
+        $.ajax({
+            type: 'POST',
+            url: '/services',
+            data: JSON.stringify(data_dict),
+            contentType: 'application/json; charset=utf-8',
+            cache: false,
+            processData: false,
+            success: function(data) {
+                {#algo_id = data['algo_id'];#}
+                {#algo_list = data['algo_list'];#}
+                {#algo_dict = data['algo_dict'];#}
+                {#console.log(algo_id);#}
+                {#console.log(algo_list);#}
+                {#console.log(algo_dict);#}
+                {#generateAttrHtml(data);#}
+            },
+        });
+    });
 });
 
 </script>
