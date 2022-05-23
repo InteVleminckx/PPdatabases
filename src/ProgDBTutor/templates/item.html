@@ -74,7 +74,7 @@
     google.charts.load('current', {'packages':['corechart', 'bar']});
 
    $(function() {
-       $('#submit_graph').click(function(e) {
+       $('#submit_graph').click(function() {
            var form_data = new FormData($('#form1')[0]);
            console.log(form_data);
            $.ajax({

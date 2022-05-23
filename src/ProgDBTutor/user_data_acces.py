@@ -664,7 +664,7 @@ def addDataset(dataset_id, dataset_name):
 def getCustomerAndItemIDs(start, end, dataset_id):
     global dbconnect
     cursor = dbconnect.get_cursor()
-    cursor.execute("SELECT I.customer_id, I.item_id FROM Interaction I WHERE I.t_dat BETWEEN %s AND %S AND dataset_id = %s ORDER BY customer_id DESC; ", (start, end, dataset_id))
+    cursor.execute("SELECT I.customer_id, I.item_id FROM Interaction I WHERE I.t_dat BETWEEN %s AND %s AND dataset_id = %s ORDER BY customer_id DESC; ", (start, end, dataset_id))
     rows = cursor.fetchall()
     results = []
     for row in rows:
