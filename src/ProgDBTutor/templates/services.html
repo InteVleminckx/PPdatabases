@@ -185,7 +185,7 @@
 {#                            <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="algoSubmit" role="button">#}
 {#                                Add Algorithm#}
 {#                            </button>#}
-                            <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" name="submit_button" value="algoSubmit" role="button" onclick="sendData();">
+                            <button class="algosubmit" style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" id="algoSubmit" name="submit_button" value="algoSubmit" role="button" onclick="">
                                 Add Algorithm
                             </button>
 {#                            </form>#}
@@ -207,14 +207,8 @@
                                     <td style="color: red; border-top: 0;">Remove</td>
                                 </tr>
                             </thead>
-                            <tbody style="height: 610px;">
-                                {% for key, value in algo_dict.items() %}
-                                    <tr>
-                                        <td>{{ key }}</td>
-                                        <td>{{ value }}</td>
-                                        <td style="font-size: 20px;color: red;cursor: pointer;"><div onclick="window.location.href='{{ url_for('datasetupload', rowData=key) }}';">&times;</div></td>
-                                    </tr>
-                                {% endfor %}
+                            <tbody id="tablesection" style="height: 610px;">
+
                             </tbody>
                         </table>
                     </div>
@@ -224,160 +218,11 @@
     </div>
     </div>
 
-    <button form="dataForm" style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="abtestSubmit" role="button">
+    <button form="dataForm" style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" id="abtestSubmit" name="submit_button" value="abtestSubmit" role="button">
         Submit A/B-test
     </button>
 </div>
 </form>
-
-{#<form method="POST" action="" data-name="cForm">#}
-{#<div class="_services" id="services">#}
-{##}
-{##}
-{#        <h1>1. Choosing dataset</h1>#}
-{#        <p>Select a dataset with the selection button below. <br>#}
-{#            If you would like to add a new dataset (for admins only), go to the Datasets page.</p>#}
-{##}
-{#        <h1>Setting up the algorithm</h1>#}
-{#            <div class="_services__card">#}
-{#                <div class="par_form">#}
-{#                    <div class="container">#}
-{##}
-{#                          <!-- Dataset Selection-->#}
-{##}
-{#                          <select class="ds_select" id="datasetSelection" name="datasetSelection">#}
-{#                              <option value="dataset 0">dataset 0</option>#}
-{#                              <option value="dataset 1">dataset 1</option>#}
-{#                              <option value="dataset 2">dataset 2</option>#}
-{#                              <option value="dataset 3">dataset 3</option>#}
-{#                          </select>#}
-{##}
-{#                          <!-- General parameters Selection-->#}
-{##}
-{#                          <div class="row">#}
-{#                            <div class="col-25"><label for="startingpoint">Starting point</label></div>#}
-{#                            <div class="col-75"><input type="datetime-local" id="startingpoint" name="startingpoint" placeholder="Starting point" required></div>#}
-{#                          </div>#}
-{#                          <div class="row">#}
-{#                            <div class="col-25"><label for="endpoint">End point</label></div>#}
-{#                            <div class="col-75"><input type="datetime-local" id="endpoint" name="endpoint" placeholder="End point" required></div>#}
-{#                          </div>#}
-{#                          <div class="row">#}
-{#                            <div class="col-25"><label for="stepsize">Stepsize</label></div>#}
-{#                            <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize" required></div>#}
-{#                          </div>#}
-{#                          <div class="row">#}
-{#                            <div class="col-25"><label for="topk">Top-k</label></div>#}
-{#                            <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" required></div>#}
-{#                          </div>#}
-{#                        <form method="POST" data-name="cForm">#}
-{#                          <!-- Algorithm Selection-->#}
-{##}
-{#                            <select class="_ds_select" id="algoSelection" name="algoSelection" onchange="switchVisibleParameters();">#}
-{#                                <option value="popularity">popularity</option>#}
-{#                                <option value="recency">recency</option>#}
-{#                                <option value="itemknn">itemknn</option>#}
-{#                            </select>#}
-{##}
-{#                          <!-- Algorithm-specific parameters Selection-->#}
-{##}
-{#                            <p style="color: black;">Set Parameters</p>#}
-{##}
-{#                            <div class="par_form">#}
-{#                                <div class="container1" id="popularity_par" style="border: 2px solid black;">#}
-{#                                  <div class="row">#}
-{#                                    <div class="col-25"><label for="windowsize">Window Size</label></div>#}
-{#                                    <div class="col-75" style="width: 25%"><input type="text" id="windowsize" name="windowsize" placeholder="windowsize" ></div>#}
-{#                                  </div>#}
-{#                                  <div class="row">#}
-{#                                    <div class="col-25"><label for="retraininterval">Retrain interval</label></div>#}
-{#                                    <div class="col-75" style="width: 25%"><input type="text" id="retraininterval1" name="retraininterval1" placeholder="retraininterval" ></div>#}
-{#                                  </div>#}
-{#                                </div>#}
-{##}
-{#                                <div class="container2" id="recency_par" style="border: 2px solid black; opacity: 0;height: 0;width: 0;">#}
-{#                                  <div class="row">#}
-{#                                    <div class="col-25"><label for="retraininterval">Retrain interval</label></div>#}
-{#                                    <div class="col-75" style="width: 25%"><input type="text" id="retraininterval2" name="retraininterval2" placeholder="retraininterval" ></div>#}
-{#                                  </div>#}
-{#                                </div>#}
-{##}
-{#                                <div class="container3" id="itemknn_par" style="border: 2px solid black; opacity: 0;height: 0;width: 0;">#}
-{#                                  <div class="row">#}
-{#                                    <div class="col-25"><label for="k">K</label></div>#}
-{#                                    <div class="col-75" style="width: 25%"><input type="text" id="k" name="k" placeholder="k" ></div>#}
-{#                                  </div>#}
-{#                                  <div class="row">#}
-{#                                    <div class="col-25"><label for="window">Window</label></div>#}
-{#                                    <div class="col-75" style="width: 25%"><input type="text" id="window" name="window" placeholder="window" ></div>#}
-{#                                  </div>#}
-{#                                  <div class="row">#}
-{#                                    <div class="col-25"><label for="normalize">Normalize</label></div>#}
-{#                                    <div class="col-75" style="width: 25%"><input type="text" id="normalize" name="normalize" placeholder="normalize" ></div>#}
-{#                                  </div>#}
-{#                                  <div class="row">#}
-{#                                    <div class="col-25"><label for="retraininterval">Retrain interval</label></div>#}
-{#                                    <div class="col-75" style="width: 25%"><input type="text" id="retraininterval3" name="retraininterval3" placeholder="retraininterval" ></div>#}
-{#                                  </div>#}
-{#                                </div>#}
-{##}
-{#                            </div>#}
-{#                            <div align="center" class="___services__btn" style="margin-top: 20px;">#}
-{#                                <button type="submit" >#}
-{#                                    Add algorithm#}
-{#                                </button>#}
-{#                            </div>#}
-{#                                <input type="submit" name="submit_button" value="algoSubmit">#}
-{#                      </form>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#    </div>#}
-{##}
-{#<!-- Services Section-->#}
-{#<div class="__services" id="services">#}
-{##}
-{#        Popularity: window size en retrain interval#}
-{#        Recency: retrain interval#}
-{#        ItemKNN: K, window, normalize en retrain interval#}
-{#    <div class="box">#}
-{#        <div class="__container">#}
-{##}
-{#            <div class="_dataset_title" >List of added algorithms</div>#}
-{#            <div class="_dataset__btn">#}
-{#                <button name="submit_button" value="remove">Remove algorithm</button>#}
-{#            </div>#}
-{##}
-{#            <div class="_dataset__header">#}
-{#                <div class="_dataset__item" tabindex="1">#}
-{#                    <ul><li>Algorithm number</li><li>Algorithm name</li></ul>#}
-{#                </div>#}
-{#            </div>#}
-{##}
-{#            <div class="_dataset__card">#}
-{#                <div class="_dataset__scroll">#}
-{#                    {% set count = [] %}#}
-{#                    {% for key, value in algo_dict.items() %}#}
-{#                        <div class="_dataset__item" tabindex={{ count|length }}>#}
-{#                            <ul><li>{{ key }}</li><li>{{ value }}</li></ul>#}
-{#                        </div>#}
-{#                        {% set __ = count.append(1) %}#}
-{#                    {% endfor %}#}
-{##}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#        <div class="___services__btn">#}
-{#            <button type="submit">#}
-{#                <a href="visualizations">Start Setup</a>#}
-{#            </button>#}
-{#        </div>#}
-{#</div>#}
-
-{#<input type="submit" name="submit_button" value="abtestSubmit">#}
-
-{#</form>#}
 
 <script src="../static/jquery-3.2.1.js">
 </script>
@@ -411,6 +256,8 @@
     {#        $("#" + $(this).val()).show();#}
     {#    });#}
     {# });#}
+
+
 
     function switchVisibleParameters() {
 
@@ -447,40 +294,98 @@
             }, 1000); // <-- time in milliseconds
         });
 
-    function sendData() {
-    let ds_id = document.getElementById("datasetSelection").value;
-    let gen_par_start = document.getElementById("startingpoint").value;
-    let gen_par_end = document.getElementById("endpoint").value;
-    let gen_par_stepsize = document.getElementById("stepsize").value;
-    let gen_par_topk = document.getElementById("topk").value;
 
+var algo_id = 1;
+var algo_list = [];
+var algo_dict = {};
 
-    fetch(`/services/addalgorithm`, {
-        headers : {
-            'Content-Type' : 'application/json'
-        },
-        method : 'POST',
-        body : JSON.stringify( {
-            'ds_id' : ds_id,
-            'gen_par_start' : gen_par_start,
-            'gen_par_end' : gen_par_end,
-            'gen_par_stepsize' : gen_par_stepsize,
-            'gen_par_topk' : gen_par_topk
-        })
-    }).then(function(response) {
-        return response.text();
-    }).then(function(text) {
-        console.log(text['ds_id'])
-        var dict = JSON.parse(text);
+$(function() {
+    $('#algoSubmit').click(function() {
+        {#var form_data = new FormData($('#dataForm')[0]);#}
+        var form_data = $('#dataForm').serializeArray();
+        data_dict = {'form_data':{}, 'algo_id':algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict};
+        {#console.log(form_data);#}
+        for (var el of form_data) {
+            data_dict['form_data'][el['name']] = el['value'];
+        }
+        console.log(data_dict);
 
-        document.getElementById("datasetSelection").innerHTML = text['ds_id'];
-        document.getElementById("startingpoint").innerHTML = text['startingpoint'];
-        document.getElementById("endpoint").innerHTML = text['endpoint'];
-        document.getElementById("stepsize").innerHTML = text['stepsize'];
-        document.getElementById("topk").innerHTML = text['topk'];
-
+        $.ajax({
+            type: 'POST',
+            url: '/services/addalgorithm',
+            data: JSON.stringify(data_dict),
+            contentType: 'application/json; charset=utf-8',
+            cache: false,
+            processData: false,
+            success: function(data) {
+                algo_id = data['algo_id'];
+                algo_list = data['algo_list'];
+                algo_dict = data['algo_dict'];
+                console.log(algo_id);
+                console.log(algo_list);
+                console.log(algo_dict);
+                generateAttrHtml(data);
+            },
+        });
     });
+});
+
+function generateAttrHtml(data) {
+
+    var attrElem = document.getElementById("tablesection");
+    var _html = "";
+    var algo_num = data['algo_id']-1;
+    var lastAlgoAdded = data['algo_dict'][algo_num.toString()]; // Object.keys(data).length.toString()
+    console.log(lastAlgoAdded);
+
+    _html += "<tr>";
+    _html += "<td>" + algo_num + "</td>";
+    _html += "<td>" + lastAlgoAdded + "</td>";
+    _html += "<td style=\"font-size: 20px;color: red;cursor: pointer;\"><div>&times;</div></td>";
+    _html += "</tr>";
+
+    attrElem.innerHTML += _html;
+
 }
+
+$('button.algosubmit').click(function(e) {
+    e.preventDefault();
+});
+
+$('button.abtestSubmit').click(function(e) {
+    algo_id = 1;
+});
+
+$(function() {
+    $('#abtestSubmit').click(function() {
+        {#var form_data = new FormData($('#dataForm')[0]);#}
+        var form_data = $('#dataForm').serializeArray();
+        data_dict = {'form_data':{}, 'algo_id':algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict};
+        {#console.log(form_data);#}
+        for (var el of form_data) {
+            data_dict['form_data'][el['name']] = el['value'];
+        }
+        console.log(data_dict);
+
+        $.ajax({
+            type: 'POST',
+            url: '/services',
+            data: JSON.stringify(data_dict),
+            contentType: 'application/json; charset=utf-8',
+            cache: false,
+            processData: false,
+            success: function(data) {
+                {#algo_id = data['algo_id'];#}
+                {#algo_list = data['algo_list'];#}
+                {#algo_dict = data['algo_dict'];#}
+                {#console.log(algo_id);#}
+                {#console.log(algo_list);#}
+                {#console.log(algo_dict);#}
+                {#generateAttrHtml(data);#}
+            },
+        });
+    });
+});
 
 </script>
 
