@@ -250,6 +250,7 @@ def services(selected_ds_id=None):
             #         elif algo_dict[algo_id] == 'itemknn':
             #             algo_list = algo_list[:-4]
             #         del algo_dict[algo_id]
+
         elif request.method == 'GET':
             pass
         dataset_names = getDatasets()
