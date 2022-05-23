@@ -43,7 +43,7 @@ def startAB(abtest_id, dataset_id):
 
         elif algorithm.name == 'itemknn':
             retraininterval = int(algorithm.params["retraininterval"])
-            windowsize = int(algorithm.params["windowsize"])
+            windowsize = int(algorithm.params["window"])
             k = int(algorithm.params['k'])
             normalize = bool(algorithm.params['normalize'])
             itemAlgo = itemknn.ItemKNN(dataset_id, abtest_id, result_id, startpoint, endpoint, topk, stepsize,
