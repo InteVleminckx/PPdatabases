@@ -211,7 +211,6 @@ function goToABTestPage() {
     console.log(ds);
     var link = document.getElementById('abtestlink');
     link.href += '?selected_ds_id=' + ds;
-
 }
 
 $(function() {
@@ -230,7 +229,6 @@ $(function() {
                 console.log(data['articles_attr']);
                 console.log(data['customers_attr']);
                 generateAttrHtml(data);
-
             },
         });
     });
@@ -281,7 +279,6 @@ function generateAttrHtml(data) {
             _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute2 + "\">" + attribute2 + "</label></div>";
             _html += "<div class=\"col-75\" style=\"width: 40%\">";
             _html += "<select class=\"\" id=\"" + cust_select_id + "\" name=\"" + cust_select_id + "\">";
-            console.log(attr_types);
             for (var __type of attr_types) {
                 _html += "<option value=\"" + __type + "\">" + __type + "</option>\n";
             }
@@ -317,13 +314,11 @@ function sub(obj, button) {
 
 function sendData() {
     let id = document.getElementById("datasetSelection").value;
-
     fetch(`/datasets/${id}`).then(function(response) {
         return response.text();
     }).then(function(text) {
         console.log(text)
         var statistics = JSON.parse(text)
-        console.log()
         document.getElementById("nr_of_customers").innerHTML = statistics[0].users
         document.getElementById("nr_of_items").innerHTML = statistics[0].articles
         document.getElementById("nr_of_interactions").innerHTML = statistics[0].interactions
@@ -391,6 +386,7 @@ function toggleDatasetView() {
     if (c0.style.display === "none") {
         c0.style.display = "block";
         c3.style.display = "none";
+        sendData();
     }
     else {
         c0.style.display = "none";
