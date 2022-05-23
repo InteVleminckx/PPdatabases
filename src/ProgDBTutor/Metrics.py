@@ -69,6 +69,7 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID):
 
     ctr = 0
 
+    print(endDate)
     for row in rows:
         cursor.execute(
             "select item_number from recommendation where ( abtest_id = %s and result_id = %s and dataset_id = %s and (customer_id = -1 or customer_id = %s) and start_point < %s and %s <= end_point);",
@@ -214,7 +215,7 @@ def getAR_and_ARPU(days, endDate, abtestID, resultID, datasetID):
     if days not in [7, 30]:
         days = 7
 
-    startDate = str(datetime.strptime(str(endDate)[0:10], '%Y-%m-%d') - timedelta(days=days))
+    startDate = str(datetime.strptime(str(endDate)[0:10], '%Y-%m-%d') - timedelta(days=days))[0:10]
     endDate = str(endDate)[0:10]
 
     cursor = connection.get_cursor()
@@ -222,7 +223,7 @@ def getAR_and_ARPU(days, endDate, abtestID, resultID, datasetID):
     # customer_id's of all active customers from interval [startDate+1 , endDate] (geen dubbele startDate's)
     cursor.execute("SELECT DISTINCT i.customer_id FROM Interaction i \
                         WHERE i.t_dat BETWEEN %s AND %s",
-                   (startDate, endDate))
+                   (str(startDate), str(endDate)))
 
     if cursor is None:
         return None
@@ -234,29 +235,31 @@ def getAR_and_ARPU(days, endDate, abtestID, resultID, datasetID):
     returnAR = [0, {}]
 
     for ID in customerIDs:
-
+        # print(abtestID, resultID, datasetID, startDate, endDate, ID[0])
         # geef het aantal voorgestelde aankopen van die user over het interval
         cursor.execute("SELECT r1.item_number FROM Recommendation r1 \
                             WHERE r1.abtest_id = %s AND r1.result_id = %s AND r1.dataset_id = %s \
                             AND r1.start_point < %s AND r1.end_point >= %s \
                             AND (r1.customer_id = %s OR r1.customer_id = -1); ",
-                       (abtestID, resultID, datasetID, startDate, endDate, ID[0]))
+                       (str(abtestID), str(resultID), str(datasetID), str(startDate), str(endDate), str(ID[0])))
 
         recommendations = cursor.fetchall()
 
         # geef het aantal aankopen van die user over het interval + prijs van elke aankoop
         cursor.execute("SELECT i.item_id, i.price FROM Interaction i \
                             WHERE i.customer_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s; ",
-                       (ID[0], datasetID, startDate, endDate))
+                       (str(ID[0]), str(datasetID), str(startDate), str(endDate)))
 
         purchases = cursor.fetchall()
 
         customer_ARPU = 0
         customer_AR = 0
+        # print(purchases, recommendations)
         for row in purchases:
-            if row[0] in recommendations:
-                customer_ARPU += row[1]
-                customer_AR += 1
+            for reco in recommendations:
+                if row[0] == reco[0]:
+                    customer_ARPU += row[1]
+                    customer_AR += 1
 
         # getal tussen 0 en 1
         customer_ARPU = customer_ARPU / len(purchases)
@@ -278,7 +281,7 @@ def getAR_and_ARPU(days, endDate, abtestID, resultID, datasetID):
 
     for key, value in returnAR[1].items():
         AR += returnAR[1][key]
-    AR = AR / len(returnAR[1])
+    AR = round(AR / len(returnAR[1]),2)
 
     returnAR[0] = AR
 
