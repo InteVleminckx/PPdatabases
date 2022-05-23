@@ -303,11 +303,29 @@ def datasets():
             cust_col_name = request.form.get("customers_name_column")
             if cust_col_name:
                 type_list['customers_name_column'] = cust_col_name
-        handelRequests(app, session, request, datasetQueue, type_list)
+        jobs = handelRequests(app, session, request, datasetQueue, type_list)
+        if jobs:
+            session['jobsDataset'] = jobs
         dataset_names = getDatasets()
 
         return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=json.dumps(file_attr_types))
     return redirect(url_for('login_user'))
+
+@app.route("/datasets/update")
+def datasetUpdate():
+    print('HIER')
+    if 'jobsDataset' in session:
+        jobs = session["jobsDataset"]
+        finished = 0
+        for job in jobs:
+            j = datasetQueue.fetch_job(job)
+            if j is not None:
+                if str(j.get_status()) == "finished":
+                    finished += 1
+
+        if finished == len(jobs) and finished != 0:
+            return 'done'
+    return 'notDone'
 
 @app.route("/fileupload", methods=['GET', 'POST'])
 def fileupload():
@@ -583,4 +601,4 @@ def logout():
 # RUN DEV SERVER
 if __name__ == "__main__":
     #os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
-    app.run(HOST, debug=True)
+    app.run(HOST, debug=False)
