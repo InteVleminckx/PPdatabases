@@ -338,10 +338,10 @@ function generateAttrHtml(data) {
     var lastAlgoAdded = data['algo_dict'][algo_num.toString()]; // Object.keys(data).length.toString()
     console.log(lastAlgoAdded);
 
-    _html += "<tr>";
+    _html += "<tr id=\"" + algo_num + "\">";
     _html += "<td>" + algo_num + "</td>";
     _html += "<td>" + lastAlgoAdded + "</td>";
-    _html += "<td style=\"font-size: 20px;color: red;cursor: pointer;\"><div>&times;</div></td>";
+    _html += "<td style=\"font-size: 20px;color: red;cursor: pointer;\" onclick=\"removeAlgorithm(" + algo_num + ")\"><div>&times;</div></td>";
     _html += "</tr>";
 
     attrElem.innerHTML += _html;
@@ -388,6 +388,37 @@ $(function() {
         });
     });
 });
+
+// Function that will remove an algorithm from the temporary algorithm table, list and dict
+function removeAlgorithm(algo_id) {
+    // Remove from the HTML
+    {#console.log(e.target.parentElement.id);#}
+    var row = document.getElementById(algo_id.toString());
+    row.remove();
+
+    // Remove from algo_list
+    let change = true;
+    while (change) {
+        change = false;
+        let index = -1;
+        for (let i = 0; i < algo_list.length; i++) {
+            if (algo_list[i][0] === algo_id) {
+                index = i;
+                change = true;
+                break;
+            }
+        }
+        if (change) {
+            algo_list.splice(index, 1);
+        }
+    }
+    // Remove from algo_dict
+    if (algo_dict.hasOwnProperty(algo_id)) {
+        delete algo_dict[algo_id];
+    }
+    console.log(algo_list);
+    console.log(algo_dict);
+}
 
 </script>
 
