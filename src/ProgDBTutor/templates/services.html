@@ -26,6 +26,13 @@
 {#    />#}
 
 </head>
+
+<style>
+    html, body {
+        background-color: #E3E9F0;
+    }
+</style>
+
 <body>
 
 <nav class="navbar" id="navbar">
@@ -76,7 +83,7 @@
             <div class="_column">
                 <h2>Add Algorithm</h2>
 
-                <div class="abtestcontainer1">
+                <div class="abtestcontainer1" style="">
                         <div class="container___">
 
 {#                            <form id="dataForm" method="POST" action="" data-name="cForm">#}
@@ -185,7 +192,7 @@
 {#                            <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="algoSubmit" role="button">#}
 {#                                Add Algorithm#}
 {#                            </button>#}
-                            <button class="algosubmit" style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" id="algoSubmit" name="submit_button" value="algoSubmit" role="button" onclick="">
+                            <button class="algosubmit_btn" style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" id="algoSubmit" name="submit_button" value="algoSubmit" role="button" onclick="">
                                 Add Algorithm
                             </button>
 {#                            </form>#}
@@ -207,7 +214,7 @@
                                     <td style="color: red; border-top: 0;">Remove</td>
                                 </tr>
                             </thead>
-                            <tbody id="tablesection" style="height: 610px;">
+                            <tbody id="tablesection" style="height: 626px;">
 
                             </tbody>
                         </table>
@@ -218,7 +225,7 @@
     </div>
     </div>
 
-    <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" id="abtestSubmit" name="submit_button" value="abtestSubmit" role="button">
+    <button class="abtestsubmit_btn" style="margin-left: auto; margin-right: auto;" id="abtestSubmit" name="submit_button" value="abtestSubmit" role="button">
         Submit A/B-test
     </button>
 </div>
