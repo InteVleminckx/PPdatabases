@@ -82,7 +82,7 @@ def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
     prevDate = curDate
 
     ctr = getClickThroughRate(startpoint, endpoint, abtest_id, result_id, dataset_id, stepsize)
-    arad, arpuad = test(7, startpoint, endpoint, abtest_id, result_id, dataset_id, int(stepsize))
+    arad, arpuad = getAR_and_ARPU(7, startpoint, endpoint, abtest_id, result_id, dataset_id, int(stepsize))
     # while curDate <= end:
         # print("oke")
         # print(curDate)
