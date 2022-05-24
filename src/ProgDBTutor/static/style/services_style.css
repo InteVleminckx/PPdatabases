@@ -496,7 +496,7 @@
 .abtestpage {
     /*width: 400px;*/
     /*height: 30px;*/
-    background-color: #000000;
+    background-color: #E3E9F0;
     justify-content: center;
 
     padding: 100px;
@@ -505,13 +505,13 @@
 
 .abtestpage h1 {
     text-align: center;
-    color: white;
+    color: black;
     margin-bottom: 20px;
 }
 
 .abtestcontainer h2 {
     text-align: center;
-    color: white;
+    color: black;
     margin-top: 20px;
 }
 
@@ -519,7 +519,7 @@
     /*width: 400px;*/
     /*height: 30px;*/
     width: 100%;
-    background-color: #4f4d4d;
+    background-color: #F0F2FA;
     border-radius: 10px;
 
     display: flex;
@@ -536,9 +536,12 @@
     background-color: #b8b5b5;
     margin: 50px;
     margin-top: 20px;
-    border-radius: 10px;
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
+    border: 0 solid #d9dee3;
+    border-radius: 8px;
     /*padding-top: 5px;*/
-    /*width: 500px;*/
+    /*width: 490px;*/
+    /*width: 100%;*/
 }
 
 .par_form {
@@ -553,7 +556,7 @@
   border-radius: 5px;
   background-color: darkgray;
   padding: 20px;
-    width: 100%;
+    /*width: 90%;*/
 }
 
 
@@ -563,4 +566,22 @@
     padding-top: 5px;
     border-radius: 5px;
 
+}
+
+.algosubmit_btn, .abtestsubmit_btn {
+    background: #1e7e34;
+    padding: 10px 50px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+
+
+}
+
+.abtestsubmit_btn {
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
