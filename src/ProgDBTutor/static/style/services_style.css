@@ -568,7 +568,7 @@
 
 }
 
-.algosubmit_btn, .abtestsubmit_btn {
+.algosubmit, .abtestsubmit_btn {
     background: #1e7e34;
     padding: 10px 50px;
     border: none;
