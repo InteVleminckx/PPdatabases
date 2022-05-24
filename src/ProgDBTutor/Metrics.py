@@ -50,7 +50,6 @@ def getNrOfActiveUsers(startDate=None, endDate=None):
 
 
 def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, stepsize):
-
     cursor = connection.get_cursor()
     print("startctr")
 
@@ -76,11 +75,12 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, steps
 
     # print(info_recommendation)
 
-    cursor.execute('select t_dat, customer_id, item_id from interaction where t_dat between %s and %s and dataset_id = %s;',
-                   (str(startDate), str(endDate), str(datasetID)))
+    cursor.execute(
+        'select t_dat, customer_id, item_id from interaction where t_dat between %s and %s and dataset_id = %s;',
+        (str(startDate), str(endDate), str(datasetID)))
 
     interactions = cursor.fetchall()
-    
+
     info_interactions = {}
 
     for interaction in interactions:
@@ -93,15 +93,15 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, steps
         info_interactions[str(interaction[0])[0:10]][str(interaction[1])].append(str(interaction[2]))
 
     # print(info_interactions)
-    
+
     ctr = {}
-    
+
     curDate = datetime.strptime(startDate, "%Y-%m-%d")
     end = datetime.strptime(endDate, "%Y-%m-%d")
     stepsize_ = timedelta(days=int(stepsize))
-    
+
     while curDate <= end:
-        
+
         ctrCount = 0
         if int(stepsize) > 1:
 
@@ -122,11 +122,11 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, steps
                                     if str(item) in info_recommendation[date][str(customer)]:
                                         count_ += 1
 
-                    ctrCount += count_/actv_cus
+                    ctrCount += count_ / actv_cus
 
                 start += timedelta(days=1)
 
-            ctr[str(curDate)[0:10]] = (round(ctrCount/int(stepsize),2))
+            ctr[str(curDate)[0:10]] = (round(ctrCount / int(stepsize), 2))
 
         else:
             date = str(curDate)[0:10]
@@ -134,21 +134,21 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, steps
             if date in info_recommendation:
                 actv_cus = len(info_interactions[date])
                 for customer, items in info_interactions[date].items():
-                    #We controleren eerst of de de user al in de recommendations zit, zoja check de items nog
-                    #Moeten ook nog de datum controleren
+                    # We controleren eerst of de de user al in de recommendations zit, zoja check de items nog
+                    # Moeten ook nog de datum controleren
                     if date in info_recommendation:
                         if str(customer) in info_recommendation[date]:
-                            #nu nog de items controleren
+                            # nu nog de items controleren
                             for item in items:
                                 if str(item) in info_recommendation[date][str(customer)]:
                                     ctrCount += 1
 
-            ctr[date] = (round(ctrCount/actv_cus, 2))
+            ctr[date] = (round(ctrCount / actv_cus, 2))
 
         curDate += stepsize_
 
     return ctr
-    
+
 
 def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, stepSize):
     # hardcoded 7 or 30 days
@@ -168,7 +168,6 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, step
     _end = datetime.strptime(str(startDate)[0:10], '%Y-%m-%d') - timedelta(days=days)
 
     while _end <= datetime.strptime(str(date2)[0:10], '%Y-%m-%d'):
-
         intervalDates.append([date2, date1])
 
         # update
@@ -206,10 +205,10 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, step
             DATA[row[1]] = [[], [], [], []]
 
         # voeg data toe aan de entry
-        DATA[row[1]][3].append(row[3])      # price
-        DATA[row[1]][0].append(row[2])      # item_id
-        DATA[row[1]][1].append(row[0])      # date
-        DATA[row[1]][2].append(True)        # bool: was_recommended
+        DATA[row[1]][3].append(row[3])  # price
+        DATA[row[1]][0].append(row[2])  # item_id
+        DATA[row[1]][1].append(row[0])  # date
+        DATA[row[1]][2].append(True)  # bool: was_recommended
 
     for row in not_recommended_purchases:
 
@@ -218,10 +217,10 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, step
             DATA[row[1]] = [[], [], [], []]
 
         # voeg data toe aan de entry
-        DATA[row[1]][3].append(0)           # price = 0 because not recommended
-        DATA[row[1]][0].append(row[2])      # item_id
-        DATA[row[1]][1].append(row[0])      # date
-        DATA[row[1]][2].append(False)       # bool: was_recommended
+        DATA[row[1]][3].append(0)  # price = 0 because not recommended
+        DATA[row[1]][0].append(row[2])  # item_id
+        DATA[row[1]][1].append(row[0])  # date
+        DATA[row[1]][2].append(False)  # bool: was_recommended
 
     returnValue = []
 
@@ -238,13 +237,14 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, step
                 t_dat = datetime.strptime(str(value[1][i])[0:10], '%Y-%m-%d')
 
                 # als die customer een aankoop heeft binnen het interval -> doe er iets mee
-                if datetime.strptime(str(interval[0])[0:10], '%Y-%m-%d') < t_dat <= datetime.strptime(str(interval[1])[0:10], '%Y-%m-%d'):
+                if datetime.strptime(str(interval[0])[0:10], '%Y-%m-%d') < t_dat <= datetime.strptime(
+                        str(interval[1])[0:10], '%Y-%m-%d'):
                     nrOfPurchases += 1
 
                     # als de item recommended was
                     if value[2][i]:
                         AR += 1
-                        ARPU += value[3][i]    # items[3] holds the price of the purchase
+                        ARPU += value[3][i]  # items[3] holds the price of the purchase
 
         if nrOfPurchases != 0:
             AR = AR / nrOfPurchases
@@ -259,7 +259,6 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, step
     index 1: de Attribution Rate voor dat interval
     index 2: de Average Revenue Per User voor dat interval
     """
-
 
     arad = {}
     arpuad = {}

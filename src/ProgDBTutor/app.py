@@ -223,7 +223,7 @@ def services():
             #abtest.getABtestResults(maxABtestID, dataset_id)
             #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
 
-            jobABtests = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id)
+            jobABtests = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id, job_timeout=3600)
             jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
             jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
             jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
