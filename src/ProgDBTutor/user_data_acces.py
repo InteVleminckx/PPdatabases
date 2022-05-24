@@ -664,7 +664,7 @@ def addDataset(dataset_id, dataset_name):
 def getCustomerAndItemIDs(start, end, dataset_id):
     global dbconnect
     cursor = dbconnect.get_cursor()
-    cursor.execute("SELECT I.customer_id, I.item_id FROM Interaction I WHERE I.t_dat BETWEEN %s AND %S AND dataset_id = %s ORDER BY customer_id DESC; ", (start, end, dataset_id))
+    cursor.execute("SELECT I.customer_id, I.item_id FROM Interaction I WHERE I.t_dat BETWEEN %s AND %s AND dataset_id = %s ORDER BY customer_id DESC; ", (start, end, dataset_id))
     rows = cursor.fetchall()
     results = []
     for row in rows:
@@ -744,13 +744,25 @@ def getRecommendationCorrectness(retrainDay, item_id, abtest_id, dataset_id):
     algorithmsList = []
     resultIDs = getResultIds(abtest_id, dataset_id)
     for id in resultIDs:
-        cursor.execute("CREATE OR REPLACE VIEW recommendations as SELECT item_number as item_number FROM Recommendation WHERE abtest_id = %s AND \
+        # First create a view containing the recommendations
+        cursor.execute("CREATE OR REPLACE VIEW recommendations as SELECT item_number as item_number, customer_id as customer_id FROM Recommendation WHERE abtest_id = %s AND \
                         result_id = %s AND dataset_id = %s AND item_number = %s AND end_point = %s;",
-                        (str(abtest_id), str(id), str(dataset_id), str(item_id), retrainDay))
+                       (str(abtest_id), str(id), str(dataset_id), str(item_id), retrainDay))
         dbconnect.commit()
-        cursor.execute("SELECT count(*) FROM Interaction WHERE item_id = %s AND t_dat = %s AND dataset_id = %s AND \
-                       item_id IN (SELECT item_number FROM recommendations);",
-                       (str(item_id), retrainDay, str(dataset_id)))
+
+        algorithm = getAlgorithm(abtest_id, id)
+        # Popularity and recency ==> count how many interactions there were on that day
+        if algorithm.name == 'popularity' or algorithm.name == 'recency':
+            cursor.execute("SELECT count(*) FROM Interaction WHERE item_id = %s AND t_dat = %s AND dataset_id = %s AND \
+                           item_id IN (SELECT item_number FROM recommendations);",
+                           (str(item_id), retrainDay, str(dataset_id)))
+
+        # ItemKNN ==> look at user specific recommendations and purchases
+        elif algorithm.name == 'itemknn':
+            cursor.execute("SELECT count(*) FROM Interaction i WHERE i.item_id = %s AND i.t_dat = %s AND i.dataset_id = %s AND \
+                           i.item_id IN (SELECT r.item_number FROM recommendations r WHERE r.customer_id = i.customer_id);",
+                           (str(item_id), retrainDay, str(dataset_id)))
+
         amount = cursor.fetchone()[0]
         algorithmsList.append(amount)
 

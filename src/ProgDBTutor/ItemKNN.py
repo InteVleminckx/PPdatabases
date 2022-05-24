@@ -96,16 +96,27 @@ class ItemKNN:
 
         trainWindow = (str(self.currentDate - self.windowSize)[0:10], str(self.currentDate)[0:10])
         recommendationDictionary = self.iknn(*trainWindow)
+
+        insert_query = 'INSERT INTO Recommendation(abtest_id, result_id, dataset_id, customer_id, item_number, attribute_customer, start_point, end_point) VALUES %s'
+        cursor = dbconnect.get_cursor()
+        attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
+        tuples_list = []
+
         if recommendationDictionary is not None:
 
             """ DO SOMETHING HERE """
-            for customer_id, recommendations in recommendationDictionary:
+            for customer_id in recommendationDictionary:
+                recommendations = recommendationDictionary[customer_id]
                 for item_id in recommendations:
-                    item = getItem(str(item_id), self.datasetID)
                     # attribute_dataset = list(item.attributes.keys())[0]
-                    attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
-                    addRecommendation(self.ABTestID, self.resultID, self.datasetID, customer_id, str(item_id),
-                                      attribute_costumer, start, end)
+                    tuples_list.append((self.ABTestID, self.resultID, self.datasetID, customer_id, str(item_id), attribute_costumer, start, end))
+                    # addRecommendation(self.ABTestID, self.resultID, self.datasetID, customer_id, str(item_id),
+                    #                   attribute_costumer, start, end)
+
+            psycopg2.extras.execute_values(
+                cursor, insert_query, tuples_list, template=None, page_size=100
+            )
+            dbconnect.commit()
 
     def history_from_subset_interactions(self, interactions, amt_users=5) -> List[List]:
         """ Take the history of the first users in the dataset and return as list of lists """

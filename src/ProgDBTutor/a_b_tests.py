@@ -9,7 +9,8 @@ from db_connection import DBConnection
 from user_data_acces import *
 
 import Popularity as popularity
-import recency_algorithm as receny
+import recency_algorithm as recency
+import ItemKNN as itemknn
 
 def deleteABTest(abtest_id):
     cursor = dbconnect.get_cursor()
@@ -29,16 +30,25 @@ def startAB(abtest_id, dataset_id):
         algorithm_param = result.algorithm_param
         algorithm = getAlgorithm(abtest_id, result_id)
 
-        if algorithm.name == "popularity":
+        if algorithm.name == 'popularity':
             retraininterval = int(algorithm.params["retraininterval"])
             windowsize = int(algorithm.params["windowsize"])
             popAlgo = popularity.Popularity(dataset_id, abtest_id, result_id, startpoint, endpoint, stepsize, topk, windowsize, retraininterval, algorithm_param)
             popAlgo.recommend()
 
-        elif algorithm.name == "recency":
+        elif algorithm.name == 'recency':
             retraininterval = int(algorithm.params["retraininterval"])
-            recAlgo = receny.Recency(dataset_id, abtest_id, result_id, startpoint, endpoint, topk, stepsize, retraininterval, algorithm_param)
+            recAlgo = recency.Recency(dataset_id, abtest_id, result_id, startpoint, endpoint, topk, stepsize, retraininterval, algorithm_param)
             recAlgo.recommend()
+
+        elif algorithm.name == 'itemknn':
+            retraininterval = int(algorithm.params["retraininterval"])
+            windowsize = int(algorithm.params["window"])
+            k = int(algorithm.params['k'])
+            normalize = bool(algorithm.params['normalize'])
+            itemAlgo = itemknn.ItemKNN(dataset_id, abtest_id, result_id, startpoint, endpoint, topk, stepsize,
+                                       normalize, k, windowsize, retraininterval, algorithm.params)
+            itemAlgo.recommend()
 
 def getAB_Pop_Active(abtest_id, dataset_id):
     dataset_id = 0

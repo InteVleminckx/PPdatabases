@@ -223,9 +223,9 @@ def services():
             #abtest.getABtestResults(maxABtestID, dataset_id)
             #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
 
-            jobABtests = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id)
-            # jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
-            # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
+            jobABtests = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id, job_timeout=3600)
+            jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
+            jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
             jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
 
             session["abVisualistation"] = jobABvisualisations.id
@@ -404,9 +404,9 @@ def itemsection_graph():
 
         # Compute popularity item graph
         if graph_type == 'Popularity item':
-            startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
-            endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
-            stepsize = datetime.timedelta(days=1)
+            startPoint = datetime.strptime(begin_date, '%Y-%m-%d')
+            endPoint = datetime.strptime(end_date, '%Y-%m-%d')
+            stepsize = timedelta(days=1)
 
             # Add first row to data
             data = [['Date', 'Purchases']]
@@ -418,9 +418,9 @@ def itemsection_graph():
 
         # Compute recommendation count graph
         elif graph_type == 'Recommendation count':
-            startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
-            endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
-            stepsize = datetime.timedelta(days=1)
+            startPoint = datetime.strptime(begin_date, '%Y-%m-%d')
+            endPoint = datetime.strptime(end_date, '%Y-%m-%d')
+            stepsize = timedelta(days=1)
 
             # Add first row that contains all algorithm names
             firstRow = ['Date']
@@ -437,9 +437,9 @@ def itemsection_graph():
 
         # Compute recommendation correctness graph
         elif graph_type == 'Recommendation correctness':
-            startPoint = datetime.datetime.strptime(begin_date, '%Y-%m-%d')
-            endPoint = datetime.datetime.strptime(end_date, '%Y-%m-%d')
-            stepsize = datetime.timedelta(days=1)
+            startPoint = datetime.strptime(begin_date, '%Y-%m-%d')
+            endPoint = datetime.strptime(end_date, '%Y-%m-%d')
+            stepsize = timedelta(days=1)
 
             # Determine the columns that we need to use in the index.html
             resultIDs = getResultIds(abtest_id, dataset_id)
