@@ -104,7 +104,7 @@ class ItemKNN:
                     item = getItem(str(item_id), self.datasetID)
                     # attribute_dataset = list(item.attributes.keys())[0]
                     attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
-                    addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id),
+                    addRecommendation(self.ABTestID, self.resultID, self.datasetID, customer_id, str(item_id),
                                       attribute_costumer, start, end)
 
     def history_from_subset_interactions(self, interactions, amt_users=5) -> List[List]:

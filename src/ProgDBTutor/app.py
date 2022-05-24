@@ -153,23 +153,21 @@ def addalgorithm():
                 algo_id += 1
 
         data_dict = {'algo_id':algo_id, 'algo_list':algo_list, 'algo_dict':algo_dict}
-        print("success")
-        print(data_dict)
+        # print("success")
+        # print(data_dict)
         return data_dict
 
 @app.route("/services", methods=['GET', 'POST'])
-@app.route("/services/<selected_ds_id>", methods=['GET', 'POST'])
 # @login_required
-def services(selected_ds_id=None):
+def services():
 
     if 'loggedin' in session:
-        print(request.args)
-        if request.args.get('selected_ds_id') is not None:
-            pass
 
         if request.method == 'POST':
 
             dataDict = request.get_json()
+            print(dataDict)
+
             form_data = dataDict['form_data']
             algo_id = dataDict['algo_id']
             algo_list = dataDict['algo_list']
@@ -181,11 +179,11 @@ def services(selected_ds_id=None):
             creator = session['username']
 
             # General parameters for ABtest
-            start = request.form.get('startingpoint')
-            end = request.form.get('endpoint')
-            stepsize = request.form.get('stepsize')
-            topk = request.form.get('topk')
-            dataset = request.form.get('datasetSelection')
+            start = form_data['startingpoint']
+            end = form_data['endpoint']
+            stepsize = form_data['stepsize']
+            topk = form_data['topk']
+            dataset = form_data['datasetSelection']
             ABTestID = getMaxABTestID() + 1
             if not dataset:
                 return redirect(url_for('visualizations'))
@@ -231,71 +229,12 @@ def services(selected_ds_id=None):
             jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
 
             session["abVisualistation"] = jobABvisualisations.id
-            # abtest_id += 1
-            # algo_id = 1
-            # return redirect(url_for('itemsection'))
-            return redirect(url_for('visualizations'))
 
-            # dataset_id = ""
-            # for char in dataset:
-            #     if char.isdigit():
-            #         dataset_id += char
-            #
-            # i = 1
-            # while i < algo_id:
-            #     # Add entry for ABtest table
-            #     # addAB_Test(abtest_id, i, start, end, stepsize, topk)
-            #     abTestQueue.enqueue(addAB_Test, ABTestID, i, start, end, stepsize, topk)
-            #
-            #     # Add entries for Algorithm table
-            #     for j in range(len(algo_list)):
-            #         if algo_list[j][0] == i:
-            #             algorithm_param = algo_list[j][2]
-            #             # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
-            #             # algo_list[j][3])
-            #             abTestQueue.enqueue(addAlgorithm, ABTestID, i, algo_list[j][1], algo_list[j][2],
-            #                         algo_list[j][3])
-            #
-            #     # Add entry for result table
-            #     #addResult(abtest_id, i, dataset_id, algorithm_param, creator)
-            #     abTestQueue.enqueue(addResult, ABTestID, i, dataset_id, algorithm_param, creator)
-            #
-            #     i += 1
-            #
-            # # Remove algorithms from list and dicts
-            # algo_list = []
-            # algo_dict = {}
-            # connection.commit()
-            #
-            # # Call function to start a/b tests
-            # #abtest.startAB(maxABtestID, dataset_id)
-            # #abtest.getABtestResults(maxABtestID, dataset_id)
-            # #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
-            #
-            # jobABtests = abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id)
-            # # jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
-            # # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
-            # jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id)
-            #
-            # session["abVisualistation"] = jobABvisualisations.id
-            # # abtest_id += 1
-            # # algo_id = 1
-            # # return redirect(url_for('itemsection'))
-            # return redirect(url_for('visualizations'))
+            # return redirect(url_for('visualizations')) #TODO if not work turn on
 
-            # Remove the last add algorithm
-            # elif s == "remove":
-            #     algo_id -= 1
-            #     if algo_id == 0:
-            #         algo_id = 1
-            #     else:
-            #         if algo_dict[algo_id] == 'popularity':
-            #             algo_list = algo_list[:-2]
-            #         elif algo_dict[algo_id] == 'recency':
-            #             algo_list = algo_list[:-1]
-            #         elif algo_dict[algo_id] == 'itemknn':
-            #             algo_list = algo_list[:-4]
-            #         del algo_dict[algo_id]
+            data_dict = {'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}
+
+            return data_dict
 
         elif request.method == 'GET':
             pass

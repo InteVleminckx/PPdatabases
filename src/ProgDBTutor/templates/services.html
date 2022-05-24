@@ -26,6 +26,13 @@
 {#    />#}
 
 </head>
+
+<style>
+    html, body {
+        background-color: #E3E9F0;
+    }
+</style>
+
 <body>
 
 <nav class="navbar" id="navbar">
@@ -76,7 +83,7 @@
             <div class="_column">
                 <h2>Add Algorithm</h2>
 
-                <div class="abtestcontainer1">
+                <div class="abtestcontainer1" style="">
                         <div class="container___">
 
 {#                            <form id="dataForm" method="POST" action="" data-name="cForm">#}
@@ -207,7 +214,7 @@
                                     <td style="color: red; border-top: 0;">Remove</td>
                                 </tr>
                             </thead>
-                            <tbody id="tablesection" style="height: 610px;">
+                            <tbody id="tablesection" style="height: 626px;">
 
                             </tbody>
                         </table>
@@ -218,7 +225,7 @@
     </div>
     </div>
 
-    <button form="dataForm" style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" id="abtestSubmit" name="submit_button" value="abtestSubmit" role="button">
+    <button class="abtestsubmit_btn" style="margin-left: auto; margin-right: auto;" id="abtestSubmit" name="submit_button" value="abtestSubmit" role="button">
         Submit A/B-test
     </button>
 </div>
@@ -359,15 +366,13 @@ $('button.abtestSubmit').click(function(e) {
 });
 
 $(function() {
-    $('#abtestSubmit').click(function() {
-        {#var form_data = new FormData($('#dataForm')[0]);#}
+    $('#abtestSubmit').click(function(event) {
+        event.preventDefault();
         var form_data = $('#dataForm').serializeArray();
-        data_dict = {'form_data':{}, 'algo_id':algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict};
-        {#console.log(form_data);#}
-        for (var el of form_data) {
+        data_dict = {'form_data':{}, 'algo_id':algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}; // alle data die we willen versturen
+        for (var el of form_data) { // de form elementen aan de data_dict toevoegen.
             data_dict['form_data'][el['name']] = el['value'];
         }
-        console.log(data_dict);
 
         $.ajax({
             type: 'POST',
@@ -377,13 +382,9 @@ $(function() {
             cache: false,
             processData: false,
             success: function(data) {
-                {#algo_id = data['algo_id'];#}
-                {#algo_list = data['algo_list'];#}
-                {#algo_dict = data['algo_dict'];#}
-                {#console.log(algo_id);#}
-                {#console.log(algo_list);#}
-                {#console.log(algo_dict);#}
-                {#generateAttrHtml(data);#}
+                console.log(data);
+                window.location.href = "{{ url_for('visualizations') }}"; // de redirect naar andere pagina in javascript
+
             },
         });
     });
