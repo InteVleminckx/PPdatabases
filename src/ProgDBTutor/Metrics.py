@@ -82,7 +82,7 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, steps
                 (str(datasetID), date, str(curDate + (timedelta(days=int(stepsize) - 1)))[0:10]))
             interactions = cursor.fetchall()
 
-            #We vragen het aantal actieve gebruikers op
+            # We vragen het aantal actieve gebruikers op
             cursor.execute(
                 'select count(distinct customer_id) from interaction where dataset_id = %s and t_dat between %s and %s',
                 (str(datasetID), date, str(curDate + (timedelta(days=int(stepsize) - 1)))[0:10]))
@@ -91,7 +91,7 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, steps
 
             dirInteraction = {}
 
-            #We zetten alle aankopen samen per user
+            # We zetten alle aankopen samen per user
             for id, item in interactions:
                 if id not in dirInteraction:
                     dirInteraction[id] = [item]
@@ -100,11 +100,11 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, steps
 
             count = 0
 
-            #We gaan over alle interaction per gebruiker
+            # We gaan over alle interaction per gebruiker
             for id, items in dirInteraction.items():
-                #We controleren of een van de gekochte items van de gebruiker in zijn recommendation zit
+                # We controleren of een van de gekochte items van de gebruiker in zijn recommendation zit
                 if any(reco[0] in items for reco in recommendations):
-                    #We doen de count omhoog
+                    # We doen de count omhoog
                     count += 1
 
             ctr[date] = round(count / activeUsers, 2)

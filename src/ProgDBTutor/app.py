@@ -390,8 +390,8 @@ def usersectionUpdate():
         job = abTestQueue.fetch_job(userpage)
         if job is not None:
             if str(job.get_status()) == "finished":
-                recommendations, history, interval, graph, topkListprint = job.return_value
-                return {"recommendations":recommendations, "history": history, "interval":interval, "graph":graph, "topkListprint": topkListprint}
+                recommendations, history, interval, graph, topkListprint, dates = job.return_value
+                return {"recommendations":recommendations, "history": history, "interval":interval, "graph":graph, "topkListprint": topkListprint, "dates": dates}
     return {}
 
 @app.route("/usersection")
