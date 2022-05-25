@@ -65,6 +65,8 @@ class ItemKNN:
         user_ids, item_ids = zip(*Allinteractions)
         unique_item_ids = list(set(item_ids))
 
+        self.currentModel = ItemKNNAlgorithm(k=self.K, normalize=self.normalize)
+
         while self.currentDate <= self.end:
 
             if self.currentDate == nextRetrain:
@@ -77,46 +79,21 @@ class ItemKNN:
 
             self.currentDate += simulationStep
 
-        ########################################################################################################################
-
-        # while self.currentDate <= self.end:
-        #
-        #     if self.currentDate >= nextRetrain:
-        #         self.reTrain(self.start, self.currentDate)
-        #         nextRetrain = nextRetrain + self.retrainInterval
-        #
-        #     self.currentDate += deltaStepsize
-        #
-        #     if self.simulationTime is None:
-        #         oneStep = tm.process_time() - start_time
-        #         oneStep /= self.stepSize
-        #         days = (self.end - self.start).days
-        #         self.simulationTime = float("{0:.4f}".format(oneStep * days))
-        #         print("Excpected calculation time = " + str(self.simulationTime) + " seconds.")
-
     def retrain(self, unique_item_ids):
 
         trainingWindow = (str(self.currentDate - self.windowSize)[0:10], str(self.currentDate)[0:10])
-
-        self.currentModel = ItemKNNAlgorithm(k=self.K, normalize=self.normalize)
-
-        """ MUST BE LIST OF TUPLES"""
         interactions = getCustomerAndItemIDs(trainingWindow[0], trainingWindow[1], self.datasetID)
-
         self.currentModel.train(interactions, unique_item_ids=unique_item_ids)
 
     def recommend(self, startDateDataset, currentDate):
-        # this one is slower, but requires far less memory than the other
-        # alg = ItemKNNIterative(k=k, normalize=normalize)
 
-        # This one is faster, but requires more memory
         interactions = getCustomerAndItemIDs(str(startDateDataset)[0:10], str(currentDate)[0:10], self.datasetID)
         user_ids, item_ids = zip(*interactions)
         unique_user_ids = list(set(user_ids))
 
         amt_users = len(unique_user_ids)
         histories = self.history_from_subset_interactions(interactions, amt_users=amt_users)
-        # # this will be a list
+
         recommendations = self.currentModel.recommend_all(histories, self.top_k)
         recommendations = dict(zip(unique_user_ids, recommendations))
 
@@ -133,7 +110,6 @@ class ItemKNN:
             for customer_id in recommendations:
                 recommendations_ = recommendations[customer_id]
                 for item_id in recommendations_:
-                    # attribute_dataset = list(item.attributes.keys())[0]
                     tuples_list.append((self.ABTestID, self.resultID, self.datasetID, customer_id, str(item_id),
                                         attribute_costumer, *recommendationsInterval))
 

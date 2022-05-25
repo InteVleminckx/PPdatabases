@@ -34,7 +34,7 @@ def startAB(abtest_id, dataset_id):
             retraininterval = int(algorithm.params["retraininterval"])
             windowsize = int(algorithm.params["windowsize"])
             popAlgo = popularity.Popularity(dataset_id, abtest_id, result_id, startpoint, endpoint, stepsize, topk, windowsize, retraininterval, algorithm_param)
-            popAlgo.recommend()
+            popAlgo.popularity()
 
         elif algorithm.name == 'recency':
             retraininterval = int(algorithm.params["retraininterval"])
