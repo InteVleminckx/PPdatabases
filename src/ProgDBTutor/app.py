@@ -405,7 +405,7 @@ def itemsection_graph():
     if request.method == 'POST':
         abtest_id = getMaxABTestID()
         dataset_id = 1
-        item_id = 706016001
+        item_id = 690541004
 
         numbers = []
         maxYValue = 0
@@ -439,8 +439,15 @@ def itemsection_graph():
             # Add first row that contains all algorithm names
             firstRow = ['Date']
             resultIDs = getResultIds(abtest_id, dataset_id)
-            for id in resultIDs:
-                firstRow.append('Algorithm' + str(id))
+            for result_id in resultIDs:
+                algorithm = getAlgorithm(abtest_id, result_id)
+                if algorithm.name == 'popularity':
+                    firstRow.append('Popularity' + str(result_id))
+                elif algorithm.name == 'recency':
+                    firstRow.append('Recency' + str(result_id))
+                elif algorithm.name == 'itemknn':
+                    firstRow.append('ItemKNN' + str(result_id))
+
             data.append(firstRow)
 
             while startPoint <= endPoint:
@@ -457,9 +464,17 @@ def itemsection_graph():
 
             # Determine the columns that we need to use in the index.html
             resultIDs = getResultIds(abtest_id, dataset_id)
-            for id in resultIDs:
-                columns.append('Algorithm' + str(id) + ' recommendations')
-                columns.append('Algorithm' + str(id) + ' correct recommendations')
+            for result_id in resultIDs:
+                algorithm = getAlgorithm(abtest_id, result_id)
+                if algorithm.name == 'popularity':
+                    columns.append('Popularity' + str(result_id) + ' recommendations')
+                    columns.append('Popularity' + str(result_id) + ' correct recommendations')
+                elif algorithm.name == 'recency':
+                    columns.append('Recency' + str(result_id) + ' recommendations')
+                    columns.append('Recency' + str(result_id) + ' correct recommendations')
+                elif algorithm.name == 'itemknn':
+                    columns.append('ItemKNN' + str(result_id) + ' recommendations')
+                    columns.append('ItemKNN' + str(result_id) + ' correct recommendations')
 
             # Determine the data that we need for the graph
             while startPoint <= endPoint:
