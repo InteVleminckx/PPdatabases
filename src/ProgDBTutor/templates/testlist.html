@@ -3,69 +3,251 @@
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 
-	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
+{#	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">#}
+{#	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">#}
 	<link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">
+{#    <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">#}
 
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    font-family: 'Kumbh Sans', sans-serif;
+    scroll-behavior: smooth;
+}
+
+.tableborder {
+    border: 1px solid lightgray;
+    padding: 50px;
+    height: 550px;
+    overflow-y: auto;
+}
+
+tr {
+    height: 60px;
+    vertical-align: middle;
+}
+</style>
 <body>
 
 <nav class="navbar" id="navbar">
-        <div class="navbar_container">
-            <div class="navbar_toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-            <ul class="navbar_menu">
-                <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
-            </ul>
+    <div class="navbar_container">
+        <div class="navbar_toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
         </div>
-    </nav>
+        <ul class="navbar_menu">
+            <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
+        </ul>
+    </div>
+</nav>
+
+<h1 style="margin-top: 30px; margin-bottom: 25px;text-align: center;">A/B-tests</h1>
+<div class="table-responsive" style="width: 80%; display: block; margin-left: auto;margin-right: auto; margin-top: 50px;">
+
+    <div class="tableborder">
+    <table class="table table-hover">
+        <thead>
+            <tr style="text-align: center">
+                <th>ID</th>
+                <th>Dataset ID</th>
+                <th>Dataset Name</th>
+                <th>Starting Point</th>
+                <th>End point</th>
+                <th>Stepsize</th>
+                <th>Top-k</th>
+                <th>Algorithms</th>
+                <th><div style="color: red;">Remove</div></th>
+            </tr>
+        </thead>
+        <tbody style="overflow-y: auto; height: 400px;">
+        {% for item in testList %}
+            <tr style="text-align: center">
+                <td>{{ item }}</td>
+                <td>2</td>
+                <td>H&M</td>
+                <td>01-01-2020</td>
+                <td>09-01-2020</td>
+                <td>2</td>
+                <td>5</td>
+                <td>Algorithms</td>
+                <td><div style="color:red; cursor: pointer;">&times;</div></td>
+
+            </tr>
+        {% endfor %}
+        <tr style="text-align: center">
+            <td>2</td>
+            <td>2</td>
+            <td>H&M</td>
+            <td>01-01-2020</td>
+            <td>09-01-2020</td>
+            <td>2</td>
+            <td>5</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
+        <tr style="text-align: center">
+            <td>2</td>
+            <td>2</td>
+            <td>H&M</td>
+            <td>01-01-2020</td>
+            <td>09-01-2020</td>
+            <td>2</td>
+            <td>5</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
+        <tr style="text-align: center">
+            <td>2</td>
+            <td>2</td>
+            <td>H&M</td>
+            <td>01-01-2020</td>
+            <td>09-01-2020</td>
+            <td>2</td>
+            <td>5</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
+        <tr style="text-align: center">
+            <td>2</td>
+            <td>2</td>
+            <td>H&M</td>
+            <td>01-01-2020</td>
+            <td>09-01-2020</td>
+            <td>2</td>
+            <td>5</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
+        <tr style="text-align: center">
+            <td>2</td>
+            <td>2</td>
+            <td>H&M</td>
+            <td>01-01-2020</td>
+            <td>09-01-2020</td>
+            <td>2</td>
+            <td>5</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
+        <tr style="text-align: center">
+            <td>2</td>
+            <td>2</td>
+            <td>H&M</td>
+            <td>01-01-2020</td>
+            <td>09-01-2020</td>
+            <td>2</td>
+            <td>5</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
+        <tr style="text-align: center">
+            <td>2</td>
+            <td>2</td>
+            <td>H&M</td>
+            <td>01-01-2020</td>
+            <td>09-01-2020</td>
+            <td>2</td>
+            <td>5</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
+        <tr style="text-align: center">
+            <td>2</td>
+            <td>2</td>
+            <td>H&M</td>
+            <td>01-01-2020</td>
+            <td>09-01-2020</td>
+            <td>2</td>
+            <td>5</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
+        <tr style="text-align: center">
+            <td>2</td>
+            <td>2</td>
+            <td>H&M</td>
+            <td>01-01-2020</td>
+            <td>09-01-2020</td>
+            <td>2</td>
+            <td>5</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
+        <tr style="text-align: center">
+            <td>2</td>
+            <td>2</td>
+            <td>H&M</td>
+            <td>01-01-2020</td>
+            <td>09-01-2020</td>
+            <td>2</td>
+            <td>5</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
+        <tr style="text-align: center">
+            <td>5</td>
+            <td>5</td>
+            <td>H&M</td>
+            <td>01-01-2020</td>
+            <td>09-01-2020</td>
+            <td>2</td>
+            <td>5</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</div>
 
 
 
 
 <!-- Dataset Section-->
 
-<div class="dataset" id="dataset">
-
+{#<div class="dataset" id="dataset">#}
+{##}
 {#    <div class="_container">#}
-
-        <div class="dataset_title" >A/B-tests</div>
-        <div class="dataset__btn">
-            <button>Remove A/B-test</button>
-        </div>
-        <table class="scroll-table" id="scrolltable">
-            <thead>
-                <tr>
-                    <td>A/B-test id</td>
-                    <td>A/B-test name</td>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in testList %}
-                    <tr>
+{##}
+{#        <div class="dataset_title" >A/B-tests</div>#}
+{#        <div class="dataset__btn">#}
+{#            <button>Remove A/B-test</button>#}
+{#        </div>#}
+{#        <table class="scroll-table" id="scrolltable">#}
+{#            <thead>#}
+{#                <tr>#}
+{#                    <td>A/B-test id</td>#}
+{#                    <td>A/B-test name</td>#}
+{#                </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#                {% for item in testList %}#}
+{#                    <tr>#}
 {#                    onclick="window.location.href='{{ url_for('testlist', rowData=key) }}';"#}
-                        <td>A/B-test</td>
-                        <td>{{ item }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+{#                        <td>A/B-test</td>#}
+{#                        <td>{{ item }}</td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#            </tbody>#}
+{#        </table>#}
 {#    </div>#}
-
-
-
-</div>
+{##}
+{##}
+{##}
+{#</div>#}
 
 <script>
 $('#scrolltable tbody tr').click(function() {
