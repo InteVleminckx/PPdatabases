@@ -253,7 +253,9 @@ def getData(ds_id):
 @app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
 def datasets():
+
     if 'loggedin' in session:
+
         type_list = {}
         if request.method == 'POST':
             type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '', 'customers_name_column': ''}
@@ -283,7 +285,7 @@ def datasets():
 
 @app.route("/datasets/update")
 def datasetUpdate():
-    print('HIER')
+
     if 'jobsDataset' in session:
         jobs = session["jobsDataset"]
         finished = 0
@@ -348,6 +350,9 @@ def visualizationsUpdate():
 
 @app.route("/testlist")
 def testlist():
+
+    testList = {'abtest_id':'', 'dataset_id':'', 'dataset_name':'', 'startingpoint':'',
+                'endpoint':'', 'stepsize':'', 'topk':'', 'algorithms':''}
     cursor = connection.get_cursor()
     cursor.execute("SELECT DISTINCT(abtest_id) FROM ABTest")
 
