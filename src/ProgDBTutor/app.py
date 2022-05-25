@@ -253,11 +253,7 @@ def getData(ds_id):
 @app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
 def datasets():
-    print("aaaaaaaaaaaaaaaaaaa")
     if 'loggedin' in session:
-
-        print("rrrrrrrrrrrrrrrrrrr")
-
         type_list = {}
         if request.method == 'POST':
             type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '', 'customers_name_column': ''}
