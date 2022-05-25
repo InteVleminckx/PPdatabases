@@ -3,90 +3,119 @@ import json
 from user_data_acces import *
 import datetime
 
+
 def getUserInformation(abtest_id, dataset_id, user_id):
     algoritmes = getAlgoritmes(abtest_id)
     startAB, endAB, steps, topk = getAbInterval(abtest_id)
     historyUser = getPurchases(user_id, dataset_id, startAB, endAB)
     recommendationsPerInterval = getRecommendations(abtest_id, dataset_id, user_id)
-    colors = ['#9FE3FE', '#9CD0FE', '#9DBEFE', '#9CB5FE', '#9CB5FE', '#C2A5FF', '#D69DFF', '#DF9BFD', '#ED9BEB', '#F49CD3',
-             '#FEABB1', '#FECF9F', '#F7FCA8', '#D3FFA7', '#BEFEC4', '#BEFEC4']
+    colors = ['#9FE3FE', '#9CD0FE', '#9DBEFE', '#9CB5FE', '#9CB5FE', '#C2A5FF', '#D69DFF', '#DF9BFD', '#ED9BEB',
+              '#F49CD3',
+              '#FEABB1', '#FECF9F', '#F7FCA8', '#D3FFA7', '#BEFEC4', '#BEFEC4']
 
     maxcolor = len(colors)
     colorsID = {}
-    recosSort = {}
+    ids_algoritmes = set()
 
     for key in recommendationsPerInterval:
-        if key[1] in recosSort:
-            recosSort[key[1]].append(key[0])
-        else:
-            recosSort[key[1]] = [key[0]]
-    j = 1
-    for key in recosSort:
-        recosSort[key].sort()
-        recosSort[key].reverse()
-        colorsID[j] = colors[(j-1)%maxcolor]
-        j += 1
+        ids_algoritmes.add(key[1])
 
     # We gaan per stepsize de recommendations groeperen, we doen de "simulatie" na te bootsen
     startDate = datetime.datetime.strptime(startAB, "%Y-%m-%d")
     endDate = datetime.datetime.strptime(endAB, "%Y-%m-%d")
     stepsize = datetime.timedelta(days=steps)
+    simulationStep = datetime.timedelta(days=1)
 
-    recommendations = []
-    history = []
-    purchases = []
+    recommendations = {}
+    history = {}
+    purchases = {}
+    dates = []
+    nextRecommend = startDate
+    itemsPerStep = []
+
+    colorCount = 0
 
     while startDate <= endDate:
-        colorCount = 0
-        stepReco = []
-        hisUser = [None] * len(historyUser)
-        purch = {}
+        # We lopen terug over heel de simulatie
 
-        for reco in recosSort:
-            for date in recosSort[reco]:
-                if startDate < datetime.datetime.strptime(date, "%Y-%m-%d"):
-                    continue
+        # We gaan eerst al alle aankopen voor de huidige stepsize van de user samen zetten
+        date = str(startDate)[0:10]
+
+        if date in historyUser:
+            itemsPerStep.extend(historyUser[date])
+        if startDate == nextRecommend:
+            # Wanneer we dit hebben gedaan gaan we per algoritme kijken of aangekocht items hierin zaten
+            history[date] = list()
+            recommendations[date] = list()
+            purchases[date] = list()
+            dates.append(date)
+            print("enter")
+            for result_id in ids_algoritmes:
+                if date in historyUser:
+                    for item in itemsPerStep:
+                        if (date, result_id) in recommendationsPerInterval:
+                            for recItems in recommendationsPerInterval[(date, result_id)]:
+                                if str(item[0]) == str(recItems[0]):
+                                    breaked = False
+                                    for item_ in history[date]:
+                                        if item_["name"] == str(item[1]):
+                                            item_["purchased"] = True
+                                            breaked = True
+                                            break
+                                    if not breaked:
+                                        history[date].append(
+                                            {"name": str(item[1]), "purchased": True, "url": str(item[2])})
+                                else:
+                                    breaked = False
+                                    for item_ in history[date]:
+                                        if item_["name"] == str(item[1]):
+                                            breaked = True
+                                            break
+                                    if not breaked:
+                                        history[date].append(
+                                            {"name": str(item[1]), "purchased": False, "url": str(item[2])})
+
+                if (date, result_id) in recommendationsPerInterval:
+                    recos = recommendationsPerInterval[(date, result_id)]
+                    name = algoritmes[result_id]
+                    recos_ = [item[1] for item in recos]
+                    recommendations[date].append({"name": name, "result_id": result_id, "recommendations": recos_,
+                                                  "color": colors[colorCount % len(colors)]})
+                    count = 0
+                    for reco in recos:
+                        for item in itemsPerStep:
+                            if str(reco[0]) == str(item[0]):
+                                count += 1
+                                print("oke")
+                    purchases[date].append({"name": name, "count": count, "color": colors[colorCount % len(colors)]})
+
                 else:
-                    reco_ = recommendationsPerInterval[(date, reco)]
-                    name = algoritmes[reco]
-                    recosname = [item[1] for item in reco_]
-                    stepReco.append({"name": name, "date": str(startDate)[0:10], "recommendations" : recosname, "result_id": reco, "color": colorsID[reco]})
+                    name = algoritmes[result_id]
+                    recommendations[date].append({"name": name, "result_id": result_id, "recommendations": [],
+                                                  "color": colors[colorCount % len(colors)]})
+                    purchases[date].append({"name": name, "count": 0, "color": colors[colorCount % len(colors)]})
 
-                    for i, his in enumerate(historyUser):
-                        if (name, reco) not in purch:
-                            purch[(name, reco)] = [0, colorsID[reco]]
-                        if [str(his[0]), his[2]] in reco_:
+                colorCount += 1
 
-                            purch[(name, reco)][0] += 1
-                            hisUser[i] = {"item": str(his[2]), "url": his[1], "purchased":True}
-                        else:
-                            if hisUser[i] is None:
-                                hisUser[i] = {"item": str(his[2]), "url": his[1], "purchased": False}
-                    break
+            itemsPerStep = []
+            nextRecommend += stepsize
+            colorCount = 0
 
-            colorCount += 1
-            if colorCount == maxcolor:
-                colorCount = 0
+        startDate += simulationStep
 
-        stepReco.sort(key=lambda x:x["result_id"])
-        recommendations.append(stepReco)
-        history.append(hisUser)
-        purch = dict(sorted(purch.items(), key=lambda x:x[0][1]))
-        purch_ = []
-        for pur in purch:
-            purch_.append([pur[0], purch[pur][0], purch[pur][1]])
-        purchases.append(purch_)
-        startDate += stepsize
-
-
+    # print(history)
+    # print(recommendations)
+    # print(purchases)
     jsPur = json.dumps(purchases)
     jsReco = json.dumps(recommendations)
     jsHistory = json.dumps(history)
+    jsDates = json.dumps(dates)
     topk_ = []
-    for i in range(topk+1):
+    for i in range(topk + 1):
         topk_.append(i)
     jsTopk = json.dumps(topk_)
-    return jsReco, jsHistory, startAB + " — " + endAB, jsPur, jsTopk
+    return jsReco, jsHistory, startAB + " — " + endAB, jsPur, jsTopk, jsDates
+
 
 def getAlgoritmes(abtest_id):
     cursor = dbconnect.get_cursor()
@@ -109,7 +138,8 @@ def getAlgoritmes(abtest_id):
 def getAbInterval(abtest_id):
     cursor = dbconnect.get_cursor()
 
-    cursor.execute("select start_point, end_point, stepsize, topk from abtest where abtest_id = %s limit 1;", (str(abtest_id),))
+    cursor.execute("select start_point, end_point, stepsize, topk from abtest where abtest_id = %s limit 1;",
+                   (str(abtest_id),))
     interval = cursor.fetchone()
     if interval is None:
         return None
@@ -124,25 +154,31 @@ def getAbInterval(abtest_id):
 def getPurchases(user_id, dataset_id, start, end):
     cursor = dbconnect.get_cursor()
     cursor.execute(
-        "select item_id from interaction where dataset_id = %s and customer_id = %s and t_dat between %s and %s;",
+        "select item_id, t_dat from interaction where dataset_id = %s and customer_id = %s and t_dat between %s and %s;",
         (str(dataset_id), str(user_id), str(start), str(end)))
     rows = cursor.fetchall()
-    items = []
 
     if rows is None:
         return None
 
-    cursor.execute("select name from names where dataset_id = %s and table_name = 'articles';",(str(dataset_id),))
+    cursor.execute("select name from names where dataset_id = %s and table_name = 'articles';", (str(dataset_id),))
     name = cursor.fetchone()[0]
     if name is None:
         return None
+
+    items = {}
+    rows = list(set(rows))
+
     for row in rows:
         item = getItem(row[0], dataset_id).attributes
         val = ""
         if "image_url" in item:
             val = item["image_url"]
         name_ = item[name]
-        items.append([row[0], val, name_])
+        if str(row[1])[0:10] not in items:
+            items[str(row[1])[0:10]] = [(row[0], name_, val)]
+        else:
+            items[str(row[1])[0:10]].append((row[0], name_, val))
 
     return items
 
@@ -162,7 +198,7 @@ def getRecommendations(abtest_id, dataset_id, customer_id):
     if recommendations is None:
         return None
 
-    cursor.execute("select name from names where dataset_id = %s and table_name = 'articles';",(str(dataset_id),))
+    cursor.execute("select name from names where dataset_id = %s and table_name = 'articles';", (str(dataset_id),))
     name = cursor.fetchone()[0]
     if name is None:
         return None

@@ -85,6 +85,8 @@
     var ABinterval = null;
     var maxValue = 0;
     var top_kList = null;
+    var dates = [];
+
 
     function fetchStatus() {
 
@@ -99,8 +101,9 @@
                     history_ = JSON.parse(returnDict["history"])
                     graph = JSON.parse(returnDict["graph"])
                     ABinterval = returnDict["interval"]
-                    maxValue = recommendations.length;
                     top_kList = JSON.parse(returnDict["topkListprint"])
+                    dates = JSON.parse(returnDict["dates"])
+                    maxValue = dates.length;
                     clearInterval(interval)
                     update(0)
                 }
@@ -122,7 +125,7 @@
         }
 
         {#console.log(recommendations)#}
-        document.getElementById("counterInterval").innerHTML = (value+1).toString() + " / " + (recommendations.length).toString()
+        document.getElementById("counterInterval").innerHTML = (value+1).toString() + " / " + (dates.length).toString()
         generateAlgoritmes(value);
         generateHistory(value);
         google.charts.load('current', {'packages':['corechart','bar']});
@@ -135,11 +138,12 @@
         var algos = document.getElementById("innerAlgorithm")
         var counter = 0;
         var html_ = ""
-        document.getElementById("counterInterval").innerHTML += "    —    " + recommendations[value_][0]["date"]
+        document.getElementById("counterInterval").innerHTML += "    —    " + dates[value_]
         let ticks_ = [0];
         let calcBools = false;
 
-        for (const reco of recommendations[value_]){
+        for (const reco of recommendations[dates[value_]]){
+
             {#console.log(reco["name"], reco["date"], reco["recommendations"], reco["color"]);#}
             html_ += "<div class=\"st_wrap_table\" data-table_id=\" + counter.toString() + \">";
             html_ +=     "<header class=\"topk_table_header\">";
@@ -189,11 +193,11 @@
         html_ +=         "<div class=\"history_table\">"
         html_ +=             "<div id=\"history_table_items\" class=\"history_table_items\">"
 
-        for (const item of history_[value_]){
+        for (const item of history_[dates[value_]]){
 
-
-            html_ +=             "<div id=\""+ item["item"] +"\" class=\"history_table_rows\">";
-            html_ +=                 "<div onclick='generateImage(\"" + item["url"] + "\")'  class=\"history_column_item\">" + item["item"] + "</div>";
+            console.log(item)
+            html_ +=             "<div id=\""+ item["name"] +"\" class=\"history_table_rows\">";
+            html_ +=                 "<div onclick='generateImage(\"" + item["url"] + "\")'  class=\"history_column_item\">" + item["name"] + "</div>";
             if (item["purchased"]){
                 html_ +=             "<div class=\"history_column_hasImage\" style=\"color: #91ee05\">&#9745</div>";
             }
@@ -229,8 +233,8 @@
     function makeGraph(value_, ticks_){
         document.getElementById("purchasesGraph").innerHTML = ""
         var data_ = [['Algorithm', 'Bought', {role: 'style'}]]
-        for (const row of graph[value_]) {
-            data_.push(row);
+        for (const row of graph[dates[value_]]) {
+            data_.push([row["name"], row["count"], row["color"]]);
 
         }
         console.log(data_)
