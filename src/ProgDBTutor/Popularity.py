@@ -12,14 +12,15 @@ import datetime
 # from app import user_data_access
 import time as tm
 
-
 from config import config_data
 from db_connection import DBConnection
 from user_data_acces import *
 
+
 class Popularity:
 
-    def __init__(self, dataset_id, abtest_id, result_id, startPoint, endPoint, stepsize, topk, window, retrainInterval, algorithm_param):
+    def __init__(self, dataset_id, abtest_id, result_id, startPoint, endPoint, stepsize, topk, window, retrainInterval,
+                 algorithm_param):
         self.startPoint = datetime.datetime.strptime(startPoint, '%Y-%m-%d %H:%M:%S')
         self.endPoint = datetime.datetime.strptime(endPoint, '%Y-%m-%d %H:%M:%S')
         self.stepsize = datetime.timedelta(days=stepsize)
@@ -34,63 +35,72 @@ class Popularity:
         self.result_id = result_id
         self.algorithm_param = algorithm_param
         self.simulationTime = None
+        self.currentModel = None
 
-    def simulate(self):
-        nextRetrainInterval = self.currentDate
 
-        start_time = tm.process_time()
+    def popularity(self):
+
+        nextRetrain = self.currentDate  # next retrain interval
+        nextRecommend = self.currentDate
+        simulationStep = datetime.timedelta(days=1)
+
         while self.currentDate <= self.endPoint:
-            if self.currentDate >= nextRetrainInterval:
-                self.train()
-                nextRetrainInterval += self.retrainInterval
 
-            self.currentDate += self.stepsize
+            if self.currentDate == nextRetrain:
+                self.retrain()
+                nextRetrain += self.retrainInterval
 
-            if self.simulationTime is None:
-                oneStep = tm.process_time() - start_time
-                oneStep /= self.intStep
-                days = (self.endPoint - self.startPoint).days
-                self.simulationTime = float("{0:.4f}".format(oneStep * days))
-                print("Excpected calculation time = " + str(self.simulationTime) + " seconds.")
+            if self.currentDate == nextRecommend:
+                self.recommend()
+                nextRecommend += self.stepsize
 
+            self.currentDate += simulationStep
+
+    def retrain(self):
+        trainWindow = (str(self.currentDate - self.window)[0:10], str(self.currentDate)[0:10])
+        self.currentModel = getPopularityItem(self.dataset_id, *trainWindow, self.topk) 
+        
     def recommend(self):
-        self.simulate()
+        recommendWindow = (str(self.currentDate - self.stepsize)[0:10], str(self.currentDate)[0:10])
 
-    def train(self):
-        trainWindow = (str(self.currentDate-self.window)[0:10], str(self.currentDate)[0:10])
-        recommendations = getPopularityItem(self.dataset_id, *trainWindow, self.topk)
-        if recommendations is not None:
-            for item_id, count in recommendations:
+        if self.currentModel is not None:
+            for item_id, count in self.currentModel:
                 attribute_costumer = list(getCustomer(-1, self.dataset_id).attributes)[0]
-                addRecommendation(self.abtest_id, self.result_id, self.dataset_id, -1, str(item_id), attribute_costumer, *trainWindow)
+                addRecommendation(self.abtest_id, self.result_id, self.dataset_id, -1, str(item_id), attribute_costumer,
+                                  *recommendWindow)
 
-    # def getdate(self, date):
-    # 
-    #     year, month, day = "", "", ""
-    # 
-    #     first, second = True, False
-    # 
-    #     for letter in date:
-    #         if first and not second:
-    #             if letter == '-':
-    #                 second = True
-    #             else:
-    #                 year += letter
-    # 
-    #         elif first and second:
-    #             if letter == "-":
-    #                 second = False
-    #                 first = False
-    #             else:
-    #                 month += letter
-    # 
-    #         else:
-    #             day += letter
-    # 
-    #     return int(year), int(month), int(day)
+    # def simulate(self):
+    #     nextRetrainInterval = self.currentDate
+    #
+    #     start_time = tm.process_time()
+    #     while self.currentDate <= self.endPoint:
+    #         if self.currentDate >= nextRetrainInterval:
+    #             self.train()
+    #             nextRetrainInterval += self.retrainInterval
+    #
+    #         self.currentDate += self.stepsize
+    #
+    #         if self.simulationTime is None:
+    #             oneStep = tm.process_time() - start_time
+    #             oneStep /= self.intStep
+    #             days = (self.endPoint - self.startPoint).days
+    #             self.simulationTime = float("{0:.4f}".format(oneStep * days))
+    #             print("Excpected calculation time = " + str(self.simulationTime) + " seconds.")
+    #
+    # def recommend(self):
+    #     self.simulate()
+    #
+    # def train(self):
+    #     trainWindow = (str(self.currentDate - self.window)[0:10], str(self.currentDate)[0:10])
+    #     recommendations = getPopularityItem(self.dataset_id, *trainWindow, self.topk)
+    #     if recommendations is not None:
+    #         for item_id, count in recommendations:
+    #             attribute_costumer = list(getCustomer(-1, self.dataset_id).attributes)[0]
+    #             addRecommendation(self.abtest_id, self.result_id, self.dataset_id, -1, str(item_id), attribute_costumer,
+    #                               *trainWindow)
+
 
 def main():
-
     algo = Popularity(0, 100, 0, "2020-01-01", "2020-02-15", 1, 10, 2, 3, "window_size")
     algo.recommend()
 
