@@ -25,7 +25,7 @@ def getUserInformation(abtest_id, dataset_id, user_id):
         recosSort[key].sort()
         recosSort[key].reverse()
         colorsID[j] = colors[(j-1)%maxcolor]
-        j+=1
+        j += 1
 
     # We gaan per stepsize de recommendations groeperen, we doen de "simulatie" na te bootsen
     startDate = datetime.datetime.strptime(startAB, "%Y-%m-%d")

@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="ab_container__table">
-                <button onclick="window.location.href='{{ url_for('usersection', dataset_id=1, customer_id=253864, abtest_id=186) }}';">User page</button>
+                <button onclick="window.location.href='{{ url_for('usersection', dataset_id=1, customer_id=253864, abtest_id=10) }}';">User page</button>
             </div>
        </div>
         <div class="split__container">
@@ -338,6 +338,12 @@
             }
             if (params.hasOwnProperty("windowsize")){
                 html_ += "    <div class=\"ab_container__table_column\">"+ params["windowsize"] +"</div>"
+            }
+            else {
+                html_ += "    <div class=\"ab_container__table_column\"></div>"
+            }
+            if (params.hasOwnProperty("window")){
+                html_ += "    <div class=\"ab_container__table_column\">"+ params["window"] +"</div>"
             }
             else {
                 html_ += "    <div class=\"ab_container__table_column\"></div>"

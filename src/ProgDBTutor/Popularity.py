@@ -37,7 +37,6 @@ class Popularity:
         self.simulationTime = None
         self.currentModel = None
 
-
     def popularity(self):
 
         nextRetrain = self.currentDate  # next retrain interval
@@ -58,8 +57,8 @@ class Popularity:
 
     def retrain(self):
         trainWindow = (str(self.currentDate - self.window)[0:10], str(self.currentDate)[0:10])
-        self.currentModel = getPopularityItem(self.dataset_id, *trainWindow, self.topk) 
-        
+        self.currentModel = getPopularityItem(self.dataset_id, *trainWindow, self.topk)
+
     def recommend(self):
         recommendWindow = (str(self.currentDate - self.stepsize)[0:10], str(self.currentDate)[0:10])
 
@@ -68,36 +67,6 @@ class Popularity:
                 attribute_costumer = list(getCustomer(-1, self.dataset_id).attributes)[0]
                 addRecommendation(self.abtest_id, self.result_id, self.dataset_id, -1, str(item_id), attribute_costumer,
                                   *recommendWindow)
-
-    # def simulate(self):
-    #     nextRetrainInterval = self.currentDate
-    #
-    #     start_time = tm.process_time()
-    #     while self.currentDate <= self.endPoint:
-    #         if self.currentDate >= nextRetrainInterval:
-    #             self.train()
-    #             nextRetrainInterval += self.retrainInterval
-    #
-    #         self.currentDate += self.stepsize
-    #
-    #         if self.simulationTime is None:
-    #             oneStep = tm.process_time() - start_time
-    #             oneStep /= self.intStep
-    #             days = (self.endPoint - self.startPoint).days
-    #             self.simulationTime = float("{0:.4f}".format(oneStep * days))
-    #             print("Excpected calculation time = " + str(self.simulationTime) + " seconds.")
-    #
-    # def recommend(self):
-    #     self.simulate()
-    #
-    # def train(self):
-    #     trainWindow = (str(self.currentDate - self.window)[0:10], str(self.currentDate)[0:10])
-    #     recommendations = getPopularityItem(self.dataset_id, *trainWindow, self.topk)
-    #     if recommendations is not None:
-    #         for item_id, count in recommendations:
-    #             attribute_costumer = list(getCustomer(-1, self.dataset_id).attributes)[0]
-    #             addRecommendation(self.abtest_id, self.result_id, self.dataset_id, -1, str(item_id), attribute_costumer,
-    #                               *trainWindow)
 
 
 def main():
