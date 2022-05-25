@@ -48,7 +48,7 @@ def startAB(abtest_id, dataset_id):
             normalize = bool(algorithm.params['normalize'])
             itemAlgo = itemknn.ItemKNN(dataset_id, abtest_id, result_id, startpoint, endpoint, topk, stepsize,
                                        normalize, k, windowsize, retraininterval, algorithm.params)
-            itemAlgo.recommend()
+            itemAlgo.iknn()
 
 def getAB_Pop_Active(abtest_id, dataset_id):
     dataset_id = 0

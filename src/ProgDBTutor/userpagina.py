@@ -92,7 +92,7 @@ def getAlgoritmes(abtest_id):
     cursor = dbconnect.get_cursor()
 
     cursor.execute("select result_id, name from algorithm where abtest_id = %s group by result_id, name;",
-                   (str(abtest_id)))
+                   (str(abtest_id),))
     algoritmes = {}
     rows = cursor.fetchall()
 
@@ -109,7 +109,7 @@ def getAlgoritmes(abtest_id):
 def getAbInterval(abtest_id):
     cursor = dbconnect.get_cursor()
 
-    cursor.execute("select start_point, end_point, stepsize, topk from abtest where abtest_id = %s limit 1;", (str(abtest_id)))
+    cursor.execute("select start_point, end_point, stepsize, topk from abtest where abtest_id = %s limit 1;", (str(abtest_id),))
     interval = cursor.fetchone()
     if interval is None:
         return None
