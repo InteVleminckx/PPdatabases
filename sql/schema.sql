@@ -88,6 +88,8 @@ CREATE TABLE Algorithm(
     name TEXT NOT NULL,
     param_name TEXT NOT NULL,
     value TEXT NOT NULL,
+    -- Foreign key to ABTest
+    FOREIGN KEY (abtest_id, result_id) REFERENCES ABTest(abtest_id, result_id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY (abtest_id, result_id, param_name)
 );
 
