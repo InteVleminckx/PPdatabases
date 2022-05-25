@@ -49,50 +49,9 @@ def getNrOfActiveUsers(startDate=None, endDate=None):
     return cursor.fetchone()[0]
 
 
-def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, stepsize):
+def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, stepsize, algoName):
     cursor = connection.get_cursor()
     print("startctr")
-
-    cursor.execute(
-        'select i.t_dat, i.customer_id, i.item_id from interaction i where i.dataset_id = %s and i.t_dat between %s and %s and exists(select * from recommendation r where'
-        ' r.item_number = i.item_id and ( r.customer_id = i.customer_id  or r.customer_id = -1) and r.start_point < i.t_dat and i.t_dat <= r.end_point  and r.abtest_id = %s and r.result_id = %s and r.dataset_id = %s) '
-        'order by customer_id;',
-        (str(datasetID), str(startDate), str(endDate), str(abtestID), str(resultID), str(datasetID))
-    )
-
-    interactions = cursor.fetchall()
-
-    info_recommendation = {}
-
-    for interaction in interactions:
-        if str(interaction[0])[0:10] not in info_recommendation:
-            info_recommendation[str(interaction[0])[0:10]] = {}
-
-        if str(interaction[1]) not in info_recommendation[str(interaction[0])[0:10]]:
-            info_recommendation[str(interaction[0])[0:10]][str(interaction[1])] = []
-
-        info_recommendation[str(interaction[0])[0:10]][str(interaction[1])].append(str(interaction[2]))
-
-    # print(info_recommendation)
-
-    cursor.execute(
-        'select t_dat, customer_id, item_id from interaction where t_dat between %s and %s and dataset_id = %s;',
-        (str(startDate), str(endDate), str(datasetID)))
-
-    interactions = cursor.fetchall()
-
-    info_interactions = {}
-
-    for interaction in interactions:
-        if str(interaction[0])[0:10] not in info_interactions:
-            info_interactions[str(interaction[0])[0:10]] = {}
-
-        if str(interaction[1]) not in info_interactions[str(interaction[0])[0:10]]:
-            info_interactions[str(interaction[0])[0:10]][str(interaction[1])] = []
-
-        info_interactions[str(interaction[0])[0:10]][str(interaction[1])].append(str(interaction[2]))
-
-    # print(info_interactions)
 
     ctr = {}
 
@@ -102,48 +61,112 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, steps
 
     while curDate <= end:
 
-        ctrCount = 0
-        if int(stepsize) > 1:
+        # Bij elke stepsize hebben we een nieuwe recommendation dus bekijken we ook de ctr
 
-            start = curDate - stepsize_
+        # Om het ons makkelijker te maken gaan we dit opslitsen in een geval waar we als algo pop of rec hebben of als algo itemknn
+        if algoName != 'itemknn':
+            date = str(curDate)[0:10]
+            # bij recommendations is de stepsize gelijk aan het endpoint, we vragen dus eerst alle recommendations op
+            cursor.execute(
+                'select item_number from recommendation where dataset_id = %s and abtest_id = %s and result_id = %s and end_point = %s',
+                (str(datasetID), str(abtestID), str(resultID), date))
 
-            while start <= curDate:
-                count_ = 0
-                date = str(start)[0:10]
-                if date in info_recommendation:
-                    actv_cus = len(info_interactions[date])
-                    for customer, items in info_interactions[date].items():
-                        # We controleren eerst of de de user al in de recommendations zit, zoja check de items nog
-                        # Moeten ook nog de datum controleren
-                        if date in info_recommendation:
-                            if str(customer) in info_recommendation[date]:
-                                # nu nog de items controleren
-                                for item in items:
-                                    if str(item) in info_recommendation[date][str(customer)]:
-                                        count_ += 1
+            recommendations = cursor.fetchall()
+            if recommendations is None:
+                ctr[date] = 0
+                continue
 
-                    ctrCount += count_ / actv_cus
+            # Nu gaan we alle interactions opvragen waar deze recommendations voor gedaan zijn
+            cursor.execute(
+                'select customer_id, item_id from interaction where dataset_id = %s and t_dat between %s and %s',
+                (str(datasetID), date, str(curDate + (timedelta(days=int(stepsize) - 1)))[0:10]))
+            interactions = cursor.fetchall()
 
-                start += timedelta(days=1)
+            #We vragen het aantal actieve gebruikers op
+            cursor.execute(
+                'select count(distinct customer_id) from interaction where dataset_id = %s and t_dat between %s and %s',
+                (str(datasetID), date, str(curDate + (timedelta(days=int(stepsize) - 1)))[0:10]))
 
-            ctr[str(curDate)[0:10]] = (round(ctrCount / int(stepsize), 2))
+            activeUsers = int(cursor.fetchone()[0])
+
+            dirInteraction = {}
+
+            #We zetten alle aankopen samen per user
+            for id, item in interactions:
+                if id not in dirInteraction:
+                    dirInteraction[id] = [item]
+                else:
+                    dirInteraction[id].append(item)
+
+            count = 0
+
+            #We gaan over alle interaction per gebruiker
+            for id, items in dirInteraction.items():
+                #We controleren of een van de gekochte items van de gebruiker in zijn recommendation zit
+                if any(reco[0] in items for reco in recommendations):
+                    #We doen de count omhoog
+                    count += 1
+
+            ctr[date] = round(count / activeUsers, 2)
 
         else:
             date = str(curDate)[0:10]
-            actv_cus = 1
-            if date in info_recommendation:
-                actv_cus = len(info_interactions[date])
-                for customer, items in info_interactions[date].items():
-                    # We controleren eerst of de de user al in de recommendations zit, zoja check de items nog
-                    # Moeten ook nog de datum controleren
-                    if date in info_recommendation:
-                        if str(customer) in info_recommendation[date]:
-                            # nu nog de items controleren
-                            for item in items:
-                                if str(item) in info_recommendation[date][str(customer)]:
-                                    ctrCount += 1
 
-            ctr[date] = (round(ctrCount / actv_cus, 2))
+            # bij recommendations is de stepsize gelijk aan het endpoint, we vragen dus eerst alle recommendations op
+            cursor.execute(
+                'select customer_id, item_number from recommendation where dataset_id = %s and abtest_id = %s and result_id = %s and end_point = %s',
+                (str(datasetID), str(abtestID), str(resultID), date))
+
+            recommendations = cursor.fetchall()
+            if recommendations is None:
+                ctr[date] = 0
+                continue
+
+            # Nu gaan we alle interactions opvragen waar deze recommendations voor gedaan zijn
+            cursor.execute(
+                'select customer_id, item_id from interaction where dataset_id = %s and t_dat between %s and %s',
+                (str(datasetID), date, str(curDate + (timedelta(days=int(stepsize) - 1)))[0:10]))
+            interactions = cursor.fetchall()
+
+            # We vragen het aantal actieve users op
+            cursor.execute(
+                'select count(distinct customer_id) from interaction where dataset_id = %s and t_dat between %s and %s',
+                (str(datasetID), date, str(curDate + (timedelta(days=int(stepsize) - 1)))[0:10]))
+
+            activeUsers = int(cursor.fetchone()[0])
+
+            dirInteraction = {}
+            dirRecommendations = {}
+
+            # We zetten alle items samen per customer id
+            for id, item in interactions:
+
+                if id not in dirInteraction:
+                    dirInteraction[id] = [item]
+                else:
+                    dirInteraction[id].append(item)
+
+            # We zetten alle recommendations samen per customer id
+            for id, item in recommendations:
+
+                if id not in dirRecommendations:
+                    dirRecommendations[id] = [item]
+                else:
+                    dirRecommendations[id].append(item)
+
+            count = 0
+
+            # We lopen over de interactions
+            for id, items in dirInteraction.items():
+
+                # We controleren of de id bestaan in de recommendation
+                if id in dirRecommendations:
+                    # We controleren of de aankopen van de user in de recommendations zitten
+                    if any(reco in items for reco in dirRecommendations[id]):
+                        # Zit in zijn recommendation dus we doen de count + 1
+                        count += 1
+
+            ctr[date] = round(count / activeUsers, 2)
 
         curDate += stepsize_
 

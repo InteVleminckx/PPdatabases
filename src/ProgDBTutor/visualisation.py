@@ -67,21 +67,21 @@ def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
     for result in results:
         algo = getAlgorithm(abtest_id, result[0])
         algorithms[str(result[0])] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
-        ctr_, arad, argRev = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
+        ctr_, arad, argRev = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize, algo.name)
         ctr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
         ard[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
         argRevPr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
 
     return algorithms, ctr, ard, argRevPr
 
-def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
+def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize, algoName):
 
     curDate = datetime.strptime(startpoint, "%Y-%m-%d")
     end = datetime.strptime(endpoint, "%Y-%m-%d")
     # print("oke")
     prevDate = curDate
 
-    ctr = getClickThroughRate(startpoint, endpoint, abtest_id, result_id, dataset_id, stepsize)
+    ctr = getClickThroughRate(startpoint, endpoint, abtest_id, result_id, dataset_id, stepsize, algoName)
     arad, arpuad = getAR_and_ARPU(7, startpoint, endpoint, abtest_id, result_id, dataset_id, int(stepsize))
     # while curDate <= end:
         # print("oke")

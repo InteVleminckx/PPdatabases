@@ -670,7 +670,6 @@ def getCustomerAndItemIDs(start, end, dataset_id):
     for row in rows:
         # row is expected to be a Tuple here
         results.append(row)
-
     return results
 
 def getMaxDatasetID():
