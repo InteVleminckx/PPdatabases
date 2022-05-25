@@ -405,7 +405,7 @@ def itemsection_graph():
     if request.method == 'POST':
         abtest_id = getMaxABTestID()
         dataset_id = 1
-        item_id = 690541004
+        item_id = 706016001
 
         numbers = []
         maxYValue = 0

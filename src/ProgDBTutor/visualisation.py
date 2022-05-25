@@ -52,10 +52,7 @@ def getPurchasesAndActiveUsersOverTime(start, end):
 
 
 def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
-    cursor = dbconnect.get_cursor()
-    cursor.execute("select result_id from abtest where abtest_id = %s", (str(abtest_id),))
-
-    results = cursor.fetchall()
+    results = getResultIds(abtest_id, dataset_id)
     if results is None:
         return False
 
@@ -65,12 +62,12 @@ def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
     ard = {}
     argRevPr = {}
     for result in results:
-        algo = getAlgorithm(abtest_id, result[0])
-        algorithms[str(result[0])] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
-        ctr_, arad, argRev = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize)
-        ctr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
-        ard[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
-        argRevPr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
+        algo = getAlgorithm(abtest_id, result)
+        algorithms[str(result)] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
+        ctr_, arad, argRev = getCTR(result, abtest_id, dataset_id, startpoint, endpoint, stepsize)
+        ctr[result] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
+        ard[result] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
+        argRevPr[result] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
 
     return algorithms, ctr, ard, argRevPr
 
