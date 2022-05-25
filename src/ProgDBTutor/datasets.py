@@ -22,12 +22,10 @@ def handelRequests(app, session, request, taskQueue, type_list):
 
         # Delete hier de dataset
         if dlte is not None:
-            #removeDataset(session, rqst)
             taskQueue.enqueue(removeDataset, session['username'], rqst, job_timeout=600)
 
     # Add dataset form
     elif request.method == 'POST':
-        #taskQueue.enqueue(addDatasetHere, app, session)
         addDatasetHere(app, session, taskQueue, type_list)
         return addDatasetHere(app, session, taskQueue, type_list)
     else:
@@ -40,8 +38,8 @@ def addDatasetHere(app, session, tq, type_list):
         id1 = importArticles(app, dataset_id, tq, type_list)
         id2 = importCustomers(app, dataset_id, tq, type_list)
         id3 = importPurchases(app, dataset_id, tq)
-        tq.enqueue(createDatasetIdIndex)
-        return [id1, id2, id3]
+        tq.enqueue(createDatasetIdIndex, job_timeout=600)
+        return {id1: False, id2: False, id3: False}
     else:
         flash("You need admin privileges to upload a dataset", category='error')
 
@@ -72,7 +70,6 @@ def getDatasetInformation(dataset_id):
 def importDataset(tq):
     datasetname = request.form['ds_name']
     datasetId = int(getMaxDatasetID()) + 1
-    #addDataset(datasetId, datasetname)
     tq.enqueue(addDataset, datasetId, datasetname)
     return datasetId
 
@@ -93,7 +90,6 @@ def importArticles(app, dataset_id, tq, type_list): #\
     af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     af.save(af_filename)
     # Add articles to database
-    #addArticles(data_articles, dataset_id)
     job = tq.enqueue(addArticles, af_filename, dataset_id, type_list, job_timeout=1200)
     return job.id
 
@@ -104,7 +100,6 @@ def importCustomers(app, dataset_id, tq, type_list):
     cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     cf.save(cf_filename)
     # Add customers to database
-    #addCustomers(data_customers, columns_customers, dataset_id)
     job = tq.enqueue(addCustomers, cf_filename, dataset_id, type_list, job_timeout=1200)
     return job.id
 
@@ -115,7 +110,6 @@ def importPurchases(app, dataset_id, tq):
     pf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     pf.save(pf_filename)
     # Add purchases to database
-    #addPurchases(data_purchases, dataset_id)
     job = tq.enqueue(addPurchases, pf_filename, dataset_id, job_timeout=3600)
     return job.id
 
