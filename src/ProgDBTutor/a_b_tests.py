@@ -39,7 +39,7 @@ def startAB(abtest_id, dataset_id):
         elif algorithm.name == 'recency':
             retraininterval = int(algorithm.params["retraininterval"])
             recAlgo = recency.Recency(dataset_id, abtest_id, result_id, startpoint, endpoint, topk, stepsize, retraininterval, algorithm_param)
-            recAlgo.recommend()
+            recAlgo.recency()
 
         elif algorithm.name == 'itemknn':
             retraininterval = int(algorithm.params["retraininterval"])
