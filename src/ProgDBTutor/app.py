@@ -351,17 +351,15 @@ def visualizationsUpdate():
 @app.route("/testlist")
 def testlist():
     creator = session['username']
-
     testList = []
     cursor = connection.get_cursor()
     cursor.execute("SELECT a.abtest_id, r.dataset_id, d.dataset_name, a.start_point, a.end_point, a.stepsize, "
                    "a.topk FROM ABTest a, Dataset d, Result r WHERE r.creator = %s AND a.abtest_id = r.abtest_id AND "
-                   "a.result_id = r.result.id AND r.dataset_id = d.dataset_id", (creator))
+                   "a.result_id = r.result_id AND r.dataset_id = d.dataset_id", (creator,))
     for row in cursor:
         d = {'abtest_id':row[0], 'dataset_id': row[1], 'dataset_name':row[2], 'startingpoint':row[3],
                 'endpoint':row[4], 'stepsize':row[5], 'topk':row[6], 'algorithms': None}
         testList.append(d)
-
     for i in range(len(testList)):
         algos = {} #per (key, value), de value bevat op index 0 de naam van de algoritme en alles erna zijn de
         # parameters.
@@ -374,7 +372,6 @@ def testlist():
             else:
                 algos[row[0]] = [row[1], row[2]]
         testList[i]['algorithms'] = algos
-
 
     return render_template('testlist.html', app_data=app_data, testList = testList)
 

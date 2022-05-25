@@ -75,20 +75,21 @@ tr {
         <tbody style="overflow-y: auto; height: 400px;">
         {% for item in testList %}
             <tr style="text-align: center">
-                <td style="text-decoration: underline;color: #0000EE;cursor: pointer ">{{ item }}</td>
-                <td>2</td>
-                <td>H&M</td>
-                <td>01-01-2020</td>
-                <td>09-01-2020</td>
-                <td>2</td>
-                <td>5</td>
+                <td style="text-decoration: underline;color: #0000EE;cursor: pointer ">{{ item['abtest_id'] }}</td>
+                <td>{{ item['dataset_id'] }}</td>
+                <td>{{ item['dataset_name'] }}</td>
+                <td>{{ item['startingpoint'] }}</td>
+                <td>{{ item['endpoint'] }}</td>
+                <td>{{ item['stepsize'] }}</td>
+                <td>{{ item['topk'] }}</td>
                 <td>Algorithms</td>
                 <td><div style="color:red; cursor: pointer;">&times;</div></td>
 
             </tr>
         {% endfor %}
+
         <tr style="text-align: center">
-            <td>2</td>
+            <td>10</td>
             <td>2</td>
             <td>H&M</td>
             <td>01-01-2020</td>
