@@ -278,14 +278,18 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, step
 
                 # voeg de recommendations voor die dag toe aan de lijst van alle recommendations
                 moveOn = True
-                recommendations.append(_recommendations)
+
+                if _recommendations not in recommendations:
+                    recommendations.append(_recommendations)
+
+                # recommendations.append(_recommendations)
 
             if not moveOn:
                 ar[date] = 0
                 arpu[date] = 0
                 continue
 
-            recommendations = list(set(recommendations))
+            # recommendations = list(set(recommendations))
 
             # Nu gaan we alle interactions opvragen waar deze recommendations voor gedaan zijn
             cursor.execute(
@@ -307,8 +311,8 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, step
 
             # er kunnen meerdere recommendation modellen zijn.
             for recom in recommendations:
-
-                for id, item in recom[0]:
+                # print(recom)
+                for id, item in recom:
 
                     if id not in dirRecommendations:
                         dirRecommendations[id] = [item]
