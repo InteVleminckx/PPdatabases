@@ -25,7 +25,7 @@ def getInfoVisualisationPage(abtest_id, dataset_id):
     datasetName = getDatasetname(dataset_id)
     graphPurchasesAndUsers,totalUsers, totalPurch = getPurchasesAndActiveUsersOverTime(startPoint, endPoint)
 
-    algorithms, ctr, arad, arpuad = getAlgortihms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
+    algorithms, ctr, arad, arpuad = getAlgorithms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
 
     return {"abtest_id": abtest_id, "startpoint":startPoint, "endpoint":endPoint, "datasetname": datasetName,
             "stepsize": stepsize, "topk": topk, "graphPurchAndUsers" : graphPurchasesAndUsers, "totalUsers": totalUsers, "totalPurchases": totalPurch,
@@ -51,11 +51,8 @@ def getPurchasesAndActiveUsersOverTime(start, end):
     return info, str(totalusers), str(totalPurch)
 
 
-def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
-    cursor = dbconnect.get_cursor()
-    cursor.execute("select result_id from abtest where abtest_id = %s", (str(abtest_id),))
-
-    results = cursor.fetchall()
+def getAlgorithms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
+    results = getResultIds(abtest_id, dataset_id)
     if results is None:
         return False
 
@@ -65,23 +62,23 @@ def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
     ard = {}
     argRevPr = {}
     for result in results:
-        algo = getAlgorithm(abtest_id, result[0])
-        algorithms[str(result[0])] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
-        ctr_, arad, argRev = getCTR(result[0], abtest_id, dataset_id, startpoint, endpoint, stepsize, algo.name)
-        ctr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
-        ard[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
-        argRevPr[result[0]] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
+        algo = getAlgorithm(abtest_id, result)
+        algorithms[str(result)] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
+        ctr_, arad, argRev = getCTR(result, abtest_id, dataset_id, startpoint, endpoint, stepsize)
+        ctr[result] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
+        ard[result] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
+        argRevPr[result] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
 
     return algorithms, ctr, ard, argRevPr
 
-def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize, algoName):
+def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize):
 
     curDate = datetime.strptime(startpoint, "%Y-%m-%d")
     end = datetime.strptime(endpoint, "%Y-%m-%d")
     # print("oke")
     prevDate = curDate
 
-    ctr = getClickThroughRate(startpoint, endpoint, abtest_id, result_id, dataset_id, stepsize, algoName)
+    ctr = getClickThroughRate(startpoint, endpoint, abtest_id, result_id, dataset_id, stepsize)
     arad, arpuad = getAR_and_ARPU(7, startpoint, endpoint, abtest_id, result_id, dataset_id, int(stepsize))
     # while curDate <= end:
         # print("oke")

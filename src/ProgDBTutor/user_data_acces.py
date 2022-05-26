@@ -6,6 +6,7 @@ from psycopg2.extensions import register_adapter, AsIs
 import psycopg2.extras
 from config import config_data
 from db_connection import DBConnection
+from datetime import datetime, timedelta
 
 """
 This class is to hold an datascientist out of the database
@@ -741,27 +742,30 @@ def getRecommendationCorrectness(retrainDay, item_id, abtest_id, dataset_id):
     cursor = dbconnect.get_cursor()
     algorithmsList = []
     resultIDs = getResultIds(abtest_id, dataset_id)
-    for id in resultIDs:
+    for result_id in resultIDs:
+        algorithm = getAlgorithm(abtest_id, result_id)
+        timeBetween = int(algorithm.params['retraininterval'])
+        nextRetrainDay = retrainDay + timedelta(days=timeBetween)
         # First create a view containing the recommendations
         cursor.execute("CREATE OR REPLACE VIEW recommendations as SELECT item_number as item_number, customer_id as customer_id FROM Recommendation WHERE abtest_id = %s AND \
                         result_id = %s AND dataset_id = %s AND item_number = %s AND end_point = %s;",
-                       (str(abtest_id), str(id), str(dataset_id), str(item_id), retrainDay))
+                       (str(abtest_id), str(result_id), str(dataset_id), str(item_id), retrainDay))
         dbconnect.commit()
 
-        algorithm = getAlgorithm(abtest_id, id)
         # Popularity and recency ==> count how many interactions there were on that day
         if algorithm.name == 'popularity' or algorithm.name == 'recency':
-            cursor.execute("SELECT count(*) FROM Interaction WHERE item_id = %s AND t_dat = %s AND dataset_id = %s AND \
-                           item_id IN (SELECT item_number FROM recommendations);",
-                           (str(item_id), retrainDay, str(dataset_id)))
+            cursor.execute("SELECT count(*) FROM Interaction WHERE item_id = %s AND dataset_id = %s AND t_dat >= %s AND \
+                           t_dat <= %s AND item_id IN (SELECT item_number FROM recommendations);",
+                           (str(item_id), str(dataset_id), retrainDay, nextRetrainDay))
 
         # ItemKNN ==> look at user specific recommendations and purchases
         elif algorithm.name == 'itemknn':
-            cursor.execute("SELECT count(*) FROM Interaction i WHERE i.item_id = %s AND i.t_dat = %s AND i.dataset_id = %s AND \
-                           i.item_id IN (SELECT r.item_number FROM recommendations r WHERE r.customer_id = i.customer_id);",
-                           (str(item_id), retrainDay, str(dataset_id)))
+            cursor.execute("SELECT count(*) FROM Interaction i WHERE i.item_id = %s AND i.dataset_id = %s AND i.t_dat >= %s AND \
+                           i.t_dat <= %s AND i.item_id, i.customer_id IN (SELECT * FROM recommendations r);",
+                           (str(item_id), str(dataset_id), retrainDay, nextRetrainDay))
 
         amount = cursor.fetchone()[0]
+        print(amount)
         algorithmsList.append(amount)
 
     return algorithmsList
