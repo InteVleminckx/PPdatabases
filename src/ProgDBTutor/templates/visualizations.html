@@ -10,6 +10,12 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+
+
 </head>
 <body>
 
@@ -67,31 +73,51 @@
                 </div>
             </div>
             <div class="ab_container__table" id="algorithmTable">
-                <div class="ab_container__table_row" style="background-color: #d2d8de">
-                    <div class="ab_container__table_column" style="font-weight: bold; width: 50px" >Number</div>
-                    <div class="ab_container__table_column" style="font-weight: bold" >Name</div>
-                    <div class="ab_container__table_column" style="font-weight: bold" >K</div>
-                    <div class="ab_container__table_column" style="font-weight: bold" >Windowsize</div>
-                    <div class="ab_container__table_column" style="font-weight: bold" >Normalize</div>
-                    <div class="ab_container__table_column" style="font-weight: bold" >Retraininterval</div>
-                </div>
+                <table class="generalPurpose_table flex-fixhead-algorithm_table" id="test1">
+                    <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Name</th>
+                        <th>K</th>
+                        <th>Windowsize</th>
+                        <th>Normalize</th>
+                        <th>Retraininterval</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableAlgoritmes"></tbody>
+                </table>
             </div>
             <div class="metric_container__graph" id="arpuad_graph" ></div>
 
             <div class="container__algemeneinfo">
                 <div class="container__algemeneinfo_split">
-
+                    <div class="container__algemeneinfo_topkRecommendations" id="topkRecommendations">
+                        <div class="topkRecommendation" id="tableRecommendations">
+                        </div>
+                    </div>
                 </div>
                 <div class="container__algemeneinfo_split">
                     <div class="container__algemeneinfo_layer">
-
+                        <div class="container__algemeneinfo_topkPurchases" id="topkPurchases">
+                            <table class="generalPurpose_table flex-fixhead-topKPurchases_table" id="test2">
+                                <thead>
+                                <tr>
+                                    <th>Item_id</th>
+                                    <th>Count</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableTopkRecommendations"></tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="container__algemeneinfo_layer">
-                        <div class="container__algemeneinfo__values">
-
+                        <div class="container__algemeneinfo__values" id="uniqueUsers">
+                            <h2>Unique users:</h2>
+                            <p id="unique_users"></p>
                         </div>
-                        <div class="container__algemeneinfo__values">
-
+                        <div class="container__algemeneinfo__values" id="totalRevenue">
+                            <h2>Total revenue:</h2>
+                            <p id="total_revenue"></p>
                         </div>
                     </div>
                 </div>
@@ -100,25 +126,41 @@
         <div class="split__container">
             <div class="ab_container__info">
                 <div class="metric__info_purch_active">
-                    <h2>
-                        Total purchases:
-                    </h2>
-                    <p id="purchases">
-
-                    </p>
+                    <h2>Total purchases:</h2>
+                    <p id="purchases"></p>
                 </div>
                 <div class="metric__info_purch_active">
-                    <h2>
-                        Active users:
-                    </h2>
-                    <p id="users">
-
-                    </p>
+                    <h2>Active users:</h2>
+                    <p id="users"></p>
                 </div>
             </div>
             <div class="metric_container__graph" id="user_purch_graph"></div>
             <div class="metric_container__graph" id="ctr_arad_graph"></div>
+            <div class="container__algemeneinfo">
+                <div class="container__algemeneinfo_userlist" id="userLists">
+                    <table class="generalPurpose_table flex-fixhead-userList_table" id="test3">
+                        <thead>
+                            <tr>
+                                <th onclick="orderUsers(0)">Active user</th>
+                                <th onclick="orderUsers(1)">Total purchases</th>
+                                <th onclick="orderUsers(2)">Purchases over time</th>
+                                <th onclick="orderUsers(3)">CTR</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableUserList"></tbody>
+                    </table>
 
+                </div>
+                <div class="container__algemeneinfo_slider">
+                    <div class="slider__date">
+                        <p>
+                            <input type="text" id="amount" disabled style=" border: 0; color: #30799B; font-weight: bold; font-size: 18px" size="40" />
+                        </p>
+                    </div>
+
+                    <div class="slider__range" id="slider-range"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -126,7 +168,20 @@
 
 <script>
 
-
+    $(function () {
+        $("#slider-range").slider({
+            range: true,
+            min: new Date('2010.01.01').getTime() / 1000,
+            max: new Date('2014.01.01').getTime() / 1000,
+            step: 86400,
+            values: [new Date('2010.01.01').getTime() / 1000, new Date('2014.01.01').getTime() / 1000],
+            slide: function (event, ui) {
+                $("#amount").val((new Date(ui.values[0] * 1000).toDateString()) + " - " + (new Date(ui.values[1] * 1000)).toDateString());
+            }
+        });
+        $("#amount").val((new Date($("#slider-range").slider("values", 0) * 1000).toDateString()) +
+            " - " + (new Date($("#slider-range").slider("values", 1) * 1000)).toDateString());
+    });
 
     document.getElementById("abtest_id").innerHTML = "";
     document.getElementById("dataset_name").innerHTML = "";
@@ -136,9 +191,19 @@
     document.getElementById("endpoint").innerHTML = "";
     document.getElementById("purchases").innerHTML = "";
     document.getElementById("users").innerHTML = "";
-    {#fetchStatus();#}
     var interval = null;
     let entered = false;
+
+    var topkPurchases = null
+    var topkRecommendations = null
+    var listUsers = null
+    var sortedUserList = null
+    var totaleRevenue = null
+    var UniqueUsers = null
+    var sortUsers = 0;
+    var startPoint = null;
+    var endPoint = null;
+
     function fetchStatus() {
         fetch(`/visualizations/update`)
             .then(function (response) {
@@ -146,15 +211,19 @@
             })
             .then(function (text){
                 let all = JSON.parse(text)
-                let info = all["visualization"]
                 if (Object.keys(all).length > 0 && entered == false){
                     entered = true;
+                    let info = all["visualization"]
+
+                    startPoint = info["stepsize"];
+                    endPoint = info["endpoint"];
+
                     document.getElementById("abtest_id").innerHTML = info["abtest_id"];
                     document.getElementById("dataset_name").innerHTML = info["datasetname"];
                     document.getElementById("startpoint").innerHTML = info["startpoint"];
-                    document.getElementById("stepsize").innerHTML = info["stepsize"];
+                    document.getElementById("stepsize").innerHTML = startPoint
+                    document.getElementById("endpoint").innerHTML = endPoint
                     document.getElementById("topk").innerHTML = info["topk"];
-                    document.getElementById("endpoint").innerHTML = info["endpoint"];
                     document.getElementById("purchases").innerHTML = info["totalPurchases"];
                     document.getElementById("users").innerHTML = info["totalUsers"];
                     let dataUsersPurch = info["graphPurchAndUsers"]
@@ -175,6 +244,18 @@
                     console.log("oke")
                     constructAlgorithmTable(algorihtms);
 
+                    topkPurchases = all["topkPurchases"];
+                    topkRecommendations = all["topkRecommendations"];
+                    listUsers = all["listUsers"];
+                    totaleRevenue = all["totaleRevenue"];
+                    UniqueUsers = all["totaleUsers"];
+                    sortedUserList = all["sortingOrder"]
+
+                    constructTopkPurchases(topkPurchases);
+                    constructTopkRecommendationsPerAlgo(topkRecommendations);
+                    constructListActiveUsers()
+                    document.getElementById("total_revenue").innerHTML = totaleRevenue;
+                    document.getElementById("unique_users").innerHTML = UniqueUsers;
                     clearInterval(interval)
                 }
             })
@@ -213,7 +294,7 @@
 
     }
 
-     function drawCTRandARAD(ctr, arad){
+    function drawCTRandARAD(ctr, arad){
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'X');
 
@@ -345,58 +426,116 @@
     }
 
     function constructAlgorithmTable(dataAlgo){
-        {#console.log(dataAlgo)#}
         html_ = ""
-        {#console.log(dataAlgo)#}
         for (const [key, value] of Object.entries(dataAlgo)){
 
-            {#console.log(key, value)#}
-
-            html_ += "<div class=\"ab_container__table_row\">"
-            html_ += "    <div class=\"ab_container__table_column\" style='width: 50px' >" + value["result_id"].toString() + "</div>"
-            html_ += "    <div class=\"ab_container__table_column\">" + value["name"] + "</div>"
+            html_ += "<tr>"
 
             let params = value["params"]
 
+
+            html_ += "<td data-label=\"Number\">"+ value["result_id"] +"</td>"
+            html_ += "<td data-label=\"Name\">"+ value["name"] +"</td>"
+
             if (params.hasOwnProperty("k")){
-                html_ += "    <div class=\"ab_container__table_column\">"+ params["k"] +"</div>"
+                html_ += "<td data-label=\"K\">"+ params["k"] +"</td>"
             }
             else {
-                html_ += "    <div class=\"ab_container__table_column\"></div>"
+                html_ += "<td data-label=\"K\">/</td>"
             }
             if (params.hasOwnProperty("windowsize")){
-                html_ += "    <div class=\"ab_container__table_column\">"+ params["windowsize"] +"</div>"
+                html_ += "<td data-label=\"Windowsize\">"+ params["windowsize"] +"</td>"
             }
 
             else if (params.hasOwnProperty("window")){
-                html_ += "    <div class=\"ab_container__table_column\">"+ params["window"] +"</div>"
+                html_ += "<td data-label=\"Windowsize\">"+ params["window"] +"</td>"
             }
             else {
-                html_ += "    <div class=\"ab_container__table_column\"></div>"
+                html_ += "<td data-label=\"Windowsize\">/</td>"
             }
 
-            {#else {#}
-            {#    html_ += "    <div class=\"ab_container__table_column\"></div>"#}
-            {# } #}
             if (params.hasOwnProperty("normalize")){
-                html_ += "    <div class=\"ab_container__table_column\">"+ params["normalize"] +"</div>"
+                html_ += "<td data-label=\"Normalize\">"+ params["normalize"] +"</td>"
             }
             else {
-                html_ += "    <div class=\"ab_container__table_column\"></div>"
+                html_ += "<td data-label=\"Normalize\">/</td>"
             }
             if (params.hasOwnProperty("retraininterval")){
-                html_ += "    <div class=\"ab_container__table_column\">"+ params["retraininterval"] +"</div>"
+                html_ += "<td data-label=\"Retraininterval\">"+ params["retraininterval"] +"</td>"
             }
             else {
-                html_ += "    <div class=\"ab_container__table_column\"></div>"
+                html_ += "<td data-label=\"Retraininterval\">/</td>"
             }
-            html_ += "</div>"
+
+            html_ += "</tr>"
+
         }
-
-        document.getElementById("algorithmTable").innerHTML += html_
-
+        document.getElementById("tableAlgoritmes").innerHTML = html_
     }
 
+    function constructTopkPurchases(dataPurchases){
+        html_ = ""
+        for (const [key, value] of Object.entries(dataPurchases)){
+
+            html_ += "<tr>"
+            html_ += "<td data-label=\"Item-id\">"+ value["item"] +"</td>"
+            html_ += "<td data-label=\"Count\">"+ value["count"] +"</td>"
+            html_ += "</tr>"
+
+        }
+        document.getElementById("tableTopkRecommendations").innerHTML = html_
+    }
+
+    function constructTopkRecommendationsPerAlgo(dataRecommendations) {
+       html_ = ""
+        for (const [key, value] of Object.entries(dataRecommendations)){
+            html_ += "<div class=\"topkRecommendationHead\">"
+            html_ += "    <h2>" + value["name"] + "</h2>"
+            html_ += "    <p>Algorithm number: " +  key.toString() + "</p>"
+            html_ += "</div>"
+
+            html_ += "<div class=\"topkRecommendationContent\">"
+
+            for (const recommendation of value["recommendations"]) {
+
+               html_ += "<div class=\"topkRecommendationRow\">"
+               html_ += "     <div class=\"topkRecommendationColumn\">" + recommendation["item"] + "</div>"
+               html_ += "     <div class=\"topkRecommendationColumn\">" + recommendation["count"] + "</div>"
+               html_ += "</div>"
+
+            }
+
+            html_ += "</div>"
+
+        }
+        document.getElementById("tableRecommendations").innerHTML = html_
+    }
+
+    function constructListActiveUsers(){
+       html_ = ""
+
+        let rowCount = 0;
+
+        for (const id of sortedUserList[sortUsers]){
+            html_ += "<tr>"
+            html_ += "<td data-label=\"Active user\">"+ id +"</td>"
+            html_ += "<td data-label=\"Total purchases\">"+ listUsers[id]["totalePurchases"] +"</td>"
+            html_ += "<td data-label=\"Purchases over time-period\">"+ listUsers[id]["purchasesOverTime"] +"</td>"
+            html_ += "<td data-label=\"CTR\">"+ listUsers[id]["CTR"] +"</td>"
+            html_ += "</tr>"
+
+            if (rowCount == 1000){
+                break;
+            }
+            rowCount += 1;
+        }
+        document.getElementById("tableUserList").innerHTML = html_
+    }
+
+    function orderUsers(number) {
+        sortUsers = number;
+        constructListActiveUsers();
+    }
 
     window.addEventListener('load', function () {
         let fetchInterval = 1000;
