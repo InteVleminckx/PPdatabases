@@ -101,6 +101,7 @@ thead {
     display: flex;
     flex-direction: column;
     background: #FFFFFF;
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
 }
 
 .item_table thead {
