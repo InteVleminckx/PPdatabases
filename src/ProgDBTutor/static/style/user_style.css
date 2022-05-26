@@ -317,8 +317,8 @@ html, body{
 	height: 0px; width: 0px;
 	border: 8px solid;
 	border-color:
-		darkorange
-		darkorange
+		#30799B
+		#30799B
 		transparent
 		transparent;
 	transform: rotate(-135deg);
@@ -339,10 +339,10 @@ html, body{
 
 .arrowLeft:before {
 	border-color:
-		darkorange
+		#30799B
 		transparent
 		transparent
-		darkorange;
+		#30799B;
 	display: block;
 	top: -1px; right: 0px;
 	transform-origin: top right;
@@ -352,8 +352,8 @@ html, body{
 .arrowLeft:after {
 	border-color:
 		transparent
-		darkorange
-		darkorange
+		#30799B
+		#30799B
 		transparent;
 	top: 0px; right: -1px;
 	transform-origin: top right;
@@ -368,8 +368,8 @@ html, body{
 	height: 0px; width: 0px;
 	border: 8px solid;
 	border-color:
-		darkorange
-		darkorange
+		#30799B
+		#30799B
 		transparent
 		transparent;
 	transform: rotate(45deg);
@@ -390,10 +390,10 @@ html, body{
 
 .arrowRight:before {
 	border-color:
-		darkorange
+		#30799B
 		transparent
 		transparent
-		darkorange;
+		#30799B;
 	display: block;
 	top: -1px; right: 0px;
 	transform-origin: top right;
@@ -403,8 +403,8 @@ html, body{
 .arrowRight:after {
 	border-color:
 		transparent
-		darkorange
-		darkorange
+		#30799B
+		#30799B
 		transparent;
 	top: 0px; right: -1px;
 	transform-origin: top right;

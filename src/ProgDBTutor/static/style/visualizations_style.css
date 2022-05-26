@@ -1,14 +1,14 @@
 html, body{
-    height: 1200px;
+    height: 1500px;
 }
 
 .container__info {
-    height: 1200px;
+    height: 1500px;
 }
 
 .split__container {
     margin-top: 50px;
-    height: 1200px;
+    height: 1500px;
     width: 600px;
     display: flex;
     /*justify-content: space-evenly;*/
@@ -105,7 +105,7 @@ html, body{
 .metric__info_purch_active h2 {
     margin-left: 8px;
     margin-top: 8px;
-    color: #03a9f4;
+    color: #30799B;
 }
 
 .metric__info_purch_active p {
@@ -132,4 +132,265 @@ html, body{
 
 .ab_container__table_column {
     width: 100px;
+}
+
+.container__algemeneinfo {
+    width: 600px;
+    height: 570px;
+    display: flex;
+    /*justify-content: space-between;*/
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+
+.container__algemeneinfo_split {
+    width: 275px;
+    height: 570px;
+    margin-right: 50px;
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.container__algemeneinfo_layer {
+    width: 275px;
+    height: 260px;
+    margin-bottom: 0px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.container__algemeneinfo__values {
+    width: 275px;
+    height: 130px;
+
+    background-color: #FFFFFF;
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
+    border: 0 solid #d9dee3;
+    border-radius: 8px;
+
+    margin-bottom: 25px;
+
+}
+
+.container__algemeneinfo__values h2 {
+    margin-left: 8px;
+    margin-top: 8px;
+    color: #30799B;
+    font-size: x-large;
+}
+
+.container__algemeneinfo__values p {
+    margin-top: 28px;
+    text-align: center;
+    color: #000000;
+    font-size: x-large;
+}
+
+/*Dit is tabel voor topk (item, count)*/
+.container__algemeneinfo_topkPurchases {
+
+    width: 275px;
+    height: 260px;
+
+    background-color: #FFFFFF;
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
+    border: 0 solid #d9dee3;
+    border-radius: 8px;
+
+
+}
+
+.container__algemeneinfo_topkRecommendations {
+    width: 275px;
+    height: 570px;
+
+    background-color: #FFFFFF;
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
+    border: 0 solid #d9dee3;
+    border-radius: 8px;
+
+}
+
+.container__algemeneinfo_userlist {
+    width: 600px;
+    height: 450px;
+    margin-bottom: 30px;
+
+    background-color: #FFFFFF;
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
+    border: 0 solid #d9dee3;
+    border-radius: 8px;
+
+}
+
+.container__algemeneinfo_slider {
+    width: 600px;
+    height: 90px;
+
+    background-color: #FFFFFF;
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
+    border: 0 solid #d9dee3;
+    border-radius: 8px;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.generalPurpose_table {
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
+}
+
+.generalPurpose_table thead {
+    background: #30799B;
+    color: #FFFFFF;
+}
+
+.generalPurpose_table thead tr,
+.generalPurpose_table tbody tr {
+    display: flex;
+}
+
+.generalPurpose_table tbody tr+tr {
+    border-top: none;
+}
+
+.generalPurpose_table thead tr th,
+.generalPurpose_table tbody tr td {
+    display: flex;
+    flex: 1;
+    padding: .5em;
+    justify-content: center;
+}
+
+@media screen and (max-width: 640px) {
+    .generalPurpose_table {
+        border: 0;
+    }
+    .generalPurpose_table thead {
+        display: none;
+    }
+    .generalPurpose_table tbody tr {
+        flex-direction: column;
+        margin: 1em;
+        border: none;
+    }
+    .generalPurpose_table tbody tr td {
+        flex-direction: column;
+        justify-content: center;
+    }
+    .generalPurpose_table tbody tr td+td {
+        border-top: 1px solid #ccc;
+    }
+    .generalPurpose_table tbody tr td:before {
+        display: flex;
+        align-items: center;
+        margin: -.5em -.5em .75em -.5em;
+        padding: .5em;
+        content: attr(data-label);
+        color: #fff;
+        background: #009485;
+    }
+}
+.flex-fixhead-topKPurchases_table tbody {
+    height: 226px;
+    overflow-y: auto;
+}
+
+.flex-fixhead-userList_table tbody {
+    height: 400px;
+    overflow-y: auto;
+}
+
+.flex-fixhead-algorithm_table tbody {
+    height: 250px;
+    overflow-y: auto;
+}
+
+.flex-fixhead-algorithm_table thead {
+    font-size: small;
+}
+
+/********************************************/
+
+.topkRecommendation {
+
+    width: 275px;
+    height: 570px;
+    overflow-y: scroll;
+    border-radius: 8px;
+}
+
+.topkRecommendationHead {
+
+    width: 260px;
+    height: 60px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #30799B;
+}
+
+.topkRecommendationHead h2 {
+    font-size: 22px;
+    color: white;
+}
+
+.topkRecommendationHead p {
+    font-size: 15px;
+    color: white;
+}
+
+.topkRecommendationRow {
+    width: 260px;
+    height: 30px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    border-bottom: 1px solid lightgrey;
+}
+
+.topkRecommendationColumn {
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/********************************************/
+
+.slider__date {
+    width: 450px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+}
+
+#amount {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+}
+
+.slider__range {
+    width: 450px;
+    height: 20px;
 }

@@ -356,10 +356,10 @@ def visualizationsUpdate():
                 topkReco = abTestQueue.fetch_job(job[1]).result
                 topkPurchases = abTestQueue.fetch_job(job[2]).result
                 totRev = abTestQueue.fetch_job(job[3]).result
-                listUsers, totUsers = abTestQueue.fetch_job(job[4]).result
+                listUsers, listUsersSort, totUsers = abTestQueue.fetch_job(job[4]).result
 
                 return {"visualization": visualization, "topkRecommendations": topkReco, "topkPurchases": topkPurchases,
-                        "totaleRevenue": totRev, "totaleUsers": totUsers, "listUsers": listUsers}
+                        "totaleRevenue": totRev, "totaleUsers": totUsers, "listUsers": listUsers, "sortingOrder": listUsersSort}
     return {}
 
 

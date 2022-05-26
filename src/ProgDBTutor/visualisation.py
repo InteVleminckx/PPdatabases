@@ -7,7 +7,7 @@ import pandas as pd
 import os
 from user_data_acces import *
 from Metrics import *
-
+import sys
 
 def getInfoVisualisationPage(abtest_id, dataset_id):
     cursor = dbconnect.get_cursor()
@@ -171,19 +171,22 @@ def getListOfActiveUsers(start, end, dataset_id, abtest_id):
         userInformation[str(user[0])] = {"totalePurchases": 0, "purchasesOverTime": 0, "CTR": 0}
 
     userInformation = getUsersTotalPurchases(dataset_id, start, end, userInformation, cursor)
-
+    userInformation = getUsersPurchasesOverTime(start, end, dataset_id, cursor, userInformation)
     userInformation = getUsersCTR(start, end, dataset_id, userInformation, cursor, abtest_id)
 
+    sort0 = dict(sorted(userInformation.items(), key=lambda item: int(item[0]), reverse=False))
+    userInformation_.append([key for key in sort0])
+
     sort1 = dict(sorted(userInformation.items(), key=lambda item: item[1]["totalePurchases"], reverse=True))
-    userInformation_.append(sort1)
+    userInformation_.append([key for key in sort1])
 
     sort2 = dict(sorted(userInformation.items(), key=lambda item: item[1]["purchasesOverTime"], reverse=True))
-    userInformation_.append(sort2)
+    userInformation_.append([key for key in sort2])
 
     sort3 = dict(sorted(userInformation.items(), key=lambda item: item[1]["CTR"], reverse=True))
-    userInformation_.append(sort3)
+    userInformation_.append([key for key in sort3])
 
-    return userInformation_, userCount
+    return userInformation, userInformation_, userCount
 
 
 def getUsersTotalPurchases(dataset_id, start, end, userInformation, cursor):
@@ -201,7 +204,7 @@ def getUsersTotalPurchases(dataset_id, start, end, userInformation, cursor):
     return userInformation
 
 
-def getUsersPurchasesOverTime(start, end, dataset_id, customer_id, cursor, userInformation):
+def getUsersPurchasesOverTime(start, end, dataset_id, cursor, userInformation):
 
     cursor.execute(
         "select count(i1.customer_id), i1.customer_id from interaction i1 where i1.dataset_id = %s and i1.t_dat between %s and %s and i1.customer_id "
