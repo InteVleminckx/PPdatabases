@@ -28,7 +28,7 @@ def getInfoVisualisationPage(abtest_id, dataset_id):
 
     algorithms, ctr, arad, arpuad = getAlgorithms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
 
-    return {"abtest_id": abtest_id, "startpoint": startPoint, "endpoint": endPoint, "datasetname": datasetName,
+    return {"abtest_id": abtest_id, "dataset_id": dataset_id,"startpoint": startPoint, "endpoint": endPoint, "datasetname": datasetName,
             "stepsize": stepsize, "topk": topk, "graphPurchAndUsers": graphPurchasesAndUsers, "totalUsers": totalUsers,
             "totalPurchases": totalPurch,
             "algorithms": algorithms, "ctr": ctr, "ar@d": arad, "arpu@d": arpuad}
