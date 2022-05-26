@@ -72,7 +72,7 @@ tr {
                 <th><div style="color: red;">Remove</div></th>
             </tr>
         </thead>
-        <tbody style="overflow-y: auto; height: 400px;">
+        <tbody style="overflow-y: auto;">
         {% for item in testList %}
             <tr style="text-align: center" id="{{ item['abtest_id'] }}">
                 <td style="text-decoration: underline;color: #0000EE;cursor: pointer ">{{ item['abtest_id'] }}</td>
@@ -88,7 +88,7 @@ tr {
             </tr>
         {% endfor %}
 
-{#        <tr style="text-align: center">#}
+{#        <tr style="text-align: center" id="1">#}
 {#            <td>10</td>#}
 {#            <td>2</td>#}
 {#            <td>H&M</td>#}
@@ -97,7 +97,7 @@ tr {
 {#            <td>2</td>#}
 {#            <td>5</td>#}
 {#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
+{#            <td><div style="color:red; cursor: pointer;" onclick="removeABTest('1')">&times;</div></td>#}
 {#        </tr>#}
 {#        <tr style="text-align: center">#}
 {#            <td>2</td>#}
@@ -252,11 +252,24 @@ tr {
 
 <script>
 
-function removeABTest(algo_id) {
+function removeABTest(abtest_id) {
     // Remove from the HTML
     {#console.log(e.target.parentElement.id);#}
-    var row = document.getElementById(algo_id.toString());
+    var row = document.getElementById(abtest_id.toString());
     row.remove();
+
+    $.ajax({
+        type: 'POST',
+        url: '/abTestRemove',
+        data: JSON.stringify({'abtest_id': abtest_id}),
+        contentType: 'application/json; charset=utf-8',
+        cache: false,
+        processData: false,
+        success: function(data) {
+            console.log(data);
+
+        },
+    });
 
 }
 

@@ -393,11 +393,14 @@ def testlist():
     return render_template('testlist.html', app_data=app_data, testList=testList)
 
 
-@app.route("/abTestRemove")
-def abTestRemove(abTest_id):
-    abTest_id = 1
+@app.route("/abTestRemove", methods=['GET', 'POST'])
+def abTestRemove():
+    data = request.get_json()
+    abTest_id = data['abtest_id']
+
     cursor = connection.get_cursor()
     cursor.execute("DELETE FROM ABTest WHERE abtest_id = %s", (str(abTest_id),))
+    return {}
 
 
 # ----------------- User section page -----------------#
