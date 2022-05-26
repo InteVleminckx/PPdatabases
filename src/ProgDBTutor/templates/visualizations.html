@@ -92,8 +92,7 @@
             <div class="container__algemeneinfo">
                 <div class="container__algemeneinfo_split">
                     <div class="container__algemeneinfo_topkRecommendations" id="topkRecommendations">
-                        <div class="topkRecommendation" id="tableRecommendations">
-                        </div>
+                        <div class="topkRecommendation" id="tableRecommendations"></div>
                     </div>
                 </div>
                 <div class="container__algemeneinfo_split">
@@ -141,10 +140,10 @@
                     <table class="generalPurpose_table flex-fixhead-userList_table" id="test3">
                         <thead>
                             <tr>
-                                <th onclick="orderUsers(0)">Active user</th>
-                                <th onclick="orderUsers(1)">Total purchases</th>
-                                <th onclick="orderUsers(2)">Purchases over time</th>
-                                <th onclick="orderUsers(3)">CTR</th>
+                                <th style="cursor: pointer" onclick="orderUsers(0)">Active user</th>
+                                <th style="cursor: pointer" onclick="orderUsers(1)">Total purchases</th>
+                                <th style="cursor: pointer" onclick="orderUsers(2)">Purchases over time</th>
+                                <th style="cursor: pointer" onclick="orderUsers(3)">CTR</th>
                             </tr>
                         </thead>
                         <tbody id="tableUserList"></tbody>
@@ -159,6 +158,11 @@
                     </div>
 
                     <div class="slider__range" id="slider-range"></div>
+                    <div class="slider__button">
+                        <div class="style_slider__button">
+                            <button onclick="renewInterval()">RENEW</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -168,20 +172,7 @@
 
 <script>
 
-    $(function () {
-        $("#slider-range").slider({
-            range: true,
-            min: new Date('2010.01.01').getTime() / 1000,
-            max: new Date('2014.01.01').getTime() / 1000,
-            step: 86400,
-            values: [new Date('2010.01.01').getTime() / 1000, new Date('2014.01.01').getTime() / 1000],
-            slide: function (event, ui) {
-                $("#amount").val((new Date(ui.values[0] * 1000).toDateString()) + " - " + (new Date(ui.values[1] * 1000)).toDateString());
-            }
-        });
-        $("#amount").val((new Date($("#slider-range").slider("values", 0) * 1000).toDateString()) +
-            " - " + (new Date($("#slider-range").slider("values", 1) * 1000)).toDateString());
-    });
+
 
     document.getElementById("abtest_id").innerHTML = "";
     document.getElementById("dataset_name").innerHTML = "";
@@ -192,7 +183,9 @@
     document.getElementById("purchases").innerHTML = "";
     document.getElementById("users").innerHTML = "";
     var interval = null;
+    var requestInterval = null;
     let entered = false;
+    let requestEntered = false;
 
     var topkPurchases = null
     var topkRecommendations = null
@@ -203,6 +196,8 @@
     var sortUsers = 0;
     var startPoint = null;
     var endPoint = null;
+    var abtest = null;
+    var dataset = null;
 
     function fetchStatus() {
         fetch(`/visualizations/update`)
@@ -215,13 +210,16 @@
                     entered = true;
                     let info = all["visualization"]
 
-                    startPoint = info["stepsize"];
+                    startPoint = info["startpoint"];
                     endPoint = info["endpoint"];
 
-                    document.getElementById("abtest_id").innerHTML = info["abtest_id"];
+                    abtest = info["abtest_id"];
+                    dataset = info["dataset_id"];
+
+                    document.getElementById("abtest_id").innerHTML = abtest
                     document.getElementById("dataset_name").innerHTML = info["datasetname"];
-                    document.getElementById("startpoint").innerHTML = info["startpoint"];
-                    document.getElementById("stepsize").innerHTML = startPoint
+                    document.getElementById("startpoint").innerHTML = startPoint
+                    document.getElementById("stepsize").innerHTML = info["stepsize"]
                     document.getElementById("endpoint").innerHTML = endPoint
                     document.getElementById("topk").innerHTML = info["topk"];
                     document.getElementById("purchases").innerHTML = info["totalPurchases"];
@@ -231,8 +229,6 @@
                     let ctr = info["ctr"]
                     let arad = info["ar@d"]
                     let arpuad = info["arpu@d"]
-
-
 
                     google.charts.load('current', {packages: ['corechart', 'line']});
                     {#google.charts.setOnLoadCallback(drawActUsersAndPurchChart);#}
@@ -256,9 +252,27 @@
                     constructListActiveUsers()
                     document.getElementById("total_revenue").innerHTML = totaleRevenue;
                     document.getElementById("unique_users").innerHTML = UniqueUsers;
+                    slider();
                     clearInterval(interval)
                 }
             })
+    }
+
+    function slider() {
+       $(function () {
+        $("#slider-range").slider({
+            range: true,
+            min: new Date(startPoint).getTime() / 1000,
+            max: new Date(endPoint).getTime() / 1000,
+            step: 86400,
+            values: [new Date(startPoint).getTime() / 1000, new Date(endPoint).getTime() / 1000],
+            slide: function (event, ui) {
+                $("#amount").val((new Date(ui.values[0] * 1000).toDateString()) + " - " + (new Date(ui.values[1] * 1000)).toDateString());
+            }
+        });
+        $("#amount").val((new Date($("#slider-range").slider("values", 0) * 1000).toDateString()) +
+            " - " + (new Date($("#slider-range").slider("values", 1) * 1000)).toDateString());
+    });
     }
 
     function drawActUsersAndPurchChart(dataUsersPurch){
@@ -536,6 +550,61 @@
         sortUsers = number;
         constructListActiveUsers();
     }
+
+    function fetchRequest() {
+               fetch(`/visualizations/updateRequest`)
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (text){
+                let all = JSON.parse(text)
+                if (Object.keys(all).length > 0 && requestEntered == false){
+                    requestEntered = true;
+
+                    topkPurchases = all["topkPurchases"];
+                    topkRecommendations = all["topkRecommendations"];
+                    listUsers = all["listUsers"];
+                    totaleRevenue = all["totaleRevenue"];
+                    UniqueUsers = all["totaleUsers"];
+                    sortedUserList = all["sortingOrder"]
+
+                    constructTopkPurchases(topkPurchases);
+                    constructTopkRecommendationsPerAlgo(topkRecommendations);
+                    constructListActiveUsers()
+                    document.getElementById("total_revenue").innerHTML = totaleRevenue;
+                    document.getElementById("unique_users").innerHTML = UniqueUsers;
+                    clearInterval(requestInterval);
+                }
+            })
+
+    }
+
+    function renewInterval() {
+
+        let start = (new Date($("#slider-range").slider("values", 0) * 1000)).toISOString().slice(0, 10);
+        let end = (new Date($("#slider-range").slider("values", 1) * 1000)).toISOString().slice(0, 10);
+
+        let data_dict = {"startdate": start, "enddate": end, "abtest_id": abtest, "dataset_id": dataset};
+
+        $.ajax({
+            type: 'POST',
+            url: '/visualizations/request',
+            data: JSON.stringify(data_dict),
+            contentType: 'application/json; charset=utf-8',
+            cache: false,
+            processData: false,
+            success: function(data) {
+                console.log(data);
+                requestInterval = setInterval(fetchRequest, 1000)
+                requestEntered = false;
+            },
+        });
+
+    }
+
+    {#function getRowValue(value){#}
+    {##}
+    {# } #}
 
     window.addEventListener('load', function () {
         let fetchInterval = 1000;
