@@ -375,6 +375,11 @@ def testlist():
 
     return render_template('testlist.html', app_data=app_data, testList = testList)
 
+@app.route("/abTestRemove")
+def abTestRemove(abTest_id):
+    abTest_id = 1
+    cursor = connection.get_cursor()
+    cursor.execute("DELETE FROM ABTest WHERE abtest_id = %s", (str(abTest_id),))
 
 #----------------- User section page -----------------#
 
@@ -385,8 +390,8 @@ def usersectionUpdate():
         job = abTestQueue.fetch_job(userpage)
         if job is not None:
             if str(job.get_status()) == "finished":
-                recommendations, history, interval, graph, topkListprint = job.return_value
-                return {"recommendations":recommendations, "history": history, "interval":interval, "graph":graph, "topkListprint": topkListprint}
+                recommendations, history, interval, graph, topkListprint, dates = job.return_value
+                return {"recommendations":recommendations, "history": history, "interval":interval, "graph":graph, "topkListprint": topkListprint, "dates": dates}
     return {}
 
 @app.route("/usersection")

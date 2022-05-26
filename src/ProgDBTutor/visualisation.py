@@ -25,7 +25,7 @@ def getInfoVisualisationPage(abtest_id, dataset_id):
     datasetName = getDatasetname(dataset_id)
     graphPurchasesAndUsers,totalUsers, totalPurch = getPurchasesAndActiveUsersOverTime(startPoint, endPoint)
 
-    algorithms, ctr, arad, arpuad = getAlgortihms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
+    algorithms, ctr, arad, arpuad = getAlgorithms(abtest_id, dataset_id, startPoint, endPoint, stepsize)
 
     return {"abtest_id": abtest_id, "startpoint":startPoint, "endpoint":endPoint, "datasetname": datasetName,
             "stepsize": stepsize, "topk": topk, "graphPurchAndUsers" : graphPurchasesAndUsers, "totalUsers": totalUsers, "totalPurchases": totalPurch,
@@ -51,7 +51,7 @@ def getPurchasesAndActiveUsersOverTime(start, end):
     return info, str(totalusers), str(totalPurch)
 
 
-def getAlgortihms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
+def getAlgorithms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
     results = getResultIds(abtest_id, dataset_id)
     if results is None:
         return False
