@@ -76,10 +76,8 @@
                     <div class="ab_container__table_column" style="font-weight: bold" >Retraininterval</div>
                 </div>
             </div>
-            <div class="ab_container__table">
-                <button onclick="window.location.href='{{ url_for('usersection', dataset_id=1, customer_id=77757, abtest_id=17) }}';">User page</button>
-            </div>
-       </div>
+            <div class="metric_container__graph" id="arpuad_graph" ></div>
+        </div>
         <div class="split__container">
             <div class="ab_container__info">
                 <div class="metric__info_purch_active">
@@ -101,7 +99,7 @@
             </div>
             <div class="metric_container__graph" id="user_purch_graph"></div>
             <div class="metric_container__graph" id="ctr_arad_graph"></div>
-            <div class="metric_container__graph" id="arpuad_graph" ></div>
+
         </div>
     </div>
 </div>
@@ -127,7 +125,8 @@
                 return response.text();
             })
             .then(function (text){
-                let info = JSON.parse(text)
+                let all = JSON.parse(text)
+                let info = all["visualization"]
                 if (Object.keys(info).length > 0){
                     document.getElementById("abtest_id").innerHTML = info["abtest_id"];
                     document.getElementById("dataset_name").innerHTML = info["datasetname"];

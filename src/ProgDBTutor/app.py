@@ -15,7 +15,7 @@ from rq import Queue
 
 # from config import config_data
 # from db_connection import DBConnection
-from user_data_acces import * # , UserDataAcces
+from user_data_acces import *  # , UserDataAcces
 # from user_data_acces import UserDataAcces
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -29,6 +29,7 @@ from datetime import datetime, timedelta
 
 from config import config_data
 from db_connection import DBConnection
+
 # from user_data_acces import UserDataAcces
 
 """
@@ -40,7 +41,6 @@ from visualisation import *
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'.csv'}
-
 
 app = Flask('Tutorial')
 app.secret_key = '*^*(*&)(*)(*afafafaSDD47j\3yX R~X@H!jmM]Lwf/,?KT'
@@ -55,21 +55,20 @@ algo_dict = dict()
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
 
-#For threading
+# For threading
 rds = redis.Redis()
-datasetQueue = Queue('queue1', connection=rds)  #queue for dataset processes
-abTestQueue = Queue('queue2', connection=rds)   #queue for abTest processes
+datasetQueue = Queue('queue1', connection=rds)  # queue for dataset processes
+abTestQueue = Queue('queue2', connection=rds)  # queue for abTest processes
 
 # INITIALIZE SINGLETON SERVICES
 
 
 # algo_id = 1
-abtest_id = getMaxABTestID()+1
+abtest_id = getMaxABTestID() + 1
 
 file_attr_types = ["string", "float", "int", "image_url"]
 
-jsonData = dict() # dictionary om de general parameters voor de ab-test pagina op te slaan
-
+jsonData = dict()  # dictionary om de general parameters voor de ab-test pagina op te slaan
 
 # login_manager = LoginManager()
 # login_manager.login_view = 'app.login_user'
@@ -87,11 +86,11 @@ jsonData = dict() # dictionary om de general parameters voor de ab-test pagina o
 DEBUG = True
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
 
-#----------------- VIEW -----------------#
+
+# ----------------- VIEW -----------------#
 @app.route("/")
 @app.route("/home")
 def main():
-
     l = session.get('loggedin', False)
 
     if l:
@@ -99,16 +98,17 @@ def main():
     else:
         return render_template('home.html', app_data=app_data)
 
+
 @app.route("/contact")
 # @login_required
 def contact():
     return render_template('contact.html', app_data=app_data)
 
-#----------------- A/B-test page -----------------#
+
+# ----------------- A/B-test page -----------------#
 
 @app.route("/services/addalgorithm", methods=['GET', 'POST'])
 def addalgorithm():
-
     if request.method == 'POST':
 
         dataDict = request.get_json()
@@ -152,15 +152,15 @@ def addalgorithm():
                 algo_dict[str(algo_id)] = "itemknn"
                 algo_id += 1
 
-        data_dict = {'algo_id':algo_id, 'algo_list':algo_list, 'algo_dict':algo_dict}
+        data_dict = {'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}
         # print("success")
         # print(data_dict)
         return data_dict
 
+
 @app.route("/services", methods=['GET', 'POST'])
 # @login_required
 def services():
-
     if 'loggedin' in session:
 
         if request.method == 'POST':
@@ -205,10 +205,10 @@ def services():
                         # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
                         # algo_list[j][3])
                         abTestQueue.enqueue(addAlgorithm, ABTestID, i, algo_list[j][1], algo_list[j][2],
-                                    algo_list[j][3])
+                                            algo_list[j][3])
 
                 # Add entry for result table
-                #addResult(abtest_id, i, dataset_id, algorithm_param, creator)
+                # addResult(abtest_id, i, dataset_id, algorithm_param, creator)
                 abTestQueue.enqueue(addResult, ABTestID, i, dataset_id, algorithm_param, creator)
 
                 i += 1
@@ -219,16 +219,21 @@ def services():
             connection.commit()
 
             # Call function to start a/b tests
-            #abtest.startAB(maxABtestID, dataset_id)
-            #abtest.getABtestResults(maxABtestID, dataset_id)
-            #abtest.getAB_Pop_Active(maxABtestID, dataset_id)
+            # abtest.startAB(maxABtestID, dataset_id)
+            # abtest.getABtestResults(maxABtestID, dataset_id)
+            # abtest.getAB_Pop_Active(maxABtestID, dataset_id)
 
             abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id, job_timeout=3600)
             # jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
             # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
             jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
 
-            session["abVisualistation"] = jobABvisualisations.id
+            recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, 5, ABTestID)
+            totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, "", "", dataset_id, 5, ABTestID)
+            totRev = abTestQueue.enqueue(getTotaleRevenue, "", "", dataset_id, ABTestID)
+            listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID)
+
+            session["abVisualistation"] = [jobABvisualisations.id, recos.id, totPurch.id, totRev.id, listUsers.id]
 
             # return redirect(url_for('visualizations')) #TODO if not work turn on
 
@@ -243,22 +248,24 @@ def services():
 
     return redirect(url_for('login_user'))
 
-#----------------- Dataset page -----------------#
+
+# ----------------- Dataset page -----------------#
 
 @app.route("/datasets/<ds_id>", methods=['GET', 'POST'])
 def getData(ds_id):
     if request.method == 'GET':
         return getDatasetInformation(ds_id)
 
+
 @app.route("/datasets", methods=['GET', 'POST'])
 # @login_required
 def datasets():
-
     if 'loggedin' in session:
 
         type_list = {}
         if request.method == 'POST':
-            type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '', 'customers_name_column': ''}
+            type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '',
+                         'customers_name_column': ''}
             type_item = 0
             while request.form.get(f"{type_item}"):
                 type_list['articles_types'].append(request.form.get(f"{type_item}"))
@@ -280,12 +287,13 @@ def datasets():
             session['jobsDataset'] = jobs
         dataset_names = getDatasets()
 
-        return render_template('datasets.html', app_data=app_data, names=dataset_names, attr_types=json.dumps(file_attr_types))
+        return render_template('datasets.html', app_data=app_data, names=dataset_names,
+                               attr_types=json.dumps(file_attr_types))
     return redirect(url_for('login_user'))
+
 
 @app.route("/datasets/update")
 def datasetUpdate():
-
     if 'jobsDataset' in session:
         jobs = session["jobsDataset"]
         finished = 0
@@ -299,9 +307,9 @@ def datasetUpdate():
             return 'done'
     return 'notDone'
 
+
 @app.route("/fileupload", methods=['GET', 'POST'])
 def fileupload():
-
     if request.method == 'POST':
         headerDict = {}
         if request.files.get('articles_file').filename != '':
@@ -315,6 +323,7 @@ def fileupload():
         # print(headerDict)
         return headerDict
 
+
 @app.route("/datasetupload")
 def datasetupload(rowData):
     cursor = connection.get_cursor()
@@ -327,26 +336,34 @@ def datasetupload(rowData):
 
     return redirect(url_for('datasets'))
 
-#----------------- A/B-test Visualization page -----------------#
+
+# ----------------- A/B-test Visualization page -----------------#
 
 @app.route("/visualizations")
 # @login_required
 def visualizations():
     return render_template('visualizations.html', app_data=app_data)
 
+
 @app.route("/visualizations/update")
 def visualizationsUpdate():
-
     if "abVisualistation" in session:
         job = session["abVisualistation"]
-        job = abTestQueue.fetch_job(job)
-        if job is not None:
-            if str(job.get_status()) == "finished":
-                return job.return_value
+        job_ = abTestQueue.fetch_job(job[-1])
+        if job_ is not None:
+            if str(job_.get_status()) == "finished":
+                visualization = abTestQueue.fetch_job(job[0]).result
+                topkReco = abTestQueue.fetch_job(job[1]).result
+                topkPurchases = abTestQueue.fetch_job(job[2]).result
+                totRev = abTestQueue.fetch_job(job[3]).result
+                listUsers, totUsers = abTestQueue.fetch_job(job[4]).result
+
+                return {"visualization": visualization, "topkRecommendations": topkReco, "topkPurchases": topkPurchases,
+                        "totaleRevenue": totRev, "totaleUsers": totUsers, "listUsers": listUsers}
     return {}
 
 
-#----------------- A/B-test list -----------------#
+# ----------------- A/B-test list -----------------#
 
 @app.route("/testlist")
 def testlist():
@@ -357,11 +374,11 @@ def testlist():
                    "a.topk FROM ABTest a, Dataset d, Result r WHERE r.creator = %s AND a.abtest_id = r.abtest_id AND "
                    "a.result_id = r.result_id AND r.dataset_id = d.dataset_id", (creator,))
     for row in cursor:
-        d = {'abtest_id':row[0], 'dataset_id': row[1], 'dataset_name':row[2], 'startingpoint':str(row[3])[:10],
-                'endpoint':str(row[4])[:10], 'stepsize':row[5], 'topk':row[6], 'algorithms': None}
+        d = {'abtest_id': row[0], 'dataset_id': row[1], 'dataset_name': row[2], 'startingpoint': str(row[3])[:10],
+             'endpoint': str(row[4])[:10], 'stepsize': row[5], 'topk': row[6], 'algorithms': None}
         testList.append(d)
     for i in range(len(testList)):
-        algos = {} #per (key, value), de value bevat op index 0 de naam van de algoritme en alles erna zijn de
+        algos = {}  # per (key, value), de value bevat op index 0 de naam van de algoritme en alles erna zijn de
         # parameters.
         cursor.execute("SELECT a.result_id, a.name, a.param_name FROM Algorithm a,  Result r WHERE a.abtest_id = %s "
                        "AND r.creator = %s", (testList[i]['abtest_id'], creator))
@@ -373,7 +390,8 @@ def testlist():
                 algos[row[0]] = [row[1], row[2]]
         testList[i]['algorithms'] = algos
 
-    return render_template('testlist.html', app_data=app_data, testList = testList)
+    return render_template('testlist.html', app_data=app_data, testList=testList)
+
 
 @app.route("/abTestRemove")
 def abTestRemove(abTest_id):
@@ -381,29 +399,35 @@ def abTestRemove(abTest_id):
     cursor = connection.get_cursor()
     cursor.execute("DELETE FROM ABTest WHERE abtest_id = %s", (str(abTest_id),))
 
-#----------------- User section page -----------------#
+
+# ----------------- User section page -----------------#
 
 @app.route("/usersection/update")
 def usersectionUpdate():
+    print("update")
     if "userpage" in session:
         userpage = session["userpage"]
         job = abTestQueue.fetch_job(userpage)
+        print(job.get_status())
         if job is not None:
             if str(job.get_status()) == "finished":
-                recommendations, history, interval, graph, topkListprint, dates = job.return_value
-                return {"recommendations":recommendations, "history": history, "interval":interval, "graph":graph, "topkListprint": topkListprint, "dates": dates}
+                recommendations, history, interval, graph, topkListprint, dates = abTestQueue.fetch_job(userpage[0])
+                return {"recommendations": recommendations, "history": history, "interval": interval, "graph": graph,
+                        "topkListprint": topkListprint, "dates": dates}
     return {}
+
 
 @app.route("/usersection")
 def usersection():
     dataset_id = request.args.get("dataset_id")
     customer_id = request.args.get("customer_id")
     abtest_id = request.args.get("abtest_id")
-    userJob = abTestQueue.enqueue(getUserInformation, abtest_id, dataset_id, customer_id)
-    session["userpage"] = userJob.id
-    datasetname = getDatasetname(dataset_id)
+    information = abTestQueue.enqueue(getUserInformation, abtest_id, dataset_id, customer_id)
 
+    session["userpage"] = information.id
+    datasetname = getDatasetname(dataset_id)
     return render_template('user.html', username=customer_id, datasetname=datasetname)
+
 
 @app.route("/itemsection_graph", methods=['POST', 'GET'])
 def itemsection_graph():
@@ -511,7 +535,8 @@ def itemsection_graph():
 
         return d
 
-#----------------- Item section page -----------------#
+
+# ----------------- Item section page -----------------#
 @app.route("/itemsection", methods=['POST', 'GET'])
 def itemsection():
     abtest_id = getMaxABTestID()
@@ -535,7 +560,7 @@ def itemsection():
                            name=None, title=None)
 
 
-#----------------- User_Login -----------------#
+# ----------------- User_Login -----------------#
 
 @app.route("/register", methods=['GET', 'POST'])
 def add_user():
@@ -551,10 +576,11 @@ def add_user():
     # user = DataScientist.query.filter_by(username=user_username).first
 
     # some basic checks (if they trigger, they 'flash' a message on the page (see the login.html doc))
-    if row is not None: # check to see if user with the email already exists in the database
+    if row is not None:  # check to see if user with the email already exists in the database
         flash('This username already exists.', category='error')
     else:
-        user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username, email=user_email, password=generate_password_hash(user_password, method='sha256'))
+        user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username,
+                                 email=user_email, password=generate_password_hash(user_password, method='sha256'))
         print('Adding {}'.format(user_obj.to_dct()))
         user_obj = add_user(user_obj)
         # login_user(user_obj, remember=True)
@@ -566,9 +592,9 @@ def add_user():
 
     return render_template('login.html', app_data=app_data)
 
+
 @app.route("/login", methods=['GET', 'POST'])
 def login_user():
-
     if request.method == 'POST':
 
         user_username = request.form.get('username')
@@ -578,7 +604,7 @@ def login_user():
         cursor = connection.get_cursor()
         cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
         row = cursor.fetchone()
-        if row is not None: # als de username is gevonden
+        if row is not None:  # als de username is gevonden
             user = row[0]
             cursor1 = connection.get_cursor()
             cursor1.execute("SELECT password FROM authentication WHERE username = %s", (user_username,))
@@ -596,6 +622,7 @@ def login_user():
 
     return render_template('login.html', app_data=app_data)
 
+
 @app.route("/logout", methods=['GET', 'POST'])
 # @login_required
 def logout():
@@ -607,7 +634,8 @@ def logout():
     # session.pop('_flashes', None)
     return redirect(url_for('login_user'))
 
+
 # RUN DEV SERVER
 if __name__ == "__main__":
-    #os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
+    # os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
     app.run(HOST, debug=False)
