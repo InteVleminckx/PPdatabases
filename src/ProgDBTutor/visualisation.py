@@ -78,7 +78,7 @@ def getAlgorithms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
 
 def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize, algoName):
     ctr = getClickThroughRate(startpoint, endpoint, abtest_id, result_id, dataset_id, stepsize, algoName)
-    arad, arpuad = getAR_and_ARPU(7, startpoint, endpoint, abtest_id, result_id, dataset_id, int(stepsize))
+    arad, arpuad = getAR_and_ARPU(7, startpoint, endpoint, abtest_id, result_id, dataset_id, int(stepsize), algoName)
     return ctr, arad, arpuad
 
 
