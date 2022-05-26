@@ -55,7 +55,7 @@ class Recency:
         if self.currentModel is not None:
             for item_id in self.currentModel:
                 attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
-                addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, str(item_id), attribute_costumer,
+                addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, item_id[0], attribute_costumer,
                                   *recommendWindow)
 
 # TESTCODE

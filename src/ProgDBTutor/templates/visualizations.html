@@ -77,6 +77,25 @@
                 </div>
             </div>
             <div class="metric_container__graph" id="arpuad_graph" ></div>
+
+            <div class="container__algemeneinfo">
+                <div class="container__algemeneinfo_split">
+
+                </div>
+                <div class="container__algemeneinfo_split">
+                    <div class="container__algemeneinfo_layer">
+
+                    </div>
+                    <div class="container__algemeneinfo_layer">
+                        <div class="container__algemeneinfo__values">
+
+                        </div>
+                        <div class="container__algemeneinfo__values">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="split__container">
             <div class="ab_container__info">
@@ -119,6 +138,7 @@
     document.getElementById("users").innerHTML = "";
     {#fetchStatus();#}
     var interval = null;
+    let entered = false;
     function fetchStatus() {
         fetch(`/visualizations/update`)
             .then(function (response) {
@@ -127,7 +147,8 @@
             .then(function (text){
                 let all = JSON.parse(text)
                 let info = all["visualization"]
-                if (Object.keys(info).length > 0){
+                if (Object.keys(all).length > 0 && entered == false){
+                    entered = true;
                     document.getElementById("abtest_id").innerHTML = info["abtest_id"];
                     document.getElementById("dataset_name").innerHTML = info["datasetname"];
                     document.getElementById("startpoint").innerHTML = info["startpoint"];
@@ -141,18 +162,23 @@
                     let ctr = info["ctr"]
                     let arad = info["ar@d"]
                     let arpuad = info["arpu@d"]
-                    console.log(algorihtms)
+
+
+
                     google.charts.load('current', {packages: ['corechart', 'line']});
-                    google.charts.setOnLoadCallback(drawActUsersAndPurchChart);
-                    drawActUsersAndPurchChart(dataUsersPurch);
+                    {#google.charts.setOnLoadCallback(drawActUsersAndPurchChart);#}
+                    google.setOnLoadCallback(function () {
+                        drawCTRandARAD(ctr, arad)
+                        drawARPUAD(arpuad)
+                        drawActUsersAndPurchChart(dataUsersPurch);
+                    });
+                    console.log("oke")
                     constructAlgorithmTable(algorihtms);
-                    drawCTRandARAD(ctr, arad)
-                    drawARPUAD(arpuad)
+
                     clearInterval(interval)
                 }
             })
     }
-
 
     function drawActUsersAndPurchChart(dataUsersPurch){
         var data = new google.visualization.DataTable();
@@ -165,9 +191,9 @@
             dataGraph.push([new Date(key), parseInt(value["purchases"]), parseInt(value['users'])])
         }
 
-        console.log(dataGraph)
+        {#console.log(dataGraph)#}
         data.addRows(dataGraph);
-        console.log(data)
+        {#console.log(data)#}
 
         var options = {
         pointSize: 3,
@@ -218,7 +244,7 @@
         count = 0
         for (const [key, value] of Object.entries(ctr)){
             for (const [key2, value2] of Object.entries(value["values"])){
-                console.log(value2)
+                {#console.log(value2)#}
                     dates[count].push(value2)
                     count += 1
             }
@@ -226,14 +252,14 @@
         }
         for (const [key, value] of Object.entries(arad)){
             for (const [key2, value2] of Object.entries(value["values"])){
-                console.log(value2)
+                {#console.log(value2)#}
                     dates[count].push(value2)
                     count += 1
             }
             count = 0
         }
 
-        console.log(dates)
+        {#console.log(dates)#}
 
         {#console.log(dataGraph)#}
         data.addRows(dates);
@@ -287,14 +313,14 @@
         count = 0
         for (const [key, value] of Object.entries(dataarpuad)){
             for (const [key2, value2] of Object.entries(value["values"])){
-                console.log(value2)
+                {#console.log(value2)#}
                     dates[count].push(value2)
                     count += 1
             }
             count = 0
         }
 
-        console.log(dates)
+        {#console.log(dates)#}
 
         {#console.log(dataGraph)#}
         data.addRows(dates);
@@ -319,9 +345,12 @@
     }
 
     function constructAlgorithmTable(dataAlgo){
-        console.log(dataAlgo)
+        {#console.log(dataAlgo)#}
         html_ = ""
+        {#console.log(dataAlgo)#}
         for (const [key, value] of Object.entries(dataAlgo)){
+
+            {#console.log(key, value)#}
 
             html_ += "<div class=\"ab_container__table_row\">"
             html_ += "    <div class=\"ab_container__table_column\" style='width: 50px' >" + value["result_id"].toString() + "</div>"
@@ -338,15 +367,17 @@
             if (params.hasOwnProperty("windowsize")){
                 html_ += "    <div class=\"ab_container__table_column\">"+ params["windowsize"] +"</div>"
             }
-            else {
-                html_ += "    <div class=\"ab_container__table_column\"></div>"
-            }
-            if (params.hasOwnProperty("window")){
+
+            else if (params.hasOwnProperty("window")){
                 html_ += "    <div class=\"ab_container__table_column\">"+ params["window"] +"</div>"
             }
             else {
                 html_ += "    <div class=\"ab_container__table_column\"></div>"
             }
+
+            {#else {#}
+            {#    html_ += "    <div class=\"ab_container__table_column\"></div>"#}
+            {# } #}
             if (params.hasOwnProperty("normalize")){
                 html_ += "    <div class=\"ab_container__table_column\">"+ params["normalize"] +"</div>"
             }

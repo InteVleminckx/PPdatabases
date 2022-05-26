@@ -71,7 +71,7 @@ def getAlgorithms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
         ctr_, arad, argRev = getCTR(result, abtest_id, dataset_id, startpoint, endpoint, stepsize, algo.name)
         ctr[result] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
         ard[result] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
-        argRevPr[result] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "AR@D"}
+        argRevPr[result] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "ARPU@D"}
 
     return algorithms, ctr, ard, argRevPr
 
