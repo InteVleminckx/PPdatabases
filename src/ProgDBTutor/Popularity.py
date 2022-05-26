@@ -8,7 +8,7 @@ LIMIT 2;
 """
 # from app import user_data_access
 
-import datetime
+from datetime import datetime, timedelta
 # from app import user_data_access
 import time as tm
 
@@ -21,13 +21,13 @@ class Popularity:
 
     def __init__(self, dataset_id, abtest_id, result_id, startPoint, endPoint, stepsize, topk, window, retrainInterval,
                  algorithm_param):
-        self.startPoint = datetime.datetime.strptime(startPoint, '%Y-%m-%d %H:%M:%S')
-        self.endPoint = datetime.datetime.strptime(endPoint, '%Y-%m-%d %H:%M:%S')
-        self.stepsize = datetime.timedelta(days=stepsize)
+        self.startPoint = datetime.strptime(startPoint, '%Y-%m-%d %H:%M:%S')
+        self.endPoint = datetime.strptime(endPoint, '%Y-%m-%d %H:%M:%S')
+        self.stepsize = timedelta(days=stepsize)
         self.intStep = stepsize
         self.topk = topk
-        self.window = datetime.timedelta(days=window)
-        self.retrainInterval = datetime.timedelta(days=retrainInterval)
+        self.window = timedelta(days=window)
+        self.retrainInterval = timedelta(days=retrainInterval)
         self.currentDate = self.startPoint
         self.recommendations = dict()
         self.dataset_id = dataset_id
@@ -41,7 +41,7 @@ class Popularity:
 
         nextRetrain = self.currentDate  # next retrain interval
         nextRecommend = self.currentDate
-        simulationStep = datetime.timedelta(days=1)
+        simulationStep = timedelta(days=1)
 
         while self.currentDate <= self.endPoint:
 
