@@ -3,49 +3,63 @@ html, body {
     background-color: #E3E9F0;
 }
 
+table {
+    width: initial !important;
+    text-align: center !important;
+    border-collapse: collapse !important;
+    border-radius: 8px !important;
+}
+
+table, tr, td {
+    height: initial !important;
+}
+
+thead {
+    width: 100% !important;
+    border-radius: 8px 8px 0px 0px !important;
+}
+
 .main__header {
+    margin-top: 30px;
+    margin-bottom: 30px;
     text-align: center;
 }
-.container__itemsection {
-    margin-bottom: 50px;
-    height: 1350px;
-    padding: 10px;
+
+.container__itemsection_ {
+    height: 1420px;
     justify-content: center;
 }
 
-.container__info {
+.container__info_ {
     width: 1350px;
-    height: 1330px;
+    height: 1350px;
     background-color: #F0F2FA;
     border-radius: 8px;
+    margin: auto;
 
-    margin-left: auto;
-    margin-right: auto;
-
+    box-shadow: 0 0 20px -8px rgb(160 163 198);
     display: flex;
+    flex-direction: column;
     justify-content: space-evenly;
     flex-wrap: wrap;
 }
 
-.container__column {
-    margin-top: 20px;
-    height: 600px;
+.container__layer_ {
+    width: 1350px;
+    height: 45%;
+    display: flex;
+    justify-content: space-evenly;
 }
 
-.container__info_item {
-    width: 600px;
-    height: 600px;
-    overflow: auto;
-    background-color: #FFFFFF;
-    box-shadow: 0 0 20px -8px rgb(160 163 198);
-    border: 0 solid #d9dee3;
-    color: rgb(27,30,36);
-    border-radius: 8px;
-    margin-top: 20px;
+.container__column_ {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 45%;
 }
 
-.container__item_picture {
-    width: 600px;
+.container__item_picture_ {
+    width: 100%;
     height: 400px;
     overflow-x:hidden;
     overflow-y:hidden;
@@ -54,11 +68,10 @@ html, body {
     border: 0 solid #d9dee3;
     color: rgb(27,30,36);
     border-radius: 8px;
-    margin-top: 20px;
 }
 
-.container__graph {
-    width: 1250px;
+.container__graph_ {
+    width: 93%;
     height: 600px;
     overflow: auto;
     background-color: #FFFFFF;
@@ -68,11 +81,10 @@ html, body {
     border: 0 solid #d9dee3;
     color: rgb(27,30,36);
     border-radius: 8px;
-    margin-top: 20px;
 }
 
-.container__selection {
-    width: 600px;
+.container__selection_ {
+    width: 100%;
     height: 160px;
     overflow: auto;
     background-color: #FFFFFF;
@@ -80,7 +92,6 @@ html, body {
     border: 0 solid #d9dee3;
     color: rgb(27,30,36);
     border-radius: 8px;
-    margin-top: 40px;
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
@@ -89,7 +100,6 @@ html, body {
 .item_table {
     display: flex;
     flex-direction: column;
-    border: 1px solid lightgray;
     background: #FFFFFF;
 }
 
@@ -104,7 +114,7 @@ html, body {
 }
 
 .item_table tbody tr+tr {
-    border-top: 1px solid #ccc;
+    border-top: none;
 }
 
 .item_table thead tr th,
@@ -125,10 +135,11 @@ html, body {
     .item_table tbody tr {
         flex-direction: column;
         margin: 1em;
-        border: 1px solid #ccc;
+        border: none;
     }
     .item_table tbody tr td {
         flex-direction: column;
+        justify-content: center;
     }
     .item_table tbody tr td+td {
         border-top: 1px solid #ccc;
@@ -144,18 +155,19 @@ html, body {
     }
 }
 .flex-fixhead-table tbody {
-    overflow: auto;
-    height: 564px;
+    height: 573px;
+    overflow-y: auto;
 }
 
-.grid-container {
+.grid-container_ {
     display: flex;
-    grid-template-columns: auto auto auto;
+    flex-direction: row;
+    justify-content: space-evenly;
     height: 80px;
     width: 600px;
 }
 
-.grid-item_1 {
+.grid-item_1_ {
     width: 300px;
     background-color: rgba(255, 255, 255, 0.8);
     text-align: center;
@@ -167,23 +179,6 @@ html, body {
     color: rgb(27,30,36);
     border-radius: 8px;
     margin: 10px;
-}
-
-.grid-item_2 {
-    width: 120px;
-    background-color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    background-color: #FFFFFF;
-    box-shadow: 0 0 20px -8px rgb(160 163 198);
-    border: 0 solid #d9dee3;
-    color: rgb(27,30,36);
-    border-radius: 8px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    margin-left: 10px;
-    margin-right: 10px;
 }
 
 .select {
