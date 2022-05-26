@@ -10,8 +10,10 @@ table {
     border-radius: 8px !important;
 }
 
-table, tr, td {
+table, tr td {
     height: initial !important;
+    border-bottom: none;
+    border-top: 0.5px solid lightgray;
 }
 
 thead {
