@@ -3,16 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/user_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/visualizations_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/item_style.css') }}">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 </head>
 <body>
+
+{#Navbar section#}
+<nav class="navbar" id="navbar">
+    <div class="navbar_container">
+        <div class="navbar_toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="navbar_menu">
+            <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
+        </ul>
+    </div>
+</nav>
+
 <form method="POST" action="" name="form1" id="form1">
     <h1 class="main__header">Item Page</h1>
-    <div class="container__itemsection">
-        <div class="container__info">
-            <main class="container__column" id="col1">
-                <div class="container__info_item">
+    <div class="container__itemsection_">
+        <div class="container__info_">
+            <main class="container__layer_">
+                <main class="container__column_" id="col1">
                     <table class="item_table flex-fixhead-table">
                         <thead>
                         <tr>
@@ -29,47 +54,48 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                </div>
+                </main>
+                <main class="container__column_" id="col2">
+                    <main class="container__item_picture_">
+                        {% if item_picture %}
+                            <img src="{{ item_picture }}" width="100%" height="400px" alt="Picture of an item">
+                        {% else %}
+                            <img src="" width="100%" height="400px" alt="Picture of an item">
+                        {% endif %}
+                    </main>
+                    <main class="container__selection_">
+                        <div class="grid-container_">
+                            <div class="grid-item_1_">
+                                <select class="select" id="graph_select" name="graph_select">
+                                    <option value="Popularity item">Popularity item</option>
+                                    <option value="Recommendation count">Recommendation count</option>
+                                    <option value="Recommendation correctness">Recommendation correctness</option>
+                                </select>
+                            </div>
+                            <div class="grid-item_1_">
+                                <button class="_button" role="button" id="submit_graph" name="submit_graph">
+                                    Show graph
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid-container_">
+                            <div class="grid-item_1_">
+                                <input class="_date" type="date" placeholder="Begin" id="begin_time" name="begin_time" value="2020-01-01" required>
+                            </div>
+                            <div class="grid-item_1_">
+                                <input class="_date" type="date" placeholder="End" id="end_time" name="end_time" value="2020-01-09" required>
+                            </div>
+                        </div>
+                    </main>
+                </main>
             </main>
-            <main class="container__column" id="col2">
-                <div class="container__item_picture">
-                    {% if item_picture %}
-                        <img src="{{ item_picture }}" width="600px" height="400px" alt="Picture of an item">
-                    {% else %}
-                        <img src="" width="600px" height="400px" alt="Picture of an item">
-                    {% endif %}
-                </div>
-                <div class="container__selection">
-                    <div class="grid-container">
-                        <div class="grid-item_1">
-                            <select class="select" id="graph_select" name="graph_select">
-                                <option value="Popularity item">Popularity item</option>
-                                <option value="Recommendation count">Recommendation count</option>
-                                <option value="Recommendation correctness">Recommendation correctness</option>
-                            </select>
-                        </div>
-                        <div class="grid-item_1">
-                            <button class="_button" role="button" id="submit_graph" name="submit_graph">
-                                Show graph
-                            </button>
-                        </div>
-                    </div>
-                    <div class="grid-container">
-                        <div class="grid-item_1">
-                            <input class="_date" type="date" placeholder="Begin" id="begin_time" name="begin_time" value="2020-01-01" required>
-                        </div>
-                        <div class="grid-item_1">
-                            <input class="_date" type="date" placeholder="End" id="end_time" name="end_time" value="2020-01-09" required>
-                        </div>
-                    </div>
-                </div>
+            <main class="container__layer_">
+                <main class="container__graph_" id="item_graph"></main>
             </main>
-            <div class="container__graph" id="item_graph"></div>
         </div>
     </div>
 </form>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart', 'bar']});
 
