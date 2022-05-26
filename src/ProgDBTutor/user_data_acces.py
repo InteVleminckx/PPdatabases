@@ -761,7 +761,7 @@ def getRecommendationCorrectness(retrainDay, item_id, abtest_id, dataset_id):
         # ItemKNN ==> look at user specific recommendations and purchases
         elif algorithm.name == 'itemknn':
             cursor.execute("SELECT count(*) FROM Interaction i WHERE i.item_id = %s AND i.dataset_id = %s AND i.t_dat >= %s AND \
-                           i.t_dat <= %s AND i.item_id, i.customer_id IN (SELECT * FROM recommendations r);",
+                           i.t_dat <= %s AND i.item_id IN (SELECT r.item_number FROM recommendations r WHERE r.customer_id = i.customer_id);",
                            (str(item_id), str(dataset_id), retrainDay, nextRetrainDay))
 
         amount = cursor.fetchone()[0]
