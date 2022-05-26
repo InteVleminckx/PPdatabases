@@ -6,6 +6,24 @@ html, body{
     height: 1500px;
 }
 
+table {
+    width: initial !important;
+    text-align: center !important;
+    border-collapse: collapse !important;
+    border-radius: 8px !important;
+}
+
+table, tr td {
+    height: initial !important;
+    border-bottom: none;
+    border-top: 0.5px solid lightgray;
+}
+
+thead {
+    width: 100% !important;
+    border-radius: 8px 8px 0px 0px !important;
+}
+
 .split__container {
     margin-top: 50px;
     height: 1500px;
@@ -63,13 +81,13 @@ html, body{
 
 .ab_container__table {
     width: 600px;
-    height: 425px;
+    height: 267px;
     background-color: #FFFFFF;
     box-shadow: 0 0 20px -8px rgb(160 163 198);
     border: 0 solid #d9dee3;
     border-radius: 8px;
     margin-bottom: 50px;
-    overflow-y: scroll;
+    overflow-y: hidden;
 }
 
 .metric__info_purch_active {
@@ -86,7 +104,6 @@ html, body{
 .metric__info_purch_active:nth-last-child(1){
     margin-right: 0;
 }
-
 
 .metric_container__graph {
     width: 600px;
@@ -109,12 +126,10 @@ html, body{
 }
 
 .metric__info_purch_active p {
-    align-content: center;
-    justify-content: center;
-    display: flex;
-    line-height: 85px;
-    font-size: 32px;
-    color: black;
+    margin-top: 21px;
+    text-align: center;
+    color: #000000;
+    font-size: large;
 }
 
 .ab_container__table_row {
