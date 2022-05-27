@@ -342,59 +342,8 @@ def datasetupload(rowData):
 @app.route("/visualizations")
 # @login_required
 def visualizations():
-
-    # print(request.args)
-    if len(request.args) > 0:
-
-        ABTestID = request.args["abtest_id"]
-        dataset_id = request.args["dataset_id"]
-
-        jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
-
-        recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, 5, ABTestID)
-        totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, "", "", dataset_id, 5, ABTestID)
-        totRev = abTestQueue.enqueue(getTotaleRevenue, "", "", dataset_id, ABTestID)
-        listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID)
-
-        session["abVisualistation"] = [jobABvisualisations.id, recos.id, totPurch.id, totRev.id, listUsers.id]
-
     return render_template('visualizations.html', app_data=app_data)
 
-@app.route("/visualizations/request", methods=["GET", "POST"])
-def visualizationsRequest():
-
-    if request.method == "POST":
-        data = request.get_json()
-        dataset_id = data["dataset_id"]
-        ABTestID = data["abtest_id"]
-        start = data["startdate"]
-        end = data["enddate"]
-
-        recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, start, end, dataset_id, 5, ABTestID)
-        totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, start, end, dataset_id, 5, ABTestID)
-        totRev = abTestQueue.enqueue(getTotaleRevenue, start, end, dataset_id, ABTestID)
-        listUsers = abTestQueue.enqueue(getListOfActiveUsers, start, end, dataset_id, ABTestID)
-
-        session["abVisualistationRequest"] = [recos.id, totPurch.id, totRev.id, listUsers.id]
-
-    return {}
-
-@app.route("/visualizations/updateRequest")
-def visualizationsUpdateRequest():
-    if "abVisualistationRequest" in session:
-        job = session["abVisualistationRequest"]
-        job_ = abTestQueue.fetch_job(job[-1])
-        if job_ is not None:
-            if str(job_.get_status()) == "finished":
-                # visualization = abTestQueue.fetch_job(job[0]).result
-                topkReco = abTestQueue.fetch_job(job[0]).result
-                topkPurchases = abTestQueue.fetch_job(job[1]).result
-                totRev = abTestQueue.fetch_job(job[2]).result
-                listUsers, listUsersSort, totUsers = abTestQueue.fetch_job(job[3]).result
-
-                return {"topkRecommendations": topkReco, "topkPurchases": topkPurchases,
-                        "totaleRevenue": totRev, "totaleUsers": totUsers, "listUsers": listUsers, "sortingOrder": listUsersSort}
-    return {}
 
 @app.route("/visualizations/update")
 def visualizationsUpdate():
@@ -407,10 +356,10 @@ def visualizationsUpdate():
                 topkReco = abTestQueue.fetch_job(job[1]).result
                 topkPurchases = abTestQueue.fetch_job(job[2]).result
                 totRev = abTestQueue.fetch_job(job[3]).result
-                listUsers, listUsersSort, totUsers = abTestQueue.fetch_job(job[4]).result
+                listUsers, totUsers = abTestQueue.fetch_job(job[4]).result
 
                 return {"visualization": visualization, "topkRecommendations": topkReco, "topkPurchases": topkPurchases,
-                        "totaleRevenue": totRev, "totaleUsers": totUsers, "listUsers": listUsers, "sortingOrder": listUsersSort}
+                        "totaleRevenue": totRev, "totaleUsers": totUsers, "listUsers": listUsers}
     return {}
 
 
@@ -432,11 +381,11 @@ def testlist():
         algos = {}  # per (key, value), de value bevat op index 0 de naam van de algoritme en alles erna zijn de
         # parameters.
         cursor.execute("SELECT a.result_id, a.name, a.param_name FROM Algorithm a,  Result r WHERE a.abtest_id = %s "
-                       "AND r.creator = %s AND a.abtest_id = r.abtest_id", (testList[i]['abtest_id'], creator))
+                       "AND r.creator = %s", (testList[i]['abtest_id'], creator))
         for row in cursor:
             if row[0] in algos:
-                algos[row[0]].append(row[2])
-                # algos[row[0]] = l
+                l = algos[row[0]].append(row[2])
+                algos[row[0]] = l
             else:
                 algos[row[0]] = [row[1], row[2]]
         testList[i]['algorithms'] = algos
@@ -684,7 +633,6 @@ def logout():
     session.pop('loggedin', None)
     session.pop('username', None)
     session.pop('abVisualistation', None)
-    session.pop('abVisualistationRequest', None)
     session.pop('userpage', None)
     # session.pop('_flashes', None)
     return redirect(url_for('login_user'))
