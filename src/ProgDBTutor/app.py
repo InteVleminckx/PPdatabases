@@ -370,7 +370,8 @@ def testlist():
     creator = session['username']
     testList = []
     cursor = connection.get_cursor()
-    cursor.execute("SELECT a.abtest_id, r.dataset_id, d.dataset_name, a.start_point, a.end_point, a.stepsize, "
+    cursor.execute("SELECT disticnt(a.abtest_id), r.dataset_id, d.dataset_name, a.start_point, a.end_point, "
+                   "a.stepsize, "
                    "a.topk FROM ABTest a, Dataset d, Result r WHERE r.creator = %s AND a.abtest_id = r.abtest_id AND "
                    "a.result_id = r.result_id AND r.dataset_id = d.dataset_id", (creator,))
     for row in cursor:
@@ -387,7 +388,6 @@ def testlist():
             if row[0] in algos.keys():
                 algos[row[0]].append([row[2], row[3]])
             else:
-                l = [row[1], [row[2], row[3]]]
                 algos[row[0]] = [row[1], [row[2], row[3]]]
         testList[i]['algorithms'] = algos
 
