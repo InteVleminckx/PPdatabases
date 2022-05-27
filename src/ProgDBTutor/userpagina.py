@@ -103,9 +103,6 @@ def getUserInformation(abtest_id, dataset_id, user_id):
 
         startDate += simulationStep
 
-    # print(history)
-    # print(recommendations)
-    # print(purchases)
     jsPur = json.dumps(purchases)
     jsReco = json.dumps(recommendations)
     jsHistory = json.dumps(history)
@@ -114,6 +111,15 @@ def getUserInformation(abtest_id, dataset_id, user_id):
     for i in range(topk + 1):
         topk_.append(i)
     jsTopk = json.dumps(topk_)
+
+    print(jsReco)
+    print(jsHistory)
+    print(startAB)
+    print(endAB)
+    print(jsPur)
+    print(jsTopk)
+    print(jsDates)
+
     return jsReco, jsHistory, startAB + " — " + endAB, jsPur, jsTopk, jsDates
 
 

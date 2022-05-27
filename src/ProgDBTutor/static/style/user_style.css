@@ -322,6 +322,7 @@ html, body{
 		transparent
 		transparent;
 	transform: rotate(-135deg);
+    cursor: pointer;
 }
 
 .arrowLeft:before, .arrowLeft:after {
@@ -373,6 +374,7 @@ html, body{
 		transparent
 		transparent;
 	transform: rotate(45deg);
+    cursor: pointer;
 }
 
 .arrowRight:before, .arrowRight:after {
@@ -422,3 +424,4 @@ html, body{
     align-items: center;
     width: 200px;
 }
+
