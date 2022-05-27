@@ -380,14 +380,15 @@ def testlist():
     for i in range(len(testList)):
         algos = {}  # per (key, value), de value bevat op index 0 de naam van de algoritme en alles erna zijn de
         # parameters.
-        cursor.execute("SELECT a.result_id, a.name, a.param_name FROM Algorithm a,  Result r WHERE a.abtest_id = %s "
+        cursor.execute("SELECT a.result_id, a.name, a.param_name, a.value FROM Algorithm a,  Result r WHERE "
+                       "a.abtest_id = %s "
                        "AND r.creator = %s", (testList[i]['abtest_id'], creator))
         for row in cursor:
             if row[0] in algos:
-                l = algos[row[0]].append(row[2])
+                l = algos[row[0]].append([row[2], row[3]])
                 algos[row[0]] = l
             else:
-                algos[row[0]] = [row[1], row[2]]
+                algos[row[0]] = [row[1], [row[2], row[3]]]
         testList[i]['algorithms'] = algos
 
     return render_template('testlist.html', app_data=app_data, testList=testList)
