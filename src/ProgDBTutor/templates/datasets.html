@@ -44,7 +44,7 @@
     <div class="_container0" id="_container0" style="display: block;">
         <div class="_row">
             <div class="_column">
-                <select class="c0_select" id="datasetSelection" name="datasetSelection" onchange="sendData()">
+                <select class="c0_select" id="datasetSelection" name="datasetSelection" onchange="sendData();goToABTestPage();">
                     {% for id, name in names %}
                         <option value="{{ id }}">dataset: {{ name }}</option>
                     {% endfor %}
@@ -215,26 +215,6 @@ function goToABTestPage() {
     console.log(ds);
     var link = document.getElementById('abtestlink');
     link.href += '?selected_ds_id=' + ds;
-
-
-    {#window.location.href="{{ url_for('services', selectedDataset='ds') }}".replace("ds", ds);#}
-    {#window.location.href="{{ url_for('services', selected_ds_id='ds') }}".replace("ds", ds);#}
-    {#$.ajax({#}
-    {#        type: 'POST',#}
-    {#        url: '/datasets/redirectabtestpage',#}
-    {#        data: {'ds_id' : ds},#}
-    {#        contentType: false,#}
-    {#        cache: false,#}
-    {#        processData: false,#}
-    {#        dataType: 'json',#}
-    {#        success: function(data) {#}
-    {#            console.log("Success!");#}
-    {#        },#}
-    {#    });#}
-    {#e.preventDefault();#}
-    {#window.location.href = "https://www.google.com";#}
-    {#window.location.reload();#}
-
 }
 
 $(function() {

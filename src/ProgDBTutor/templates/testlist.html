@@ -75,7 +75,7 @@ tr {
         <tbody style="overflow-y: auto;">
         {% for item in testList %}
             <tr style="text-align: center" id="{{ item['abtest_id'] }}">
-                <td style="text-decoration: underline;color: #0000EE;cursor: pointer ">{{ item['abtest_id'] }}</td>
+                <td style="text-decoration: underline;color: #0000EE;cursor: pointer;" onclick="goToTestList({{ item['abtest_id'] }}, {{ item['dataset_id'] }});">{{ item['abtest_id'] }}</td>
                 <td>{{ item['dataset_id'] }}</td>
                 <td>{{ item['dataset_name'] }}</td>
                 <td>{{ item['startingpoint'] }}</td>
@@ -84,10 +84,19 @@ tr {
                 <td>{{ item['topk'] }}</td>
                 <td>Algorithms</td>
                 <td><div style="color:red; cursor: pointer;" onclick="removeABTest({{ item['dataset_id'] }})">&times;</div></td>
-
             </tr>
         {% endfor %}
-
+        <tr style="text-align: center" id="15">
+            <td style="text-decoration: underline;color: #0000EE;cursor: pointer;" onclick="goToTestList(15, 10);">15</td>
+            <td>10</td>
+            <td>name</td>
+            <td>a</td>
+            <td>b</td>
+            <td>5</td>
+            <td>10</td>
+            <td>Algorithms</td>
+            <td><div style="color:red; cursor: pointer;">&times;</div></td>
+        </tr>
 {#        <tr style="text-align: center" id="1">#}
 {#            <td>10</td>#}
 {#            <td>2</td>#}
@@ -254,7 +263,6 @@ tr {
 
 function removeABTest(abtest_id) {
     // Remove from the HTML
-    {#console.log(e.target.parentElement.id);#}
     var row = document.getElementById(abtest_id.toString());
     row.remove();
 
@@ -266,11 +274,17 @@ function removeABTest(abtest_id) {
         cache: false,
         processData: false,
         success: function(data) {
-            console.log(data);
 
         },
     });
 
+}
+
+function goToTestList(abtest_id, dataset_id) {
+    url = window.location.href
+    url_string = url.substring(0, url.lastIndexOf("/"))
+    window.location.href = url_string + "/visualizations" + "?abtest_id=" + abtest_id.toString() + "&dataset_id=" + dataset_id.toString()// de redirect naar andere pagina in javascript
+    console.log(window.location.href)
 }
 
 </script>
