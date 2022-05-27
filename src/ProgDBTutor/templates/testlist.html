@@ -331,14 +331,14 @@ function showAlgorithms(algorithm_values) {
         let K = "/";
         let normalize = "/";
         if (val[0] === "popularity") {
-            windowsize = val[1]['windowsize'];
+            windowsize = val[1]['window'];
             retraininterval = val[1]['retraininterval'];
         }
         else if (val[0] === "recency") {
             retraininterval = val[1]['retraininterval'];
         }
         else {
-            windowsize = val[1]['windowsize'];
+            windowsize = val[1]['window'];
             retraininterval = val[1]['retraininterval'];
             K = val[1]['k'];
             normalize = val[1]['normalize'];
