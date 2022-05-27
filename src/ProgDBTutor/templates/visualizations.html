@@ -492,7 +492,7 @@
         for (const [key, value] of Object.entries(dataPurchases)){
 
             html_ += "<tr>"
-            html_ += "<td data-label=\"Item-id\">"+ value["item"] +"</td>"
+            html_ += "<td style='cursor: pointer' onclick='redirectToItemPage(" + value["item"] + ")' data-label=\"Item-id\">"+ value["item"] +"</td>"
             html_ += "<td data-label=\"Count\">"+ value["count"] +"</td>"
             html_ += "</tr>"
 
@@ -513,7 +513,7 @@
             for (const recommendation of value["recommendations"]) {
 
                html_ += "<div class=\"topkRecommendationRow\">"
-               html_ += "     <div class=\"topkRecommendationColumn\">" + recommendation["item"] + "</div>"
+               html_ += "     <div style='cursor: pointer' onclick='redirectToItemPage(" + recommendation["item"] + ")' class=\"topkRecommendationColumn\">" + recommendation["item"] + "</div>"
                html_ += "     <div class=\"topkRecommendationColumn\">" + recommendation["count"] + "</div>"
                html_ += "</div>"
 
@@ -608,6 +608,13 @@
         let url__string = url__.replace('http://','').replace('https://','').split(/[/?#]/)[0];
         window.location.href = "/usersection?customer_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();
 
+    }
+
+    function redirectToItemPage(id) {
+        console.log(id)
+        let url__ = window.location.href
+        let url__string = url__.replace('http://','').replace('https://','').split(/[/?#]/)[0];
+        window.location.href = "/itemsection?item_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();
     }
 
 
