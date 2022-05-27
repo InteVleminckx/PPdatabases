@@ -196,7 +196,7 @@ def getAdmin(adminName):
 """
 This function adds the given user object to the database.
 """
-def add_user(user_obj):
+def addUser(user_obj):
     global dbconnect
     cursor = dbconnect.get_cursor()
     try:

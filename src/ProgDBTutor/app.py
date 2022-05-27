@@ -324,18 +324,15 @@ def fileupload():
         return headerDict
 
 
-@app.route("/datasetupload")
-def datasetupload(rowData):
+@app.route("/datasetRemove", methods=['GET', 'POST'])
+def datasetRemove():
     cursor = connection.get_cursor()
-    # remove dataset(s) with id=rowData
-    try:
-        cursor.execute("DELETE FROM Dataset WHERE dataset_id = %s", (rowData))
-        connection.commit()
-    except:
-        connection.rollback()
+    dataset_name = request.form.get('datasetSelection')
+
+    if 'loggedin' in session:
+        cursor.execute("DELETE FROM Dataset WHERE dataset_name = %s", dataset_name)
 
     return redirect(url_for('datasets'))
-
 
 # ----------------- A/B-test Visualization page -----------------#
 
@@ -370,7 +367,7 @@ def testlist():
     creator = session['username']
     testList = []
     cursor = connection.get_cursor()
-    cursor.execute("SELECT disticnt(a.abtest_id), r.dataset_id, d.dataset_name, a.start_point, a.end_point, "
+    cursor.execute("SELECT distinct(a.abtest_id), r.dataset_id, d.dataset_name, a.start_point, a.end_point, "
                    "a.stepsize, "
                    "a.topk FROM ABTest a, Dataset d, Result r WHERE r.creator = %s AND a.abtest_id = r.abtest_id AND "
                    "a.result_id = r.result_id AND r.dataset_id = d.dataset_id", (creator,))
@@ -381,16 +378,18 @@ def testlist():
     for i in range(len(testList)):
         algos = {}  # per (key, value), de value bevat op index 0 de naam van de algoritme en alles erna zijn de
         # parameters.
-        cursor.execute("SELECT a.result_id, a.name, distinct(a.param_name), a.value FROM Algorithm a,  Result r WHERE "
+        cursor.execute("SELECT distinct(a.param_name), a.result_id, a.name, a.value FROM Algorithm a,  Result r WHERE "
                        "a.abtest_id = %s "
                        "AND r.creator = %s", (testList[i]['abtest_id'], creator))
         for row in cursor:
-            if row[0] in algos.keys():
-                algos[row[0]].append([row[2], row[3]])
+            if row[1] in algos.keys():
+                algos[row[1]][1][row[0]] = row[3]
             else:
-                algos[row[0]] = [row[1], [row[2], row[3]]]
+                algos[row[1]] = [row[2], {row[0]: row[3]}]
+
         testList[i]['algorithms'] = algos
 
+    print(testList)
     return render_template('testlist.html', app_data=app_data, testList=testList)
 
 
@@ -586,7 +585,7 @@ def add_user():
         user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username,
                                  email=user_email, password=generate_password_hash(user_password, method='sha256'))
         print('Adding {}'.format(user_obj.to_dct()))
-        user_obj = add_user(user_obj)
+        addUser(user_obj)
         # login_user(user_obj, remember=True)
 
         flash('Account succesfully registered!', category='success')

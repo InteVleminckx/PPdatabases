@@ -239,6 +239,24 @@ $(function() {
     });
 });
 
+$(function() {
+       $('#delete_btn').click(function() {
+           var form_data = new FormData($('form1')[0]);
+           console.log(form_data);
+           $.ajax({
+               type: 'POST',
+               url: '/datasetRemove',
+               data: form_data,
+               contentType: false,
+               cache: false,
+               processData: false,
+               success: function(data) {
+
+               },
+            });
+       });
+   });
+
 var attr_types = JSON.parse({{ attr_types | tojson | safe }});
 
 function generateAttrHtml(data) {
