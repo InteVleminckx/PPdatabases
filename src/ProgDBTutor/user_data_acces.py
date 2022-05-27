@@ -640,7 +640,7 @@ def getItemPurchases(dataset_id, item_id, date):
 def getRecencyItem(dataset_id, interval_start, interval_end, top_k):
     global dbconnect
     cursor = dbconnect.get_cursor()
-    cursor.execute("SELECT item_id\
+    cursor.execute("SELECT distinct item_id, t_dat\
                    FROM Interaction \
                    WHERE t_dat BETWEEN %s AND %s AND dataset_id = %s \
                    ORDER BY t_dat DESC LIMIT %s;", (interval_start, interval_end, dataset_id, top_k))
