@@ -384,7 +384,6 @@ def testlist():
             if row[0] in algos.keys():
                 algos[row[0]].append([row[2], row[3]])
             else:
-                l = [row[1], [row[2], row[3]]]
                 algos[row[0]] = [row[1], [row[2], row[3]]]
         testList[i]['algorithms'] = algos
 
