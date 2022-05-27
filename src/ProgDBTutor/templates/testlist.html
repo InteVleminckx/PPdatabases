@@ -333,17 +333,17 @@ function showAlgorithms(algorithm_values) {
         let K = "/";
         let normalize = "/";
         if (key === "popularity") {
-            windowsize = val[0];
-            retraininterval = val[1];
+            windowsize = val[0][1];
+            retraininterval = val[1][1];
         }
         else if (key === "recency") {
-            retraininterval = val[0];
+            retraininterval = val[0][1];
         }
         else {
-            windowsize = val[1];
-            retraininterval = val[3];
-            K = val[0];
-            normalize = val[2];
+            windowsize = val[1][1];
+            retraininterval = val[3][1];
+            K = val[0][1];
+            normalize = val[2][1];
         }
 
         _html += "<tr style=\"text-align: center\" id=\"" + key + "\">";
@@ -353,10 +353,9 @@ function showAlgorithms(algorithm_values) {
         _html += "<td>" + retraininterval + "</td>";
         _html += "</tr>";
 
-        attrElem.innerHTML += _html;
 
     }
-
+    attrElem.innerHTML += _html;
 }
 
 </script>
