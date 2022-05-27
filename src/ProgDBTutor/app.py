@@ -68,6 +68,7 @@ abtest_id = getMaxABTestID() + 1
 
 file_attr_types = ["string", "float", "int", "image_url"]
 
+
 jsonData = dict()  # dictionary om de general parameters voor de ab-test pagina op te slaan
 
 # login_manager = LoginManager()
@@ -283,8 +284,13 @@ def datasets():
 
         # handelRequests(app, session, request, datasetQueue, type_list)
         jobs = handelRequests(app, session, request, datasetQueue, type_list)
+        if 'jobsDataset' not in session:
+            session['jobsDataset'] = []
         if jobs:
-            session['jobsDataset'] = jobs
+            session['jobsDataset'] = []
+            c = session['jobsDataset']
+            c.append(jobs)
+            session['jobsDataset'] = c
         dataset_names = getDatasets()
 
         return render_template('datasets.html', app_data=app_data, names=dataset_names,
@@ -295,16 +301,31 @@ def datasets():
 @app.route("/datasets/update")
 def datasetUpdate():
     if 'jobsDataset' in session:
-        jobs = session["jobsDataset"]
-        finished = 0
-        for job in jobs:
-            j = datasetQueue.fetch_job(job)
-            if j is not None:
-                if str(j.get_status()) == "finished":
-                    finished += 1
-
-        if finished == len(jobs) and finished != 0:
+        finished = True
+        notInQueue = True
+        if len(session["jobsDataset"]) == 0:
             return 'done'
+
+        for i in range(len(session["jobsDataset"])):
+            for key, value in session["jobsDataset"][i]:
+                j = datasetQueue.fetch_job(key)
+                if j is not None:
+                    notInQueue = False
+                    if str(j.get_status()) == "finished":
+                        l = session["jobsDataset"][i]
+                        l[key] = True
+                        session["jobsDataset"] = l
+            if notInQueue:
+                l = session["jobsDataset"]
+                l.pop(i)
+                session["jobsDataset"] = l
+
+            for key, value in session["jobsDataset"][i]:
+                if not value:
+                    finished = False
+
+            if finished:
+                return 'done'
     return 'notDone'
 
 
@@ -611,6 +632,8 @@ def login_user():
                 flash('Incorrect password, try again.', category='error')
         else:
             flash('Username does not exist.', category='error')
+
+    session['jobsDataset'] = []
 
     return render_template('login.html', app_data=app_data)
 
