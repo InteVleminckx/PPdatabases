@@ -532,7 +532,7 @@
 
         for (const id of sortedUserList[sortUsers]){
             html_ += "<tr>"
-            html_ += "<td data-label=\"Active user\">"+ id +"</td>"
+            html_ += "<td style='cursor: pointer' onclick='redirectToUserPage(" + id + ")' data-label=\"Active user\">"+ id +"</td>"
             html_ += "<td data-label=\"Total purchases\">"+ listUsers[id]["totalePurchases"] +"</td>"
             html_ += "<td data-label=\"Purchases over time-period\">"+ listUsers[id]["purchasesOverTime"] +"</td>"
             html_ += "<td data-label=\"CTR\">"+ listUsers[id]["CTR"] +"</td>"
@@ -602,9 +602,14 @@
 
     }
 
-    {#function getRowValue(value){#}
-    {##}
-    {# } #}
+    function redirectToUserPage(id) {
+        console.log(id)
+        let url__ = window.location.href
+        let url__string = url__.replace('http://','').replace('https://','').split(/[/?#]/)[0];
+        window.location.href = "/usersection?customer_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();
+
+    }
+
 
     window.addEventListener('load', function () {
         let fetchInterval = 1000;
