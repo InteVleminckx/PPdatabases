@@ -327,8 +327,7 @@ def fileupload():
 @app.route("/datasetRemove", methods=['GET', 'POST'])
 def datasetRemove():
     cursor = connection.get_cursor()
-    data = request.form.get('d')
-    dataset_name = data['dataset_name']
+    dataset_name = request.form.get('datasetSelection')
 
     if 'loggedin' in session:
         cursor.execute("DELETE FROM Dataset WHERE dataset_name = %s", dataset_name)
