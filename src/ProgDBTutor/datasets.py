@@ -26,7 +26,7 @@ def handelRequests(app, session, request, taskQueue, type_list):
 
     # Add dataset form
     elif request.method == 'POST':
-        addDatasetHere(app, session, taskQueue, type_list)
+        # addDatasetHere(app, session, taskQueue, type_list)
         return addDatasetHere(app, session, taskQueue, type_list)
     else:
         pass
@@ -34,11 +34,17 @@ def handelRequests(app, session, request, taskQueue, type_list):
 
 def addDatasetHere(app, session, tq, type_list):
     if session['username'] == 'admin':  # checken of de user de admin is
+        print("1")
         dataset_id = importDataset(tq)
+        print("2")
         id1 = importArticles(app, dataset_id, tq, type_list)
+        print("3")
         id2 = importCustomers(app, dataset_id, tq, type_list)
+        print("4")
         id3 = importPurchases(app, dataset_id, tq)
+        print("5")
         tq.enqueue(createDatasetIdIndex, job_timeout=600)
+        print("6")
         return {id1: False, id2: False, id3: False}
     else:
         flash("You need admin privileges to upload a dataset", category='error')
@@ -68,9 +74,15 @@ def getDatasetInformation(dataset_id):
     return dictNumbers
 
 def importDataset(tq):
-    datasetname = request.form['ds_name']
+    print("1.1")
+    print(request.form)
+    datasetname = request.form['dataset_name']
+
+    print("1.2")
     datasetId = int(getMaxDatasetID()) + 1
+    print("1.3")
     tq.enqueue(addDataset, datasetId, datasetname)
+    print("1.4")
     return datasetId
 
 
@@ -85,6 +97,7 @@ def getCSVHeader(app, csv_filename):
 
 def importArticles(app, dataset_id, tq, type_list): #\
 
+    print(request.files)
     af = request.files['articles_file']
     uploaded_file = secure_filename(af.filename)
     af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)

@@ -263,7 +263,10 @@ def datasets():
     if 'loggedin' in session:
 
         type_list = {}
+        # print("enter")
+
         if request.method == 'POST':
+            # print(request.form)
             type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '',
                          'customers_name_column': ''}
             type_item = 0
@@ -271,22 +274,29 @@ def datasets():
                 type_list['articles_types'].append(request.form.get(f"{type_item}"))
                 type_item += 1
             type_item = -1
+            # print("1")
             while request.form.get(f"{type_item}"):
                 type_list['customers_types'].append(request.form.get(f"{type_item}"))
                 type_item -= 1
             art_col_name = request.form.get("articles_name_column")
+            # print("2")
             if art_col_name:
                 type_list['articles_name_column'] = art_col_name
             cust_col_name = request.form.get("customers_name_column")
+            # print("3")
             if cust_col_name:
                 type_list['customers_name_column'] = cust_col_name
 
-        handelRequests(app, session, request, datasetQueue, type_list)
+            # print("4")
+
+        # handelRequests(app, session, request, datasetQueue, type_list)
         jobs = handelRequests(app, session, request, datasetQueue, type_list)
+        # print("4.5")
         if jobs:
             session['jobsDataset'] = jobs
+        # print("5")
         dataset_names = getDatasets()
-
+        # print("okee")
         return render_template('datasets.html', app_data=app_data, names=dataset_names,
                                attr_types=json.dumps(file_attr_types))
     return redirect(url_for('login_user'))
@@ -381,14 +391,15 @@ def testlist():
         algos = {}  # per (key, value), de value bevat op index 0 de naam van de algoritme en alles erna zijn de
         # parameters.
         cursor.execute("SELECT a.result_id, a.name, a.param_name FROM Algorithm a,  Result r WHERE a.abtest_id = %s "
-                       "AND r.creator = %s", (testList[i]['abtest_id'], creator))
+                       "AND r.creator = %s AND r.abtest_id = a.abtest_id", (testList[i]['abtest_id'], creator))
         for row in cursor:
             if row[0] in algos:
-                l = algos[row[0]].append(row[2])
-                algos[row[0]] = l
+                algos[row[0]].append(row[2])
             else:
                 algos[row[0]] = [row[1], row[2]]
         testList[i]['algorithms'] = algos
+
+    print(testList)
 
     return render_template('testlist.html', app_data=app_data, testList=testList)
 
@@ -414,7 +425,7 @@ def usersectionUpdate():
         print(job.get_status())
         if job is not None:
             if str(job.get_status()) == "finished":
-                recommendations, history, interval, graph, topkListprint, dates = abTestQueue.fetch_job(userpage[0])
+                recommendations, history, interval, graph, topkListprint, dates = job.result
                 return {"recommendations": recommendations, "history": history, "interval": interval, "graph": graph,
                         "topkListprint": topkListprint, "dates": dates}
     return {}

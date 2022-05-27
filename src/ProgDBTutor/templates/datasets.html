@@ -38,166 +38,181 @@
     </div>
 </nav>
 
-<div class="giantcontainer">
 
-    <form method="GET" action="" name="form1">
-    <div class="_container0" id="_container0" style="display: block;">
-        <div class="_row">
-            <div class="_column">
-                <select class="c0_select" id="datasetSelection" name="datasetSelection" onchange="sendData();goToABTestPage();">
-                    {% for id, name in names %}
-                        <option value="{{ id }}">dataset: {{ name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
 
-            <div class="_column">
-                <button class="c0_button" role="button" id="add_btn" name="add_btn" onclick="toggleDatasetView();">
-                    Add dataset
-                </button>
-            </div>
 
-        </div>
-{#    </div>#}
+<div class="container__page" id="datasetpage">
 
-{#    <div class="_container1" id="_container1" style="display: block;">#}
-        <div class="_row">
-            <div class="_column">
-                <div class="c1_statcontainer" style="margin-left: 50px;">
-                    <h2>Number of customers:</h2>
-                    <p id="nr_of_customers">0</p>
+{######################################################################################################################}
+{#                                                    FORM1                                                           #}
+{######################################################################################################################}
+
+    <div class="container__section" id="section1" style="display: block">
+        <form method="GET" action="" name="form1" id="form1">
+            <div class="container__layer" id="form1_layer1">
+                <div class="container__column" id="form1_layer1_column1">
+                    <select class="container__select" name="datasetSelection" id="datasetSelection" onchange="sendData(); goToABTestPage()">
+                        {% for id, name in names %}
+                            <option value="{{ id }}">Dataset: {{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="container__column" id="form1_layer1_column2">
+                    <button class="container__button" role="button" id="add_btn" name="add_btn" onclick="toggleDatasetView()">
+                        Add dataset
+                    </button>
                 </div>
             </div>
-            <div class="_column">
-                <div class="c1_statcontainer">
-                    <h2>Number of items:</h2>
-                    <p id="nr_of_items">0</p>
+            <div class="container__layer" id="form1_layer2">
+                <div class="container__column" id="form1_layer2_column1">
+                    <div class="container__head" id="form1_layer2_column1_head">
+                        <h2>Number of customers</h2>
+                    </div>
+                    <div class="container__content" id="form1_layer2_column1_content">
+                        <p id="nr_of_customers">0</p>
+                    </div>
                 </div>
-            </div>
-            <div class="_column">
-                <div class="c1_statcontainer" style="margin-right: 50px;">
-                    <h2>Number of interactions:</h2>
-                    <p id="nr_of_interactions">0</p>
+                <div class="container__column" id="form1_layer2_column2">
+                    <div class="container__head" id="form1_layer2_column2_head">
+                        <h2>Number of items</h2>
+                    </div>
+                    <div class="container__content" id="form1_layer2_column2_content">
+                        <p id="nr_of_items">0</p>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="_row" id="dashboard_div">
-            <div class="_column">
-                <div class="c1_graphcontainer"  style="margin-left: 50px;" id="graph-active">
-
-                </div>
-
-            </div>
-            <div class="_column">
-                <div class="c1_graphcontainer"   id="graph-distr">
-
-                </div>
-            </div>
-            <div class="_column">
-                <div class="c1_graphcontainer" style="margin-right: 50px;" id="graph-ts">
-
-                </div>
-            </div>
-        </div>
-{#    </div>#}
-
-{#    <div class="_container2" id="_container2" style="display: block;">#}
-        <div class="_row">
-            <div class="_column">
-                <button class="c2_button_" style="margin-left: 50px;" role="button" id="abtestpagelink" name="abtestpagelink" >
-                    <a class="abtestlink" id="abtestlink" href="services"> Go to A/B-test page with this dataset </a>
-                </button>
-            </div>
-            <div class="_column">
-                <button class="c2_button_" style="margin-right: 50px;" type="submit" role="button" id="delete_btn" name="delete_btn">
-                    Delete dataset
-                </button>
-            </div>
-        </div>
-    </div>
-    </form>
-    <div class="_container3" id="_container3" style="display: none;">
-        <form id="upload-files" method="POST" action="" enctype="multipart/form-data" name="form2">
-            <div class="_row">
-                <div class="_column">
-                    <div class="c3_namecontainer" style="margin-left: 50px;margin-right: 50px">
-                        <input type="text" id="ds_name" name="ds_name" placeholder="Enter dataset name" required>
+                <div class="container__column" id="form1_layer2_column3">
+                    <div class="container__head" id="form1_layer2_column3_head">
+                        <h2>Number of interactions</h2>
+                    </div>
+                    <div class="container__content" id="form1_layer2_column3_content">
+                        <p id="nr_of_interactions">0</p>
                     </div>
                 </div>
             </div>
-
-            <div class="_row">
-
-                <div class="_column">
-                    <div class="c3_filecontainer" style="margin-left: 50px;">
-                        <h2> Articles file</h2>
-                        <div id="btn1" onclick="getFile1()"> Choose file </div>
-                        <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub1(this);">
-                        </div>
-                        <div class="typeformcontainer" id="typeformcontainer1">
-                            <section id="articles_attr_section">
-                            </section>
-                        </div>
-                        <div class="choosenamecontainer">
-                            <h4> Column that should serve as name:</h4>
-                            <section id="articles_cname_section">
-                            </section>
-                        </div>
+            <div class="container__layer" id="form1_layer3">
+                <div class="container__column" id="form1_layer3_column1">
+                    <div class="container__head" id="form1_layer3_column1_head">
+                        <h2>Active users</h2>
+                    </div>
+                    <div class="container__content" id="form1_layer3_column1_content">
+                        <div class="container__graph" id="graph_active"></div>
+                    </div>
+                </div>
+                <div class="container__column" id="form1_layer3_column2">
+                    <div class="container__head" id="form1_layer3_column2_head">
+                        <h2>Price distributions</h2>
+                    </div>
+                    <div class="container__content" id="form1_layer3_column2_content">
+                        <div class="container__graph" id="graph_distribution"></div>
                     </div>
                 </div>
 
-                <div class="_column">
-                    <div class="c3_filecontainer">
-                        <h2> Purchases file</h2>
-                        <div id="btn2" onclick="getFile2()"> Choose file </div>
-                        <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" id="purchases_file" name="purchases_file" value="" accept=".csv" required onchange="sub2(this)">
-                        </div>
+                <div class="container__column" id="form1_layer3_column3">
+                    <div class="container__head" id="form1_layer2_column3_head">
+                        <h2>Timestamp distributions</h2>
+                    </div>
+                    <div class="container__content" id="form1_layer2_column3_content">
+                        <div class="container__graph" id="graph_timestamps"></div>
                     </div>
                 </div>
 
-                <div class="_column">
-                    <div class="c3_filecontainer" style="margin-right: 50px;">
-                        <h2> Customers file</h2>
-                        <div id="btn3" onclick="getFile3()"> Choose file </div>
-                        <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" id="customers_file" name="customers_file" value="" accept=".csv" required onchange="sub3(this)">
-                        </div>
-                        <div class="typeformcontainer" id="typeformcontainer2">
-                            <section id="customers_attr_section">
-                            </section>
-                        </div>
-                        <div class="choosenamecontainer">
-                            <h4> Column that should serve as name:</h4>
-                            <section id="customers_cname_section">
-                            </section>
-                        </div>
-                    </div>
-                </div>
             </div>
-
-            <div class="_row">
-                <div class="_column">
-                    <div class="c3_button" style="margin-left: 50px">
-                        <button type="submit" role="button">
-                            Add dataset
-                        </button>
-                    </div>
+            <div class="container__layer" id="form1_layer4">
+                <div class="container__column" id="form1_layer4_column1">
+                    <button class="container__button" id="abtestpagelink" name="abtestpagelink" role="button">
+                        <a href="services" class="container__link" id="link__abtest">
+                            Go to A/B-test page with this dataset
+                        </a>
+                    </button>
                 </div>
-                <div class="_column">
-                    <div class="c3_button" style="margin-right: 50px">
-                        <button type="submit" role="button" onclick="toggleDatasetView()">
-                            Cancel
-                        </button>
-                    </div>
+                <div class="container__column" id="form1_layer4_column2">
+                    <button class="container__button" id="delete_btn" name="delete_btn" role="button">
+                        Delete dataset
+                    </button>
                 </div>
             </div>
         </form>
     </div>
 
-</div>
+{######################################################################################################################}
+{#                                                    FORM2                                                           #}
+{######################################################################################################################}
 
+    <div class="container__section" id="section2" style="display: none">
+        <form method="POST" action="" name="form2" id="form2" enctype="multipart/form-data">
+            <div class="container__layer" id="form2_layer1">
+                <div class="container__column" id="form2_layer1_column1">
+                    <input class="container__input" type="text" id="dataset_name" name="dataset_name" placeholder="Enter dataset name" required>
+                </div>
+            </div>
+            <div class="container__layer" id="form2_layer2">
+                <div class="container__column" id="form2_layer2_column1">
+                    <div class="container__head" id="form2_layer2_column1_head">
+                        <h2>Articles file</h2>
+                    </div>
+                    <div class="container__content" id="form2_layer2_column1_content">
+                        <div class="container__button" id="articles_button" onclick="getFile1()">Choose file</div>
+                        <div style="height: 0px; width: 0px; overflow: hidden;">
+                            <input class="container__input" type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub1(this);">
+                        </div>
+                        <div class="container__typechecker" id="articles_typechecker">
+                            <section id="articles_typepicker"></section>
+                        </div>
+                        <div class="container__namepicker" id="articles_namepicker">
+                            <h4>Column that should serve as name:</h4>
+                            <section id="articles_picker"></section>
+                        </div>
+                    </div>
+                </div>
+                <div class="container__column" id="form2_layer2_column2">
+                    <div class="container__head" id="form2_layer2_column2_head">
+                        <h2>Purchases file</h2>
+                    </div>
+                    <div class="container__content" id="form2_layer2_column2_content">
+                        <div class="container__button" id="purchases_button" onclick="getFile2()">Choose file</div>
+                        <div style="height: 0px; width: 0px; overflow: hidden;">
+                            <input type="file" class="container__input" id="purchases_file" name="purchases_file" value="" accept=".csv" required onchange="sub2(this)">
+                        </div>
+                    </div>
+                </div>
+                <div class="container__column" id="form2_layer2_column3">
+                    <div class="container__head" id="form2_layer2_column3_head">
+                        <h2>Customers file</h2>
+                    </div>
+                    <div class="container__content" id="form2_layer2_column3_content">
+                        <div class="container__button" id="customers_button" onclick="getFile3()">Choose file</div>
+                        <div style="height: 0px; width: 0px; overflow: hidden;">
+                            <input type="file" class="container__inputfile" id="customers_file" name="customers_file" value="" accept=".csv" required onchange="sub3(this)">
+                        </div>
+                        <div class="container__typechecker" id="customers_typechecker">
+                            <section id="customers_typepicker"></section>
+                        </div>
+                        <div class="container__namepicker" id="customers_namepicker">
+                            <h4>Column that should serve as name:</h4>
+                            <section id="customers_picker"></section>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="container__layer" id="form2_layer3">
+                <div class="container__column" id="form2_layer3_column1">
+                    <button class="container__button" id="adddataset_button" type="submit" role="button">
+                        Add dataset
+                    </button>
+                </div>
+                <div class="container__column" id="form2_layer3_column2">
+                    <button class="container__button" id="cancel_button" type="submit" role="button" onclick="toggleDatasetView()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{######################################################################################################################}
+
+</div>
 
 <script>
     {#var row_id = 0;#}
@@ -213,13 +228,13 @@ function goToABTestPage() {
     var ds = document.getElementById("datasetSelection");
     ds = ds.options[ds.selectedIndex].value
     console.log(ds);
-    var link = document.getElementById('abtestlink');
+    var link = document.getElementById('link__abtest');
     link.href += '?selected_ds_id=' + ds;
 }
 
 $(function() {
     $('#articles_file, #customers_file').change(function() {
-        var form_data = new FormData($('#upload-files')[0]);
+        var form_data = new FormData($('#form2')[0]);
         console.log(form_data);
         $.ajax({
             type: 'POST',
@@ -243,12 +258,12 @@ var attr_types = JSON.parse({{ attr_types | tojson | safe }});
 
 function generateAttrHtml(data) {
     if (data['changed'] === 'articles_attr') {
-        var attrElem = document.getElementById("articles_attr_section");
+        var attrElem = document.getElementById("articles_typepicker");
         var _html = "";
         var articles_attr_list = data['articles_attr'];
         var art_select_id = 0;
         for (var attribute of articles_attr_list) {
-            _html += "<div class=\"row\">";
+            _html += "<div class=\"container__typechecker_row\">";
             _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute + "\">" + attribute + "</label></div>";
             _html += "<div class=\"col-75\" style=\"width: 40%\">";
             _html += "<select class=\"\" id=\"" + art_select_id + "\" name=\"" + art_select_id + "\">";
@@ -264,7 +279,7 @@ function generateAttrHtml(data) {
 
         attrElem.innerHTML = _html;
 
-        var attrNameElem = document.getElementById("articles_cname_section");
+        var attrNameElem = document.getElementById("articles_picker");
         _html = "";
         _html += "<select class=\"\" id=\"articles_name_column\" name=\"articles_name_column\">";
         for (var attribute1 of articles_attr_list) {
@@ -274,13 +289,13 @@ function generateAttrHtml(data) {
         attrNameElem.innerHTML = _html;
     }
     else {
-        attrElem = document.getElementById("customers_attr_section");
+        attrElem = document.getElementById("customers_typepicker");
         _html = "";
         articles_attr_list = data['customers_attr'];
         var cust_select_id = -1;
 
         for (var attribute2 of articles_attr_list) {
-            _html += "<div class=\"row\">";
+            _html += "<div class=\"container__typechecker_row\">";
             _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute2 + "\">" + attribute2 + "</label></div>";
             _html += "<div class=\"col-75\" style=\"width: 40%\">";
             _html += "<select class=\"\" id=\"" + cust_select_id + "\" name=\"" + cust_select_id + "\">";
@@ -296,7 +311,7 @@ function generateAttrHtml(data) {
 
         attrElem.innerHTML = _html;
 
-        attrNameElem = document.getElementById("customers_cname_section");
+        attrNameElem = document.getElementById("customers_picker");
         _html = "";
         _html += "<select class=\"\" id=\"customers_name_column\" name=\"customers_name_column\">";
         for (var attribute3 of articles_attr_list) {
@@ -320,21 +335,21 @@ function getFile3() {
 function sub1(obj) {
     var file = obj.value;
     var filename = file.split("\\");
-    document.getElementById("btn1").innerHTML = filename[filename.length - 1];
+    document.getElementById("articles_button").innerHTML = filename[filename.length - 1];
     event.preventDefault();
 }
 
 function sub2(obj) {
     var file = obj.value;
     var filename = file.split("\\");
-    document.getElementById("btn2").innerHTML = filename[filename.length - 1];
+    document.getElementById("purchases_button").innerHTML = filename[filename.length - 1];
     event.preventDefault();
 }
 
 function sub3(obj) {
     var file = obj.value;
     var filename = file.split("\\");
-    document.getElementById("btn3").innerHTML = filename[filename.length - 1];
+    document.getElementById("customers_button").innerHTML = filename[filename.length - 1];
     event.preventDefault();
 }
 
@@ -397,9 +412,9 @@ function sendData() {
 
         google.charts.load('current', {'packages':['bar']});
         google.setOnLoadCallback(function () {
-            drawGraph(dataUsers, "graph-active", "Number of active users")
-            drawGraph(dataDist, "graph-distr", "Price distribution")
-            drawGraph(dataInteractions, "graph-ts", "Number of interactions")
+            drawGraph(dataUsers, "graph_active", "Number of active users")
+            drawGraph(dataDist, "graph_distribution", "Price distribution")
+            drawGraph(dataInteractions, "graph_timestamps", "Number of interactions")
         });
     });
 }
@@ -413,8 +428,6 @@ function drawGraph(data, name, title_){
               width: '94%'
           },
           legend: { position: 'none' },
-          chart: {
-            title: title_},
           axes: {
             x: {
               0: { side: 'top'} // Top x-axis.
@@ -439,20 +452,22 @@ function drawGraph(data, name, title_){
 {##}
 
 function toggleDatasetView() {
-    var c0 = document.getElementById("_container0");
-    var c3 = document.getElementById("_container3");
-    if (c0.style.display === "none") {
-        c0.style.display = "block";
-        c3.style.display = "none";
+    var section1 = document.getElementById("section1");
+    var section2 = document.getElementById("section2");
+    if (section1.style.display === "none") {
+        section1.style.display = "block";
+        section2.style.display = "none";
+        document.getElementById("datasetpage").style.height = "710px";
     }
     else {
-        c0.style.display = "none";
-        c3.style.display = "block";
+        section1.style.display = "none";
+        section2.style.display = "block";
+        document.getElementById("datasetpage").style.height = "800px";
     }
     event.preventDefault();
 }
 
-$('button.c0_button').click(function(e) {
+$('button.container__button#add_btn').click(function(e) {
     e.preventDefault();
 });
 
