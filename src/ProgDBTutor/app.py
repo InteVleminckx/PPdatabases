@@ -382,8 +382,7 @@ def testlist():
                        "AND r.creator = %s", (testList[i]['abtest_id'], creator))
         for row in cursor:
             if row[0] in algos.keys():
-                l = algos[row[0]].append([row[2], row[3]])
-                algos[row[0]] = l
+                algos[row[0]].append([row[2], row[3]])
             else:
                 algos[row[0]] = [row[1], [row[2], row[3]]]
         testList[i]['algorithms'] = algos
