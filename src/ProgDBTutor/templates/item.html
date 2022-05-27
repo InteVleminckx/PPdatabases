@@ -102,6 +102,9 @@
    $(function() {
        $('#submit_graph').click(function() {
            var form_data = new FormData($('#form1')[0]);
+           form_data.append('dataset_id', '{{ dataset_id }}')
+           form_data.append('abtest_id', '{{ abtest_id }}')
+           form_data.append('item_id', '{{ item_id }}')
            console.log(form_data);
            $.ajax({
                type: 'POST',

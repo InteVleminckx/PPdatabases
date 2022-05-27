@@ -486,9 +486,9 @@ def usersection():
 @app.route("/itemsection_graph", methods=['POST', 'GET'])
 def itemsection_graph():
     if request.method == 'POST':
-        abtest_id = getMaxABTestID()
-        dataset_id = 1
-        item_id = 706016001
+        dataset_id = request.form.get('dataset_id', None)
+        abtest_id = request.form.get("abtest_id", None)
+        item_id = request.form.get("item_id", None)
 
         numbers = []
         maxYValue = 0
@@ -593,9 +593,9 @@ def itemsection_graph():
 # ----------------- Item section page -----------------#
 @app.route("/itemsection", methods=['POST', 'GET'])
 def itemsection():
-    abtest_id = getMaxABTestID()
-    dataset_id = 1
-    item_id = 706016001
+    abtest_id = request.args.get("abtest_id")
+    dataset_id = request.args.get("dataset_id")
+    item_id = request.args.get("item_id")
     attrAndVal = []
     image_url = ""
 
@@ -611,7 +611,7 @@ def itemsection():
         image_url = None
 
     return render_template('item.html', attr_val=attrAndVal, item_picture=image_url, data1=None,
-                           name=None, title=None)
+                           name=None, title=None, abtest_id=abtest_id, dataset_id=dataset_id, item_id=item_id)
 
 
 # ----------------- User_Login -----------------#
