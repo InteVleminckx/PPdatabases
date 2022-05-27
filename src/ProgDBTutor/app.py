@@ -342,6 +342,22 @@ def datasetupload(rowData):
 @app.route("/visualizations")
 # @login_required
 def visualizations():
+
+    # print(request.args)
+    if len(request.args) > 0:
+
+        ABTestID = request.args["abtest_id"]
+        dataset_id = request.args["dataset_id"]
+
+        jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
+
+        recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, 5, ABTestID)
+        totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, "", "", dataset_id, 5, ABTestID)
+        totRev = abTestQueue.enqueue(getTotaleRevenue, "", "", dataset_id, ABTestID)
+        listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID)
+
+        session["abVisualistation"] = [jobABvisualisations.id, recos.id, totPurch.id, totRev.id, listUsers.id]
+
     return render_template('visualizations.html', app_data=app_data)
 
 @app.route("/visualizations/request", methods=["GET", "POST"])
@@ -416,11 +432,11 @@ def testlist():
         algos = {}  # per (key, value), de value bevat op index 0 de naam van de algoritme en alles erna zijn de
         # parameters.
         cursor.execute("SELECT a.result_id, a.name, a.param_name FROM Algorithm a,  Result r WHERE a.abtest_id = %s "
-                       "AND r.creator = %s", (testList[i]['abtest_id'], creator))
+                       "AND r.creator = %s AND a.abtest_id = r.abtest_id", (testList[i]['abtest_id'], creator))
         for row in cursor:
             if row[0] in algos:
-                l = algos[row[0]].append(row[2])
-                algos[row[0]] = l
+                algos[row[0]].append(row[2])
+                # algos[row[0]] = l
             else:
                 algos[row[0]] = [row[1], row[2]]
         testList[i]['algorithms'] = algos
