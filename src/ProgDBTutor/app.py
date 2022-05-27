@@ -281,7 +281,7 @@ def datasets():
             if cust_col_name:
                 type_list['customers_name_column'] = cust_col_name
 
-        handelRequests(app, session, request, datasetQueue, type_list)
+        # handelRequests(app, session, request, datasetQueue, type_list)
         jobs = handelRequests(app, session, request, datasetQueue, type_list)
         if jobs:
             session['jobsDataset'] = jobs
@@ -322,17 +322,6 @@ def fileupload():
             headerDict['changed'] = 'customers_attr'
         # print(headerDict)
         return headerDict
-
-
-@app.route("/datasetRemove", methods=['GET', 'POST'])
-def datasetRemove():
-    cursor = connection.get_cursor()
-    dataset_name = request.form.get('datasetSelection')
-
-    if 'loggedin' in session:
-        cursor.execute("DELETE FROM Dataset WHERE dataset_name = %s", dataset_name)
-
-    return redirect(url_for('datasets'))
 
 # ----------------- A/B-test Visualization page -----------------#
 
