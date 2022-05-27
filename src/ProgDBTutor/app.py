@@ -324,18 +324,16 @@ def fileupload():
         return headerDict
 
 
-@app.route("/datasetupload")
-def datasetupload(rowData):
+@app.route("/datasetRemove", methods=['GET', 'POST'])
+def datasetRemove():
     cursor = connection.get_cursor()
-    # remove dataset(s) with id=rowData
-    try:
-        cursor.execute("DELETE FROM Dataset WHERE dataset_id = %s", (rowData))
-        connection.commit()
-    except:
-        connection.rollback()
+    data = request.form.get('d')
+    dataset_name = data['dataset_name']
+
+    if 'loggedin' in session:
+        cursor.execute("DELETE FROM Dataset WHERE dataset_name = %s", dataset_name)
 
     return redirect(url_for('datasets'))
-
 
 # ----------------- A/B-test Visualization page -----------------#
 
@@ -441,6 +439,7 @@ def testlist():
                 algos[row[0]] = [row[1], row[2]]
         testList[i]['algorithms'] = algos
 
+    print(testList)
     return render_template('testlist.html', app_data=app_data, testList=testList)
 
 
@@ -636,7 +635,7 @@ def add_user():
         user_obj = DataScientist(firstname=user_firstname, lastname=user_lastname, username=user_username,
                                  email=user_email, password=generate_password_hash(user_password, method='sha256'))
         print('Adding {}'.format(user_obj.to_dct()))
-        user_obj = add_user(user_obj)
+        addUser(user_obj)
         # login_user(user_obj, remember=True)
 
         flash('Account succesfully registered!', category='success')
