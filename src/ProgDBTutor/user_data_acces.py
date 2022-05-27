@@ -269,6 +269,7 @@ def addArticles(file_name, dataset_id, types_list):
     global dbconnect
     #Duurt 1.30 min op deze manier
     print('start reading articles')
+    print(file_name)
     data_articles = pd.read_csv(file_name)
     start = time.process_time()
     cursor = dbconnect.get_cursor()
