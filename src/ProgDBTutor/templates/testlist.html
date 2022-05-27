@@ -58,7 +58,7 @@ tr {
 
 <div class="_pagecontainer">
 <div class="_container flex-direction">
-    <div class="table-responsive" style="width: 65%;margin-top: 50px;">
+    <div class="table-responsive" id="table1" style="width: 65%;margin-top: 50px;">
 
         <div class="tableborder">
             <table class="table table-hover">
@@ -226,7 +226,7 @@ tr {
         </div>
     </div>
 
-    <div class="table-responsive" style="width: 35%;margin-top: 50px;">
+    <div class="table-responsive" id="table2" style="width: 35%;margin-top: 50px;">
 
         <div class="tableborder">
             <table class="table table-hover" style="font-size: 12px;">
@@ -322,40 +322,39 @@ function goToTestList(abtest_id, dataset_id) {
 function showAlgorithms(algorithm_values) {
 
     var attrElem = document.getElementById("algo_table_body");
-
+    var _html = "";
 
     for ([key, val] of Object.entries(algorithm_values)) {
-
-        var _html = "";
 
         let windowsize = "/";
         let retraininterval = "/";
         let K = "/";
         let normalize = "/";
-        if (key === "popularity") {
-            windowsize = val[0][1];
-            retraininterval = val[1][1];
+        if (val[0] === "popularity") {
+            windowsize = val[1]['window'];
+            retraininterval = val[1]['retraininterval'];
         }
-        else if (key === "recency") {
-            retraininterval = val[0][1];
+        else if (val[0] === "recency") {
+            retraininterval = val[1]['retraininterval'];
         }
         else {
-            windowsize = val[1][1];
-            retraininterval = val[3][1];
-            K = val[0][1];
-            normalize = val[2][1];
+            windowsize = val[1]['window'];
+            retraininterval = val[1]['retraininterval'];
+            K = val[1]['k'];
+            normalize = val[1]['normalize'];
         }
 
         _html += "<tr style=\"text-align: center\" id=\"" + key + "\">";
+        _html += "<td>" + val[0] + "</td>";
         _html += "<td>" + K + "</td>";
         _html += "<td>" + windowsize + "</td>";
         _html += "<td>" + normalize + "</td>";
         _html += "<td>" + retraininterval + "</td>";
         _html += "</tr>";
-
-
     }
-    attrElem.innerHTML += _html;
+
+    attrElem.innerHTML = _html;
+
 }
 
 </script>
