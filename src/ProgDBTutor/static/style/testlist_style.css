@@ -1,4 +1,45 @@
+._container {
+    display: inline-flex;
+    flex-wrap: wrap;
+    width: 100%;
 
+}
+
+._pagecontainer {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
+
+.flex-direction {
+    flex-direction: row;
+}
+
+@media screen and (max-width: 500px) {
+    .flex-direction {
+        flex-direction: column;
+    }
+}
+
+._navbar{
+    background-color: #111515;
+    height: 4.5rem;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    font-size: 20px;
+
+
+    flex-wrap: wrap;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    padding: .5rem 1rem;
+}
 
 
 

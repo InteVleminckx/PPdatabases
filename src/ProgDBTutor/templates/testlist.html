@@ -6,7 +6,7 @@
 {#	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">#}
 {#	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">#}
 	<link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
-{#    <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">#}
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/testlist_style.css') }}">
 
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
@@ -37,7 +37,7 @@ tr {
 </style>
 <body>
 
-<nav class="navbar" id="navbar">
+<nav class="_navbar" id="navbar">
     <div class="navbar_container">
         <div class="navbar_toggle" id="mobile-menu">
             <span class="bar"></span>
@@ -55,174 +55,206 @@ tr {
 </nav>
 
 <h1 style="margin-top: 30px; margin-bottom: 25px;text-align: center;">A/B-tests</h1>
-<div class="table-responsive" style="width: 80%; display: block; margin-left: auto;margin-right: auto; margin-top: 50px;">
 
-    <div class="tableborder">
-    <table class="table table-hover">
-        <thead>
-            <tr style="text-align: center">
-                <th>ID</th>
-                <th>Dataset ID</th>
-                <th>Dataset Name</th>
-                <th>Starting Point</th>
-                <th>End point</th>
-                <th>Stepsize</th>
-                <th>Top-k</th>
-                <th>Algorithms</th>
-                <th><div style="color: red;">Remove</div></th>
-            </tr>
-        </thead>
-        <tbody style="overflow-y: auto;">
-        {% for item in testList %}
-            <tr style="text-align: center" id="{{ item['abtest_id'] }}">
-                <td style="text-decoration: underline;color: #0000EE;cursor: pointer;" onclick="goToTestList({{ item['abtest_id'] }}, {{ item['dataset_id'] }});">{{ item['abtest_id'] }}</td>
-                <td>{{ item['dataset_id'] }}</td>
-                <td>{{ item['dataset_name'] }}</td>
-                <td>{{ item['startingpoint'] }}</td>
-                <td>{{ item['endpoint'] }}</td>
-                <td>{{ item['stepsize'] }}</td>
-                <td>{{ item['topk'] }}</td>
-                <td>Algorithms</td>
-                <td><div style="color:red; cursor: pointer;" onclick="removeABTest({{ item['dataset_id'] }})">&times;</div></td>
-            </tr>
-        {% endfor %}
-        <tr style="text-align: center" id="15">
-            <td style="text-decoration: underline;color: #0000EE;cursor: pointer;" onclick="goToTestList(15, 10);">15</td>
-            <td>10</td>
-            <td>name</td>
-            <td>a</td>
-            <td>b</td>
-            <td>5</td>
-            <td>10</td>
-            <td>Algorithms</td>
-            <td><div style="color:red; cursor: pointer;">&times;</div></td>
-        </tr>
-{#        <tr style="text-align: center" id="1">#}
-{#            <td>10</td>#}
-{#            <td>2</td>#}
-{#            <td>H&M</td>#}
-{#            <td>01-01-2020</td>#}
-{#            <td>09-01-2020</td>#}
-{#            <td>2</td>#}
-{#            <td>5</td>#}
-{#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;" onclick="removeABTest('1')">&times;</div></td>#}
-{#        </tr>#}
-{#        <tr style="text-align: center">#}
-{#            <td>2</td>#}
-{#            <td>2</td>#}
-{#            <td>H&M</td>#}
-{#            <td>01-01-2020</td>#}
-{#            <td>09-01-2020</td>#}
-{#            <td>2</td>#}
-{#            <td>5</td>#}
-{#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-{#        </tr>#}
-{#        <tr style="text-align: center">#}
-{#            <td>2</td>#}
-{#            <td>2</td>#}
-{#            <td>H&M</td>#}
-{#            <td>01-01-2020</td>#}
-{#            <td>09-01-2020</td>#}
-{#            <td>2</td>#}
-{#            <td>5</td>#}
-{#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-{#        </tr>#}
-{#        <tr style="text-align: center">#}
-{#            <td>2</td>#}
-{#            <td>2</td>#}
-{#            <td>H&M</td>#}
-{#            <td>01-01-2020</td>#}
-{#            <td>09-01-2020</td>#}
-{#            <td>2</td>#}
-{#            <td>5</td>#}
-{#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-{#        </tr>#}
-{#        <tr style="text-align: center">#}
-{#            <td>2</td>#}
-{#            <td>2</td>#}
-{#            <td>H&M</td>#}
-{#            <td>01-01-2020</td>#}
-{#            <td>09-01-2020</td>#}
-{#            <td>2</td>#}
-{#            <td>5</td>#}
-{#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-{#        </tr>#}
-{#        <tr style="text-align: center">#}
-{#            <td>2</td>#}
-{#            <td>2</td>#}
-{#            <td>H&M</td>#}
-{#            <td>01-01-2020</td>#}
-{#            <td>09-01-2020</td>#}
-{#            <td>2</td>#}
-{#            <td>5</td>#}
-{#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-{#        </tr>#}
-{#        <tr style="text-align: center">#}
-{#            <td>2</td>#}
-{#            <td>2</td>#}
-{#            <td>H&M</td>#}
-{#            <td>01-01-2020</td>#}
-{#            <td>09-01-2020</td>#}
-{#            <td>2</td>#}
-{#            <td>5</td>#}
-{#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-{#        </tr>#}
-{#        <tr style="text-align: center">#}
-{#            <td>2</td>#}
-{#            <td>2</td>#}
-{#            <td>H&M</td>#}
-{#            <td>01-01-2020</td>#}
-{#            <td>09-01-2020</td>#}
-{#            <td>2</td>#}
-{#            <td>5</td>#}
-{#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-{#        </tr>#}
-{#        <tr style="text-align: center">#}
-{#            <td>2</td>#}
-{#            <td>2</td>#}
-{#            <td>H&M</td>#}
-{#            <td>01-01-2020</td>#}
-{#            <td>09-01-2020</td>#}
-{#            <td>2</td>#}
-{#            <td>5</td>#}
-{#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-{#        </tr>#}
-{#        <tr style="text-align: center">#}
-{#            <td>2</td>#}
-{#            <td>2</td>#}
-{#            <td>H&M</td>#}
-{#            <td>01-01-2020</td>#}
-{#            <td>09-01-2020</td>#}
-{#            <td>2</td>#}
-{#            <td>5</td>#}
-{#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-{#        </tr>#}
-{#        <tr style="text-align: center">#}
-{#            <td>5</td>#}
-{#            <td>5</td>#}
-{#            <td>H&M</td>#}
-{#            <td>01-01-2020</td>#}
-{#            <td>09-01-2020</td>#}
-{#            <td>2</td>#}
-{#            <td>5</td>#}
-{#            <td>Algorithms</td>#}
-{#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-{#        </tr>#}
-        </tbody>
-    </table>
+<div class="_pagecontainer">
+<div class="_container flex-direction">
+    <div class="table-responsive" style="width: 65%;margin-top: 50px;">
+
+        <div class="tableborder">
+            <table class="table table-hover">
+                <thead>
+                    <tr style="text-align: center">
+                        <th>ID</th>
+                        <th>Dataset ID</th>
+                        <th>Dataset Name</th>
+                        <th>Starting Point</th>
+                        <th>End point</th>
+                        <th>Stepsize</th>
+                        <th>Top-k</th>
+                        <th>Algorithms</th>
+                        <th><div style="color: red;">Remove</div></th>
+                    </tr>
+                </thead>
+                <tbody style="overflow-y: auto;">
+                {% for item in testList %}
+                    <tr style="text-align: center" id="{{ item['abtest_id'] }}" onclick="showAlgorithms({{ item['algorithms'] }})">
+                        <td style="text-decoration: underline;color: #0000EE;cursor: pointer;" onclick="goToTestList({{ item['abtest_id'] }}, {{ item['dataset_id'] }});">{{ item['abtest_id'] }}</td>
+                        <td>{{ item['dataset_id'] }}</td>
+                        <td>{{ item['dataset_name'] }}</td>
+                        <td>{{ item['startingpoint'] }}</td>
+                        <td>{{ item['endpoint'] }}</td>
+                        <td>{{ item['stepsize'] }}</td>
+                        <td>{{ item['topk'] }}</td>
+                        <td>{{ item['algorithms']|length }}</td>
+                        <td><div style="color:red; cursor: pointer;" onclick="removeABTest({{ item['dataset_id'] }})">&times;</div></td>
+                    </tr>
+                {% endfor %}
+                <tr style="text-align: center" id="15">
+                    <td style="text-decoration: underline;color: #0000EE;cursor: pointer;" onclick="goToTestList(15, 10);">15</td>
+                    <td>10</td>
+                    <td>name</td>
+                    <td>a</td>
+                    <td>b</td>
+                    <td>5</td>
+                    <td>10</td>
+                    <td>Algorithms</td>
+                    <td><div style="color:red; cursor: pointer;">&times;</div></td>
+                </tr>
+        {#        <tr style="text-align: center" id="1">#}
+        {#            <td>10</td>#}
+        {#            <td>2</td>#}
+        {#            <td>H&M</td>#}
+        {#            <td>01-01-2020</td>#}
+        {#            <td>09-01-2020</td>#}
+        {#            <td>2</td>#}
+        {#            <td>5</td>#}
+        {#            <td>Algorithms</td>#}
+        {#            <td><div style="color:red; cursor: pointer;" onclick="removeABTest('1')">&times;</div></td>#}
+        {#        </tr>#}
+        {#        <tr style="text-align: center">#}
+        {#            <td>2</td>#}
+        {#            <td>2</td>#}
+        {#            <td>H&M</td>#}
+        {#            <td>01-01-2020</td>#}
+        {#            <td>09-01-2020</td>#}
+        {#            <td>2</td>#}
+        {#            <td>5</td>#}
+        {#            <td>Algorithms</td>#}
+        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
+        {#        </tr>#}
+        {#        <tr style="text-align: center">#}
+        {#            <td>2</td>#}
+        {#            <td>2</td>#}
+        {#            <td>H&M</td>#}
+        {#            <td>01-01-2020</td>#}
+        {#            <td>09-01-2020</td>#}
+        {#            <td>2</td>#}
+        {#            <td>5</td>#}
+        {#            <td>Algorithms</td>#}
+        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
+        {#        </tr>#}
+        {#        <tr style="text-align: center">#}
+        {#            <td>2</td>#}
+        {#            <td>2</td>#}
+        {#            <td>H&M</td>#}
+        {#            <td>01-01-2020</td>#}
+        {#            <td>09-01-2020</td>#}
+        {#            <td>2</td>#}
+        {#            <td>5</td>#}
+        {#            <td>Algorithms</td>#}
+        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
+        {#        </tr>#}
+        {#        <tr style="text-align: center">#}
+        {#            <td>2</td>#}
+        {#            <td>2</td>#}
+        {#            <td>H&M</td>#}
+        {#            <td>01-01-2020</td>#}
+        {#            <td>09-01-2020</td>#}
+        {#            <td>2</td>#}
+        {#            <td>5</td>#}
+        {#            <td>Algorithms</td>#}
+        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
+        {#        </tr>#}
+        {#        <tr style="text-align: center">#}
+        {#            <td>2</td>#}
+        {#            <td>2</td>#}
+        {#            <td>H&M</td>#}
+        {#            <td>01-01-2020</td>#}
+        {#            <td>09-01-2020</td>#}
+        {#            <td>2</td>#}
+        {#            <td>5</td>#}
+        {#            <td>Algorithms</td>#}
+        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
+        {#        </tr>#}
+        {#        <tr style="text-align: center">#}
+        {#            <td>2</td>#}
+        {#            <td>2</td>#}
+        {#            <td>H&M</td>#}
+        {#            <td>01-01-2020</td>#}
+        {#            <td>09-01-2020</td>#}
+        {#            <td>2</td>#}
+        {#            <td>5</td>#}
+        {#            <td>Algorithms</td>#}
+        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
+        {#        </tr>#}
+        {#        <tr style="text-align: center">#}
+        {#            <td>2</td>#}
+        {#            <td>2</td>#}
+        {#            <td>H&M</td>#}
+        {#            <td>01-01-2020</td>#}
+        {#            <td>09-01-2020</td>#}
+        {#            <td>2</td>#}
+        {#            <td>5</td>#}
+        {#            <td>Algorithms</td>#}
+        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
+        {#        </tr>#}
+        {#        <tr style="text-align: center">#}
+        {#            <td>2</td>#}
+        {#            <td>2</td>#}
+        {#            <td>H&M</td>#}
+        {#            <td>01-01-2020</td>#}
+        {#            <td>09-01-2020</td>#}
+        {#            <td>2</td>#}
+        {#            <td>5</td>#}
+        {#            <td>Algorithms</td>#}
+        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
+        {#        </tr>#}
+        {#        <tr style="text-align: center">#}
+        {#            <td>2</td>#}
+        {#            <td>2</td>#}
+        {#            <td>H&M</td>#}
+        {#            <td>01-01-2020</td>#}
+        {#            <td>09-01-2020</td>#}
+        {#            <td>2</td>#}
+        {#            <td>5</td>#}
+        {#            <td>Algorithms</td>#}
+        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
+        {#        </tr>#}
+        {#        <tr style="text-align: center">#}
+        {#            <td>5</td>#}
+        {#            <td>5</td>#}
+        {#            <td>H&M</td>#}
+        {#            <td>01-01-2020</td>#}
+        {#            <td>09-01-2020</td>#}
+        {#            <td>2</td>#}
+        {#            <td>5</td>#}
+        {#            <td>Algorithms</td>#}
+        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
+        {#        </tr>#}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="table-responsive" style="width: 35%;margin-top: 50px;">
+
+        <div class="tableborder">
+            <table class="table table-hover" style="font-size: 12px;">
+                <thead>
+                    <tr style="text-align: center">
+                        <th>Algorithm Name</th>
+                        <th>K</th>
+                        <th>Windowsize</th>
+                        <th>Normalize</th>
+                        <th>Retraininterval</th>
+                    </tr>
+                </thead>
+                <tbody style="overflow-y: auto;" id="algo_table_body">
+
+{#                <tr style="text-align: center">#}
+{#                    <td>15</td>#}
+{#                    <td>10</td>#}
+{#                    <td>name</td>#}
+{#                    <td>a</td>#}
+{#                    <td>b</td>#}
+{#                </tr>#}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 </div>
-
 
 
 
@@ -281,10 +313,50 @@ function removeABTest(abtest_id) {
 }
 
 function goToTestList(abtest_id, dataset_id) {
-    url = window.location.href
-    url_string = url.substring(0, url.lastIndexOf("/"))
+    let url = window.location.href
+    let url_string = url.substring(0, url.lastIndexOf("/"))
     window.location.href = url_string + "/visualizations" + "?abtest_id=" + abtest_id.toString() + "&dataset_id=" + dataset_id.toString()// de redirect naar andere pagina in javascript
     console.log(window.location.href)
+}
+
+function showAlgorithms(algorithm_values) {
+
+    var attrElem = document.getElementById("algo_table_body");
+
+
+    for ([key, val] of Object.entries(algorithm_values)) {
+
+        var _html = "";
+
+        let windowsize = "/";
+        let retraininterval = "/";
+        let K = "/";
+        let normalize = "/";
+        if (key === "popularity") {
+            windowsize = val[0];
+            retraininterval = val[1];
+        }
+        else if (key === "recency") {
+            retraininterval = val[0];
+        }
+        else {
+            windowsize = val[1];
+            retraininterval = val[3];
+            K = val[0];
+            normalize = val[2];
+        }
+
+        _html += "<tr style=\"text-align: center\" id=\"" + key + "\">";
+        _html += "<td>" + K + "</td>";
+        _html += "<td>" + windowsize + "</td>";
+        _html += "<td>" + normalize + "</td>";
+        _html += "<td>" + retraininterval + "</td>";
+        _html += "</tr>";
+
+        attrElem.innerHTML += _html;
+
+    }
+
 }
 
 </script>
