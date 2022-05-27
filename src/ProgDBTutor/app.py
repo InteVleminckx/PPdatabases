@@ -228,8 +228,8 @@ def services():
             # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
             jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
 
-            recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, 5, ABTestID)
-            totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, "", "", dataset_id, 5, ABTestID)
+            recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, topk, ABTestID)
+            totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, "", "", dataset_id, topk, ABTestID)
             totRev = abTestQueue.enqueue(getTotaleRevenue, "", "", dataset_id, ABTestID)
             listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID)
 
@@ -389,6 +389,7 @@ def abTestRemove():
 
     cursor = connection.get_cursor()
     cursor.execute("DELETE FROM ABTest WHERE abtest_id = %s", (str(abTest_id),))
+    connection.commit()
     return {}
 
 
