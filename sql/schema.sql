@@ -122,6 +122,7 @@ CREATE TABLE Recommendation (
     start_point TIMESTAMP NOT NULL,
     end_point TIMESTAMP NOT NULL,
     -- Primary key ==> combination of abtest, result, customer and item is unique
+    FOREIGN KEY (abtest_id, algorithm_id) REFERENCES Algorithm(abtest_id, algorithm_id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY (abtest_id, algorithm_id, customer_id, dataset_id, item_number, start_point, end_point)
     -- Reference to a customer from Customers, need 2 attributes for the primary key of a customer
 --     FOREIGN KEY (dataset_id, customer_id, attribute_customer) REFERENCES Customer(dataset_id, customer_number, attribute) ON UPDATE CASCADE ON DELETE CASCADE
