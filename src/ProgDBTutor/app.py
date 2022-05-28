@@ -197,20 +197,16 @@ def services():
             while i < algo_id:
                 # Add entry for ABtest table
                 # addAB_Test(abtest_id, i, start, end, stepsize, topk)
-                abTestQueue.enqueue(addAB_Test, ABTestID, i, start, end, stepsize, topk)
+                print(creator)
+                abTestQueue.enqueue(addAB_Test, ABTestID, i, start, end, stepsize, topk, creator, dataset_id)
 
                 # Add entries for Algorithm table
                 for j in range(len(algo_list)):
                     if algo_list[j][0] == i:
-                        algorithm_param = algo_list[j][2]
                         # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
                         # algo_list[j][3])
                         abTestQueue.enqueue(addAlgorithm, ABTestID, i, algo_list[j][1], algo_list[j][2],
                                             algo_list[j][3])
-
-                # Add entry for result table
-                # addResult(abtest_id, i, dataset_id, algorithm_param, creator)
-                abTestQueue.enqueue(addResult, ABTestID, i, dataset_id, algorithm_param, creator)
 
                 i += 1
 
@@ -377,10 +373,9 @@ def testlist():
     creator = session['username']
     testList = []
     cursor = connection.get_cursor()
-    cursor.execute("SELECT distinct(a.abtest_id), r.dataset_id, d.dataset_name, a.start_point, a.end_point, "
-                   "a.stepsize, "
-                   "a.topk FROM ABTest a, Dataset d, Result r WHERE r.creator = %s AND a.abtest_id = r.abtest_id AND "
-                   "a.result_id = r.result_id AND r.dataset_id = d.dataset_id", (creator,))
+    cursor.execute("SELECT distinct(a.abtest_id), a.dataset_id, d.dataset_name, a.start_point, a.end_point, "
+                   "a.stepsize, a.topk FROM ABTest a, Dataset d WHERE a.creator = %s AND "
+                   "a.dataset_id = d.dataset_id", (creator,))
     for row in cursor:
         d = {'abtest_id': row[0], 'dataset_id': row[1], 'dataset_name': row[2], 'startingpoint': str(row[3])[:10],
              'endpoint': str(row[4])[:10], 'stepsize': row[5], 'topk': row[6], 'algorithms': None}
@@ -388,9 +383,8 @@ def testlist():
     for i in range(len(testList)):
         algos = {}  # per (key, value), de value bevat op index 0 de naam van de algoritme en alles erna zijn de
         # parameters.
-        cursor.execute("SELECT distinct(a.param_name), a.result_id, a.name, a.value FROM Algorithm a,  Result r WHERE "
-                       "a.abtest_id = %s "
-                       "AND r.creator = %s", (testList[i]['abtest_id'], creator))
+        cursor.execute("SELECT distinct(a.param_name), a.algorithm_id, a.name, a.value FROM Algorithm a, ABTest ab WHERE "
+                       "a.abtest_id = %s AND a.abtest_id = ab.abtest_id AND ab.creator = %s", (testList[i]['abtest_id'], creator))
         for row in cursor:
             if row[1] in algos.keys():
                 algos[row[1]][1][row[0]] = row[3]
@@ -481,15 +475,15 @@ def itemsection_graph():
 
             # Add first row that contains all algorithm names
             firstRow = ['Date']
-            resultIDs = getResultIds(abtest_id, dataset_id)
-            for result_id in resultIDs:
-                algorithm = getAlgorithm(abtest_id, result_id)
+            algorithm_ids = getAlgorithmIds(abtest_id, dataset_id)
+            for algorithm_id in algorithm_ids:
+                algorithm = getAlgorithm(abtest_id, algorithm_id)
                 if algorithm.name == 'popularity':
-                    firstRow.append('Popularity' + str(result_id))
+                    firstRow.append('Popularity' + str(algorithm_id))
                 elif algorithm.name == 'recency':
-                    firstRow.append('Recency' + str(result_id))
+                    firstRow.append('Recency' + str(algorithm_id))
                 elif algorithm.name == 'itemknn':
-                    firstRow.append('ItemKNN' + str(result_id))
+                    firstRow.append('ItemKNN' + str(algorithm_id))
 
             data.append(firstRow)
 
@@ -506,18 +500,18 @@ def itemsection_graph():
             stepsize = timedelta(days=1)
 
             # Determine the columns that we need to use in the index.html
-            resultIDs = getResultIds(abtest_id, dataset_id)
-            for result_id in resultIDs:
-                algorithm = getAlgorithm(abtest_id, result_id)
+            algorithm_ids = getAlgorithmIds(abtest_id, dataset_id)
+            for algorithm_id in algorithm_ids:
+                algorithm = getAlgorithm(abtest_id, algorithm_id)
                 if algorithm.name == 'popularity':
-                    columns.append('Popularity' + str(result_id) + ' recommendations')
-                    columns.append('Popularity' + str(result_id) + ' correct recommendations')
+                    columns.append('Popularity' + str(algorithm_id) + ' recommendations')
+                    columns.append('Popularity' + str(algorithm_id) + ' correct recommendations')
                 elif algorithm.name == 'recency':
-                    columns.append('Recency' + str(result_id) + ' recommendations')
-                    columns.append('Recency' + str(result_id) + ' correct recommendations')
+                    columns.append('Recency' + str(algorithm_id) + ' recommendations')
+                    columns.append('Recency' + str(algorithm_id) + ' correct recommendations')
                 elif algorithm.name == 'itemknn':
-                    columns.append('ItemKNN' + str(result_id) + ' recommendations')
-                    columns.append('ItemKNN' + str(result_id) + ' correct recommendations')
+                    columns.append('ItemKNN' + str(algorithm_id) + ' recommendations')
+                    columns.append('ItemKNN' + str(algorithm_id) + ' correct recommendations')
 
             # Determine the data that we need for the graph
             while startPoint <= endPoint:
@@ -535,7 +529,7 @@ def itemsection_graph():
 
             begin_counter = 2
             end_counter = 1
-            for i in range(len(resultIDs) - 1):
+            for i in range(len(algorithm_ids) - 1):
                 numbers.append([begin_counter, end_counter])
                 begin_counter += 1
                 numbers.append([begin_counter, end_counter])
