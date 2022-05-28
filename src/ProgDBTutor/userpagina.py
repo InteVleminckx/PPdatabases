@@ -50,11 +50,11 @@ def getUserInformation(abtest_id, dataset_id, user_id):
             purchases[date] = list()
             dates.append(date)
             print("enter")
-            for result_id in ids_algoritmes:
+            for algorithm_id in ids_algoritmes:
                 if date in historyUser:
                     for item in itemsPerStep:
-                        if (date, result_id) in recommendationsPerInterval:
-                            for recItems in recommendationsPerInterval[(date, result_id)]:
+                        if (date, algorithm_id) in recommendationsPerInterval:
+                            for recItems in recommendationsPerInterval[(date, algorithm_id)]:
                                 if str(item[0]) == str(recItems[0]):
                                     breaked = False
                                     for item_ in history[date]:
@@ -75,11 +75,11 @@ def getUserInformation(abtest_id, dataset_id, user_id):
                                         history[date].append(
                                             {"name": str(item[1]), "purchased": False, "url": str(item[2])})
 
-                if (date, result_id) in recommendationsPerInterval:
-                    recos = recommendationsPerInterval[(date, result_id)]
-                    name = algoritmes[result_id]
+                if (date, algorithm_id) in recommendationsPerInterval:
+                    recos = recommendationsPerInterval[(date, algorithm_id)]
+                    name = algoritmes[algorithm_id]
                     recos_ = [item[1] for item in recos]
-                    recommendations[date].append({"name": name, "result_id": result_id, "recommendations": recos_,
+                    recommendations[date].append({"name": name, "algorithm_id": algorithm_id, "recommendations": recos_,
                                                   "color": colors[colorCount % len(colors)]})
                     count = 0
                     for reco in recos:
@@ -90,8 +90,8 @@ def getUserInformation(abtest_id, dataset_id, user_id):
                     purchases[date].append({"name": name, "count": count, "color": colors[colorCount % len(colors)]})
 
                 else:
-                    name = algoritmes[result_id]
-                    recommendations[date].append({"name": name, "result_id": result_id, "recommendations": [],
+                    name = algoritmes[algorithm_id]
+                    recommendations[date].append({"name": name, "algorithm_id": algorithm_id, "recommendations": [],
                                                   "color": colors[colorCount % len(colors)]})
                     purchases[date].append({"name": name, "count": 0, "color": colors[colorCount % len(colors)]})
 
@@ -126,7 +126,7 @@ def getUserInformation(abtest_id, dataset_id, user_id):
 def getAlgoritmes(abtest_id):
     cursor = dbconnect.get_cursor()
 
-    cursor.execute("select result_id, name from algorithm where abtest_id = %s group by result_id, name;",
+    cursor.execute("select algorithm_id, name from algorithm where abtest_id = %s group by algorithm_id, name;",
                    (str(abtest_id),))
     algoritmes = {}
     rows = cursor.fetchall()
@@ -136,7 +136,7 @@ def getAlgoritmes(abtest_id):
 
     for row in rows:
         algoritmes[row[0]] = row[1]
-        # algoritmes.append({"name": row[1], "result_id": row[0]})
+        # algoritmes.append({"name": row[1], "algorithm_id": row[0]})
 
     return algoritmes
 
@@ -192,11 +192,11 @@ def getPurchases(user_id, dataset_id, start, end):
 def getRecommendations(abtest_id, dataset_id, customer_id):
     cursor = dbconnect.get_cursor()
     cursor.execute(
-        "select result_id, item_number, end_point from recommendation where abtest_id = %s and dataset_id = %s and (customer_id = -1 or customer_id = %s);",
+        "select algorithm_id, item_number, end_point from recommendation where abtest_id = %s and dataset_id = %s and (customer_id = -1 or customer_id = %s);",
         (str(abtest_id), str(dataset_id), str(customer_id)))
     recommendations = cursor.fetchall()
     cursor.execute(
-        "select result_id, end_point from recommendation where abtest_id = %s and dataset_id = %s and (customer_id = -1 or customer_id = %s) group by result_id, end_point;",
+        "select algorithm_id, end_point from recommendation where abtest_id = %s and dataset_id = %s and (customer_id = -1 or customer_id = %s) group by algorithm_id, end_point;",
         (str(abtest_id), str(dataset_id), str(customer_id)))
     intervals = cursor.fetchall()
     recosPerInterval = dict()

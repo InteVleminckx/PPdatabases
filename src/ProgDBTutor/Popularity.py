@@ -19,8 +19,7 @@ from user_data_acces import *
 
 class Popularity:
 
-    def __init__(self, dataset_id, abtest_id, result_id, startPoint, endPoint, stepsize, topk, window, retrainInterval,
-                 algorithm_param):
+    def __init__(self, dataset_id, abtest_id, algorithm_id, startPoint, endPoint, stepsize, topk, window, retrainInterval):
         self.startPoint = datetime.strptime(startPoint, '%Y-%m-%d %H:%M:%S')
         self.endPoint = datetime.strptime(endPoint, '%Y-%m-%d %H:%M:%S')
         self.stepsize = timedelta(days=stepsize)
@@ -32,8 +31,7 @@ class Popularity:
         self.recommendations = dict()
         self.dataset_id = dataset_id
         self.abtest_id = abtest_id
-        self.result_id = result_id
-        self.algorithm_param = algorithm_param
+        self.algorithm_id = algorithm_id
         self.simulationTime = None
         self.currentModel = None
 
@@ -64,13 +62,12 @@ class Popularity:
 
         if self.currentModel is not None:
             for item_id, count in self.currentModel:
-                attribute_costumer = list(getCustomer(-1, self.dataset_id).attributes)[0]
-                addRecommendation(self.abtest_id, self.result_id, self.dataset_id, -1, str(item_id), attribute_costumer,
+                addRecommendation(self.abtest_id, self.algorithm_id, self.dataset_id, -1, str(item_id),
                                   *recommendWindow)
 
 
 def main():
-    algo = Popularity(0, 100, 0, "2020-01-01", "2020-02-15", 1, 10, 2, 3, "window_size")
+    algo = Popularity(0, 100, 0, "2020-01-01", "2020-02-15", 1, 10, 2, 3)
     algo.recommend()
 
 # main()

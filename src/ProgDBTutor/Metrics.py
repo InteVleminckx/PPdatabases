@@ -38,7 +38,7 @@ def getNrOfActiveUsers(startDate, endDate):
     return cursor.fetchone()[0]
 
 
-def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, stepsize, algoName):
+def getClickThroughRate(startDate, endDate, abtestID, algorithmID, datasetID, stepsize, algoName):
     cursor = connection.get_cursor()
     print("startctr")
 
@@ -57,8 +57,8 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, steps
             date = str(curDate)[0:10]
             # bij recommendations is de stepsize gelijk aan het endpoint, we vragen dus eerst alle recommendations op
             cursor.execute(
-                'select item_number from recommendation where dataset_id = %s and abtest_id = %s and result_id = %s and end_point = %s',
-                (str(datasetID), str(abtestID), str(resultID), date))
+                'select item_number from recommendation where dataset_id = %s and abtest_id = %s and algorithm_id = %s and end_point = %s',
+                (str(datasetID), str(abtestID), str(algorithmID), date))
 
             recommendations = cursor.fetchall()
             if recommendations is None:
@@ -103,8 +103,8 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, steps
 
             # bij recommendations is de stepsize gelijk aan het endpoint, we vragen dus eerst alle recommendations op
             cursor.execute(
-                'select customer_id, item_number from recommendation where dataset_id = %s and abtest_id = %s and result_id = %s and end_point = %s',
-                (str(datasetID), str(abtestID), str(resultID), date))
+                'select customer_id, item_number from recommendation where dataset_id = %s and abtest_id = %s and algorithm_id = %s and end_point = %s',
+                (str(datasetID), str(abtestID), str(algorithmID), date))
 
             recommendations = cursor.fetchall()
             if recommendations is None:
@@ -162,7 +162,7 @@ def getClickThroughRate(startDate, endDate, abtestID, resultID, datasetID, steps
     return ctr
 
 
-def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, stepSize, algoName):
+def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, stepSize, algoName):
     # hardcoded 7 or 30 days
     if days not in [7, 30]:
         days = 7
@@ -195,8 +195,8 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, step
             for i in range(7):
 
                 cursor.execute(
-                    'select item_number from recommendation where dataset_id = %s and abtest_id = %s and result_id = %s and end_point = %s',
-                    (str(datasetID), str(abtestID), str(resultID), tempDate))
+                    'select item_number from recommendation where dataset_id = %s and abtest_id = %s and algorithm_id = %s and end_point = %s',
+                    (str(datasetID), str(abtestID), str(algorithmID), tempDate))
 
                 # ga een dag lager
                 tempDate = tempDate - timedelta(days=1)
@@ -265,8 +265,8 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, step
             for i in range(7):
 
                 cursor.execute(
-                    'select customer_id, item_number from recommendation where dataset_id = %s and abtest_id = %s and result_id = %s and end_point = %s',
-                    (str(datasetID), str(abtestID), str(resultID), tempDate))
+                    'select customer_id, item_number from recommendation where dataset_id = %s and abtest_id = %s and algorithm_id = %s and end_point = %s',
+                    (str(datasetID), str(abtestID), str(algorithmID), tempDate))
 
                 # ga een dag lager
                 tempDate = tempDate - timedelta(days=1)

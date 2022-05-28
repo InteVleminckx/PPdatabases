@@ -56,8 +56,8 @@ def getPurchasesAndActiveUsersOverTime(start, end):
 
 
 def getAlgorithms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
-    results = getResultIds(abtest_id, dataset_id)
-    if results is None:
+    algorithmIDs = getAlgorithmIds(abtest_id, dataset_id)
+    if algorithmIDs is None:
         return False
 
     algorithms = {}
@@ -65,46 +65,44 @@ def getAlgorithms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
     ctr = {}
     ard = {}
     argRevPr = {}
-    for result in results:
-        algo = getAlgorithm(abtest_id, result)
-        algorithms[str(result)] = {"name": algo.name, "params": algo.params, "result_id": algo.result_id}
-        ctr_, arad, argRev = getCTR(result, abtest_id, dataset_id, startpoint, endpoint, stepsize, algo.name)
-        ctr[result] = {"name": algo.name, "result_id": algo.result_id, "values": ctr_, "type": "CTR"}
-        ard[result] = {"name": algo.name, "result_id": algo.result_id, "values": arad, "type": "AR@D"}
-        argRevPr[result] = {"name": algo.name, "result_id": algo.result_id, "values": argRev, "type": "ARPU@D"}
+    for algorithmID in algorithmIDs:
+        algo = getAlgorithm(abtest_id, algorithmID)
+        algorithms[str(algorithmID)] = {"name": algo.name, "params": algo.params, "algorithm_id": algo.algorithm_id}
+        ctr_, arad, argRev = getCTR(algorithmID, abtest_id, dataset_id, startpoint, endpoint, stepsize, algo.name)
+        ctr[algorithmID] = {"name": algo.name, "algorithm_id": algo.algorithm_id, "values": ctr_, "type": "CTR"}
+        ard[algorithmID] = {"name": algo.name, "algorithm_id": algo.algorithm_id, "values": arad, "type": "AR@D"}
+        argRevPr[algorithmID] = {"name": algo.name, "algorithm_id": algo.algorithm_id, "values": argRev, "type": "ARPU@D"}
 
     return algorithms, ctr, ard, argRevPr
 
 
-def getCTR(result_id, abtest_id, dataset_id, startpoint, endpoint, stepsize, algoName):
-    ctr = getClickThroughRate(startpoint, endpoint, abtest_id, result_id, dataset_id, stepsize, algoName)
-    arad, arpuad = getAR_and_ARPU(7, startpoint, endpoint, abtest_id, result_id, dataset_id, int(stepsize), algoName)
+def getCTR(algorithm_id, abtest_id, dataset_id, startpoint, endpoint, stepsize, algoName):
+    ctr = getClickThroughRate(startpoint, endpoint, abtest_id, algorithm_id, dataset_id, stepsize, algoName)
+    arad, arpuad = getAR_and_ARPU(7, startpoint, endpoint, abtest_id, algorithm_id, dataset_id, int(stepsize), algoName)
     return ctr, arad, arpuad
 
 
 def getTopkMostRecommendItemsPerAlgo(start, end, dataset_id, topk, abtest_id):
-    results = getResultIds(abtest_id, dataset_id)
+    algorithmIDs = getAlgorithmIds(abtest_id, dataset_id)
     if start == "":
         abtest = getAB_Test(abtest_id)
         start, end = str(abtest.start_point)[0:10], str(abtest.end_point)[0:10]
 
     topkReco = {}
-
     cursor = dbconnect.get_cursor()
-    for result in results:
-        algoritme = getAlgorithm(abtest_id, result)
+    for algorithmID in algorithmIDs:
+        recommendations = []
+        algoritme = getAlgorithm(abtest_id, algorithmID)
+
         cursor.execute(
-            "select item_number, count(item_number) from recommendation where abtest_id = %s and result_id = %s and end_point between %s and %s group by item_number order by count(item_number) desc limit %s",
-            (str(abtest_id), str(result), str(start), str(end), str(topk)))
+            "select item_number, count(item_number) from recommendation where abtest_id = %s and algorithm_id = %s and end_point between %s and %s group by item_number order by count(item_number) desc limit %s",
+            (str(abtest_id), str(algorithmID), str(start), str(end), str(topk)))
 
         rows = cursor.fetchall()
-
-        recommendations = []
-
         for row in rows:
             recommendations.append({"item": str(row[0]), "count": str(row[1])})
 
-        topkReco[result] = {"name": algoritme.name, "result": algoritme.result_id, "recommendations": recommendations}
+        topkReco[algorithmID] = {"name": algoritme.name, "algorithmID": algoritme.algorithm_id, "recommendations": recommendations}
 
     return topkReco
 
