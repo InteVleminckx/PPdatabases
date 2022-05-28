@@ -258,13 +258,14 @@
 <script>
 
     var genParDict = JSON.parse({{ genParDict | tojson | safe }});
-    if (genParDict.hasOwnProperty('selected_ds_id')) {
-        selectDataset(genParDict['selected_ds_id']);
-    }
+
+
     window.onload = selectDataset();
 
-    function selectDataset(ds_id) {
-        $("#datasetSelection").val(ds_id.toString());
+    function selectDataset() {
+        if (genParDict.hasOwnProperty('selected_ds_id')) {
+            $("#datasetSelection").val(genParDict['selected_ds_id'].toString());
+        }
     }
 
     function switchVisibleParameters() {
