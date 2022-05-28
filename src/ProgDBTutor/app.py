@@ -68,8 +68,6 @@ abtest_id = getMaxABTestID() + 1
 
 file_attr_types = ["string", "float", "int", "image_url"]
 
-jsonData = dict()  # dictionary om de general parameters voor de ab-test pagina op te slaan
-
 # login_manager = LoginManager()
 # login_manager.login_view = 'app.login_user'
 # login_manager.init_app(app)
@@ -239,8 +237,14 @@ def services():
 
         elif request.method == 'GET':
             pass
+
+        genParDict = {}
+        selected_ds_id = request.args.get('selected_ds_id', None)
+        if selected_ds_id is not None:
+            genParDict['selected_ds_id'] = selected_ds_id
+
         dataset_names = getDatasets()
-        return render_template('services.html', app_data=app_data, genParDict=jsonData, names=dataset_names)
+        return render_template('services.html', app_data=app_data, genParDict=json.dumps(genParDict), names=dataset_names)
 
     return redirect(url_for('login_user'))
 
