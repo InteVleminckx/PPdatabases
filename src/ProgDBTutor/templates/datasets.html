@@ -149,9 +149,9 @@
                         <h2>Articles file</h2>
                     </div>
                     <div class="container__content" id="form2_layer2_column1_content">
-                        <div class="container__button" id="articles_button" onclick="getFile1()">Choose file</div>
+                        <div class="container__button" id="articles_button" onclick="getFile('articles_file')">Choose file</div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input class="container__input" type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub1(this);">
+                            <input class="container__input" type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub1(this, 'articles_button');">
                         </div>
                         <div class="container__typechecker" id="articles_typechecker">
                             <section id="articles_typepicker"></section>
@@ -167,9 +167,9 @@
                         <h2>Purchases file</h2>
                     </div>
                     <div class="container__content" id="form2_layer2_column2_content">
-                        <div class="container__button" id="purchases_button" onclick="getFile2()">Choose file</div>
+                        <div class="container__button" id="purchases_button" onclick="getFile('purchases_file')">Choose file</div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" class="container__input" id="purchases_file" name="purchases_file" value="" accept=".csv" required onchange="sub2(this)">
+                            <input type="file" class="container__input" id="purchases_file" name="purchases_file" value="" accept=".csv" required onchange="sub(this, 'purchases_button')">
                         </div>
                     </div>
                 </div>
@@ -178,9 +178,9 @@
                         <h2>Customers file</h2>
                     </div>
                     <div class="container__content" id="form2_layer2_column3_content">
-                        <div class="container__button" id="customers_button" onclick="getFile3()">Choose file</div>
+                        <div class="container__button" id="customers_button" onclick="getFile('customers_file')">Choose file</div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" class="container__inputfile" id="customers_file" name="customers_file" value="" accept=".csv" required onchange="sub3(this)">
+                            <input type="file" class="container__inputfile" id="customers_file" name="customers_file" value="" accept=".csv" required onchange="sub(this, 'customers_button')">
                         </div>
                         <div class="container__typechecker" id="customers_typechecker">
                             <section id="customers_typepicker"></section>
@@ -314,34 +314,14 @@ function generateAttrHtml(data) {
     }
 }
 
-function getFile1() {
-    document.getElementById("articles_file").click();
-}
-function getFile2() {
-    document.getElementById("purchases_file").click();
-}
-function getFile3() {
-    document.getElementById("customers_file").click();
+function getFile(elem) {
+    document.getElementById(elem).click();
 }
 
-function sub1(obj) {
+function sub(obj, button) {
     var file = obj.value;
     var filename = file.split("\\");
-    document.getElementById("articles_button").innerHTML = filename[filename.length - 1];
-    event.preventDefault();
-}
-
-function sub2(obj) {
-    var file = obj.value;
-    var filename = file.split("\\");
-    document.getElementById("purchases_button").innerHTML = filename[filename.length - 1];
-    event.preventDefault();
-}
-
-function sub3(obj) {
-    var file = obj.value;
-    var filename = file.split("\\");
-    document.getElementById("customers_button").innerHTML = filename[filename.length - 1];
+    document.getElementById(button).innerHTML = filename[filename.length - 1];
     event.preventDefault();
 }
 

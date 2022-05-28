@@ -76,13 +76,9 @@
                             Starting point
                         </div>
                         <div class="container__innerColumn" id="layer1_column1_row1_inner2">
-                            {% if 'gen_par_start' in genParDict.keys() %}
-                                <input type="date" class="container__input" id="input_startpoint"
-                                       name="input_startpoint" value="{{ genParDict['gen_par_start'] }}" required>
-                            {% else %}
+
                                 <input type="date" class="container__input" id="input_startpoint"
                                        name="input_startpoint" value="2020-01-01" required>
-                            {% endif %}
                         </div>
                     </div>
                     <div class="container__row" id="layer1_column1_row2">
@@ -90,13 +86,9 @@
                             End point
                         </div>
                         <div class="container__innerColumn" id="layer1_column1_row2_inner2">
-                            {% if 'gen_par_end' in genParDict.keys() %}
-                                <input type="date" class="container__input" id="input_endpoint" name="input_endpoint"
-                                       value="{{ genParDict['gen_par_end'] }}" required>
-                            {% else %}
+
                                 <input type="date" class="container__input" id="input_endpoint" name="input_endpoint"
                                        value="2020-01-09" required>
-                            {% endif %}
                         </div>
                     </div>
                     <div class="container__row" id="layer1_column1_row3">
@@ -104,13 +96,9 @@
                             Stepsize
                         </div>
                         <div class="container__innerColumn" id="layer1_column1_row3_inner2">
-                            {% if 'gen_par_stepsize' in genParDict.keys() %}
-                                <input type="number" class="container__input" id="input_stepsize" placeholder="stepsize"
-                                       name="input_stepsize" value="{{ genParDict['gen_par_stepsize'] }}" required>
-                            {% else %}
+
                                 <input type="number" min="0" class="container__input" id="input_stepsize"
                                        placeholder="stepsize" name="input_stepsize" value="1" required>
-                            {% endif %}
                         </div>
                     </div>
                     <div class="container__row" id="layer1_column1_row4">
@@ -118,13 +106,9 @@
                             Top-k
                         </div>
                         <div class="container__innerColumn" id="layer1_column1_row4_inner2">
-                            {% if 'gen_par_topk' in genParDict.keys() %}
-                                <input type="number" min="0" class="container__input" id="input_topk" name="input_topk"
-                                       placeholder="Top-k" value="{{ genParDict['gen_par_topk'] }}" required>
-                            {% else %}
+
                                 <input type="number" min="0" class="container__input" id="input_topk" name="input_topk"
                                        placeholder="Top-k" value="5" required>
-                            {% endif %}
                         </div>
                     </div>
                     {# ########################## #}
@@ -272,6 +256,17 @@
 <script src="../static/jquery-3.2.1.js">
 </script>
 <script>
+
+    var genParDict = JSON.parse({{ genParDict | tojson | safe }});
+
+
+    window.onload = selectDataset();
+
+    function selectDataset() {
+        if (genParDict.hasOwnProperty('selected_ds_id')) {
+            $("#datasetSelection").val(genParDict['selected_ds_id'].toString());
+        }
+    }
 
     function switchVisibleParameters() {
 
