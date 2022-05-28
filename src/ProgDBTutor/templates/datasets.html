@@ -340,13 +340,21 @@ function sub3(obj) {
 
 var interval = null;
 function fetchStatusHere() {
-    fetch(`/datasets/update`)
+    let id = document.getElementById("datasetSelection");
+    if(id.options.length){
+        id = document.getElementById("datasetSelection").value;
+    }else{
+        id = -1;
+    }
+    fetch(`/datasets/update/${id}`)
         .then(function (response) {
                 return response.text();
             })
         .then(function (text){
             if (text === 'done'){
                 sendData()
+                clearInterval(interval)
+            }else if (text === 'no refresh'){
                 clearInterval(interval)
             }
         })

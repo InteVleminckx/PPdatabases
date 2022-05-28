@@ -68,7 +68,6 @@ abtest_id = getMaxABTestID() + 1
 
 file_attr_types = ["string", "float", "int", "image_url"]
 
-
 jsonData = dict()  # dictionary om de general parameters voor de ab-test pagina op te slaan
 
 # login_manager = LoginManager()
@@ -258,7 +257,6 @@ def getData(ds_id):
 # @login_required
 def datasets():
     if 'loggedin' in session:
-
         type_list = {}
         if request.method == 'POST':
             type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '',
@@ -279,11 +277,11 @@ def datasets():
                 type_list['customers_name_column'] = cust_col_name
 
         # handelRequests(app, session, request, datasetQueue, type_list)
+        session['jobsDataset'] = []
         jobs = handelRequests(app, session, request, datasetQueue, type_list)
         if 'jobsDataset' not in session:
             session['jobsDataset'] = []
         if jobs:
-            session['jobsDataset'] = []
             c = session['jobsDataset']
             c.append(jobs)
             session['jobsDataset'] = c
@@ -294,34 +292,54 @@ def datasets():
     return redirect(url_for('login_user'))
 
 
-@app.route("/datasets/update")
-def datasetUpdate():
+@app.route("/datasets/update/<ds_id>")
+def datasetUpdate(ds_id):
+    if ds_id == "-1":
+        return 'no refresh'
     if 'jobsDataset' in session:
         finished = True
-        notInQueue = True
-        if len(session["jobsDataset"]) == 0:
-            return 'done'
-
-        for i in range(len(session["jobsDataset"])):
-            for key, value in session["jobsDataset"][i]:
+        dsIdinQueue = False
+        if len(session['jobsDataset']) == 0:
+            return 'mo refresh'
+        for i in range(len(session['jobsDataset'])):
+            if ds_id == str(session['jobsDataset'][i]['id']) or \
+                    (session['jobsDataset'][i]['id'] == 'delete' and str(session['jobsDataset'][i]['deleted_id']) ==
+                     ds_id):
+                dsIdinQueue = True
+            for key, value in session['jobsDataset'][i].items():
+                if key == 'id' or value == True:
+                    continue
                 j = datasetQueue.fetch_job(key)
                 if j is not None:
-                    notInQueue = False
                     if str(j.get_status()) == "finished":
-                        l = session["jobsDataset"][i]
+                        l = session['jobsDataset'][i]
                         l[key] = True
-                        session["jobsDataset"] = l
-            if notInQueue:
-                l = session["jobsDataset"]
-                l.pop(i)
-                session["jobsDataset"] = l
+                        session['jobsDataset'][i] = l
+                else:
+                    l = session['jobsDataset'][i]
+                    l[key] = True
+                    session['jobsDataset'][i] = l
 
-            for key, value in session["jobsDataset"][i]:
+            for key, value in session['jobsDataset'][i].items():
                 if not value:
                     finished = False
 
-            if finished:
+            if finished and (str(session['jobsDataset'][i]['id']) == ds_id or (session['jobsDataset'][i]['id'] ==
+                                                                              'delete'
+                                                                          and str(session['jobsDataset'][i][
+                                                                              'deleted_id']) == ds_id)):
+                l = session['jobsDataset']
+                l.remove(session['jobsDataset'][i])
+                session['jobsDataset'] = l
                 return 'done'
+            elif finished:
+                l = session['jobsDataset']
+                l.remove(session['jobsDataset'][i])
+                session['jobsDataset'] = l
+
+        if not dsIdinQueue:
+            return 'done'
+
     return 'notDone'
 
 
@@ -339,6 +357,7 @@ def fileupload():
             headerDict['changed'] = 'customers_attr'
         # print(headerDict)
         return headerDict
+
 
 # ----------------- A/B-test Visualization page -----------------#
 
@@ -362,7 +381,8 @@ def visualizationsUpdate():
                 listUsers, orderedList, totUsers = abTestQueue.fetch_job(job[4]).result
 
                 return {"visualization": visualization, "topkRecommendations": topkReco, "topkPurchases": topkPurchases,
-                        "totaleRevenue": totRev, "totaleUsers": totUsers, "listUsers": listUsers, "sortingOrder": orderedList}
+                        "totaleRevenue": totRev, "totaleUsers": totUsers, "listUsers": listUsers,
+                        "sortingOrder": orderedList}
     return {}
 
 

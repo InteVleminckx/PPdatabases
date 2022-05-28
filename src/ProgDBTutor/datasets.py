@@ -22,8 +22,8 @@ def handelRequests(app, session, request, taskQueue, type_list):
 
         # Delete hier de dataset
         if dlte is not None:
-            job = taskQueue.enqueue(removeDataset, session['username'], rqst, job_timeout=600)
-            return {job.id: False}
+            job = taskQueue.enqueue(removeDataset, session['username'], int(rqst), job_timeout=600)
+            return {'id': 'delete', job.id: False, 'deleted_id': int(rqst)}
 
     # Add dataset form
     elif request.method == 'POST':
@@ -39,7 +39,7 @@ def addDatasetHere(app, session, tq, type_list):
         id2 = importCustomers(app, dataset_id, tq, type_list)
         id3 = importPurchases(app, dataset_id, tq)
         tq.enqueue(createDatasetIdIndex, job_timeout=600)
-        return {id1: False, id2: False, id3: False}
+        return {'id': dataset_id, id1: False, id2: False, id3: False}
     else:
         flash("You need admin privileges to upload a dataset", category='error')
 
@@ -124,7 +124,7 @@ def getCSVHeader(app, csv_filename):
 
 def getNumberOfUsers(cursor, dataset_id):
 
-    cursor.execute('SELECT attribute FROM customer where dataset_id = %s limit 1', str(dataset_id))
+    cursor.execute('SELECT attribute FROM customer where dataset_id = %s limit 1', str(dataset_id), )
     attr = cursor.fetchone()
     if not attr:
         return 0
@@ -140,7 +140,7 @@ def getNumberOfUsers(cursor, dataset_id):
 
 def getNumberOfArticles(cursor, dataset_id):
 
-    cursor.execute('SELECT attribute FROM Articles WHERE dataset_id = %s LIMIT 1', (str(dataset_id)))
+    cursor.execute('SELECT attribute FROM Articles WHERE dataset_id = %s LIMIT 1', (str(dataset_id), ))
     attribute = cursor.fetchone()
     if not attribute:
         return 0
