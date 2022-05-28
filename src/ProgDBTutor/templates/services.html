@@ -3,27 +3,27 @@
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 
-	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/services_style.css') }}">
     {#    <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">#}
     <link rel="stylesheet" href="{{ url_for('static',filename='style/sharedStyle.css') }}">
 
-	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
-	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
+    <script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
 
-{#    <link#}
-{#      rel="stylesheet"#}
-{#      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"#}
-{#      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"#}
-{#      crossorigin="anonymous"#}
-{#    />#}
-{#    <link#}
-{#      rel="stylesheet"#}
-{#      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"#}
-{#      crossorigin="anonymous"#}
-{#    />#}
+    {#    <link#}
+    {#      rel="stylesheet"#}
+    {#      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"#}
+    {#      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"#}
+    {#      crossorigin="anonymous"#}
+    {#    />#}
+    {#    <link#}
+    {#      rel="stylesheet"#}
+    {#      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"#}
+    {#      crossorigin="anonymous"#}
+    {#    />#}
 
 </head>
 
@@ -46,7 +46,8 @@
             <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
             <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
             <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
-            <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a>
+            </li>
             <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
         </ul>
     </div>
@@ -76,9 +77,11 @@
                         </div>
                         <div class="container__innerColumn" id="layer1_column1_row1_inner2">
                             {% if 'gen_par_start' in genParDict.keys() %}
-                                <input type="date" class="container__input" id="input_startpoint" name="input_startpoint" value="{{ genParDict['gen_par_start'] }}" required>
+                                <input type="date" class="container__input" id="input_startpoint"
+                                       name="input_startpoint" value="{{ genParDict['gen_par_start'] }}" required>
                             {% else %}
-                               <input type="date" class="container__input" id="input_startpoint" name="input_startpoint" value="2020-01-01" required>
+                                <input type="date" class="container__input" id="input_startpoint"
+                                       name="input_startpoint" value="2020-01-01" required>
                             {% endif %}
                         </div>
                     </div>
@@ -88,9 +91,11 @@
                         </div>
                         <div class="container__innerColumn" id="layer1_column1_row2_inner2">
                             {% if 'gen_par_end' in genParDict.keys() %}
-                                <input type="date" class="container__input" id="input_endpoint" name="input_endpoint" value="{{ genParDict['gen_par_end'] }}" required>
+                                <input type="date" class="container__input" id="input_endpoint" name="input_endpoint"
+                                       value="{{ genParDict['gen_par_end'] }}" required>
                             {% else %}
-                               <input type="date" class="container__input" id="input_endpoint" name="input_endpoint" value="2020-01-09" required>
+                                <input type="date" class="container__input" id="input_endpoint" name="input_endpoint"
+                                       value="2020-01-09" required>
                             {% endif %}
                         </div>
                     </div>
@@ -100,9 +105,11 @@
                         </div>
                         <div class="container__innerColumn" id="layer1_column1_row3_inner2">
                             {% if 'gen_par_stepsize' in genParDict.keys() %}
-                                <input type="text" class="container__input" id="input_stepsize" placeholder="stepsize" name="input_stepsize" value="{{ genParDict['gen_par_stepsize'] }}" required>
+                                <input type="number" class="container__input" id="input_stepsize" placeholder="stepsize"
+                                       name="input_stepsize" value="{{ genParDict['gen_par_stepsize'] }}" required>
                             {% else %}
-                               <input type="text" class="container__input" id="input_stepsize" placeholder="stepsize" name="input_stepsize" value="1" required>
+                                <input type="number" min="0" class="container__input" id="input_stepsize"
+                                       placeholder="stepsize" name="input_stepsize" value="1" required>
                             {% endif %}
                         </div>
                     </div>
@@ -112,40 +119,51 @@
                         </div>
                         <div class="container__innerColumn" id="layer1_column1_row4_inner2">
                             {% if 'gen_par_topk' in genParDict.keys() %}
-                                <input type="text" class="container__input" id="input_topk" name="input_topk" placeholder="Top-k" value="{{ genParDict['gen_par_topk'] }}" required>
+                                <input type="number" min="0" class="container__input" id="input_topk" name="input_topk"
+                                       placeholder="Top-k" value="{{ genParDict['gen_par_topk'] }}" required>
                             {% else %}
-                               <input type="text" class="container__input" id="input_topk" name="input_topk" placeholder="Top-k" value="5" required>
+                                <input type="number" min="0" class="container__input" id="input_topk" name="input_topk"
+                                       placeholder="Top-k" value="5" required>
                             {% endif %}
                         </div>
                     </div>
                     {# ########################## #}
 
                     {# Algorithm section #}
-                    <select name="algoSelection" id="algoSelection" onchange="switchVisibleParameters()">
-                        <option value="popularity">popularity</option>
-                        <option value="recency">recency</option>
-                        <option value="itemknn">itemKNN</option>
-                    </select>
+                    <div class="container__row" id="layer1_column1_row5">
+                        <div class="container__innerColumn" id="layer1_column1_row5_inner1">
+                            Algorithm and parameters
+                        </div>
+                        <div class="container__innerColumn" id="layer1_column1_row5_inner2">
+                            <select class="container__select" name="algoSelection" id="algoSelection"
+                                    onchange="switchVisibleParameters()">
+                                <option value="popularity">popularity</option>
+                                <option value="recency">recency</option>
+                                <option value="itemknn">itemKNN</option>
+                            </select>
+                        </div>
+
+                    </div>
                     {# ################# #}
 
                     {# Algorithm-specific parameters section #}
-                    <p>Set algorihm parameters</p>
                     <div class="container__section" id="section1" style="display: block">
                         <div class="container__row" id="section1_row1">
                             <div class="container__innerColumn" id="section1_row1_inner1">
-                                <label for="windowsize">Window Size</label>
+                                <label for="retraininterval">Retrain interval</label>
                             </div>
                             <div class="container__innerColumn" id="section1_row1_inner2">
-                                <input type="text" class="container__input" id="input_windowsize_p" name="input_windowsize_p" placeholder="Windowsize">
+                                <input type="number" min="0" class="container__input" id="input_retraininterval_p"
+                                       name="input_retraininterval_p" placeholder="Retrain interval">
                             </div>
                         </div>
                         <div class="container__row" id="section1_row2">
                             <div class="container__innerColumn" id="section1_row2_inner1">
-                                <label for="retraininterval">Retrain interval</label>
-
+                                <label for="windowsize">Window size</label>
                             </div>
                             <div class="container__innerColumn" id="section1_row2_inner2">
-                                <input type="text" class="container__input" id="input_retraininterval_p" name="input_retraininterval_p" placeholder="Retrain interval">
+                                <input type="number" min="0" class="container__input" id="input_windowsize_p"
+                                       name="input_windowsize_p" placeholder="Window size">
                             </div>
                         </div>
                     </div>
@@ -155,25 +173,28 @@
                                 <label for="retraininterval">Retrain interval</label>
                             </div>
                             <div class="container__innerColumn" id="section2_row1_inner2">
-                                <input type="text" class="container__input" id="input_retraininterval_r" name="input_retraininterval_r" placeholder="Retrain interval">
+                                <input type="number" min="0" class="container__input" id="input_retraininterval_r"
+                                       name="input_retraininterval_r" placeholder="Retrain interval">
                             </div>
                         </div>
                     </div>
                     <div class="container__section" id="section3" style="display: none">
                         <div class="container__row" id="section3_row1">
                             <div class="container__innerColumn" id="section3_row1_inner1">
-                                <label for="k">K</label>
+                                <label for="retraininterval">Retrain interval</label>
                             </div>
                             <div class="container__innerColumn" id="section3_row1_inner2">
-                                <input type="text" class="container__input" id="input_k" name="input_k" placeholder="k">
+                                <input type="number" min="0" class="container__input" id="input_retraininterval_i"
+                                       name="input_retraininterval_i" placeholder="Retrain interval">
                             </div>
                         </div>
                         <div class="container__row" id="section3_row2">
                             <div class="container__innerColumn" id="section3_row2_inner1">
-                                <label for="window">Windowsize</label>
+                                <label for="window">Window size</label>
                             </div>
                             <div class="container__innerColumn" id="section3_row2_inner2">
-                                <input type="text" class="container__input" id="input_windowsize_i" name="input_windowsize_i" placeholder="Windowsize">
+                                <input type="number" min="0" class="container__input" id="input_windowsize_i"
+                                       name="input_windowsize_i" placeholder="Window size">
                             </div>
                         </div>
                         <div class="container__row" id="section3_row3">
@@ -181,15 +202,17 @@
                                 <label for="normalize">Normalize</label>
                             </div>
                             <div class="container__innerColumn" id="section3_row3_inner2">
-                                <input type="text" class="container__input" id="input_normalize" name="input_normalize" placeholder="Normalize">
+                                <input type="number" min="0" max="1" class="container__input" id="input_normalize"
+                                       name="input_normalize" placeholder="Normalize">
                             </div>
                         </div>
                         <div class="container__row" id="section3_row4">
                             <div class="container__innerColumn" id="section3_row4_inner1">
-                                <label for="retraininterval">Retrain interval</label>
+                                <label for="k">K</label>
                             </div>
                             <div class="container__innerColumn" id="section3_row4_inner2">
-                                <input type="text" class="container__input" id="input_retraininterval_i" name="input_retraininterval_i" placeholder="Retrain interval">
+                                <input type="number" min="0" class="container__input" id="input_k" name="input_k"
+                                       placeholder="k">
                             </div>
                         </div>
                     </div>
@@ -198,7 +221,8 @@
                 </div>
             </div>
             <div class="container__column" id="layer1_column2">
-                <button class="container__button" id="addalgorithm_button" name="submit_button" value="algoSubmit" role="button" onclick="">
+                <button class="container__button" id="addalgorithm_button" name="submit_button" value="algoSubmit"
+                        role="button" onclick="">
                     Add algorithm
                 </button>
             </div>
@@ -206,15 +230,36 @@
 
         <div class="container__layer" id="layer2">
             <div class="container__column" id="layer2_column1">
-                <div class="container__head" id="layer2_column1_head">
-                    <h2>List of added algorithms</h2>
-                </div>
                 <div class="container__content" id="layer2_column1_content">
-
+                    {# Added algorithms table #}
+                    <table class="container__table" id="layer2_column1_table">
+                        <thead class="container__tablehead" id="layer2_column1_table_head">
+                        <tr class="container__tablerow" id="layer2_column1_table_head_row1">
+                            {# Table headers #}
+                            <th class="container__tableheadcontent" id="table_head_row1_column1">
+                                Algorithm number
+                            </th>
+                            <th class="container__tableheadcontent" id="table_head_row1_column2">
+                                Algorithm name
+                            </th>
+                            <th class="container__tableheadcontent" id="table_head_row1_column3">
+                                Remove
+                            </th>
+                            {# ############# #}
+                        </tr>
+                        </thead>
+                        <tbody class="container__tablebody" id="layer2_column1_table_body">
+                            {# Table content will be filled with javascript #}
+                        </tbody>
+                    </table>
+                    {# ###################### #}
                 </div>
             </div>
             <div class="container__column" id="layer2_column2">
-
+                <button class="container__button" id="executeabtest_button" name="submit_button" value="abtestSubmit"
+                        role="button" onclick="">
+                    Execute A/B-test
+                </button>
             </div>
         </div>
 
@@ -222,372 +267,165 @@
 </form>
 
 
-{#{% with messages = get_flashed_messages(with_categories=true) %}#}
-{#    {% if messages %}#}
-{#        {% for category, message in messages %}#}
-{#            {% if category == 'error' %}#}
-{#            <div class="alert alert-danger alter-dismissable fade show" role="alert">#}
-{#                {{ message }}#}
-{#                <button type="button" class="close" data-dismiss="alert">#}
-{#                    <span aria-hidden="true">&times;</span>#}
-{#                </button>#}
-{#            </div>#}
-{#            {% else %}#}
-{#            <div class="alert alert-success alter-dismissable fade show" role="alert">#}
-{#                {{ message }}#}
-{#                <button type="button" class="close" data-dismiss="alert">#}
-{#                    <span aria-hidden="true">&times;</span>#}
-{#                </button>#}
-{#            </div>#}
-{#            {% endif %}#}
-{#        {% endfor %}#}
-{#    {% endif %}#}
-{#{% endwith %}#}
-{##}
-{#<form id="dataForm" method="POST" action="" data-name="cForm">#}
-{##}
-{#<div class="abtestpage" id="services">#}
-{#    <h1>Setting up the A/B-test</h1>#}
-{#    <div class="abtestcontainer">#}
-{#        <div class="_row">#}
-{#            <div class="_column">#}
-{#                <h2>Add Algorithm</h2>#}
-{##}
-{#                <div class="abtestcontainer1" style="">#}
-{#                        <div class="container___">#}
-{##}
-{#                            <form id="dataForm" method="POST" action="" data-name="cForm">#}
-{##}
-{##}
-{#                              <!-- Dataset Selection-->#}
-{##}
-{#                              <select class="ds_select" id="datasetSelection" name="datasetSelection">#}
-{#                                  {% for id, name in names %}#}
-{#                                    <option value="{{ id }}">dataset: {{ name }}</option>#}
-{#                                  {% endfor %}#}
-{#                              </select>#}
-{##}
-{#                              <!-- General parameters Selection-->#}
-{##}
-{#                              <div class="row">#}
-{#                                  <div class="col-25"><label for="startingpoint">Starting point</label></div>#}
-{##}
-{#                                  {% if 'gen_par_start' in genParDict.keys() %}#}
-{#                                    <div class="col-75"><input type="date" id="startingpoint" name="startingpoint" placeholder="Starting point" value="{{ genParDict['gen_par_start'] }}" required></div>#}
-{#                                  {% else %}#}
-{#                                    <div class="col-75"><input type="date" id="startingpoint" name="startingpoint" placeholder="Starting point" value="2020-01-01" required></div>#}
-{#                                  {% endif %}#}
-{#                              </div>#}
-{#                              <div class="row">#}
-{#                                  <div class="col-25"><label for="endpoint">End point</label></div>#}
-{#                                  {% if 'gen_par_end' in genParDict.keys() %}#}
-{#                                    <div class="col-75"><input type="date" id="endpoint" name="endpoint" placeholder="End point" value="{{ genParDict['gen_par_end'] }}" required></div>#}
-{#                                  {% else %}#}
-{#                                    <div class="col-75"><input type="date" id="endpoint" name="endpoint" placeholder="End point" value="2020-01-09" required></div>#}
-{#                                  {% endif %}#}
-{#                              </div>#}
-{#                              <div class="row">#}
-{#                                  <div class="col-25"><label for="stepsize">Stepsize</label></div>#}
-{#                                  {% if 'gen_par_stepsize' in genParDict.keys() %}#}
-{#                                    <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize" value="{{ genParDict['gen_par_stepsize'] }}" required></div>#}
-{#                                  {% else %}#}
-{#                                    <div class="col-75"><input type="text" id="stepsize" name="stepsize" placeholder="Stepsize" value="1" required></div>#}
-{#                                  {% endif %}#}
-{#                              </div>#}
-{#                              <div class="row">#}
-{#                                  <div class="col-25"><label for="topk">Top-k</label></div>#}
-{#                                  {% if 'gen_par_topk' in genParDict.keys() %}#}
-{#                                    <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" value="{{ genParDict['gen_par_topk'] }}" required></div>#}
-{#                                  {% else %}#}
-{#                                    <div class="col-75"><input type="text" id="topk" name="topk" placeholder="Top-k" value="5" required></div>#}
-{#                                  {% endif %}#}
-{#                              </div>#}
-{##}
-{#                            </form>#}
-{##}
-{#                            <form id="dataForm1" method="POST" action="">#}
-{##}
-{##}
-{#                              <!-- Algorithm Selection-->#}
-{##}
-{#                              <select class="_ds_select" id="algoSelection" name="algoSelection" onchange="switchVisibleParameters();">#}
-{#                                  <option value="popularity">popularity</option>#}
-{#                                  <option value="recency">recency</option>#}
-{#                                  <option value="itemknn">itemknn</option>#}
-{#                              </select>#}
-{##}
-{#                              <!-- Algorithm-specific parameters Selection-->#}
-{##}
-{#                                <p style="color: black; margin-top: 12px;">Set Algorithm Parameters:</p>#}
-{##}
-{#                                <div class="par_form">#}
-{#                                    <div class="container1" id="popularity_par" style="border: 2px solid black; display: block;">#}
-{#                                      <div class="row">#}
-{#                                        <div class="col-25"><label for="windowsize">Window Size</label></div>#}
-{#                                        <div class="col-75" style="width: 25%"><input type="text" id="windowsize" name="windowsize" placeholder="windowsize" ></div>#}
-{#                                      </div>#}
-{#                                      <div class="row">#}
-{#                                        <div class="col-25"><label for="retraininterval">Retrain interval</label></div>#}
-{#                                        <div class="col-75" style="width: 25%"><input type="text" id="retraininterval1" name="retraininterval1" placeholder="retraininterval" ></div>#}
-{#                                      </div>#}
-{#                                    </div>#}
-{##}
-{#                                    <div class="container2" id="recency_par" style="border: 2px solid black; display: none;">#}
-{#                                      <div class="row">#}
-{#                                        <div class="col-25"><label for="retraininterval">Retrain interval</label></div>#}
-{#                                        <div class="col-75" style="width: 25%"><input type="text" id="retraininterval2" name="retraininterval2" placeholder="retraininterval" ></div>#}
-{#                                      </div>#}
-{#                                    </div>#}
-{##}
-{#                                    <div class="container3" id="itemknn_par" style="border: 2px solid black; display: none;">#}
-{#                                      <div class="row">#}
-{#                                        <div class="col-25"><label for="k">K</label></div>#}
-{#                                        <div class="col-75" style="width: 25%"><input type="text" id="k" name="k" placeholder="k" ></div>#}
-{#                                      </div>#}
-{#                                      <div class="row">#}
-{#                                        <div class="col-25"><label for="window">Window</label></div>#}
-{#                                        <div class="col-75" style="width: 25%"><input type="text" id="window" name="window" placeholder="window" ></div>#}
-{#                                      </div>#}
-{#                                      <div class="row">#}
-{#                                        <div class="col-25"><label for="normalize">Normalize</label></div>#}
-{#                                        <div class="col-75" style="width: 25%"><input type="text" id="normalize" name="normalize" placeholder="normalize" ></div>#}
-{#                                      </div>#}
-{#                                      <div class="row">#}
-{#                                        <div class="col-25"><label for="retraininterval">Retrain interval</label></div>#}
-{#                                        <div class="col-75" style="width: 25%"><input type="text" id="retraininterval3" name="retraininterval3" placeholder="retraininterval" ></div>#}
-{#                                      </div>#}
-{#                                    </div>#}
-{##}
-{#                                </div>#}
-{#                            <button style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" type="submit" name="submit_button" value="algoSubmit" role="button">#}
-{#                                Add Algorithm#}
-{#                            </button>#}
-{#                            <button class="algosubmit" style="margin-top: 15px; margin-left: auto; margin-right: auto; display: block;" id="algoSubmit" name="submit_button" value="algoSubmit" role="button" onclick="">#}
-{#                                Add Algorithm#}
-{#                            </button>#}
-{#                            </form>#}
-{#                        </div>#}
-{#                    </div>#}
-{##}
-{#            </div>#}
-{##}
-{#            <div class="_column">#}
-{#                <h2>List of added algorithms</h2>#}
-{##}
-{#                <div class="abtestcontainer1" style="background-color: white;">#}
-{#                    <div class="greycontainer">#}
-{#                        <table class="scroll-table" id="scrolltable" style="background-color: darkgray;">#}
-{#                            <thead>#}
-{#                                <tr>#}
-{#                                    <td style="border-top: 0;">Algorithm number</td>#}
-{#                                    <td style="border-top: 0;">Algorithm name</td>#}
-{#                                    <td style="color: red; border-top: 0;">Remove</td>#}
-{#                                </tr>#}
-{#                            </thead>#}
-{#                            <tbody id="tablesection" style="height: 626px;">#}
-{##}
-{#                            </tbody>#}
-{#                        </table>#}
-{#                    </div>#}
-{#            </div>#}
-{##}
-{#        </div>#}
-{#    </div>#}
-{#    </div>#}
-{##}
-{#    <button class="abtestsubmit_btn" style="margin-left: auto; margin-right: auto;" id="abtestSubmit" name="submit_button" value="abtestSubmit" role="button">#}
-{#        Submit A/B-test#}
-{#    </button>#}
-{#</div>#}
-{#</form>#}
+
 
 <script src="../static/jquery-3.2.1.js">
 </script>
 <script>
-    {#$('#algoSelection').val();#}
-    {#var select1 = document.getElementById('algoSelect');#}
-    {#var value = select1.options[select1.selectedIndex].value;#}
-    {#console.log(value);#}
-
-    {#function update() {#}
-    {#    var select = document.getElementById('algoSelection');#}
-    {#    var option = select.options[select.selectedIndex];#}
-    {##}
-    {#    document.getElementById('algoSelection').value = option.value;#}
-
-    {#update();#}
-
-
-    {#var form = $('form[data-name="cForm"]');#}
-    {#form.find($("#startingpoint")).val("2020-01-01");#}
-    {#form.find($("#endpoint")).val("2020-09-01");#}
-    {#form.find($("#stepsize")).val("1");#}
-    {#form.find($("#topk")).val("5");#}
-
-
-    {#$(document).ready(function() {#}
-    {#    $("#algoSelection").change(function() {#}
-    {##}
-    {#        //Hide -other- visible forms#}
-    {#        $("#popularity_par, #recency_par, #itemknn_par").hide();#}
-    {#        $("#" + $(this).val()).show();#}
-    {#    });#}
-    {# });#}
-
-
 
     function switchVisibleParameters() {
 
-    var select = document.getElementById('algoSelection');
-    var option = select.options[select.selectedIndex];
+        var select = document.getElementById('algoSelection');
+        var option = select.options[select.selectedIndex];
 
-    if (option.value == 'popularity') {
-            if (document.getElementById('popularity_par').style.display == 'none') {
-                document.getElementById('popularity_par').style.display = 'block';
-                document.getElementById('recency_par').style.display = 'none';
-                document.getElementById('itemknn_par').style.display = 'none';
+        if (option.value == 'popularity') {
+            if (document.getElementById('section1').style.display == 'none') {
+                document.getElementById('section1').style.display = 'block';
+                document.getElementById('section2').style.display = 'none';
+                document.getElementById('section3').style.display = 'none';
 
             }
-        }
-        else if (option.value == 'recency') {
-            if (document.getElementById('recency_par').style.display == 'none') {
-                document.getElementById('popularity_par').style.display = 'none';
-                document.getElementById('recency_par').style.display = 'block';
-                document.getElementById('itemknn_par').style.display = 'none';
+        } else if (option.value == 'recency') {
+            if (document.getElementById('section2').style.display == 'none') {
+                document.getElementById('section1').style.display = 'none';
+                document.getElementById('section2').style.display = 'block';
+                document.getElementById('section3').style.display = 'none';
             }
-        }
-        else if (option.value == 'itemknn') {
-            if (document.getElementById('itemknn_par').style.display == 'none') {
-                document.getElementById('popularity_par').style.display = 'none';
-                document.getElementById('recency_par').style.display = 'none';
-                document.getElementById('itemknn_par').style.display = 'block';
+        } else if (option.value == 'itemknn') {
+            if (document.getElementById('section3').style.display == 'none') {
+                document.getElementById('section1').style.display = 'none';
+                document.getElementById('section2').style.display = 'none';
+                document.getElementById('section3').style.display = 'block';
             }
         }
     }
 
-    $(document).ready(function() {
-        setTimeout(function() {
+    $(document).ready(function () {
+        setTimeout(function () {
             $('.alert').fadeOut('slow');
-            }, 1000); // <-- time in milliseconds
-        });
+        }, 1000); // <-- time in milliseconds
+    });
 
 
-var algo_id = 1;
-var algo_list = [];
-var algo_dict = {};
+    var algo_id = 1;
+    var algo_list = [];
+    var algo_dict = {};
 
-$(function() {
-    $('#algoSubmit').click(function() {
-        {#var form_data = new FormData($('#dataForm')[0]);#}
-        var form_data = $('#dataForm').serializeArray();
-        data_dict = {'form_data':{}, 'algo_id':algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict};
-        {#console.log(form_data);#}
-        for (var el of form_data) {
-            data_dict['form_data'][el['name']] = el['value'];
-        }
-        console.log(data_dict);
 
-        $.ajax({
-            type: 'POST',
-            url: '/services/addalgorithm',
-            data: JSON.stringify(data_dict),
-            contentType: 'application/json; charset=utf-8',
-            cache: false,
-            processData: false,
-            success: function(data) {
-                algo_id = data['algo_id'];
-                algo_list = data['algo_list'];
-                algo_dict = data['algo_dict'];
-                console.log(algo_id);
-                console.log(algo_list);
-                console.log(algo_dict);
-                generateAttrHtml(data);
-            },
+    $(function () {
+        $('#addalgorithm_button').click(function () {
+            {#var form_data = new FormData($('#dataForm')[0]);#}
+            var form_data = $('#form1').serializeArray();
+
+            data_dict = {'form_data': {}, 'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict};
+            console.log(form_data);
+            for (var el of form_data) {
+                data_dict['form_data'][el['name']] = el['value'];
+            }
+            {#console.log(data_dict);#}
+
+            $.ajax({
+                type: 'POST',
+                url: '/services/addalgorithm',
+                data: JSON.stringify(data_dict),
+                contentType: 'application/json; charset=utf-8',
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    algo_id = data['algo_id'];
+                    algo_list = data['algo_list'];
+                    algo_dict = data['algo_dict'];
+                    {#console.log(algo_id);#}
+                    {#console.log(algo_list);#}
+                    {#console.log(algo_dict);#}
+                    generateAttrHtml(data);
+                },
+            });
         });
     });
-});
 
-function generateAttrHtml(data) {
+    function generateAttrHtml(data) {
 
-    var attrElem = document.getElementById("tablesection");
-    var _html = "";
-    var algo_num = data['algo_id']-1;
-    var lastAlgoAdded = data['algo_dict'][algo_num.toString()]; // Object.keys(data).length.toString()
-    console.log(lastAlgoAdded);
+        var attrElem = document.getElementById("layer2_column1_table_body");
+        var _html = "";
+        var algo_num = data['algo_id'] - 1;
+        var lastAlgoAdded = data['algo_dict'][algo_num.toString()]; // Object.keys(data).length.toString()
+        {#console.log(lastAlgoAdded);#}
 
-    _html += "<tr id=\"" + algo_num + "\">";
-    _html += "<td>" + algo_num + "</td>";
-    _html += "<td>" + lastAlgoAdded + "</td>";
-    _html += "<td style=\"font-size: 20px;color: red;cursor: pointer;\" onclick=\"removeAlgorithm(" + algo_num + ")\"><div>&times;</div></td>";
-    _html += "</tr>";
+        _html += "<tr class=\"container__tablerow\" id=\"" + algo_num + "\">";
+        _html += "<td class=\"container__tablerowcontent\" >" + algo_num + "</td>";
+        _html += "<td class=\"container__tablerowcontent\" >" + lastAlgoAdded + "</td>";
+        _html += "<td class=\"container__tablerowcontent\" style=\"font-size: 20px;color: red;cursor: pointer;\" onclick=\"removeAlgorithm(" + algo_num + ")\"><div>&times;</div></td>";
+        _html += "</tr>";
 
-    attrElem.innerHTML += _html;
+        attrElem.innerHTML += _html;
 
-}
+    }
 
-$('button.algosubmit').click(function(e) {
-    e.preventDefault();
-});
+    $('button.container__button#addalgorithm_button').click(function (e) {
+        e.preventDefault();
+    });
 
-$('button.abtestSubmit').click(function(e) {
-    algo_id = 1;
-    algo_list = [];
-    algo_dict = {};
-});
+    $('button.container__button#executeabtest_button').click(function (e) {
+        {#algo_id = 1;#}
+        {#algo_list = [];#}
+        {#algo_dict = {};#}
+    });
 
-$(function() {
-    $('#abtestSubmit').click(function(event) {
-        event.preventDefault();
-        var form_data = $('#dataForm').serializeArray();
-        data_dict = {'form_data':{}, 'algo_id':algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}; // alle data die we willen versturen
-        for (var el of form_data) { // de form elementen aan de data_dict toevoegen.
-            data_dict['form_data'][el['name']] = el['value'];
-        }
+    $(function () {
+        $('#executeabtest_button').click(function (event) {
+            event.preventDefault();
+            var form_data = $('#form1').serializeArray();
+            data_dict = {'form_data': {}, 'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}; // alle data die we willen versturen
+            for (var el of form_data) { // de form elementen aan de data_dict toevoegen.
+                data_dict['form_data'][el['name']] = el['value'];
+            }
+            console.log(data_dict)
 
-        $.ajax({
-            type: 'POST',
-            url: '/services',
-            data: JSON.stringify(data_dict),
-            contentType: 'application/json; charset=utf-8',
-            cache: false,
-            processData: false,
-            success: function(data) {
-                console.log(data);
-                window.location.href = "{{ url_for('visualizations') }}"; // de redirect naar andere pagina in javascript
+            $.ajax({
+                type: 'POST',
+                url: '/services',
+                data: JSON.stringify(data_dict),
+                contentType: 'application/json; charset=utf-8',
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    {#console.log(data);#}
+                    window.location.href = "{{ url_for('visualizations') }}"; // de redirect naar andere pagina in javascript
 
-            },
+                },
+            });
         });
     });
-});
 
-// Function that will remove an algorithm from the temporary algorithm table, list and dict
-function removeAlgorithm(algo_id) {
-    // Remove from the HTML
-    {#console.log(e.target.parentElement.id);#}
-    var row = document.getElementById(algo_id.toString());
-    row.remove();
+    // Function that will remove an algorithm from the temporary algorithm table, list and dict
+    function removeAlgorithm(algo_id) {
+        // Remove from the HTML
+        {#console.log(e.target.parentElement.id);#}
+        var row = document.getElementById(algo_id.toString());
+        row.remove();
 
-    // Remove from algo_list
-    let change = true;
-    while (change) {
-        change = false;
-        let index = -1;
-        for (let i = 0; i < algo_list.length; i++) {
-            if (algo_list[i][0] === algo_id) {
-                index = i;
-                change = true;
-                break;
+        // Remove from algo_list
+        let change = true;
+        while (change) {
+            change = false;
+            let index = -1;
+            for (let i = 0; i < algo_list.length; i++) {
+                if (algo_list[i][0] === algo_id) {
+                    index = i;
+                    change = true;
+                    break;
+                }
+            }
+            if (change) {
+                algo_list.splice(index, 1);
             }
         }
-        if (change) {
-            algo_list.splice(index, 1);
+        // Remove from algo_dict
+        if (algo_dict.hasOwnProperty(algo_id)) {
+            delete algo_dict[algo_id];
         }
     }
-    // Remove from algo_dict
-    if (algo_dict.hasOwnProperty(algo_id)) {
-        delete algo_dict[algo_id];
-    }
-}
 
 </script>
 

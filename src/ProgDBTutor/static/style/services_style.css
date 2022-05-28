@@ -2,15 +2,16 @@
 /*       algemene container       */
 /**********************************/
 .container__page {
-    height: 710px;
+    height: 750px;
     flex-direction: row;
     justify-content: space-evenly;
 }
+
 /**********************************/
 /*       layer container       */
 /**********************************/
 .container__layer {
-    height: 610px;
+    height: 650px;
     width: 613px;
     margin-top: 50px;
     flex-direction: column;
@@ -24,23 +25,21 @@
     justify-content: space-between;
 }
 
-/*#layer1_column1 {*/
-/*    */
-/*}*/
-
 #layer1_column1, #layer2_column1 {
-    height: 545px;
+    height: 585px;
 }
 
 #layer1_column2, #layer2_column2 {
     height: 40px;
+    justify-content: center;
+
 }
 
 
 /**********************************/
 /*         head container         */
 /**********************************/
-.container__head{
+.container__head {
     width: 613px;
 }
 
@@ -48,8 +47,95 @@
 /*       content container        */
 /**********************************/
 .container__content {
-    height: 505px;
     width: 613px;
+}
+
+.container__content#layer1_column1_content {
+    height: 545px;
+    flex-direction: column;
+}
+
+.container__content#layer2_column1_content {
+    height: 585px;
+}
+
+/**********************************/
+/*          row container         */
+/**********************************/
+.container__row {
+    width: 563px;
+    height: 50px;
+}
+
+/**********************************/
+/*        section container       */
+/**********************************/
+.container__section {
+    height: 220px;
+    border: 1px solid var(--theme-bg-color);
+    border-radius: var(--dash-bd-radius);
+    margin-bottom: 25px;
+}
+
+#section1_row1, #section2_row1, #section3_row1 {
+    margin-top: 10px;
+}
+
+/**********************************/
+/*      select container       */
+/**********************************/
+.container__select {
+
+}
+
+.container__select#algoSelection {
+    font-weight: normal;
+    color: black;
+}
+
+/**********************************/
+/*        input container         */
+/**********************************/
+.container__input, .container__select#algoSelection {
+
+    height: 40px;
+    width: 140px;
+    font-size: 13px;
+    border: 1px solid lightgrey;
+    border-radius: var(--dash-bd-radius);
+    text-align: left;
+    padding-left: 10px;
+    align-content: center;
+    align-items: center;
+}
+
+/**********************************/
+/*         button container       */
+/**********************************/
+.container__button {
+
+}
+
+.container__column button {
+    background-color: var(--head-tx-color);
+    color: var(--theme-bg-color);
+}
+
+/**********************************/
+/*        table container         */
+/**********************************/
+.container__table {
+    height: 585px;
+    width: 613px;
+}
+
+.container__tablehead {
+    height: 40px;
+}
+
+.container__tablebody .container__tablerow {
+    height: 40px;
+    border-bottom: 1px solid lightgrey;
 }
 
 
@@ -213,9 +299,6 @@
 /*        grid-template-columns: 1fr;*/
 /*    }*/
 /*}*/
-
-
-
 
 
 /*._select {*/
@@ -510,7 +593,6 @@
 /*}*/
 
 
-
 /*.container1 {*/
 /*  border-radius: 5px;*/
 /*  background-color: #f2f2f2;*/
@@ -615,7 +697,6 @@
 /*}*/
 
 
-
 /*.greycontainer {*/
 /*    background-color: darkgray;*/
 /*    padding-top: 5px;*/
@@ -629,7 +710,6 @@
 /*    border: none;*/
 /*    border-radius: 4px;*/
 /*    cursor: pointer;*/
-
 
 
 /*}*/

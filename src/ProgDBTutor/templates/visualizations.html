@@ -3,7 +3,7 @@
 
     <title>Recommended4you - Visualisation</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='style/user_style.css') }}">
+    {#    <link rel="stylesheet" href="{{ url_for('static',filename='style/user_style.css') }}">#}
     <link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/visualizations_style.css') }}">
@@ -11,7 +11,7 @@
     <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 
 
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css"/>
     <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 
@@ -19,7 +19,7 @@
 </head>
 <body>
 
-{#Navbar section#}
+{# Navbar section #}
 <nav class="navbar" id="navbar">
     <div class="navbar_container">
         <div class="navbar_toggle" id="mobile-menu">
@@ -31,147 +31,392 @@
             <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
             <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
             <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
-            <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a>
+            </li>
             <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
         </ul>
     </div>
 </nav>
+{# ############## #}
 
-<div class="container__itemsection">
+{# Visualizations page #}
+<div class="container__page" id="visualizationspage">
+    {# Layer1 #}
+    <div class="container__layer" id="layer1">
 
-{#    AB-InfoSection#}
-    <div class="container__info">
-        <div class="split__container">
-            <div class="ab_container__info">
-                <div class="ab__split">
-                    <div class="ab__info">
-                        <p>AB-test ID:</p>
+        {# abtest standard parameters #}
+        <div class="container__column" id="layer1_column1">
+
+            {# Header standard parameters #}
+            <div class="container__head" id="layer1_column1_head">
+                <h2>AB-test information</h2>
+            </div>
+            {# ########################## #}
+
+            {# content standard parameters #}
+            <div class="container__content" id="layer1_column1_content">
+                {# row for abtest id and datasetname#}
+                <div class="container__row" id="layer1_column1_row1">
+                    <div class="container__innerColumn" id="layer1_column1_row1_inner1">
+                        <p>AB-test ID: </p>
+                    </div>
+                    <div class="container__innerColumn" id="layer1_column1_row1_inner2">
                         <p id="abtest_id"></p>
                     </div>
-                    <div class="ab__info">
-                        <p>Dataset name:</p>
+                    <div class="container__innerColumn" id="layer1_column1_row1_inner3">
+                        <p>Dataset name: </p>
+                    </div>
+                    <div class="container__innerColumn" id="layer1_column1_row1_inner4">
                         <p id="dataset_name"></p>
                     </div>
-                    <div class="ab__info">
-                        <p>Startpoint:</p>
-                        <p id="startpoint"></p>
-                    </div>
                 </div>
-                <div class="ab__split">
-                    <div class="ab__info">
-                        <p>Stepsize:</p>
-                        <p id="stepsize"></p>
+                {# ################################ #}
+
+                {# row for topk and stepsize#}
+                <div class="container__row" id="layer1_column1_row2">
+                    <div class="container__innerColumn" id="layer1_column1_row2_inner1">
+                        <p>Top-k: </p>
                     </div>
-                    <div class="ab__info">
-                        <p>Top-k:</p>
+                    <div class="container__innerColumn" id="layer1_column1_row2_inner2">
                         <p id="topk"></p>
                     </div>
-                    <div class="ab__info">
-                        <p>Endpoint:</p>
+                    <div class="container__innerColumn" id="layer1_column1_row2_inner3">
+                        <p>Stepsize: </p>
+                    </div>
+                    <div class="container__innerColumn" id="layer1_column1_row2_inner4">
+                        <p id="stepsize"></p>
+                    </div>
+                </div>
+                {# ######################## #}
+
+                {# row for start-and endpoint#}
+                <div class="container__row" id="layer1_column1_row3">
+                    <div class="container__innerColumn" id="layer1_column1_row3_inner1">
+                        <p>Startpoint: </p>
+                    </div>
+                    <div class="container__innerColumn" id="layer1_column1_row3_inner2">
+                        <p id="startpoint"></p>
+                    </div>
+                    <div class="container__innerColumn" id="layer1_column1_row3_inner3">
+                        <p>Endpoint: </p>
+                    </div>
+                    <div class="container__innerColumn" id="layer1_column1_row3_inner4">
                         <p id="endpoint"></p>
                     </div>
                 </div>
+                {# ######################### #}
+
             </div>
-            <div class="ab_container__table" id="algorithmTable">
-                <table class="generalPurpose_table flex-fixhead-algorithm_table" id="test1">
-                    <thead>
-                    <tr>
-                        <th>Number</th>
-                        <th>Name</th>
-                        <th>K</th>
-                        <th>Windowsize</th>
-                        <th>Normalize</th>
-                        <th>Retraininterval</th>
+            {# ########################### #}
+
+        </div>
+        {# ########################## #}
+
+        {# Total purchases abtest #}
+        <div class="container__column" id="layer1_column2">
+
+            {# Header total purchases #}
+            <div class="container__head" id="layer1_column2_head">
+                <h2>Totale purchases</h2>
+            </div>
+            {# ###################### #}
+
+            {# content total purchases #}
+            <div class="container__content" id="layer1_column2_content">
+                <p id="purchases"></p>
+            </div>
+            {# ####################### #}
+
+        </div>
+        {# ###################### #}
+
+        {# Unique active users abtest #}
+        <div class="container__column" id="layer1_column3">
+
+            {# Header unique active users #}
+            <div class="container__head" id="layer1_column3_head">
+                <h2>Active users</h2>
+            </div>
+            {# ########################## #}
+
+            {# content unique active users #}
+            <div class="container__content" id="layer1_column3_content">
+                <p id="users"></p>
+            </div>
+            {# ########################### #}
+
+        </div>
+        {# ########################## #}
+
+    </div>
+    {# ###### #}
+
+    {# Layer2 #}
+    <div class="container__layer" id="layer2">
+
+        {# Table algorithmes #}
+        <div class="container__column" id="layer2_column1">
+
+            {# Content table algorithmes #}
+            <div class="container__content" id="layer2_column1_content">
+                {# Added algorithms table #}
+                <table class="container__table" id="layer2_column1_table">
+                    <thead class="container__tablehead" id="layer2_column1_table_head">
+                    <tr class="container__tablerow" id="layer2_column1_table_head_row1">
+                        {# Table headers #}
+                        <th class="container__tableheadcontent" id="table_head_row1_column1">Number</th>
+                        <th class="container__tableheadcontent" id="table_head_row1_column2">Name</th>
+                        <th class="container__tableheadcontent" id="table_head_row1_column3">Retrain interval</th>
+                        <th class="container__tableheadcontent" id="table_head_row1_column4">Window size</th>
+                        <th class="container__tableheadcontent" id="table_head_row1_column5">Normalize</th>
+                        <th class="container__tableheadcontent" id="table_head_row1_column6">K</th>
+                        {# ############# #}
                     </tr>
                     </thead>
-                    <tbody id="tableAlgoritmes"></tbody>
+                    <tbody class="container__tablebody" id="layer2_column1_table_body">
+                    {# Table content will be filled with javascript #}
+                    </tbody>
                 </table>
             </div>
-            <div class="metric_container__graph" id="arpuad_graph" ></div>
+            {# ######################### #}
 
-            <div class="container__algemeneinfo">
-                <div class="container__algemeneinfo_split">
-                    <div class="container__algemeneinfo_topkRecommendations" id="topkRecommendations">
-                        <div class="topkRecommendation" id="tableRecommendations"></div>
-                    </div>
-                </div>
-                <div class="container__algemeneinfo_split">
-                    <div class="container__algemeneinfo_layer">
-                        <div class="container__algemeneinfo_topkPurchases" id="topkPurchases">
-                            <table class="generalPurpose_table flex-fixhead-topKPurchases_table" id="test2">
-                                <thead>
-                                <tr>
-                                    <th>Item_id</th>
-                                    <th>Count</th>
-                                </tr>
-                                </thead>
-                                <tbody id="tableTopkRecommendations"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="container__algemeneinfo_layer">
-                        <div class="container__algemeneinfo__values" id="uniqueUsers">
-                            <h2>Unique users:</h2>
-                            <p id="unique_users"></p>
-                        </div>
-                        <div class="container__algemeneinfo__values" id="totalRevenue">
-                            <h2>Total revenue:</h2>
-                            <p id="total_revenue"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-        <div class="split__container">
-            <div class="ab_container__info">
-                <div class="metric__info_purch_active">
-                    <h2>Total purchases:</h2>
-                    <p id="purchases"></p>
-                </div>
-                <div class="metric__info_purch_active">
-                    <h2>Active users:</h2>
-                    <p id="users"></p>
-                </div>
-            </div>
-            <div class="metric_container__graph" id="user_purch_graph"></div>
-            <div class="metric_container__graph" id="ctr_arad_graph"></div>
-            <div class="container__algemeneinfo">
-                <div class="container__algemeneinfo_userlist" id="userLists">
-                    <table class="generalPurpose_table flex-fixhead-userList_table" id="test3">
-                        <thead>
-                            <tr>
-                                <th style="cursor: pointer" onclick="orderUsers(0)">Active user</th>
-                                <th style="cursor: pointer" onclick="orderUsers(1)">Total purchases</th>
-                                <th style="cursor: pointer" onclick="orderUsers(2)">Purchases over time</th>
-                                <th style="cursor: pointer" onclick="orderUsers(3)">CTR</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableUserList"></tbody>
-                    </table>
+        {# ################# #}
 
-                </div>
-                <div class="container__algemeneinfo_slider">
-                    <div class="slider__date">
-                        <p>
-                            <input type="text" id="amount" disabled style=" border: 0; color: #30799B; font-weight: bold; font-size: 18px" size="40" />
-                        </p>
-                    </div>
+        {# Graph purchases and active users #}
+        <div class="container__column" id="layer2_column2">
 
-                    <div class="slider__range" id="slider-range"></div>
-                    <div class="slider__button">
-                        <div class="style_slider__button">
-                            <button onclick="renewInterval()">RENEW</button>
-                        </div>
-                    </div>
-                </div>
+            {# Header graph purchases and active users #}
+            <div class="container__head" id="layer2_column2_head">
+                <h2>Purchases and active user per day</h2>
             </div>
+            {# ######################################## #}
+
+            {# Content graph purchases and active users #}
+            <div class="container__content" id="layer2_column2_content">
+
+            </div>
+            {# ######################################## #}
+
         </div>
+        {# ################################ #}
+
     </div>
+    {# ###### #}
+
+    {# Layer3 #}
+    <div class="container__layer" id="layer3">
+
+        {# Graph ar@d and CTR#}
+        <div class="container__column" id="layer3_column1">
+
+            {# Header graph ar@d and CTR #}
+            <div class="container__head" id="layer3_column1_head">
+                <h2>CTR and ar@d per timestamp</h2>
+            </div>
+            {# ######################### #}
+
+            {# Content graph ar@d and CTR #}
+            <div class="container__content" id="layer3_column1_content">
+
+            </div>
+            {# ########################## #}
+
+        </div>
+        {# ################# #}
+
+        {# Graph arpu@d #}
+        <div class="container__column" id="layer3_column2">
+
+            {# Header graph arpu@d #}
+            <div class="container__head" id="layer3_column2_head">
+                <h2>Arpu@d per timestamp</h2>
+            </div>
+            {# ################### #}
+
+            {# Content graph apru@d #}
+            <div class="container__content" id="layer3_column2_content">
+
+            </div>
+            {# #################### #}
+
+        </div>
+        {# ############ #}
+
+    </div>
+    {# ###### #}
+
+    {# Layer4 #}
+    <div class="container__layer" id="layer4">
+
+        {# Table algorithms with own topk #}
+        <div class="container__column" id="layer4_column1">
+
+            {# Header of the algorithms table #}
+            <div class="container__head" id="layer4_column1_head">
+                <h2>Top-k most recommended</h2>
+            </div>
+            {# ############################## #}
+
+            {# Content of the algorithms table #}
+            <div class="container__content" id="layer4_column1_content">
+                <div class="container__slidetable" id="table_topkrecommendations"></div>
+            </div>
+            {# ############################### #}
+
+        </div>
+        {# ############################## #}
+
+        {# Extra section #}
+        <div class="container__column" id="layer4_column2">
+
+            {# Table  topk most purchased#}
+            <div class="container__column" id="layer4_section2_column1">
+                {# Header of the algorithms table #}
+                <div class="container__head" id="layer4_section2_column1_head">
+                    <h2>Top-k most purchased</h2>
+                </div>
+                {# ############################## #}
+
+                {# Content of the most purchasd table #}
+                <div class="container__content" id="layer4_section2_column1_content">
+                    {# Added topk most purchased table #}
+                    <table class="container__table" id="layer4_section2_column1_table">
+                        <thead class="container__tablehead" id="layer4_section2_column1_table_head">
+                        <tr class="container__tablerow" id="layer4_section2_column1_table_head_row1">
+                            {# Table headers #}
+                            <th class="container__tableheadcontent" id="section2_table_head_row1_column1">
+                                Item-id
+                            </th>
+                            <th class="container__tableheadcontent" id="section2_table_head_row1_column2">
+                                Count
+                            </th>
+                            {# ############# #}
+                        </tr>
+                        </thead>
+                        <tbody class="container__tablebody" id="layer4_section2_column1_table_body">
+                        {# Table content will be filled with javascript #}
+                        </tbody>
+                    </table>
+                </div>
+                {# ############################### #}
+            </div>
+            {# ######################### #}
+
+            {# Unique active user over time #}
+            <div class="container__column" id="layer4_section2_column2">
+                {# Header of the algorithms table #}
+                <div class="container__head" id="layer4_section2_column2_head">
+                    <h2>Unique users</h2>
+                </div>
+                {# ############################## #}
+
+                {# Content of the algorithms table #}
+                <div class="container__content" id="layer4_section2_column2_content">
+                    <p id="unique_users"></p>
+                </div>
+                {# ############################### #}
+            </div>
+            {# ############################ #}
+
+            {# Total revenue over time #}
+            <div class="container__column" id="layer4_section2_column3">
+                {# Header of the algorithms table #}
+                <div class="container__head" id="layer4_section2_column3_head">
+                    <h2>Total revenue</h2>
+                </div>
+                {# ############################## #}
+
+                {# Content of the algorithms table #}
+                <div class="container__content" id="layer4_section2_column3_content">
+                    <p id="total_revenue"></p>
+                </div>
+                {# ############################### #}
+            </div>
+            {# ####################### #}
+
+        </div>
+        {# ############ #}
+
+        {# Extra section#}
+        <div class="container__column" id="layer4_column3">
+
+            {# Table list of active users over time #}
+            <div class="container__column" id="layer4_section3_column1">
+                {# Added list of users table #}
+                <table class="container__table" id="layer4_section3_column1_table">
+                    <thead class="container__tablehead" id="layer4_section3_column1_table_head">
+                    <tr class="container__tablerow" id="layer4_section3_column1_table_head_row1">
+                        {# Table headers #}
+                        <th class="container__tableheadcontent" id="section3_table_head_row1_column1"
+                            style="cursor: pointer" onclick="orderUsers(0)">
+                            Active user
+                        </th>
+                        <th class="container__tableheadcontent" id="section3_table_head_row1_column2"
+                            style="cursor: pointer" onclick="orderUsers(1)">
+                            Total purchases
+                        </th>
+                        <th class="container__tableheadcontent" id="section3_table_head_row1_column3"
+                            style="cursor: pointer" onclick="orderUsers(2)">
+                            Purchases over time
+                        </th>
+                        <th class="container__tableheadcontent" id="section3_table_head_row1_column4"
+                            style="cursor: pointer" onclick="orderUsers(3)">
+                            CTR
+                        </th>
+                        {# ############# #}
+                    </tr>
+                    </thead>
+                    <tbody class="container__tablebody" id="layer4_section3_column1_table_body">
+                    {# Table content will be filled with javascript #}
+                    </tbody>
+                </table>
+                {# ###################### #}
+            </div>
+            {# #################################### #}
+
+            {# Slider for changing timestamp interval #}
+            <div class="container__column" id="layer4_section3_column2">
+                {# Slider #}
+                <div class="container__slider" id="slider1">
+                    {# Header of slider interval #}
+                    <div class="container__head" id="layer4_section3_column2_head">
+                        <div class="container__sliderdate" id="slider1_date">
+                            <h2>Interval: </h2>
+                            <p>
+                                <input class="container__sliderinterval" disabled type="text" id="slider1_amount"
+                                       size="30">
+                            </p>
+                        </div>
+                    </div>
+                    {# ######################### #}
+
+                    {# Content of slider interval #}
+                    <div class="container__content" id="layer4_section3_column2_content">
+                        <div class="container__sliderrange" id="slider1_range"></div>
+                        <div class="container__sliderbutton" id="slider1_button">
+                            <button class="container__button" onclick="renewInterval()">RENEW</button>
+                        </div>
+                    </div>
+                    {# ########################## #}
+                </div>
+                {# ##### #}
+            </div>
+            {# ###################################### #}
+
+        </div>
+        {# ############ #}
+
+    </div>
+    {# ###### #}
+
 </div>
+{# ################### #}
+
+
 </body>
 
 <script>
-
 
 
     document.getElementById("abtest_id").innerHTML = "";
@@ -204,9 +449,9 @@
             .then(function (response) {
                 return response.text();
             })
-            .then(function (text){
+            .then(function (text) {
                 let all = JSON.parse(text)
-                if (Object.keys(all).length > 0 && entered == false){
+                if (Object.keys(all).length > 0 && entered == false) {
                     entered = true;
                     let info = all["visualization"]
 
@@ -233,12 +478,13 @@
                     google.charts.load('current', {packages: ['corechart', 'line']});
                     {#google.charts.setOnLoadCallback(drawActUsersAndPurchChart);#}
                     google.setOnLoadCallback(function () {
+                        drawActUsersAndPurchChart(dataUsersPurch);
                         drawCTRandARAD(ctr, arad)
                         drawARPUAD(arpuad)
-                        drawActUsersAndPurchChart(dataUsersPurch);
                     });
-                    console.log("oke")
+                    {#console.log("oke")#}
                     constructAlgorithmTable(algorihtms);
+                    slider();
 
                     topkPurchases = all["topkPurchases"];
                     topkRecommendations = all["topkRecommendations"];
@@ -246,43 +492,42 @@
                     totaleRevenue = all["totaleRevenue"];
                     UniqueUsers = all["totaleUsers"];
                     sortedUserList = all["sortingOrder"]
+                    document.getElementById("total_revenue").innerHTML = totaleRevenue;
+                    document.getElementById("unique_users").innerHTML = UniqueUsers;
+                    constructListActiveUsers()
 
                     constructTopkPurchases(topkPurchases);
                     constructTopkRecommendationsPerAlgo(topkRecommendations);
-                    constructListActiveUsers()
-                    document.getElementById("total_revenue").innerHTML = totaleRevenue;
-                    document.getElementById("unique_users").innerHTML = UniqueUsers;
-                    slider();
                     clearInterval(interval)
                 }
             })
     }
 
     function slider() {
-       $(function () {
-        $("#slider-range").slider({
-            range: true,
-            min: new Date(startPoint).getTime() / 1000,
-            max: new Date(endPoint).getTime() / 1000,
-            step: 86400,
-            values: [new Date(startPoint).getTime() / 1000, new Date(endPoint).getTime() / 1000],
-            slide: function (event, ui) {
-                $("#amount").val((new Date(ui.values[0] * 1000).toDateString()) + " - " + (new Date(ui.values[1] * 1000)).toDateString());
-            }
+        $(function () {
+            $("#slider1_range").slider({
+                range: true,
+                min: new Date(startPoint).getTime() / 1000,
+                max: new Date(endPoint).getTime() / 1000,
+                step: 86400,
+                values: [new Date(startPoint).getTime() / 1000, new Date(endPoint).getTime() / 1000],
+                slide: function (event, ui) {
+                    $("#slider1_amount").val((new Date(ui.values[0] * 1000).toDateString()) + " - " + (new Date(ui.values[1] * 1000)).toDateString());
+                }
+            });
+            $("#slider1_amount").val((new Date($("#slider1_range").slider("values", 0) * 1000).toDateString()) +
+                " - " + (new Date($("#slider1_range").slider("values", 1) * 1000)).toDateString());
         });
-        $("#amount").val((new Date($("#slider-range").slider("values", 0) * 1000).toDateString()) +
-            " - " + (new Date($("#slider-range").slider("values", 1) * 1000)).toDateString());
-    });
     }
 
-    function drawActUsersAndPurchChart(dataUsersPurch){
+    function drawActUsersAndPurchChart(dataUsersPurch) {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'X');
         data.addColumn('number', 'Purchases');
         data.addColumn('number', 'Active users');
 
         let dataGraph = []
-        for (const [key, value] of Object.entries(dataUsersPurch)){
+        for (const [key, value] of Object.entries(dataUsersPurch)) {
             dataGraph.push([new Date(key), parseInt(value["purchases"]), parseInt(value['users'])])
         }
 
@@ -291,36 +536,35 @@
         {#console.log(data)#}
 
         var options = {
-        pointSize: 3,
-        title: 'Purchases and active users per day.',
-        chartArea: {
-          width: '80%'
-         },
-        width: '100%',
-        height: '100%',
-        colors: ['#0032ff', '#b90000'],
-        legend: { position: 'bottom' }
-      };
+            pointSize: 3,
+            chartArea: {
+                width: '80%'
+            },
+            width: '100%',
+            height: '100%',
+            colors: ['#0032ff', '#b90000'],
+            legend: {position: 'bottom'}
+        };
 
-      var chart = new google.visualization.LineChart(document.getElementById('user_purch_graph'));
+        var chart = new google.visualization.LineChart(document.getElementById('layer2_column2_content'));
 
-      chart.draw(data, options);
+        chart.draw(data, options);
 
     }
 
-    function drawCTRandARAD(ctr, arad){
+    function drawCTRandARAD(ctr, arad) {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'X');
 
         {# Eerst de kollomen toevoegen #}
-         let dates = []
-         {#let data_ = []#}
-         let count = 0
-         for (const [key, value] of Object.entries(ctr)){
+        let dates = []
+        {#let data_ = []#}
+        let count = 0
+        for (const [key, value] of Object.entries(ctr)) {
             data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
 
-            if (count == 0){
-                for (const [key2, value2] of Object.entries(value["values"])){
+            if (count == 0) {
+                for (const [key2, value2] of Object.entries(value["values"])) {
                     dates.push([new Date(key2)])
                     {#data_.push([])#}
                 }
@@ -328,7 +572,7 @@
             }
 
         }
-        for (const [key, value] of Object.entries(arad)){
+        for (const [key, value] of Object.entries(arad)) {
             data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
         }
 
@@ -337,19 +581,19 @@
         {#console.log(ctr)#}
 
         count = 0
-        for (const [key, value] of Object.entries(ctr)){
-            for (const [key2, value2] of Object.entries(value["values"])){
+        for (const [key, value] of Object.entries(ctr)) {
+            for (const [key2, value2] of Object.entries(value["values"])) {
                 {#console.log(value2)#}
-                    dates[count].push(value2)
-                    count += 1
+                dates[count].push(value2)
+                count += 1
             }
             count = 0
         }
-        for (const [key, value] of Object.entries(arad)){
-            for (const [key2, value2] of Object.entries(value["values"])){
+        for (const [key, value] of Object.entries(arad)) {
+            for (const [key2, value2] of Object.entries(value["values"])) {
                 {#console.log(value2)#}
-                    dates[count].push(value2)
-                    count += 1
+                dates[count].push(value2)
+                count += 1
             }
             count = 0
         }
@@ -361,38 +605,37 @@
         {#console.log(data)#}
 
         var options = {
-        pointSize: 3,
-        title: 'CTR and ARAD',
-        chartArea: {
-          width: '80%'
-         },
-        width: '100%',
-        height: '100%',
-        colors: ['#9FE3FE', '#9CD0FE', '#9DBEFE', '#9CB5FE', '#9CB5FE', '#C2A5FF', '#D69DFF', '#DF9BFD', '#ED9BEB', '#F49CD3','#FEABB1', '#FECF9F', '#F7FCA8', '#D3FFA7', '#BEFEC4', '#BEFEC4'],
-        legend: { position: 'bottom' }
-      };
+            pointSize: 3,
+            chartArea: {
+                width: '80%'
+            },
+            width: '100%',
+            height: '100%',
+            colors: ['#9FE3FE', '#9CD0FE', '#9DBEFE', '#9CB5FE', '#9CB5FE', '#C2A5FF', '#D69DFF', '#DF9BFD', '#ED9BEB', '#F49CD3', '#FEABB1', '#FECF9F', '#F7FCA8', '#D3FFA7', '#BEFEC4', '#BEFEC4'],
+            legend: {position: 'bottom'}
+        };
 
-      var chart = new google.visualization.LineChart(document.getElementById('ctr_arad_graph'));
+        var chart = new google.visualization.LineChart(document.getElementById('layer3_column1_content'));
 
-      chart.draw(data, options);
+        chart.draw(data, options);
 
     }
 
-    function drawARPUAD(dataarpuad){
+    function drawARPUAD(dataarpuad) {
 
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'X');
 
 
         {# Eerst de kollomen toevoegen #}
-         let dates = []
-         {#let data_ = []#}
-         let count = 0
-         for (const [key, value] of Object.entries(dataarpuad)){
+        let dates = []
+        {#let data_ = []#}
+        let count = 0
+        for (const [key, value] of Object.entries(dataarpuad)) {
             data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
 
-            if (count == 0){
-                for (const [key2, value2] of Object.entries(value["values"])){
+            if (count == 0) {
+                for (const [key2, value2] of Object.entries(value["values"])) {
                     dates.push([new Date(key2)])
                     {#data_.push([])#}
                 }
@@ -406,11 +649,11 @@
         {#console.log(ctr)#}
 
         count = 0
-        for (const [key, value] of Object.entries(dataarpuad)){
-            for (const [key2, value2] of Object.entries(value["values"])){
+        for (const [key, value] of Object.entries(dataarpuad)) {
+            for (const [key2, value2] of Object.entries(value["values"])) {
                 {#console.log(value2)#}
-                    dates[count].push(value2)
-                    count += 1
+                dates[count].push(value2)
+                count += 1
             }
             count = 0
         }
@@ -422,128 +665,126 @@
         {#console.log(data)#}
 
         var options = {
-        pointSize: 3,
-        title: 'ARPU@D',
-        chartArea: {
-          width: '80%'
-         },
-        width: '100%',
-        height: '100%',
-        colors: ['#9FE3FE', '#9CD0FE', '#9DBEFE', '#9CB5FE', '#9CB5FE', '#C2A5FF', '#D69DFF', '#DF9BFD', '#ED9BEB', '#F49CD3','#FEABB1', '#FECF9F', '#F7FCA8', '#D3FFA7', '#BEFEC4', '#BEFEC4'],
-        legend: { position: 'bottom' }
-      };
+            pointSize: 3,
+            chartArea: {
+                width: '80%'
+            },
+            width: '100%',
+            height: '100%',
+            colors: ['#9FE3FE', '#9CD0FE', '#9DBEFE', '#9CB5FE', '#9CB5FE', '#C2A5FF', '#D69DFF', '#DF9BFD', '#ED9BEB', '#F49CD3', '#FEABB1', '#FECF9F', '#F7FCA8', '#D3FFA7', '#BEFEC4', '#BEFEC4'],
+            legend: {position: 'bottom'}
+        };
 
-      var chart = new google.visualization.LineChart(document.getElementById('arpuad_graph'));
+        var chart = new google.visualization.LineChart(document.getElementById('layer3_column2_content'));
 
-      chart.draw(data, options);
+        chart.draw(data, options);
 
     }
 
-    function constructAlgorithmTable(dataAlgo){
+    function constructAlgorithmTable(dataAlgo) {
         html_ = ""
-        for (const [key, value] of Object.entries(dataAlgo)){
+        for (const [key, value] of Object.entries(dataAlgo)) {
 
-            html_ += "<tr>"
+            html_ += "<tr class=\"container__tablerow\">"
 
             let params = value["params"]
 
 
-            html_ += "<td data-label=\"Number\">"+ value["result_id"] +"</td>"
-            html_ += "<td data-label=\"Name\">"+ value["name"] +"</td>"
+            html_ += "<td class=\"container__tablerowcontent\" data-label=\"Number\">" + value["result_id"] + "</td>"
+            html_ += "<td class=\"container__tablerowcontent\" data-label=\"Name\">" + value["name"] + "</td>"
 
-            if (params.hasOwnProperty("k")){
-                html_ += "<td data-label=\"K\">"+ params["k"] +"</td>"
+            if (params.hasOwnProperty("retraininterval")) {
+                html_ += "<td class=\"container__tablerowcontent\" data-label=\"Retrain interval\">" + params["retraininterval"] + "</td>"
+            } else {
+                html_ += "<td class=\"container__tablerowcontent\" data-label=\"Retrain interval\">/</td>"
             }
-            else {
-                html_ += "<td data-label=\"K\">/</td>"
+            if (params.hasOwnProperty("windowsize")) {
+                html_ += "<td class=\"container__tablerowcontent\" data-label=\"Window size\">" + params["windowsize"] + "</td>"
+            } else if (params.hasOwnProperty("window")) {
+                html_ += "<td class=\"container__tablerowcontent\" data-label=\"Window size\">" + params["window"] + "</td>"
+            } else {
+                html_ += "<td class=\"container__tablerowcontent\" data-label=\"Window size\">/</td>"
             }
-            if (params.hasOwnProperty("windowsize")){
-                html_ += "<td data-label=\"Windowsize\">"+ params["windowsize"] +"</td>"
+            if (params.hasOwnProperty("normalize")) {
+                html_ += "<td class=\"container__tablerowcontent\" data-label=\"Normalize\">" + params["normalize"] + "</td>"
+            } else {
+                html_ += "<td class=\"container__tablerowcontent\" data-label=\"Normalize\">/</td>"
             }
 
-            else if (params.hasOwnProperty("window")){
-                html_ += "<td data-label=\"Windowsize\">"+ params["window"] +"</td>"
-            }
-            else {
-                html_ += "<td data-label=\"Windowsize\">/</td>"
+            if (params.hasOwnProperty("k")) {
+                html_ += "<td class=\"container__tablerowcontent\" data-label=\"K\">" + params["k"] + "</td>"
+            } else {
+                html_ += "<td class=\"container__tablerowcontent\" data-label=\"K\">/</td>"
             }
 
-            if (params.hasOwnProperty("normalize")){
-                html_ += "<td data-label=\"Normalize\">"+ params["normalize"] +"</td>"
-            }
-            else {
-                html_ += "<td data-label=\"Normalize\">/</td>"
-            }
-            if (params.hasOwnProperty("retraininterval")){
-                html_ += "<td data-label=\"Retraininterval\">"+ params["retraininterval"] +"</td>"
-            }
-            else {
-                html_ += "<td data-label=\"Retraininterval\">/</td>"
-            }
 
             html_ += "</tr>"
 
         }
-        document.getElementById("tableAlgoritmes").innerHTML = html_
+        document.getElementById("layer2_column1_table_body").innerHTML = html_
     }
 
-    function constructTopkPurchases(dataPurchases){
+    function constructTopkPurchases(dataPurchases) {
         html_ = ""
-        for (const [key, value] of Object.entries(dataPurchases)){
+        for (const [key, value] of Object.entries(dataPurchases)) {
 
-            html_ += "<tr>"
-            html_ += "<td style='cursor: pointer' onclick='redirectToItemPage(" + value["item"] + ")' data-label=\"Item-id\">"+ value["item"] +"</td>"
-            html_ += "<td data-label=\"Count\">"+ value["count"] +"</td>"
+            html_ += "<tr class='container__tablerow'>"
+            html_ += "<td class='container__tablerowcontent' style='cursor: pointer' onclick='redirectToItemPage(" + value["item"] + ")' data-label=\"Item-id\">" + value["item"] + "</td>"
+            html_ += "<td class='container__tablerowcontent' data-label=\"Count\">" + value["count"] + "</td>"
             html_ += "</tr>"
 
         }
-        document.getElementById("tableTopkRecommendations").innerHTML = html_
+        document.getElementById("layer4_section2_column1_table_body").innerHTML = html_
     }
 
     function constructTopkRecommendationsPerAlgo(dataRecommendations) {
-       html_ = ""
-        for (const [key, value] of Object.entries(dataRecommendations)){
-            html_ += "<div class=\"topkRecommendationHead\">"
+        html_ = ""
+        for (const [key, value] of Object.entries(dataRecommendations)) {
+            html_ += "<div class=\"container__slidetablehead\">"
             html_ += "    <h2>" + value["name"] + "</h2>"
-            html_ += "    <p>Algorithm number: " +  key.toString() + "</p>"
+            html_ += "    <p>Algorithm number: " + key.toString() + "</p>"
+            html_ +=      "<div class='container__slidetablehead_info'>"
+            html_ += "          <p class='container__slidetable_infocolumn'> Item-id </p>"
+            html_ += "          <p class='container__slidetable_infocolumn'> Count </p>"
+            html_ +=      "</div>"
             html_ += "</div>"
 
-            html_ += "<div class=\"topkRecommendationContent\">"
+            html_ += "<div class=\"container__slidetablecontent\">"
 
             for (const recommendation of value["recommendations"]) {
 
-               html_ += "<div class=\"topkRecommendationRow\">"
-               html_ += "     <div style='cursor: pointer' onclick='redirectToItemPage(" + recommendation["item"] + ")' class=\"topkRecommendationColumn\">" + recommendation["item"] + "</div>"
-               html_ += "     <div class=\"topkRecommendationColumn\">" + recommendation["count"] + "</div>"
-               html_ += "</div>"
+                html_ += "<div class=\"container__slidetablerow\">"
+                html_ += "     <div style='cursor: pointer' onclick='redirectToItemPage(" + recommendation["item"] + ")' class=\"container__slidetablecolumn\">" + recommendation["item"] + "</div>"
+                html_ += "     <div class=\"container__slidetablecolumn\">" + recommendation["count"] + "</div>"
+                html_ += "</div>"
 
             }
 
             html_ += "</div>"
 
         }
-        document.getElementById("tableRecommendations").innerHTML = html_
+        document.getElementById("table_topkrecommendations").innerHTML = html_
     }
 
-    function constructListActiveUsers(){
-       html_ = ""
+    function constructListActiveUsers() {
+        html_ = ""
 
         let rowCount = 0;
 
-        for (const id of sortedUserList[sortUsers]){
-            html_ += "<tr>"
-            html_ += "<td style='cursor: pointer' onclick='redirectToUserPage(" + id + ")' data-label=\"Active user\">"+ id +"</td>"
-            html_ += "<td data-label=\"Total purchases\">"+ listUsers[id]["totalePurchases"] +"</td>"
-            html_ += "<td data-label=\"Purchases over time-period\">"+ listUsers[id]["purchasesOverTime"] +"</td>"
-            html_ += "<td data-label=\"CTR\">"+ listUsers[id]["CTR"] +"</td>"
+        for (const id of sortedUserList[sortUsers]) {
+            html_ += "<tr class='container__tablerow'>"
+            html_ += "<td class='container__tableheadcontent' style='cursor: pointer' onclick='redirectToUserPage(" + id + ")' data-label=\"Active user\">" + id + "</td>"
+            html_ += "<td class='container__tableheadcontent' data-label=\"Total purchases\">" + listUsers[id]["totalePurchases"] + "</td>"
+            html_ += "<td class='container__tableheadcontent' data-label=\"Purchases over time-period\">" + listUsers[id]["purchasesOverTime"] + "</td>"
+            html_ += "<td class='container__tableheadcontent' data-label=\"CTR\">" + listUsers[id]["CTR"] + "</td>"
             html_ += "</tr>"
 
-            if (rowCount == 1000){
+            if (rowCount == 1000) {
                 break;
             }
             rowCount += 1;
         }
-        document.getElementById("tableUserList").innerHTML = html_
+        document.getElementById("layer4_section3_column1_table_body").innerHTML = html_
     }
 
     function orderUsers(number) {
@@ -552,13 +793,13 @@
     }
 
     function fetchRequest() {
-               fetch(`/visualizations/updateRequest`)
+        fetch(`/visualizations/updateRequest`)
             .then(function (response) {
                 return response.text();
             })
-            .then(function (text){
+            .then(function (text) {
                 let all = JSON.parse(text)
-                if (Object.keys(all).length > 0 && requestEntered == false){
+                if (Object.keys(all).length > 0 && requestEntered == false) {
                     requestEntered = true;
 
                     topkPurchases = all["topkPurchases"];
@@ -568,11 +809,11 @@
                     UniqueUsers = all["totaleUsers"];
                     sortedUserList = all["sortingOrder"]
 
+                    constructListActiveUsers()
+                    document.getElementById("unique_users").innerHTML = UniqueUsers;
+                    document.getElementById("total_revenue").innerHTML = totaleRevenue;
                     constructTopkPurchases(topkPurchases);
                     constructTopkRecommendationsPerAlgo(topkRecommendations);
-                    constructListActiveUsers()
-                    document.getElementById("total_revenue").innerHTML = totaleRevenue;
-                    document.getElementById("unique_users").innerHTML = UniqueUsers;
                     clearInterval(requestInterval);
                 }
             })
@@ -581,8 +822,8 @@
 
     function renewInterval() {
 
-        let start = (new Date($("#slider-range").slider("values", 0) * 1000)).toISOString().slice(0, 10);
-        let end = (new Date($("#slider-range").slider("values", 1) * 1000)).toISOString().slice(0, 10);
+        let start = (new Date($("#slider1_range").slider("values", 0) * 1000)).toISOString().slice(0, 10);
+        let end = (new Date($("#slider1_range").slider("values", 1) * 1000)).toISOString().slice(0, 10);
 
         let data_dict = {"startdate": start, "enddate": end, "abtest_id": abtest, "dataset_id": dataset};
 
@@ -593,7 +834,7 @@
             contentType: 'application/json; charset=utf-8',
             cache: false,
             processData: false,
-            success: function(data) {
+            success: function (data) {
                 console.log(data);
                 requestInterval = setInterval(fetchRequest, 1000)
                 requestEntered = false;
@@ -605,7 +846,7 @@
     function redirectToUserPage(id) {
         console.log(id)
         let url__ = window.location.href
-        let url__string = url__.replace('http://','').replace('https://','').split(/[/?#]/)[0];
+        let url__string = url__.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
         window.location.href = "/usersection?customer_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();
 
     }
@@ -613,10 +854,9 @@
     function redirectToItemPage(id) {
         console.log(id)
         let url__ = window.location.href
-        let url__string = url__.replace('http://','').replace('https://','').split(/[/?#]/)[0];
+        let url__string = url__.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
         window.location.href = "/itemsection?item_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();
     }
-
 
     window.addEventListener('load', function () {
         let fetchInterval = 1000;

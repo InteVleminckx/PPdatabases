@@ -33,7 +33,6 @@ body {
     justify-content: center;
 }
 
-
 /**********************************/
 /*       algemene container       */
 /**********************************/
@@ -77,8 +76,6 @@ body {
     border-radius: var(--dash-bd-radius);
 }
 
-
-
 /**********************************/
 /*           head container       */
 /**********************************/
@@ -114,6 +111,26 @@ body {
 .container__content p {
     font-size: 35px;
 }
+
+/**********************************/
+/*          row container         */
+/**********************************/
+.container__row {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/**********************************/
+/*      innercolumn container     */
+/**********************************/
+.container__innerColumn {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 
 /**********************************/
 /*        button container        */
@@ -208,6 +225,140 @@ body {
     text-align: center;
     align-content: center;
 }
+
+/**********************************/
+/*        table container         */
+/**********************************/
+.container__table {
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    border-radius: var(--dash-bd-radius);
+
+}
+
+.container__tablehead {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: var(--theme-bg-color);
+    color: var(--head-tx-color);
+    border-radius: var(--head-bd-radius);
+}
+
+.container__tablebody {
+    overflow-y: auto;
+}
+
+.container__tablerow {
+    display: flex;
+}
+
+.container__tableheadcontent, .container__tablerowcontent {
+    display: flex;
+    flex: 1;
+    padding: .5em;
+    justify-content: center;
+}
+
+.container__tablerow td {
+    border-bottom: 1px black;
+}
+
+
+/**********************************/
+/*        slider container        */
+/**********************************/
+.container__sliderdate {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+}
+
+.container__sliderinterval {
+    border: 0;
+    color: var(--head-tx-color);
+    font-weight: bold;
+    font-size: 20px;
+    background-color: var(--theme-bg-color);
+}
+
+.container__sliderrange {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.container__sliderbutton {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/**********************************/
+/*      slidetable container      */
+/**********************************/
+.container__slidetable {
+    overflow-y: scroll;
+    border-collapse: collapse;
+}
+
+.container__slidetablehead{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    background-color: #30799B;
+    position: sticky;
+    top: 0;
+}
+
+.container__slidetablehead h2 {
+    color: var(--head-tx-color);
+}
+
+.container__slidetablehead p {
+    color: var(--head-tx-color);
+}
+
+.container__slidetablerow {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    border-bottom: 1px solid lightgrey;
+}
+
+.container__slidetablecolumn {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.container__slidetablehead_info {
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    text-align: center;
+}
+
+.container__slidetablehead_infocolumn {
+
+}
+
 
 /*._row {*/
 /*    display: flex;*/

@@ -1,10 +1,8 @@
-
 /**********************************/
 /*       algemene container       */
 /**********************************/
 .container__page {
     height: 710px;
-
 }
 
 /**********************************/
@@ -85,7 +83,7 @@
 /**********************************/
 /*         head container         */
 /**********************************/
-.container__head{
+.container__head {
     width: 400px;
 }
 
@@ -96,15 +94,15 @@
     width: 400px;
 }
 
-.container__layer#form1_layer2 .container__content{
+.container__layer#form1_layer2 .container__content {
     height: 150px;
 }
 
-.container__layer#form1_layer3 .container__content{
+.container__layer#form1_layer3 .container__content {
     height: 235px;
 }
 
-.container__layer#form2_layer2 .container__content{
+.container__layer#form2_layer2 .container__content {
     height: 540px;
 
     flex-direction: column;
@@ -178,6 +176,7 @@
 .container__namepicker h4 {
     color: #30799B;
 }
+
 
 /*._container {*/
 /*    position: relative;*/
