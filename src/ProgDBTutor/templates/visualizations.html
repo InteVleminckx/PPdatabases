@@ -689,8 +689,8 @@
             let params = value["params"]
 
 
-            html_ += "<td data-label=\"Number\">"+ value["algorithm_id"] +"</td>"
-            html_ += "<td data-label=\"Name\">"+ value["name"] +"</td>"
+            html_ += "<td class=\"container__tablerowcontent\" data-label=\"Number\">"+ value["algorithm_id"] +"</td>"
+            html_ += "<td class=\"container__tablerowcontent\" data-label=\"Name\">"+ value["name"] +"</td>"
 
             if (params.hasOwnProperty("retraininterval")) {
                 html_ += "<td class=\"container__tablerowcontent\" data-label=\"Retrain interval\">" + params["retraininterval"] + "</td>"
