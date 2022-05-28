@@ -557,11 +557,10 @@
         data.addColumn('date', 'X');
 
         {# Eerst de kollomen toevoegen #}
-        let dates = []
-        {#let data_ = []#}
-        let count = 0
-        for (const [key, value] of Object.entries(ctr)) {
-            data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
+         let dates = []
+         let count = 0
+         for (const [key, value] of Object.entries(ctr)){
+            data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["algorithm_id"])
 
             if (count == 0) {
                 for (const [key2, value2] of Object.entries(value["values"])) {
@@ -572,8 +571,8 @@
             }
 
         }
-        for (const [key, value] of Object.entries(arad)) {
-            data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
+        for (const [key, value] of Object.entries(arad)){
+            data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["algorithm_id"])
         }
 
         {#console.log(dates)#}
@@ -628,11 +627,11 @@
 
 
         {# Eerst de kollomen toevoegen #}
-        let dates = []
-        {#let data_ = []#}
-        let count = 0
-        for (const [key, value] of Object.entries(dataarpuad)) {
-            data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["result_id"])
+         let dates = []
+         {#let data_ = []#}
+         let count = 0
+         for (const [key, value] of Object.entries(dataarpuad)){
+            data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["algorithm_id"])
 
             if (count == 0) {
                 for (const [key2, value2] of Object.entries(value["values"])) {
@@ -690,8 +689,8 @@
             let params = value["params"]
 
 
-            html_ += "<td class=\"container__tablerowcontent\" data-label=\"Number\">" + value["result_id"] + "</td>"
-            html_ += "<td class=\"container__tablerowcontent\" data-label=\"Name\">" + value["name"] + "</td>"
+            html_ += "<td data-label=\"Number\">"+ value["algorithm_id"] +"</td>"
+            html_ += "<td data-label=\"Name\">"+ value["name"] +"</td>"
 
             if (params.hasOwnProperty("retraininterval")) {
                 html_ += "<td class=\"container__tablerowcontent\" data-label=\"Retrain interval\">" + params["retraininterval"] + "</td>"
@@ -734,7 +733,9 @@
             html_ += "</tr>"
 
         }
+      
         document.getElementById("layer4_section2_column1_table_body").innerHTML = html_
+
     }
 
     function constructTopkRecommendationsPerAlgo(dataRecommendations) {

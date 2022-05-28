@@ -10,8 +10,7 @@ import time as tm
 
 class Recency:
 
-    def __init__(self, dataset_id, abtest_id, result_id, _start, _end, K: int, stepSize: int, retrainInterval,
-                 algorithm_parameters):
+    def __init__(self, dataset_id, abtest_id, algorithm_id, _start, _end, K: int, stepSize: int, retrainInterval):
         self.top_k = K
         self.stepSize = timedelta(days=stepSize)
         self.retrainInterval = timedelta(days=retrainInterval)
@@ -23,9 +22,7 @@ class Recency:
 
         self.datasetID = dataset_id
         self.ABTestID = abtest_id
-        self.resultID = result_id
-
-        self.parameters = algorithm_parameters
+        self.algorithmID = algorithm_id
 
     def recency(self):
 
@@ -54,9 +51,7 @@ class Recency:
 
         if self.currentModel is not None:
             for item_id in self.currentModel:
-                attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
-                addRecommendation(self.ABTestID, self.resultID, self.datasetID, -1, item_id[0], attribute_costumer,
-                                  *recommendWindow)
+                addRecommendation(self.ABTestID, self.algorithmID, self.datasetID, -1, item_id[0], *recommendWindow)
 
 # TESTCODE
 #

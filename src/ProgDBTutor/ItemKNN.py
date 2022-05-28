@@ -12,11 +12,11 @@ from itemKNN.src.algorithm.iknn import ItemKNNAlgorithm, ItemKNNIterativeAlgorit
 
 class ItemKNN:
 
-    def __init__(self, dataset_id: int, abtest_id: int, result_id: int, _start, _end, top_k: int, stepSize: int,
-                 normalize: bool, K: int, window: int, retrainInterval: int, algorithm_parameters):
+    def __init__(self, dataset_id: int, abtest_id: int, algorithm_id: int, _start, _end, top_k: int, stepSize: int,
+                 normalize: bool, K: int, window: int, retrainInterval: int):
         self.datasetID = dataset_id
         self.ABTestID = abtest_id
-        self.resultID = result_id
+        self.algorithmID = algorithm_id
 
         self.start = datetime.strptime(_start, '%Y-%m-%d %H:%M:%S')
         self.end = datetime.strptime(_end, '%Y-%m-%d %H:%M:%S')
@@ -29,7 +29,6 @@ class ItemKNN:
 
         self.currentDate = self.start
 
-        self.parameters = algorithm_parameters
         self.simulationTime = None
 
         self.currentModel = None
@@ -97,9 +96,8 @@ class ItemKNN:
         recommendations = self.currentModel.recommend_all(histories, self.top_k)
         recommendations = dict(zip(unique_user_ids, recommendations))
 
-        insert_query = 'INSERT INTO Recommendation(abtest_id, result_id, dataset_id, customer_id, item_number, attribute_customer, start_point, end_point) VALUES %s'
+        insert_query = 'INSERT INTO Recommendation(abtest_id, algorithm_id, dataset_id, customer_id, item_number, start_point, end_point) VALUES %s'
         cursor = dbconnect.get_cursor()
-        attribute_costumer = list(getCustomer(-1, self.datasetID).attributes)[0]
         tuples_list = []
 
         recommendationsInterval = (str(currentDate-timedelta(days=self.stepSize))[0:10], str(currentDate)[0:10])
@@ -110,8 +108,8 @@ class ItemKNN:
             for customer_id in recommendations:
                 recommendations_ = recommendations[customer_id]
                 for item_id in recommendations_:
-                    tuples_list.append((self.ABTestID, self.resultID, self.datasetID, customer_id, str(item_id),
-                                        attribute_costumer, *recommendationsInterval))
+                    tuples_list.append((self.ABTestID, self.algorithmID, self.datasetID, customer_id, str(item_id),
+                                        *recommendationsInterval))
 
             psycopg2.extras.execute_values(
                 cursor, insert_query, tuples_list, template=None, page_size=100

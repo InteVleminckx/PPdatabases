@@ -39,8 +39,6 @@
 </nav>
 
 
-
-
 <div class="container__page" id="datasetpage">
 
 {######################################################################################################################}
@@ -215,18 +213,12 @@
 </div>
 
 <script>
-    {#var row_id = 0;#}
-window.onload = sendData();goToABTestPage();
 
-{#var fileAttributes = {'articles': [], 'customers': []};#}
-{#var article_attr = ["aa", "ab", "ac", "ad", "ae", "af", "ag0bvb", "ah"];#}
-{#var customer_attr = ["ca", "cb", "cc", "cd"];#}
-{#fileAttributes['articles'] = article_attr;#}
-{#fileAttributes['customers'] = customer_attr;#}
+window.onload = sendData();goToABTestPage();
 
 function goToABTestPage() {
     var ds = document.getElementById("datasetSelection");
-    ds = ds.options[ds.selectedIndex].value
+    ds = ds.value;
     console.log(ds);
     var link = document.getElementById('link__abtest');
     link.href += '?selected_ds_id=' + ds;
@@ -355,13 +347,21 @@ function sub3(obj) {
 
 var interval = null;
 function fetchStatusHere() {
-    fetch(`/datasets/update`)
+    let id = document.getElementById("datasetSelection");
+    if(id.options.length){
+        id = document.getElementById("datasetSelection").value;
+    }else{
+        id = -1;
+    }
+    fetch(`/datasets/update/${id}`)
         .then(function (response) {
                 return response.text();
             })
         .then(function (text){
             if (text === 'done'){
                 sendData()
+                clearInterval(interval)
+            }else if (text === 'no refresh'){
                 clearInterval(interval)
             }
         })
@@ -441,16 +441,6 @@ function drawGraph(data, name, title_){
         chart.draw(dataitems, google.charts.Bar.convertOptions(options));
 }
 
-{#function displayC3() {#}
-{#    var c3 = document.getElementById("_container3");#}
-{#    if (c3.style.display == "none") {#}
-{#        c3.style.display = "block";#}
-{#    }#}
-{#    else {#}
-{#        c3.style.display = "none";#}
-{#    }#}
-{##}
-
 function toggleDatasetView() {
     var section1 = document.getElementById("section1");
     var section2 = document.getElementById("section2");
@@ -471,15 +461,6 @@ $('button.container__button#add_btn').click(function(e) {
     e.preventDefault();
 });
 
-{#function selectRow() {#}
-{#    row_id = event.target.id;#}
-
-{##}
-{#function sendTableData() {#}
-{#    var data = document.getElementById(row_id).querySelectorAll(".row_data");#}
-{#    var id = data[0].innerHTML;#}
-{#    var name = data[1].innerHTML;#}
-{#    #}
 
 </script>
 
