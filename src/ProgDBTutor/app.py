@@ -120,8 +120,8 @@ def addalgorithm():
         algo = form_data['algoSelection']
 
         if algo == "popularity":
-            windowsize = form_data['windowsize']
-            retraininterval = form_data['retraininterval1']
+            windowsize = form_data['input_windowsize_p']
+            retraininterval = form_data['input_retraininterval_p']
             if windowsize == "" or retraininterval == "":
                 flash('Algorithm parameters not fully filled in.', category='error')
             else:
@@ -130,7 +130,7 @@ def addalgorithm():
                 algo_dict[str(algo_id)] = "popularity"
                 algo_id += 1
         elif algo == "recency":
-            retraininterval = form_data['retraininterval2']
+            retraininterval = form_data['input_retraininterval_r']
             if retraininterval == "":
                 flash('Algorithm parameters not fully filled in.', category='error')
             else:
@@ -138,10 +138,10 @@ def addalgorithm():
                 algo_dict[str(algo_id)] = "recency"
                 algo_id += 1
         elif algo == "itemknn":
-            k = form_data['k']
-            window = form_data['window']
-            normalize = form_data['normalize']
-            retraininterval = form_data['retraininterval3']
+            k = form_data['input_k']
+            window = form_data['input_windowsize_i']
+            normalize = form_data['input_normalize']
+            retraininterval = form_data['input_retraininterval_i']
             if k == "" or window == "" or normalize == "" or retraininterval == "":
                 flash('Algorithm parameters not fully filled in.', category='error')
             else:
@@ -179,10 +179,10 @@ def services():
             creator = session['username']
 
             # General parameters for ABtest
-            start = form_data['startingpoint']
-            end = form_data['endpoint']
-            stepsize = form_data['stepsize']
-            topk = form_data['topk']
+            start = form_data['input_startpoint']
+            end = form_data['input_endpoint']
+            stepsize = form_data['input_stepsize']
+            topk = form_data['input_topk']
             dataset = form_data['datasetSelection']
             ABTestID = getMaxABTestID() + 1
             if not dataset:
@@ -258,7 +258,10 @@ def getData(ds_id):
 def datasets():
     if 'loggedin' in session:
         type_list = {}
+        # print("enter")
+
         if request.method == 'POST':
+            # print(request.form)
             type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '',
                          'customers_name_column': ''}
             type_item = 0
@@ -266,13 +269,16 @@ def datasets():
                 type_list['articles_types'].append(request.form.get(f"{type_item}"))
                 type_item += 1
             type_item = -1
+            # print("1")
             while request.form.get(f"{type_item}"):
                 type_list['customers_types'].append(request.form.get(f"{type_item}"))
                 type_item -= 1
             art_col_name = request.form.get("articles_name_column")
+            # print("2")
             if art_col_name:
                 type_list['articles_name_column'] = art_col_name
             cust_col_name = request.form.get("customers_name_column")
+            # print("3")
             if cust_col_name:
                 type_list['customers_name_column'] = cust_col_name
 
@@ -285,8 +291,9 @@ def datasets():
             c = session['jobsDataset']
             c.append(jobs)
             session['jobsDataset'] = c
-        dataset_names = getDatasets()
 
+        dataset_names = getDatasets()
+        # print("okee")
         return render_template('datasets.html', app_data=app_data, names=dataset_names,
                                attr_types=json.dumps(file_attr_types))
     return redirect(url_for('login_user'))
@@ -364,7 +371,59 @@ def fileupload():
 @app.route("/visualizations")
 # @login_required
 def visualizations():
+
+    # print(request.args)
+    if len(request.args) > 0:
+
+        ABTestID = request.args["abtest_id"]
+        dataset_id = request.args["dataset_id"]
+
+        jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
+
+        recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, 5, ABTestID)
+        totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, "", "", dataset_id, 5, ABTestID)
+        totRev = abTestQueue.enqueue(getTotaleRevenue, "", "", dataset_id, ABTestID)
+        listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID)
+
+        session["abVisualistation"] = [jobABvisualisations.id, recos.id, totPurch.id, totRev.id, listUsers.id]
+
     return render_template('visualizations.html', app_data=app_data)
+
+@app.route("/visualizations/request", methods=["GET", "POST"])
+def visualizationsRequest():
+
+    if request.method == "POST":
+        data = request.get_json()
+        dataset_id = data["dataset_id"]
+        ABTestID = data["abtest_id"]
+        start = data["startdate"]
+        end = data["enddate"]
+
+        recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, start, end, dataset_id, 5, ABTestID)
+        totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, start, end, dataset_id, 5, ABTestID)
+        totRev = abTestQueue.enqueue(getTotaleRevenue, start, end, dataset_id, ABTestID)
+        listUsers = abTestQueue.enqueue(getListOfActiveUsers, start, end, dataset_id, ABTestID)
+
+        session["abVisualistationRequest"] = [recos.id, totPurch.id, totRev.id, listUsers.id]
+
+    return {}
+
+@app.route("/visualizations/updateRequest")
+def visualizationsUpdateRequest():
+    if "abVisualistationRequest" in session:
+        job = session["abVisualistationRequest"]
+        job_ = abTestQueue.fetch_job(job[-1])
+        if job_ is not None:
+            if str(job_.get_status()) == "finished":
+                # visualization = abTestQueue.fetch_job(job[0]).result
+                topkReco = abTestQueue.fetch_job(job[0]).result
+                topkPurchases = abTestQueue.fetch_job(job[1]).result
+                totRev = abTestQueue.fetch_job(job[2]).result
+                listUsers, listUsersSort, totUsers = abTestQueue.fetch_job(job[3]).result
+
+                return {"topkRecommendations": topkReco, "topkPurchases": topkPurchases,
+                        "totaleRevenue": totRev, "totaleUsers": totUsers, "listUsers": listUsers, "sortingOrder": listUsersSort}
+    return {}
 
 
 @app.route("/visualizations/update")
@@ -378,11 +437,11 @@ def visualizationsUpdate():
                 topkReco = abTestQueue.fetch_job(job[1]).result
                 topkPurchases = abTestQueue.fetch_job(job[2]).result
                 totRev = abTestQueue.fetch_job(job[3]).result
-                listUsers, orderedList, totUsers = abTestQueue.fetch_job(job[4]).result
+                listUsers, orderedUsers,totUsers = abTestQueue.fetch_job(job[4]).result
 
                 return {"visualization": visualization, "topkRecommendations": topkReco, "topkPurchases": topkPurchases,
-                        "totaleRevenue": totRev, "totaleUsers": totUsers, "listUsers": listUsers,
-                        "sortingOrder": orderedList}
+                        "totaleRevenue": totRev, "totaleUsers": totUsers, "listUsers": listUsers, "sortingOrder": orderedUsers}
+
     return {}
 
 
@@ -403,6 +462,7 @@ def testlist():
     for i in range(len(testList)):
         algos = {}  # per (key, value), de value bevat op index 0 de naam van de algoritme en alles erna zijn de
         # parameters.
+
         cursor.execute("SELECT distinct(a.param_name), a.algorithm_id, a.name, a.value FROM Algorithm a, ABTest ab WHERE "
                        "a.abtest_id = %s AND a.abtest_id = ab.abtest_id AND ab.creator = %s", (testList[i]['abtest_id'], creator))
         for row in cursor:
@@ -414,6 +474,7 @@ def testlist():
         testList[i]['algorithms'] = algos
 
     print(testList)
+
     return render_template('testlist.html', app_data=app_data, testList=testList)
 
 
@@ -439,7 +500,7 @@ def usersectionUpdate():
         print(job.get_status())
         if job is not None:
             if str(job.get_status()) == "finished":
-                recommendations, history, interval, graph, topkListprint, dates = abTestQueue.fetch_job(userpage[0])
+                recommendations, history, interval, graph, topkListprint, dates = job.result
                 return {"recommendations": recommendations, "history": history, "interval": interval, "graph": graph,
                         "topkListprint": topkListprint, "dates": dates}
     return {}

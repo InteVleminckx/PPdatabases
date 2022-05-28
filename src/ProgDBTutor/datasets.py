@@ -34,12 +34,14 @@ def handelRequests(app, session, request, taskQueue, type_list):
 
 def addDatasetHere(app, session, tq, type_list):
     if session['username'] == 'admin':  # checken of de user de admin is
+
         dataset_id = importDataset(tq)
         id1 = importArticles(app, dataset_id, tq, type_list)
         id2 = importCustomers(app, dataset_id, tq, type_list)
         id3 = importPurchases(app, dataset_id, tq)
         tq.enqueue(createDatasetIdIndex, job_timeout=600)
         return {'id': dataset_id, id1: False, id2: False, id3: False}
+
     else:
         flash("You need admin privileges to upload a dataset", category='error')
 
@@ -68,7 +70,8 @@ def getDatasetInformation(dataset_id):
     return dictNumbers
 
 def importDataset(tq):
-    datasetname = request.form['ds_name']
+
+    datasetname = request.form['dataset_name']
     datasetId = int(getMaxDatasetID()) + 1
     tq.enqueue(addDataset, datasetId, datasetname)
     return datasetId
@@ -80,11 +83,11 @@ def getCSVHeader(app, csv_filename):
     filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     df.save(filename)
     header = pd.read_csv(filename, header=0, nrows=0).columns.tolist()
-    # header_dict = {'header_attr': header}
     return header
 
 def importArticles(app, dataset_id, tq, type_list): #\
 
+    print(request.files)
     af = request.files['articles_file']
     uploaded_file = secure_filename(af.filename)
     af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
