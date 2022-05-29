@@ -1,0 +1,173 @@
+.navbar {
+    background-color: #111515;
+    height: 4.5rem;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    font-size: 20px;
+
+
+    /*flex-wrap: wrap;*/
+    /*-webkit-box-align: center;*/
+    /*align-items: center;*/
+    /*-webkit-box-pack: justify;*/
+    /*padding: .5rem 1rem;*/
+}
+
+.navbar_container {
+    display: flex;
+    height: 4.5rem;
+    justify-content: space-between;
+    z-index: 1;
+    width: 100%;
+    margin: 0 100%;
+}
+
+.navbar_menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+}
+
+
+.navbar_items {
+    min-width: 200px;
+    border-right: 1px solid white;
+}
+
+.navbar_items a {
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar_items:nth-last-child(1) {
+    border-right: none;
+    margin-right: 75px;
+}
+
+
+.navbar_links {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 0 3rem;
+    text-decoration: none;
+}
+
+
+.navbar_links:hover {
+    color: #fdbf01;
+    text-decoration: none;
+}
+
+.navbar_bt {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 0 3rem;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar_bt:hover {
+    text-decoration: none;
+    color: white;
+
+}
+
+.highlight {
+    color: #fdbf01;
+    border-bottom: 4px solid #fdbf01;
+}
+
+/*Veranderd navbar hier naar een knop*/
+@media screen and (max-width: 1100px) {
+
+    .navbar {
+        width: 100%;
+    }
+
+    .navbar_container {
+        display: flex;
+        justify-content: space-between;
+        height: 4.5rem;
+        z-index: 1;
+        padding: 0;
+    }
+
+    .navbar_menu {
+        display: grid;
+        grid-template-columns: auto;
+        margin: 0;
+        position: absolute;
+        top: -1000px;
+        opacity: 1;
+        transition: all 0.5s ease;
+        z-index: -1;
+    }
+
+    .navbar_items:nth-last-child(2) {
+        margin-right: 0;
+    }
+
+    .btn-1 {
+        padding: 0;
+        margin-left: 25px;
+
+    }
+
+    .navbar_menu.active {
+
+        background: #131313;
+        top: 100%;
+        width: 100%;
+        opacity: 1;
+        transition: all 0.5s ease;
+        z-index: 99;
+        height: 80vh;
+        font-size: 1.4rem;
+        left: 0;
+    }
+
+    .navbar_toggle {
+        position: absolute;
+        right: 1rem;
+        top: 1.25rem;
+    }
+
+    .navbar_toggle .bar {
+        width: 25px;
+        height: 3px;
+        margin: 5px auto;
+        transition: all 0.3s ease-in-out;
+        background: #fdbf01;
+        cursor: pointer;
+        display: block;
+    }
+
+    .navbar_items {
+        border: none;
+    }
+
+    #mobile-menu {
+        position: absolute;
+        top: 20%;
+        right: 5%;
+        transform: translate(5%, 20%);
+    }
+
+    #mobile-menu.is-active .bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    #mobile-menu.is-active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    #mobile-menu.is-active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+}

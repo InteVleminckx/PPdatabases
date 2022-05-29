@@ -5,6 +5,14 @@ import datetime
 
 
 def getUserInformation(abtest_id, dataset_id, user_id):
+    """
+    This function tries to obtain all the inforation for a user
+    :param abtest_id: the ABTest id for which we need the information
+    :param dataset_id: the id of the data to which the user belongs
+    :param user_id: the user from the dataset
+    :return: json objects that hold all the relevant information
+    """
+
     algoritmes = getAlgoritmes(abtest_id)
     startAB, endAB, steps, topk = getAbInterval(abtest_id)
     historyUser = getPurchases(user_id, dataset_id, startAB, endAB)
@@ -21,6 +29,7 @@ def getUserInformation(abtest_id, dataset_id, user_id):
         ids_algoritmes.add(key[1])
 
     # We gaan per stepsize de recommendations groeperen, we doen de "simulatie" na te bootsen
+    # We intend to group the recommendations per stepsize, essentially 'simulating' the simulation
     startDate = datetime.datetime.strptime(startAB, "%Y-%m-%d")
     endDate = datetime.datetime.strptime(endAB, "%Y-%m-%d")
     stepsize = datetime.timedelta(days=steps)
@@ -35,16 +44,18 @@ def getUserInformation(abtest_id, dataset_id, user_id):
 
     colorCount = 0
 
+    # Loop over the entire simulation
     while startDate <= endDate:
-        # We lopen terug over heel de simulatie
 
-        # We gaan eerst al alle aankopen voor de huidige stepsize van de user samen zetten
+        # First thing we do is group all the purchases for the user for this current stepsize
         date = str(startDate)[0:10]
 
         if date in historyUser:
             itemsPerStep.extend(historyUser[date])
         if startDate == nextRecommend:
-            # Wanneer we dit hebben gedaan gaan we per algoritme kijken of aangekocht items hierin zaten
+
+            # Now that we have all the purchases for a user, we need to check for each algorithm
+            # whether a purchased item was in this list
             history[date] = list()
             recommendations[date] = list()
             purchases[date] = list()
@@ -124,6 +135,10 @@ def getUserInformation(abtest_id, dataset_id, user_id):
 
 
 def getAlgoritmes(abtest_id):
+    """
+    Function to get all Algorithms that are used in the ABTest
+    :return: all algorithms
+    """
     cursor = dbconnect.get_cursor()
 
     cursor.execute("select algorithm_id, name from algorithm where abtest_id = %s group by algorithm_id, name;",
@@ -142,6 +157,10 @@ def getAlgoritmes(abtest_id):
 
 
 def getAbInterval(abtest_id):
+    """
+    Obtain all the information regarding the interval, stepsize and top k for the ABTest
+    :return: a tuple of the information
+    """
     cursor = dbconnect.get_cursor()
 
     cursor.execute("select start_point, end_point, stepsize, topk from abtest where abtest_id = %s limit 1;",
@@ -158,6 +177,10 @@ def getAbInterval(abtest_id):
 
 
 def getPurchases(user_id, dataset_id, start, end):
+    """
+    Get all purchases that a user made between an interval (the name of the pictures)
+    :return: list of all the picture names that the user bought
+    """
     cursor = dbconnect.get_cursor()
     cursor.execute(
         "select item_id, t_dat from interaction where dataset_id = %s and customer_id = %s and t_dat between %s and %s;",
@@ -190,6 +213,10 @@ def getPurchases(user_id, dataset_id, start, end):
 
 
 def getRecommendations(abtest_id, dataset_id, customer_id):
+    """
+    Get all the recommendations for the users (the name of the pictures)
+    :return: list of all the picture names for the recommended items
+    """
     cursor = dbconnect.get_cursor()
     cursor.execute(
         "select algorithm_id, item_number, end_point from recommendation where abtest_id = %s and dataset_id = %s and (customer_id = -1 or customer_id = %s);",

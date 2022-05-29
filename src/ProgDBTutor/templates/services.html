@@ -5,25 +5,27 @@
 
     <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/services_style.css') }}">
     {#    <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">#}
     <link rel="stylesheet" href="{{ url_for('static',filename='style/sharedStyle.css') }}">
 
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/flash.css') }}">
+
     <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
     <script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
 
-    {#    <link#}
-    {#      rel="stylesheet"#}
-    {#      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"#}
-    {#      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"#}
-    {#      crossorigin="anonymous"#}
-    {#    />#}
-    {#    <link#}
-    {#      rel="stylesheet"#}
-    {#      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"#}
-    {#      crossorigin="anonymous"#}
-    {#    />#}
+{#        <link#}
+{#          rel="stylesheet"#}
+{#          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"#}
+{#          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"#}
+{#          crossorigin="anonymous"#}
+{#        />#}
+{#        <link#}
+{#          rel="stylesheet"#}
+{#          href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"#}
+{#          crossorigin="anonymous"#}
+{#        />#}
 
 </head>
 
@@ -52,6 +54,9 @@
         </ul>
     </div>
 </nav>
+
+<div id="flash_div" style="width: 100%; position: fixed; z-index: 999;"></div>
+
 <form method="POST" action="" id="form1" data-name="cForm">
     <div class="container__page" id="abtestpage">
 
@@ -333,7 +338,13 @@
                     {#console.log(algo_id);#}
                     {#console.log(algo_list);#}
                     {#console.log(algo_dict);#}
-                    generateAttrHtml(data);
+                    if (data['changed']) {
+                        generateAttrHtml(data);
+                    }
+                    else {
+                        $('#flash_div').load('{{ url_for('get_flashes') }}')
+                    }
+
                 },
             });
         });

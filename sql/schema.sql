@@ -113,5 +113,5 @@ CREATE TABLE Recommendation (
 
 -- Adding Admin account
 INSERT INTO DataScientist(username, email, firstname, lastname) VALUES ('admin', 'admin@hotmail.com', 'admin', 'the admin');
-INSERT INTO Authentication(username, password) VALUES ('admin', 'nimda');
+INSERT INTO Authentication(username, password) VALUES ('admin', 'sha256$6sqeheKoqqyKS5k6$25ee63a29820d9438628d08408c37aab47d4e8778e55c79da8557aac68622bb2');
 INSERT INTO Admin(username) VALUES ('admin');
