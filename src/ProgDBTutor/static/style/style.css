@@ -61,6 +61,8 @@ body::-webkit-scrollbar {
     margin-bottom: 50px;
 }
 
+
+
 /**********************************/
 /*       layer container       */
 /**********************************/
@@ -381,3 +383,392 @@ body::-webkit-scrollbar {
 }
 
 .container__slidetablehead_infocolumn {}
+
+/****************1350 MEDIA SECTION******************/
+@media screen and (max-width: 1350px)  {
+/**********************************/
+/*       algemene container       */
+/**********************************/
+.container__page {
+    width: 713px;
+    flex-direction: column;
+}
+
+}
+
+/****************************************************/
+
+/*****************750 MEDIA SECTION******************/
+@media screen and (max-width: 750px)  {
+/**********************************/
+/*     custombody container       */
+/**********************************/
+.container__body {
+    width: 713px;
+}
+
+/**********************************/
+/*       algemene container       */
+/**********************************/
+.container__page {
+}
+
+/**********************************/
+/*       layer container       */
+/**********************************/
+.container__layer {
+}
+
+/**********************************/
+/*       column container       */
+/**********************************/
+.container__column {
+}
+
+/**********************************/
+/*           head container       */
+/**********************************/
+.container__head {
+}
+
+.container__head h2 {
+}
+
+/**********************************/
+/*       content container        */
+/**********************************/
+.container__content {
+}
+
+.container__content p {
+}
+
+/**********************************/
+/*          row container         */
+/**********************************/
+.container__row {
+}
+
+/**********************************/
+/*      innercolumn container     */
+/**********************************/
+.container__innerColumn {
+}
+
+
+/**********************************/
+/*        button container        */
+/**********************************/
+.container__button {
+}
+
+.container__button button {
+}
+
+/**********************************/
+/*          link container        */
+/**********************************/
+.container__link {
+}
+
+/**********************************/
+/*        select container        */
+/**********************************/
+.container__select {
+}
+
+/**********************************/
+/*       inputfile  container     */
+/**********************************/
+.container__inputfile {
+}
+
+/**********************************/
+/*      typechecker container     */
+/**********************************/
+.container__typechecker {
+}
+
+.container__typechecker::-webkit-scrollbar {
+}
+
+.container__typechecker_row {
+}
+
+/**********************************/
+/*       namepicker container     */
+/**********************************/
+.container__namepicker {
+}
+
+/**********************************/
+/*        table container         */
+/**********************************/
+.container__table {
+}
+
+.container__tablehead {
+}
+
+.container__tablebody {
+}
+
+.container__tablebody::-webkit-scrollbar {
+
+}
+
+.container__tablerow {
+
+}
+
+.container__tableheadcontent,
+.container__tablerowcontent {
+}
+
+.container__tablerow td {
+}
+
+/**********************************/
+/*        slider container        */
+/**********************************/
+.container__sliderdate {
+
+}
+
+.container__sliderinterval {
+
+}
+
+.container__sliderrange {
+
+}
+
+.container__sliderbutton {
+
+}
+
+/**********************************/
+/*      slidetable container      */
+/**********************************/
+.container__slidetable {
+
+}
+
+.container__slidetable::-webkit-scrollbar {
+
+}
+
+.container__slidetablehead {
+
+}
+
+.container__slidetablehead h2 {
+
+}
+
+.container__slidetablehead p {
+
+}
+
+.container__slidetablerow {
+
+}
+
+.container__slidetablecolumn {
+
+}
+
+.container__slidetablehead_info {
+
+}
+
+.container__slidetablehead_infocolumn {}
+}
+/****************************************************/
+
+/*****************420 MEDIA SECTION******************/
+@media screen and (max-width: 420px)  {
+   /**********************************/
+/*     custombody container       */
+/**********************************/
+.container__body {
+}
+
+/**********************************/
+/*       algemene container       */
+/**********************************/
+.container__page {
+}
+
+/**********************************/
+/*       layer container       */
+/**********************************/
+.container__layer {
+}
+
+/**********************************/
+/*       column container       */
+/**********************************/
+.container__column {
+}
+
+/**********************************/
+/*           head container       */
+/**********************************/
+.container__head {
+}
+
+.container__head h2 {
+}
+
+/**********************************/
+/*       content container        */
+/**********************************/
+.container__content {
+}
+
+.container__content p {
+}
+
+/**********************************/
+/*          row container         */
+/**********************************/
+.container__row {
+}
+
+/**********************************/
+/*      innercolumn container     */
+/**********************************/
+.container__innerColumn {
+}
+
+
+/**********************************/
+/*        button container        */
+/**********************************/
+.container__button {
+}
+
+.container__button button {
+}
+
+/**********************************/
+/*          link container        */
+/**********************************/
+.container__link {
+}
+
+/**********************************/
+/*        select container        */
+/**********************************/
+.container__select {
+}
+
+/**********************************/
+/*       inputfile  container     */
+/**********************************/
+.container__inputfile {
+}
+
+/**********************************/
+/*      typechecker container     */
+/**********************************/
+.container__typechecker {
+}
+
+.container__typechecker::-webkit-scrollbar {
+}
+
+.container__typechecker_row {
+}
+
+/**********************************/
+/*       namepicker container     */
+/**********************************/
+.container__namepicker {
+}
+
+/**********************************/
+/*        table container         */
+/**********************************/
+.container__table {
+}
+
+.container__tablehead {
+}
+
+.container__tablebody {
+}
+
+.container__tablebody::-webkit-scrollbar {
+
+}
+
+.container__tablerow {
+
+}
+
+.container__tableheadcontent,
+.container__tablerowcontent {
+}
+
+.container__tablerow td {
+}
+
+/**********************************/
+/*        slider container        */
+/**********************************/
+.container__sliderdate {
+
+}
+
+.container__sliderinterval {
+
+}
+
+.container__sliderrange {
+
+}
+
+.container__sliderbutton {
+
+}
+
+/**********************************/
+/*      slidetable container      */
+/**********************************/
+.container__slidetable {
+
+}
+
+.container__slidetable::-webkit-scrollbar {
+
+}
+
+.container__slidetablehead {
+
+}
+
+.container__slidetablehead h2 {
+
+}
+
+.container__slidetablehead p {
+
+}
+
+.container__slidetablerow {
+
+}
+
+.container__slidetablecolumn {
+
+}
+
+.container__slidetablehead_info {
+
+}
+
+.container__slidetablehead_infocolumn {}
+}
+/****************************************************/

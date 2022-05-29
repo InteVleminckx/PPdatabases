@@ -162,3 +162,21 @@
 .container__tablebody .container__tablerow {
     border-bottom: 1px solid lightgrey;
 }
+
+/****************1350 MEDIA SECTION******************/
+@media screen and (max-width: 1350px) {
+    /**********************************/
+    /*     custombody container       */
+    /**********************************/
+    .container__body {
+        height: 1600px;
+    }
+
+    /**********************************/
+    /*       algemene container       */
+    /**********************************/
+    .container__page {
+        height: 1500px;
+    }
+}
+/****************************************************/
