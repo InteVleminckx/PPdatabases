@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='style/user_style.css') }}">
+{#    <link rel="stylesheet" href="{{ url_for('static',filename='style/user_style.css') }}">#}
     <link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='style/visualizations_style.css') }}">
+{#    <link rel="stylesheet" href="{{ url_for('static',filename='style/visualizations_style.css') }}">#}
     <link rel="stylesheet" href="{{ url_for('static',filename='style/item_style.css') }}">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
@@ -15,6 +15,7 @@
 <body>
 
 {#Navbar section#}
+
 <nav class="navbar" id="navbar">
     <div class="navbar_container">
         <div class="navbar_toggle" id="mobile-menu">
@@ -33,67 +34,151 @@
 </nav>
 
 <form method="POST" action="" name="form1" id="form1">
-    <h1 class="main__header">Item Page</h1>
-    <div class="container__itemsection_">
-        <div class="container__info_">
-            <main class="container__layer_">
-                <main class="container__column_" id="col1">
-                    <table class="item_table flex-fixhead-table">
-                        <thead>
-                        <tr>
-                            <th>Attribute</th>
-                            <th>Value</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for attr, val in attr_val %}
-                            <tr>
-                                <td data-label="Attribute">{{ attr }}</td>
-                                <td data-label="Value">{{ val }}</td>
+
+    {# Item page #}
+    <div class="container__page" id="itempage">
+
+        {# Layer 1 #}
+        <div class="container__layer" id="layer1">
+
+            {# Column table information item #}
+            <div class="container__column" id="layer1_column1">
+
+                {# content of the table information #}
+                <div class="container__content" id="layer1_column1_content">
+
+                    {# Table item information #}
+                    <table class="container__table" id="layer1_column1_table">
+                        <thead class="container__tablehead" id="layer1_column1_table_head">
+                            <tr class="container__tablerow" id="layer1_column1_table_head_row1">
+                                {# Table headers #}
+                                <th class="container__tableheadcontent" id="table_head_row1_column1">Attribute</th>
+                                <th class="container__tableheadcontent" id="table_head_row1_column2">Value</th>
+                                {# ############# #}
                             </tr>
-                        {% endfor %}
+                        </thead>
+                        <tbody class="container__tablebody" id="layer1_column1_table_body">
+                            {% for attr, val in attr_val %}
+                                <tr class='container__tablerow'>
+                                    <td class='container__tablerowcontent' data-label="Attribute">{{ attr }}</td>
+                                    <td class='container__tablerowcontent' data-label="Value">{{ val }}</td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
-                </main>
-                <main class="container__column_" id="col2">
-                    <main class="container__item_picture_">
+                    {# ###################### #}
+
+                </div>
+                {# ################################ #}
+
+            </div>
+            {# ############################# #}
+
+            {# Column item picture and interval picker #}
+            <div class="container__column" id="layer1_section1">
+
+                {# Column item picture #}
+                <div class="container__column" id="layer1_section1_column1">
+
+                    {# Head of the picture column #}
+                    <div class="container__head" id="section1_column1_head">
+                        <h2>Picture of the article</h2>
+                    </div>
+                    {# ########################## #}
+
+                    {# Content of the picture column #}
+                    <div class="container__content" id="section1_column1_content">
                         {% if item_picture %}
-                            <img src="{{ item_picture }}" width="100%" height="400px" alt="Picture of an item">
+                            <img src="{{ item_picture }}" style=" width:100%; height:100%; object-fit: contain"alt="Picture of an item">
                         {% else %}
-                            <img src="" width="100%" height="400px" alt="Picture of an item">
+                            <img src="" style=" width:100%; height:100%; object-fit: contain" alt="Picture of an item">
                         {% endif %}
-                    </main>
-                    <main class="container__selection_">
-                        <div class="grid-container_">
-                            <div class="grid-item_1_">
-                                <select class="select" id="graph_select" name="graph_select">
+                    </div>
+                    {# ############################# #}
+
+                </div>
+                {# ################### #}
+
+                {# Column interval picker #}
+                <div class="container__column" id="layer1_section1_column2">
+
+                    {# Content of the interval picker #}
+                    <div class="container__content" id="section1_column2_content">
+
+                        {# row 1 #}
+                        <div class="container__row" id="section1_row1">
+                            {# type graph picker #}
+                            <div class="container__innerColumn" id="section1_row1_inner1">
+                                <select class="container__select" id="graph_select" name="graph_select">
                                     <option value="Popularity item">Popularity item</option>
                                     <option value="Recommendation count">Recommendation count</option>
                                     <option value="Recommendation correctness">Recommendation correctness</option>
                                 </select>
                             </div>
-                            <div class="grid-item_1_">
-                                <button class="_button" role="button" id="submit_graph" name="submit_graph">
-                                    Show graph
-                                </button>
+                            {# ################# #}
+                            <div class="container__innerColumn" id="section1_row1_inner2">
+                                <div class="container__button" id="section1_buttongraph">
+                                    <button id="submit_graph" name="submit_graph" role="button" >
+                                        Show graph
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="grid-container_">
-                            <div class="grid-item_1_">
-                                <input class="_date" type="date" placeholder="Begin" id="begin_time" name="begin_time" value="2020-01-01" required>
+                        {# ##### #}
+
+                        {# row 2 #}
+                        <div class="container__row" id="section1_row2">
+                            <div class="container__innerColumn" id="section1_row2_inner1">
+                                <input type="date" class="container__input" id="input_startpoint"
+                                       name="input_startpoint" value="2020-01-01"
+                                       placeholder="Begin" required>
                             </div>
-                            <div class="grid-item_1_">
-                                <input class="_date" type="date" placeholder="End" id="end_time" name="end_time" value="2020-01-09" required>
+                            <div class="container__innerColumn" id="section1_row2_inner2">
+                                <input type="date" class="container__input" id="input_endpoint"
+                                       name="input_endpoint" value="2020-01-09"
+                                       placeholder="End" required>
                             </div>
                         </div>
-                    </main>
-                </main>
-            </main>
-            <main class="container__layer_">
-                <main class="container__graph_" id="item_graph"></main>
-            </main>
+                        {# #### #}
+
+                    </div>
+                    {# ############################## #}
+
+                </div>
+                {# ###################### #}
+
+            </div>
+            {# ####################################### #}
+
         </div>
+        {# ####### #}
+
+        {# Layer 2 #}
+        <div class="container__layer" id="layer2">
+
+            {# Column graphs #}
+            <div class="container__column" id="layer2_column1">
+
+                {# Head of the graphs #}
+                <div class="container__head" id="layer2_column1_head">
+                    <h2>Choose a graph</h2>
+                </div>
+                {# ################## #}
+
+                {# Content of the graphs #}
+                <div class="container__content" id="layer2_column1_content">
+
+                </div>
+                {# ##################### #}
+
+            </div>
+            {# ############# #}
+
+        </div>
+        {# ####### #}
+
     </div>
+    {# ######### #}
 </form>
 
 <script type="text/javascript">
@@ -120,7 +205,7 @@
        });
    });
 
-    $('button._button').click(function (e){
+    $('button#submit_graph').click(function (e){
         e.preventDefault();
     })
 
@@ -135,16 +220,15 @@
         var d = data;
 
         if (d['graph_type'] == "Popularity item") {
+
+            document.getElementById("layer2_column1_head").innerHTML = "<h2> Popularity item </h2>"
             dataitems = new google.visualization.arrayToDataTable(d['data']);
-            chart = new google.charts.Bar(document.getElementById(d['name']));
+            chart = new google.charts.Bar(document.getElementById("layer2_column1_content"));
             options = {
                 chartArea: {
                     width: '94%'
                 },
                 legend: {position: 'none'},
-                chart: {
-                    title: 'Popularity item',
-                },
                 vAxis: {
                     title: 'Amount of purchases'
                 },
@@ -154,16 +238,14 @@
             chart.draw(dataitems, google.charts.Bar.convertOptions(options));
         }
         else if (d['graph_type'] == "Recommendation count") {
+            document.getElementById("layer2_column1_head").innerHTML = "<h2> Recommendation count </h2>"
             dataitems = new google.visualization.arrayToDataTable(d['data']);
-            chart = new google.visualization.LineChart(document.getElementById(d['name']));
+            chart = new google.visualization.LineChart(document.getElementById("layer2_column1_content"));
             options = {
                 chartArea: {
                     width: '94%'
                 },
                 legend: {position: 'bottom'},
-                chart: {
-                    title: 'Recommendation count',
-                },
                 vAxis: {
                     title: 'Amount of recommendations'
                 },
@@ -173,13 +255,14 @@
             chart.draw(dataitems, options);
         }
         else if (d['graph_type'] == "Recommendation correctness") {
+            document.getElementById("layer2_column1_head").innerHTML = "<h2> Recommendation correctness </h2>"
             dataitems = new google.visualization.DataTable();
             dataitems.addColumn('string', 'Date');
             for (var x of d['columns']) {
                 dataitems.addColumn('number', x);
             }
             dataitems.addRows(d['data'])
-            chart = new google.charts.Bar(document.getElementById(d['name']));
+            chart = new google.charts.Bar(document.getElementById("layer2_column1_content"));
             options = {
                 isStacked: true,
                 chartArea: {
@@ -187,9 +270,6 @@
                 },
                 legend: {position: 'bottom'},
                 curveType: 'function',
-                chart: {
-                    title: 'Recommendation correctness',
-                },
                 vAxis: {
                     viewWindow: {
                     }

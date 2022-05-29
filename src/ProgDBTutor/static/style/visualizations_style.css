@@ -8,7 +8,8 @@
 /**********************************/
 /*       layer container       */
 /**********************************/
-.container__layer {}
+.container__layer {
+}
 
 #layer1 {
     height: 200px;
@@ -62,8 +63,7 @@
 }
 
 #layer4_section2_column2,
-#layer4_section2_column3
-{
+#layer4_section2_column3 {
     height: 140px;
 }
 
@@ -101,12 +101,11 @@
 #layer4_column1_head,
 #layer4_section2_column1_head,
 #layer4_section2_column2_head,
-#layer4_section2_column3_head
-{
+#layer4_section2_column3_head {
     width: 300px;
 }
 
-#layer4_column1_head h2{
+#layer4_column1_head h2 {
     font-size: 20px;
 }
 
@@ -124,7 +123,7 @@
     width: 613px;
 }
 
-#layer1 .container__content{
+#layer1 .container__content {
     height: 160px;
 }
 
@@ -134,7 +133,7 @@
 }
 
 #layer1_column2_content,
-#layer1_column3_content ,
+#layer1_column3_content,
 #layer4_column1_content,
 #layer4_section2_column1_content,
 #layer4_section2_column2_content,
@@ -202,17 +201,20 @@
 /**********************************/
 /*        section container       */
 /**********************************/
-.container__section {}
+.container__section {
+}
 
 /**********************************/
 /*      select container       */
 /**********************************/
-.container__select {}
+.container__select {
+}
 
 /**********************************/
 /*        input container         */
 /**********************************/
-.container__input {}
+.container__input {
+}
 
 /**********************************/
 /*         button container       */
@@ -327,7 +329,7 @@
     height: 580px;
 }
 
-.container__slidetablehead{
+.container__slidetablehead {
     height: 80px;
 }
 
