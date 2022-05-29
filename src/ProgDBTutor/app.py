@@ -116,12 +116,13 @@ def addalgorithm():
         algo_dict = dataDict['algo_dict']
 
         algo = form_data['algoSelection']
-
+        changed = True
         if algo == "popularity":
             windowsize = form_data['input_windowsize_p']
             retraininterval = form_data['input_retraininterval_p']
             if windowsize == "" or retraininterval == "":
                 flash('Algorithm parameters not fully filled in.', category='error')
+                changed = False
             else:
                 algo_list.append([algo_id, "popularity", "windowsize", windowsize])
                 algo_list.append([algo_id, "popularity", "retraininterval", retraininterval])
@@ -131,6 +132,7 @@ def addalgorithm():
             retraininterval = form_data['input_retraininterval_r']
             if retraininterval == "":
                 flash('Algorithm parameters not fully filled in.', category='error')
+                changed = False
             else:
                 algo_list.append([algo_id, "recency", "retraininterval", retraininterval])
                 algo_dict[str(algo_id)] = "recency"
@@ -142,6 +144,7 @@ def addalgorithm():
             retraininterval = form_data['input_retraininterval_i']
             if k == "" or window == "" or normalize == "" or retraininterval == "":
                 flash('Algorithm parameters not fully filled in.', category='error')
+                changed = False
             else:
                 algo_list.append([algo_id, "itemknn", "k", k])
                 algo_list.append([algo_id, "itemknn", "window", window])
@@ -150,11 +153,15 @@ def addalgorithm():
                 algo_dict[str(algo_id)] = "itemknn"
                 algo_id += 1
 
-        data_dict = {'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}
+        data_dict = {'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict, 'changed': changed}
         # print("success")
         # print(data_dict)
         return data_dict
 
+@app.route("/get_flashes", methods=['GET', 'POST'])
+# @login_required
+def get_flashes():
+    return render_template('_flashes.html')
 
 @app.route("/services", methods=['GET', 'POST'])
 # @login_required
