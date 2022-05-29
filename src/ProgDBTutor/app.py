@@ -387,11 +387,13 @@ def visualizations():
 
         ABTestID = request.args["abtest_id"]
         dataset_id = request.args["dataset_id"]
+        abtest = getAB_Test(ABTestID)
+        topk = abtest.topk
 
         jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
 
-        recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, 5, ABTestID)
-        totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, "", "", dataset_id, 5, ABTestID)
+        recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, topk, ABTestID)
+        totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, "", "", dataset_id, topk, ABTestID)
         totRev = abTestQueue.enqueue(getTotaleRevenue, "", "", dataset_id, ABTestID)
         listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID)
 
@@ -408,9 +410,11 @@ def visualizationsRequest():
         ABTestID = data["abtest_id"]
         start = data["startdate"]
         end = data["enddate"]
+        abtest = getAB_Test(ABTestID)
+        topk = abtest.topk
 
-        recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, start, end, dataset_id, 5, ABTestID)
-        totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, start, end, dataset_id, 5, ABTestID)
+        recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, start, end, dataset_id, topk, ABTestID)
+        totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, start, end, dataset_id, topk, ABTestID)
         totRev = abTestQueue.enqueue(getTotaleRevenue, start, end, dataset_id, ABTestID)
         listUsers = abTestQueue.enqueue(getListOfActiveUsers, start, end, dataset_id, ABTestID)
 
