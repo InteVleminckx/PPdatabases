@@ -92,17 +92,42 @@ def getTopkMostRecommendItemsPerAlgo(start, end, dataset_id, topk, abtest_id):
     cursor = dbconnect.get_cursor()
     for algorithmID in algorithmIDs:
         recommendations = []
-        algoritme = getAlgorithm(abtest_id, algorithmID)
-
+        algorithm = getAlgorithm(abtest_id, algorithmID)
         cursor.execute(
             "select item_number, count(item_number) from recommendation where abtest_id = %s and algorithm_id = %s and end_point between %s and %s group by item_number order by count(item_number) desc limit %s",
             (str(abtest_id), str(algorithmID), str(start), str(end), str(topk)))
 
         rows = cursor.fetchall()
-        for row in rows:
-            recommendations.append({"item": str(row[0]), "count": str(row[1])})
 
-        topkReco[algorithmID] = {"name": algoritme.name, "algorithmID": algoritme.algorithm_id, "recommendations": recommendations}
+        # For popularity or recency we have to look at each day and compute the nr of active users
+        if algorithm.name == 'popularity' or algorithm.name == 'recency':
+            startPoint = datetime.strptime(start, '%Y-%m-%d')
+            endPoint = datetime.strptime(end, '%Y-%m-%d')
+            stepsize = timedelta(days=1)
+            counter_rows = [0] * len(rows)
+
+            # Loop over all the days
+            while startPoint <= endPoint:
+                nrActiveUsers = getNumberOfActiveUsers(dataset_id, startPoint)
+                for i in range(len(rows)):
+                    cursor.execute(
+                        "select item_number, count(item_number) from recommendation where abtest_id = %s and algorithm_id = %s and end_point = %s and item_number = %s group by item_number order by count(item_number)",
+                        (str(abtest_id), str(algorithmID), startPoint, str(rows[i][0]))
+                    )
+                    amount = cursor.fetchone()
+                    if amount:
+                        # This determines the amount we need to add to the current counter of the item
+                        counter_rows[i] += amount[1] * nrActiveUsers
+                startPoint += stepsize
+
+            for j in range(len(rows)):
+                recommendations.append({"item": str(rows[j][0]), "count": str(counter_rows[j])})
+
+        elif algorithm.name == 'itemknn':
+            for row in rows:
+                recommendations.append({"item": str(row[0]), "count": str(row[1])})
+
+        topkReco[algorithmID] = {"name": algorithm.name, "algorithmID": algorithm.algorithm_id, "recommendations": recommendations}
 
     return topkReco
 
