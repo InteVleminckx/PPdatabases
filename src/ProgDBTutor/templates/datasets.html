@@ -49,7 +49,7 @@
         <form method="GET" action="" name="form1" id="form1">
             <div class="container__layer" id="form1_layer1">
                 <div class="container__column" id="form1_layer1_column1">
-                    <select class="container__select" name="datasetSelection" id="datasetSelection" onchange="sendData(); goToABTestPage()">
+                    <select class="container__select" name="datasetSelection" id="datasetSelection" onchange="sendData();">
                         {% for id, name in names %}
                             <option value="{{ id }}">Dataset: {{ name }}</option>
                         {% endfor %}
@@ -220,7 +220,15 @@ function goToABTestPage() {
     console.log(ds);
     {#var link = document.getElementById('link__abtest');#}
     {#link.href += '?selected_ds_id=' + ds;#}
-    window.location.href = window.location.href + "?selected_ds_id=" + ds
+    {#window.location.href = window.location.href + "?selected_ds_id=" + ds#}
+
+    let url__ = window.location.href
+    let url__string = url__.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
+    {#window.location.href = url__string +"/services?dataset_id=" + ds.toString()#}
+    window.location.replace(url__string +"/services?dataset_id=" + ds.toString());
+    {#var link = document.getElementById('link__abtest');#}
+    {#link.href += '?selected_ds_id=' + ds;#}
+    {#window.location.href = window.location.href + "?selected_ds_id=" + ds#}
 }
 
 $(function() {
