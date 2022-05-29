@@ -39,380 +39,381 @@
 </nav>
 {# ############## #}
 
-{# Visualizations page #}
-<div class="container__page" id="visualizationspage">
-    {# Layer1 #}
-    <div class="container__layer" id="layer1">
+<div class="container__body">
+    {# Visualizations page #}
+    <div class="container__page" id="visualizationspage">
+        {# Layer1 #}
+        <div class="container__layer" id="layer1">
 
-        {# abtest standard parameters #}
-        <div class="container__column" id="layer1_column1">
+            {# abtest standard parameters #}
+            <div class="container__column" id="layer1_column1">
 
-            {# Header standard parameters #}
-            <div class="container__head" id="layer1_column1_head">
-                <h2>AB-test information</h2>
-            </div>
-            {# ########################## #}
-
-            {# content standard parameters #}
-            <div class="container__content" id="layer1_column1_content">
-                {# row for abtest id and datasetname#}
-                <div class="container__row" id="layer1_column1_row1">
-                    <div class="container__innerColumn" id="layer1_column1_row1_inner1">
-                        <p>AB-test ID: </p>
-                    </div>
-                    <div class="container__innerColumn" id="layer1_column1_row1_inner2">
-                        <p id="abtest_id"></p>
-                    </div>
-                    <div class="container__innerColumn" id="layer1_column1_row1_inner3">
-                        <p>Dataset name: </p>
-                    </div>
-                    <div class="container__innerColumn" id="layer1_column1_row1_inner4">
-                        <p id="dataset_name"></p>
-                    </div>
+                {# Header standard parameters #}
+                <div class="container__head" id="layer1_column1_head">
+                    <h2>AB-test information</h2>
                 </div>
-                {# ################################ #}
+                {# ########################## #}
 
-                {# row for topk and stepsize#}
-                <div class="container__row" id="layer1_column1_row2">
-                    <div class="container__innerColumn" id="layer1_column1_row2_inner1">
-                        <p>Top-k: </p>
+                {# content standard parameters #}
+                <div class="container__content" id="layer1_column1_content">
+                    {# row for abtest id and datasetname#}
+                    <div class="container__row" id="layer1_column1_row1">
+                        <div class="container__innerColumn" id="layer1_column1_row1_inner1">
+                            <p>AB-test ID: </p>
+                        </div>
+                        <div class="container__innerColumn" id="layer1_column1_row1_inner2">
+                            <p id="abtest_id"></p>
+                        </div>
+                        <div class="container__innerColumn" id="layer1_column1_row1_inner3">
+                            <p>Dataset name: </p>
+                        </div>
+                        <div class="container__innerColumn" id="layer1_column1_row1_inner4">
+                            <p id="dataset_name"></p>
+                        </div>
                     </div>
-                    <div class="container__innerColumn" id="layer1_column1_row2_inner2">
-                        <p id="topk"></p>
+                    {# ################################ #}
+
+                    {# row for topk and stepsize#}
+                    <div class="container__row" id="layer1_column1_row2">
+                        <div class="container__innerColumn" id="layer1_column1_row2_inner1">
+                            <p>Top-k: </p>
+                        </div>
+                        <div class="container__innerColumn" id="layer1_column1_row2_inner2">
+                            <p id="topk"></p>
+                        </div>
+                        <div class="container__innerColumn" id="layer1_column1_row2_inner3">
+                            <p>Stepsize: </p>
+                        </div>
+                        <div class="container__innerColumn" id="layer1_column1_row2_inner4">
+                            <p id="stepsize"></p>
+                        </div>
                     </div>
-                    <div class="container__innerColumn" id="layer1_column1_row2_inner3">
-                        <p>Stepsize: </p>
-                    </div>
-                    <div class="container__innerColumn" id="layer1_column1_row2_inner4">
-                        <p id="stepsize"></p>
-                    </div>
-                </div>
-                {# ######################## #}
+                    {# ######################## #}
 
-                {# row for start-and endpoint#}
-                <div class="container__row" id="layer1_column1_row3">
-                    <div class="container__innerColumn" id="layer1_column1_row3_inner1">
-                        <p>Startpoint: </p>
-                    </div>
-                    <div class="container__innerColumn" id="layer1_column1_row3_inner2">
-                        <p id="startpoint"></p>
-                    </div>
-                    <div class="container__innerColumn" id="layer1_column1_row3_inner3">
-                        <p>Endpoint: </p>
-                    </div>
-                    <div class="container__innerColumn" id="layer1_column1_row3_inner4">
-                        <p id="endpoint"></p>
-                    </div>
-                </div>
-                {# ######################### #}
-
-            </div>
-            {# ########################### #}
-
-        </div>
-        {# ########################## #}
-
-        {# Total purchases abtest #}
-        <div class="container__column" id="layer1_column2">
-
-            {# Header total purchases #}
-            <div class="container__head" id="layer1_column2_head">
-                <h2>Totale purchases</h2>
-            </div>
-            {# ###################### #}
-
-            {# content total purchases #}
-            <div class="container__content" id="layer1_column2_content">
-                <p id="purchases"></p>
-            </div>
-            {# ####################### #}
-
-        </div>
-        {# ###################### #}
-
-        {# Unique active users abtest #}
-        <div class="container__column" id="layer1_column3">
-
-            {# Header unique active users #}
-            <div class="container__head" id="layer1_column3_head">
-                <h2>Active users</h2>
-            </div>
-            {# ########################## #}
-
-            {# content unique active users #}
-            <div class="container__content" id="layer1_column3_content">
-                <p id="users"></p>
-            </div>
-            {# ########################### #}
-
-        </div>
-        {# ########################## #}
-
-    </div>
-    {# ###### #}
-
-    {# Layer2 #}
-    <div class="container__layer" id="layer2">
-
-        {# Table algorithmes #}
-        <div class="container__column" id="layer2_column1">
-
-            {# Content table algorithmes #}
-            <div class="container__content" id="layer2_column1_content">
-                {# Added algorithms table #}
-                <table class="container__table" id="layer2_column1_table">
-                    <thead class="container__tablehead" id="layer2_column1_table_head">
-                    <tr class="container__tablerow" id="layer2_column1_table_head_row1">
-                        {# Table headers #}
-                        <th class="container__tableheadcontent" id="table_head_row1_column1">Number</th>
-                        <th class="container__tableheadcontent" id="table_head_row1_column2">Name</th>
-                        <th class="container__tableheadcontent" id="table_head_row1_column3">Retrain interval</th>
-                        <th class="container__tableheadcontent" id="table_head_row1_column4">Window size</th>
-                        <th class="container__tableheadcontent" id="table_head_row1_column5">Normalize</th>
-                        <th class="container__tableheadcontent" id="table_head_row1_column6">K</th>
-                        {# ############# #}
-                    </tr>
-                    </thead>
-                    <tbody class="container__tablebody" id="layer2_column1_table_body">
-                    {# Table content will be filled with javascript #}
-                    </tbody>
-                </table>
-            </div>
-            {# ######################### #}
-
-        </div>
-        {# ################# #}
-
-        {# Graph purchases and active users #}
-        <div class="container__column" id="layer2_column2">
-
-            {# Header graph purchases and active users #}
-            <div class="container__head" id="layer2_column2_head">
-                <h2>Purchases and active user per day</h2>
-            </div>
-            {# ######################################## #}
-
-            {# Content graph purchases and active users #}
-            <div class="container__content" id="layer2_column2_content">
-
-            </div>
-            {# ######################################## #}
-
-        </div>
-        {# ################################ #}
-
-    </div>
-    {# ###### #}
-
-    {# Layer3 #}
-    <div class="container__layer" id="layer3">
-
-        {# Graph ar@d and CTR#}
-        <div class="container__column" id="layer3_column1">
-
-            {# Header graph ar@d and CTR #}
-            <div class="container__head" id="layer3_column1_head">
-                <h2>CTR and ar@d per timestamp</h2>
-            </div>
-            {# ######################### #}
-
-            {# Content graph ar@d and CTR #}
-            <div class="container__content" id="layer3_column1_content">
-
-            </div>
-            {# ########################## #}
-
-        </div>
-        {# ################# #}
-
-        {# Graph arpu@d #}
-        <div class="container__column" id="layer3_column2">
-
-            {# Header graph arpu@d #}
-            <div class="container__head" id="layer3_column2_head">
-                <h2>Arpu@d per timestamp</h2>
-            </div>
-            {# ################### #}
-
-            {# Content graph apru@d #}
-            <div class="container__content" id="layer3_column2_content">
-
-            </div>
-            {# #################### #}
-
-        </div>
-        {# ############ #}
-
-    </div>
-    {# ###### #}
-
-    {# Layer4 #}
-    <div class="container__layer" id="layer4">
-
-        {# Table algorithms with own topk #}
-        <div class="container__column" id="layer4_column1">
-
-            {# Header of the algorithms table #}
-            <div class="container__head" id="layer4_column1_head">
-                <h2>Top-k most recommended</h2>
-            </div>
-            {# ############################## #}
-
-            {# Content of the algorithms table #}
-            <div class="container__content" id="layer4_column1_content">
-                <div class="container__slidetable" id="table_topkrecommendations"></div>
-            </div>
-            {# ############################### #}
-
-        </div>
-        {# ############################## #}
-
-        {# Extra section #}
-        <div class="container__column" id="layer4_column2">
-
-            {# Table  topk most purchased#}
-            <div class="container__column" id="layer4_section2_column1">
-                {# Header of the algorithms table #}
-                <div class="container__head" id="layer4_section2_column1_head">
-                    <h2>Top-k most purchased</h2>
-                </div>
-                {# ############################## #}
-
-                {# Content of the most purchasd table #}
-                <div class="container__content" id="layer4_section2_column1_content">
-                    {# Added topk most purchased table #}
-                    <table class="container__table" id="layer4_section2_column1_table">
-                        <thead class="container__tablehead" id="layer4_section2_column1_table_head">
-                        <tr class="container__tablerow" id="layer4_section2_column1_table_head_row1">
-                            {# Table headers #}
-                            <th class="container__tableheadcontent" id="section2_table_head_row1_column1">
-                                Item-id
-                            </th>
-                            <th class="container__tableheadcontent" id="section2_table_head_row1_column2">
-                                Count
-                            </th>
-                            {# ############# #}
-                        </tr>
-                        </thead>
-                        <tbody class="container__tablebody" id="layer4_section2_column1_table_body">
-                        {# Table content will be filled with javascript #}
-                        </tbody>
-                    </table>
-                </div>
-                {# ############################### #}
-            </div>
-            {# ######################### #}
-
-            {# Unique active user over time #}
-            <div class="container__column" id="layer4_section2_column2">
-                {# Header of the algorithms table #}
-                <div class="container__head" id="layer4_section2_column2_head">
-                    <h2>Unique users</h2>
-                </div>
-                {# ############################## #}
-
-                {# Content of the algorithms table #}
-                <div class="container__content" id="layer4_section2_column2_content">
-                    <p id="unique_users"></p>
-                </div>
-                {# ############################### #}
-            </div>
-            {# ############################ #}
-
-            {# Total revenue over time #}
-            <div class="container__column" id="layer4_section2_column3">
-                {# Header of the algorithms table #}
-                <div class="container__head" id="layer4_section2_column3_head">
-                    <h2>Total revenue</h2>
-                </div>
-                {# ############################## #}
-
-                {# Content of the algorithms table #}
-                <div class="container__content" id="layer4_section2_column3_content">
-                    <p id="total_revenue"></p>
-                </div>
-                {# ############################### #}
-            </div>
-            {# ####################### #}
-
-        </div>
-        {# ############ #}
-
-        {# Extra section#}
-        <div class="container__column" id="layer4_column3">
-
-            {# Table list of active users over time #}
-            <div class="container__column" id="layer4_section3_column1">
-                {# Added list of users table #}
-                <table class="container__table" id="layer4_section3_column1_table">
-                    <thead class="container__tablehead" id="layer4_section3_column1_table_head">
-                    <tr class="container__tablerow" id="layer4_section3_column1_table_head_row1">
-                        {# Table headers #}
-                        <th class="container__tableheadcontent" id="section3_table_head_row1_column1"
-                            style="cursor: pointer" onclick="orderUsers(0)">
-                            Active user
-                        </th>
-                        <th class="container__tableheadcontent" id="section3_table_head_row1_column2"
-                            style="cursor: pointer" onclick="orderUsers(1)">
-                            Total purchases
-                        </th>
-                        <th class="container__tableheadcontent" id="section3_table_head_row1_column3"
-                            style="cursor: pointer" onclick="orderUsers(2)">
-                            Purchases over time
-                        </th>
-                        <th class="container__tableheadcontent" id="section3_table_head_row1_column4"
-                            style="cursor: pointer" onclick="orderUsers(3)">
-                            CTR
-                        </th>
-                        {# ############# #}
-                    </tr>
-                    </thead>
-                    <tbody class="container__tablebody" id="layer4_section3_column1_table_body">
-                    {# Table content will be filled with javascript #}
-                    </tbody>
-                </table>
-                {# ###################### #}
-            </div>
-            {# #################################### #}
-
-            {# Slider for changing timestamp interval #}
-            <div class="container__column" id="layer4_section3_column2">
-                {# Slider #}
-                <div class="container__slider" id="slider1">
-                    {# Header of slider interval #}
-                    <div class="container__head" id="layer4_section3_column2_head">
-                        <div class="container__sliderdate" id="slider1_date">
-                            <h2>Interval: </h2>
-                            <p>
-                                <input class="container__sliderinterval" disabled type="text" id="slider1_amount"
-                                       size="30">
-                            </p>
+                    {# row for start-and endpoint#}
+                    <div class="container__row" id="layer1_column1_row3">
+                        <div class="container__innerColumn" id="layer1_column1_row3_inner1">
+                            <p>Startpoint: </p>
+                        </div>
+                        <div class="container__innerColumn" id="layer1_column1_row3_inner2">
+                            <p id="startpoint"></p>
+                        </div>
+                        <div class="container__innerColumn" id="layer1_column1_row3_inner3">
+                            <p>Endpoint: </p>
+                        </div>
+                        <div class="container__innerColumn" id="layer1_column1_row3_inner4">
+                            <p id="endpoint"></p>
                         </div>
                     </div>
                     {# ######################### #}
 
-                    {# Content of slider interval #}
-                    <div class="container__content" id="layer4_section3_column2_content">
-                        <div class="container__sliderrange" id="slider1_range"></div>
-                        <div class="container__sliderbutton" id="slider1_button">
-                            <button class="container__button" onclick="renewInterval()">RENEW</button>
-                        </div>
-                    </div>
-                    {# ########################## #}
                 </div>
-                {# ##### #}
+                {# ########################### #}
+
             </div>
-            {# ###################################### #}
+            {# ########################## #}
+
+            {# Total purchases abtest #}
+            <div class="container__column" id="layer1_column2">
+
+                {# Header total purchases #}
+                <div class="container__head" id="layer1_column2_head">
+                    <h2>Totale purchases</h2>
+                </div>
+                {# ###################### #}
+
+                {# content total purchases #}
+                <div class="container__content" id="layer1_column2_content">
+                    <p id="purchases"></p>
+                </div>
+                {# ####################### #}
+
+            </div>
+            {# ###################### #}
+
+            {# Unique active users abtest #}
+            <div class="container__column" id="layer1_column3">
+
+                {# Header unique active users #}
+                <div class="container__head" id="layer1_column3_head">
+                    <h2>Active users</h2>
+                </div>
+                {# ########################## #}
+
+                {# content unique active users #}
+                <div class="container__content" id="layer1_column3_content">
+                    <p id="users"></p>
+                </div>
+                {# ########################### #}
+
+            </div>
+            {# ########################## #}
 
         </div>
-        {# ############ #}
+        {# ###### #}
+
+        {# Layer2 #}
+        <div class="container__layer" id="layer2">
+
+            {# Table algorithmes #}
+            <div class="container__column" id="layer2_column1">
+
+                {# Content table algorithmes #}
+                <div class="container__content" id="layer2_column1_content">
+                    {# Added algorithms table #}
+                    <table class="container__table" id="layer2_column1_table">
+                        <thead class="container__tablehead" id="layer2_column1_table_head">
+                        <tr class="container__tablerow" id="layer2_column1_table_head_row1">
+                            {# Table headers #}
+                            <th class="container__tableheadcontent" id="table_head_row1_column1">Number</th>
+                            <th class="container__tableheadcontent" id="table_head_row1_column2">Name</th>
+                            <th class="container__tableheadcontent" id="table_head_row1_column3">Retrain interval</th>
+                            <th class="container__tableheadcontent" id="table_head_row1_column4">Window size</th>
+                            <th class="container__tableheadcontent" id="table_head_row1_column5">Normalize</th>
+                            <th class="container__tableheadcontent" id="table_head_row1_column6">K</th>
+                            {# ############# #}
+                        </tr>
+                        </thead>
+                        <tbody class="container__tablebody" id="layer2_column1_table_body">
+                        {# Table content will be filled with javascript #}
+                        </tbody>
+                    </table>
+                </div>
+                {# ######################### #}
+
+            </div>
+            {# ################# #}
+
+            {# Graph purchases and active users #}
+            <div class="container__column" id="layer2_column2">
+
+                {# Header graph purchases and active users #}
+                <div class="container__head" id="layer2_column2_head">
+                    <h2>Purchases and active user per day</h2>
+                </div>
+                {# ######################################## #}
+
+                {# Content graph purchases and active users #}
+                <div class="container__content" id="layer2_column2_content">
+
+                </div>
+                {# ######################################## #}
+
+            </div>
+            {# ################################ #}
+
+        </div>
+        {# ###### #}
+
+        {# Layer3 #}
+        <div class="container__layer" id="layer3">
+
+            {# Graph ar@d and CTR#}
+            <div class="container__column" id="layer3_column1">
+
+                {# Header graph ar@d and CTR #}
+                <div class="container__head" id="layer3_column1_head">
+                    <h2>CTR and ar@d per timestamp</h2>
+                </div>
+                {# ######################### #}
+
+                {# Content graph ar@d and CTR #}
+                <div class="container__content" id="layer3_column1_content">
+
+                </div>
+                {# ########################## #}
+
+            </div>
+            {# ################# #}
+
+            {# Graph arpu@d #}
+            <div class="container__column" id="layer3_column2">
+
+                {# Header graph arpu@d #}
+                <div class="container__head" id="layer3_column2_head">
+                    <h2>Arpu@d per timestamp</h2>
+                </div>
+                {# ################### #}
+
+                {# Content graph apru@d #}
+                <div class="container__content" id="layer3_column2_content">
+
+                </div>
+                {# #################### #}
+
+            </div>
+            {# ############ #}
+
+        </div>
+        {# ###### #}
+
+        {# Layer4 #}
+        <div class="container__layer" id="layer4">
+
+            {# Table algorithms with own topk #}
+            <div class="container__column" id="layer4_column1">
+
+                {# Header of the algorithms table #}
+                <div class="container__head" id="layer4_column1_head">
+                    <h2>Top-k most recommended</h2>
+                </div>
+                {# ############################## #}
+
+                {# Content of the algorithms table #}
+                <div class="container__content" id="layer4_column1_content">
+                    <div class="container__slidetable" id="table_topkrecommendations"></div>
+                </div>
+                {# ############################### #}
+
+            </div>
+            {# ############################## #}
+
+            {# Extra section #}
+            <div class="container__column" id="layer4_column2">
+
+                {# Table  topk most purchased#}
+                <div class="container__column" id="layer4_section2_column1">
+                    {# Header of the algorithms table #}
+                    <div class="container__head" id="layer4_section2_column1_head">
+                        <h2>Top-k most purchased</h2>
+                    </div>
+                    {# ############################## #}
+
+                    {# Content of the most purchasd table #}
+                    <div class="container__content" id="layer4_section2_column1_content">
+                        {# Added topk most purchased table #}
+                        <table class="container__table" id="layer4_section2_column1_table">
+                            <thead class="container__tablehead" id="layer4_section2_column1_table_head">
+                            <tr class="container__tablerow" id="layer4_section2_column1_table_head_row1">
+                                {# Table headers #}
+                                <th class="container__tableheadcontent" id="section2_table_head_row1_column1">
+                                    Item-id
+                                </th>
+                                <th class="container__tableheadcontent" id="section2_table_head_row1_column2">
+                                    Count
+                                </th>
+                                {# ############# #}
+                            </tr>
+                            </thead>
+                            <tbody class="container__tablebody" id="layer4_section2_column1_table_body">
+                            {# Table content will be filled with javascript #}
+                            </tbody>
+                        </table>
+                    </div>
+                    {# ############################### #}
+                </div>
+                {# ######################### #}
+
+                {# Unique active user over time #}
+                <div class="container__column" id="layer4_section2_column2">
+                    {# Header of the algorithms table #}
+                    <div class="container__head" id="layer4_section2_column2_head">
+                        <h2>Unique users</h2>
+                    </div>
+                    {# ############################## #}
+
+                    {# Content of the algorithms table #}
+                    <div class="container__content" id="layer4_section2_column2_content">
+                        <p id="unique_users"></p>
+                    </div>
+                    {# ############################### #}
+                </div>
+                {# ############################ #}
+
+                {# Total revenue over time #}
+                <div class="container__column" id="layer4_section2_column3">
+                    {# Header of the algorithms table #}
+                    <div class="container__head" id="layer4_section2_column3_head">
+                        <h2>Total revenue</h2>
+                    </div>
+                    {# ############################## #}
+
+                    {# Content of the algorithms table #}
+                    <div class="container__content" id="layer4_section2_column3_content">
+                        <p id="total_revenue"></p>
+                    </div>
+                    {# ############################### #}
+                </div>
+                {# ####################### #}
+
+            </div>
+            {# ############ #}
+
+            {# Extra section#}
+            <div class="container__column" id="layer4_column3">
+
+                {# Table list of active users over time #}
+                <div class="container__column" id="layer4_section3_column1">
+                    {# Added list of users table #}
+                    <table class="container__table" id="layer4_section3_column1_table">
+                        <thead class="container__tablehead" id="layer4_section3_column1_table_head">
+                        <tr class="container__tablerow" id="layer4_section3_column1_table_head_row1">
+                            {# Table headers #}
+                            <th class="container__tableheadcontent" id="section3_table_head_row1_column1"
+                                style="cursor: pointer" onclick="orderUsers(0)">
+                                Active user
+                            </th>
+                            <th class="container__tableheadcontent" id="section3_table_head_row1_column2"
+                                style="cursor: pointer" onclick="orderUsers(1)">
+                                Total purchases
+                            </th>
+                            <th class="container__tableheadcontent" id="section3_table_head_row1_column3"
+                                style="cursor: pointer" onclick="orderUsers(2)">
+                                Purchases over time
+                            </th>
+                            <th class="container__tableheadcontent" id="section3_table_head_row1_column4"
+                                style="cursor: pointer" onclick="orderUsers(3)">
+                                CTR
+                            </th>
+                            {# ############# #}
+                        </tr>
+                        </thead>
+                        <tbody class="container__tablebody" id="layer4_section3_column1_table_body">
+                        {# Table content will be filled with javascript #}
+                        </tbody>
+                    </table>
+                    {# ###################### #}
+                </div>
+                {# #################################### #}
+
+                {# Slider for changing timestamp interval #}
+                <div class="container__column" id="layer4_section3_column2">
+                    {# Slider #}
+                    <div class="container__slider" id="slider1">
+                        {# Header of slider interval #}
+                        <div class="container__head" id="layer4_section3_column2_head">
+                            <div class="container__sliderdate" id="slider1_date">
+                                <h2>Interval: </h2>
+                                <p>
+                                    <input class="container__sliderinterval" disabled type="text" id="slider1_amount"
+                                           size="30">
+                                </p>
+                            </div>
+                        </div>
+                        {# ######################### #}
+
+                        {# Content of slider interval #}
+                        <div class="container__content" id="layer4_section3_column2_content">
+                            <div class="container__sliderrange" id="slider1_range"></div>
+                            <div class="container__sliderbutton" id="slider1_button">
+                                <button class="container__button" onclick="renewInterval()">RENEW</button>
+                            </div>
+                        </div>
+                        {# ########################## #}
+                    </div>
+                    {# ##### #}
+                </div>
+                {# ###################################### #}
+
+            </div>
+            {# ############ #}
+
+        </div>
+        {# ###### #}
 
     </div>
-    {# ###### #}
-
+    {# ################### #}
 </div>
-{# ################### #}
-
 
 </body>
 

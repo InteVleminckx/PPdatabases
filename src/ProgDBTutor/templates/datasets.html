@@ -43,175 +43,177 @@
 
 <div id="flash_div" style="width: 100%; position: fixed; z-index: 999;"></div>
 
-<div class="container__page" id="datasetpage">
+<div class="container__body">
+    <div class="container__page" id="datasetpage">
 
 {######################################################################################################################}
 {#                                                    FORM1                                                           #}
 {######################################################################################################################}
 
-    <div class="container__section" id="section1" style="display: block">
-        <form method="GET" action="" name="form1" id="form1">
-            <div class="container__layer" id="form1_layer1">
-                <div class="container__column" id="form1_layer1_column1">
-                    <select class="container__select" name="datasetSelection" id="datasetSelection" onchange="sendData();">
-                        {% for id, name in names %}
-                            <option value="{{ id }}">Dataset: {{ name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="container__column" id="form1_layer1_column2">
-                    <button class="container__button" role="button" id="add_btn" name="add_btn" onclick="toggleDatasetView()">
-                        Add dataset
-                    </button>
-                </div>
-            </div>
-            <div class="container__layer" id="form1_layer2">
-                <div class="container__column" id="form1_layer2_column1">
-                    <div class="container__head" id="form1_layer2_column1_head">
-                        <h2>Number of customers</h2>
+        <div class="container__section" id="section1" style="display: block">
+            <form method="GET" action="" name="form1" id="form1">
+                <div class="container__layer" id="form1_layer1">
+                    <div class="container__column" id="form1_layer1_column1">
+                        <select class="container__select" name="datasetSelection" id="datasetSelection" onchange="sendData();">
+                            {% for id, name in names %}
+                                <option value="{{ id }}">Dataset: {{ name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    <div class="container__content" id="form1_layer2_column1_content">
-                        <p id="nr_of_customers">0</p>
+                    <div class="container__column" id="form1_layer1_column2">
+                        <button class="container__button" role="button" id="add_btn" name="add_btn" onclick="toggleDatasetView()">
+                            Add dataset
+                        </button>
                     </div>
                 </div>
-                <div class="container__column" id="form1_layer2_column2">
-                    <div class="container__head" id="form1_layer2_column2_head">
-                        <h2>Number of items</h2>
+                <div class="container__layer" id="form1_layer2">
+                    <div class="container__column" id="form1_layer2_column1">
+                        <div class="container__head" id="form1_layer2_column1_head">
+                            <h2>Number of customers</h2>
+                        </div>
+                        <div class="container__content" id="form1_layer2_column1_content">
+                            <p id="nr_of_customers">0</p>
+                        </div>
                     </div>
-                    <div class="container__content" id="form1_layer2_column2_content">
-                        <p id="nr_of_items">0</p>
+                    <div class="container__column" id="form1_layer2_column2">
+                        <div class="container__head" id="form1_layer2_column2_head">
+                            <h2>Number of items</h2>
+                        </div>
+                        <div class="container__content" id="form1_layer2_column2_content">
+                            <p id="nr_of_items">0</p>
+                        </div>
                     </div>
-                </div>
-                <div class="container__column" id="form1_layer2_column3">
-                    <div class="container__head" id="form1_layer2_column3_head">
-                        <h2>Number of interactions</h2>
-                    </div>
-                    <div class="container__content" id="form1_layer2_column3_content">
-                        <p id="nr_of_interactions">0</p>
-                    </div>
-                </div>
-            </div>
-            <div class="container__layer" id="form1_layer3">
-                <div class="container__column" id="form1_layer3_column1">
-                    <div class="container__head" id="form1_layer3_column1_head">
-                        <h2>Active users</h2>
-                    </div>
-                    <div class="container__content" id="form1_layer3_column1_content">
-                        <div class="container__graph" id="graph_active"></div>
-                    </div>
-                </div>
-                <div class="container__column" id="form1_layer3_column2">
-                    <div class="container__head" id="form1_layer3_column2_head">
-                        <h2>Price distributions</h2>
-                    </div>
-                    <div class="container__content" id="form1_layer3_column2_content">
-                        <div class="container__graph" id="graph_distribution"></div>
+                    <div class="container__column" id="form1_layer2_column3">
+                        <div class="container__head" id="form1_layer2_column3_head">
+                            <h2>Number of interactions</h2>
+                        </div>
+                        <div class="container__content" id="form1_layer2_column3_content">
+                            <p id="nr_of_interactions">0</p>
+                        </div>
                     </div>
                 </div>
+                <div class="container__layer" id="form1_layer3">
+                    <div class="container__column" id="form1_layer3_column1">
+                        <div class="container__head" id="form1_layer3_column1_head">
+                            <h2>Active users</h2>
+                        </div>
+                        <div class="container__content" id="form1_layer3_column1_content">
+                            <div class="container__graph" id="graph_active"></div>
+                        </div>
+                    </div>
+                    <div class="container__column" id="form1_layer3_column2">
+                        <div class="container__head" id="form1_layer3_column2_head">
+                            <h2>Price distributions</h2>
+                        </div>
+                        <div class="container__content" id="form1_layer3_column2_content">
+                            <div class="container__graph" id="graph_distribution"></div>
+                        </div>
+                    </div>
 
-                <div class="container__column" id="form1_layer3_column3">
-                    <div class="container__head" id="form1_layer2_column3_head">
-                        <h2>Timestamp distributions</h2>
+                    <div class="container__column" id="form1_layer3_column3">
+                        <div class="container__head" id="form1_layer2_column3_head">
+                            <h2>Timestamp distributions</h2>
+                        </div>
+                        <div class="container__content" id="form1_layer2_column3_content">
+                            <div class="container__graph" id="graph_timestamps"></div>
+                        </div>
                     </div>
-                    <div class="container__content" id="form1_layer2_column3_content">
-                        <div class="container__graph" id="graph_timestamps"></div>
-                    </div>
-                </div>
 
-            </div>
-            <div class="container__layer" id="form1_layer4">
-                <div class="container__column" id="form1_layer4_column1">
-                    <button class="container__button" id="abtestpagelink" name="abtestpagelink" role="button" onclick="goToABTestPage();">
-                        Go to A/B-test page with this dataset
-                    </button>
                 </div>
-                <div class="container__column" id="form1_layer4_column2">
-                    <button class="container__button" id="delete_btn" name="delete_btn" role="button">
-                        Delete dataset
-                    </button>
+                <div class="container__layer" id="form1_layer4">
+                    <div class="container__column" id="form1_layer4_column1">
+                        <button class="container__button" id="abtestpagelink" name="abtestpagelink" role="button" onclick="goToABTestPage();">
+                            Go to A/B-test page with this dataset
+                        </button>
+                    </div>
+                    <div class="container__column" id="form1_layer4_column2">
+                        <button class="container__button" id="delete_btn" name="delete_btn" role="button">
+                            Delete dataset
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
+
+    {######################################################################################################################}
+    {#                                                    FORM2                                                           #}
+    {######################################################################################################################}
+
+        <div class="container__section" id="section2" style="display: none">
+            <form method="POST" action="" name="form2" id="form2" enctype="multipart/form-data">
+                <div class="container__layer" id="form2_layer1">
+                    <div class="container__column" id="form2_layer1_column1">
+                        <input class="container__input" type="text" id="dataset_name" name="dataset_name" placeholder="Enter dataset name" required>
+                    </div>
+                </div>
+                <div class="container__layer" id="form2_layer2">
+                    <div class="container__column" id="form2_layer2_column1">
+                        <div class="container__head" id="form2_layer2_column1_head">
+                            <h2>Articles file</h2>
+                        </div>
+                        <div class="container__content" id="form2_layer2_column1_content">
+                            <div class="container__button" id="articles_button" onclick="getFile('articles_file')">Choose file</div>
+                            <div style="height: 0px; width: 0px; overflow: hidden;">
+                                <input class="container__input" type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub(this, 'articles_button');">
+                            </div>
+                            <div class="container__typechecker" id="articles_typechecker">
+                                <section id="articles_typepicker"></section>
+                            </div>
+                            <div class="container__namepicker" id="articles_namepicker">
+                                <h4>Column that should serve as name:</h4>
+                                <section id="articles_picker"></section>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container__column" id="form2_layer2_column2">
+                        <div class="container__head" id="form2_layer2_column2_head">
+                            <h2>Purchases file</h2>
+                        </div>
+                        <div class="container__content" id="form2_layer2_column2_content">
+                            <div class="container__button" id="purchases_button" onclick="getFile('purchases_file')">Choose file</div>
+                            <div style="height: 0px; width: 0px; overflow: hidden;">
+                                <input type="file" class="container__input" id="purchases_file" name="purchases_file" value="" accept=".csv" required onchange="sub(this, 'purchases_button')">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container__column" id="form2_layer2_column3">
+                        <div class="container__head" id="form2_layer2_column3_head">
+                            <h2>Customers file</h2>
+                        </div>
+                        <div class="container__content" id="form2_layer2_column3_content">
+                            <div class="container__button" id="customers_button" onclick="getFile('customers_file')">Choose file</div>
+                            <div style="height: 0px; width: 0px; overflow: hidden;">
+                                <input type="file" class="container__inputfile" id="customers_file" name="customers_file" value="" accept=".csv" required onchange="sub(this, 'customers_button')">
+                            </div>
+                            <div class="container__typechecker" id="customers_typechecker">
+                                <section id="customers_typepicker"></section>
+                            </div>
+                            <div class="container__namepicker" id="customers_namepicker">
+                                <h4>Column that should serve as name:</h4>
+                                <section id="customers_picker"></section>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="container__layer" id="form2_layer3">
+                    <div class="container__column" id="form2_layer3_column1">
+                        <button class="container__button" id="adddataset_button" type="submit" role="button">
+                            Add dataset
+                        </button>
+                    </div>
+                    <div class="container__column" id="form2_layer3_column2">
+                        <button class="container__button" id="cancel_button" type="submit" role="button" onclick="toggleDatasetView()">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+{######################################################################################################################}
+
     </div>
-
-{######################################################################################################################}
-{#                                                    FORM2                                                           #}
-{######################################################################################################################}
-
-    <div class="container__section" id="section2" style="display: none">
-        <form method="POST" action="" name="form2" id="form2" enctype="multipart/form-data">
-            <div class="container__layer" id="form2_layer1">
-                <div class="container__column" id="form2_layer1_column1">
-                    <input class="container__input" type="text" id="dataset_name" name="dataset_name" placeholder="Enter dataset name" required>
-                </div>
-            </div>
-            <div class="container__layer" id="form2_layer2">
-                <div class="container__column" id="form2_layer2_column1">
-                    <div class="container__head" id="form2_layer2_column1_head">
-                        <h2>Articles file</h2>
-                    </div>
-                    <div class="container__content" id="form2_layer2_column1_content">
-                        <div class="container__button" id="articles_button" onclick="getFile('articles_file')">Choose file</div>
-                        <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input class="container__input" type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub(this, 'articles_button');">
-                        </div>
-                        <div class="container__typechecker" id="articles_typechecker">
-                            <section id="articles_typepicker"></section>
-                        </div>
-                        <div class="container__namepicker" id="articles_namepicker">
-                            <h4>Column that should serve as name:</h4>
-                            <section id="articles_picker"></section>
-                        </div>
-                    </div>
-                </div>
-                <div class="container__column" id="form2_layer2_column2">
-                    <div class="container__head" id="form2_layer2_column2_head">
-                        <h2>Purchases file</h2>
-                    </div>
-                    <div class="container__content" id="form2_layer2_column2_content">
-                        <div class="container__button" id="purchases_button" onclick="getFile('purchases_file')">Choose file</div>
-                        <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" class="container__input" id="purchases_file" name="purchases_file" value="" accept=".csv" required onchange="sub(this, 'purchases_button')">
-                        </div>
-                    </div>
-                </div>
-                <div class="container__column" id="form2_layer2_column3">
-                    <div class="container__head" id="form2_layer2_column3_head">
-                        <h2>Customers file</h2>
-                    </div>
-                    <div class="container__content" id="form2_layer2_column3_content">
-                        <div class="container__button" id="customers_button" onclick="getFile('customers_file')">Choose file</div>
-                        <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input type="file" class="container__inputfile" id="customers_file" name="customers_file" value="" accept=".csv" required onchange="sub(this, 'customers_button')">
-                        </div>
-                        <div class="container__typechecker" id="customers_typechecker">
-                            <section id="customers_typepicker"></section>
-                        </div>
-                        <div class="container__namepicker" id="customers_namepicker">
-                            <h4>Column that should serve as name:</h4>
-                            <section id="customers_picker"></section>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="container__layer" id="form2_layer3">
-                <div class="container__column" id="form2_layer3_column1">
-                    <button class="container__button" id="adddataset_button" type="submit" role="button">
-                        Add dataset
-                    </button>
-                </div>
-                <div class="container__column" id="form2_layer3_column2">
-                    <button class="container__button" id="cancel_button" type="submit" role="button" onclick="toggleDatasetView()">
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-{######################################################################################################################}
-
 </div>
 
 <script>

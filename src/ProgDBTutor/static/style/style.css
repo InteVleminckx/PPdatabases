@@ -27,18 +27,24 @@
 }
 
 body {
-    background-color: var(--body-bg-color);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
     overflow-y: scroll;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-
 }
 
 body::-webkit-scrollbar {
     display: none;
+}
+
+/**********************************/
+/*     custombody container       */
+/**********************************/
+.container__body {
+
+    background-color: var(--body-bg-color);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 /**********************************/
@@ -51,9 +57,8 @@ body::-webkit-scrollbar {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    top: 150px;
-    position: absolute;
-
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 /**********************************/
@@ -375,78 +380,4 @@ body::-webkit-scrollbar {
     text-align: center;
 }
 
-.container__slidetablehead_infocolumn {
-}
-
-
-/*._row {*/
-/*    display: flex;*/
-/*    flex-direction: row;*/
-/*    flex-wrap: wrap;*/
-/*    width: 100%;*/
-/*}*/
-
-/*._column {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    flex-basis: 100%;*/
-/*    flex: 1;*/
-/*}*/
-
-/*.scroll-table {*/
-/*    !*margin-left: auto;*!*/
-/*    !*margin-right: auto;*!*/
-/*}*/
-
-/*table ,tr td{*/
-/*    border:1px solid black;*/
-/*    height: 40px;*/
-/*}*/
-/*tbody {*/
-/*    display:block;*/
-/*    height:510px;*/
-/*    overflow-y:scroll;*/
-/*}*/
-/*thead, tbody tr {*/
-/*    display:table;*/
-/*    width:100%;*/
-/*    table-layout:fixed;*/
-/*}*/
-/*thead {*/
-/*    width: calc( 100% - 1.05em );*/
-/*}*/
-/*table {*/
-/*    width:100%;*/
-/*    text-align: center;*/
-/*    border-collapse: collapse;*/
-/*    border: 0;*/
-/*}*/
-
-/*td:not(:first-child):not(:last-child) {*/
-/*  border-right: 0;*/
-/*  border-left: 0;*/
-/*}*/
-/*td:first-child {*/
-/*  border-right: 0;*/
-/*  border-left: 1px;*/
-/*}*/
-/*td:last-child {*/
-/*  border-right: 1px;*/
-/*  border-left: 0;*/
-/*}*/
-
-/*table tbody tr.highlight td {*/
-/*    background-color: #1e7e34;*/
-/*}*/
-
-/*thead tr td {*/
-/*    font-weight: bold;*/
-/*}*/
-
-
-
-
-
-
-
-
+.container__slidetablehead_infocolumn {}
