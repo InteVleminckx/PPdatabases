@@ -97,10 +97,10 @@ def main():
         return render_template('home.html', app_data=app_data)
 
 
-@app.route("/contact")
-# @login_required
-def contact():
-    return render_template('contact.html', app_data=app_data)
+# @app.route("/contact")
+# # @login_required
+# def contact():
+#     return render_template('contact.html', app_data=app_data)
 
 
 # ----------------- A/B-test page -----------------#
@@ -171,14 +171,11 @@ def services():
         if request.method == 'POST':
 
             dataDict = request.get_json()
-            print(dataDict)
 
             form_data = dataDict['form_data']
             algo_id = dataDict['algo_id']
             algo_list = dataDict['algo_list']
             algo_dict = dataDict['algo_dict']
-
-            cursor = connection.get_cursor()
 
             # Params for foreign keys
             creator = session['username']
@@ -197,22 +194,24 @@ def services():
                 if char.isdigit():
                     dataset_id += char
 
-            i = 1
-            while i < algo_id:
-                # Add entry for ABtest table
-                # addAB_Test(abtest_id, i, start, end, stepsize, topk)
-                print(creator)
-                abTestQueue.enqueue(addAB_Test, ABTestID, i, start, end, stepsize, topk, creator, dataset_id)
+            current_id = 1
+            while len(algo_dict) != 0:
+                for i in range(1, algo_id + 1):
+                    if str(i) in algo_dict:
+                        # Add entry for ABtest table
+                        # addAB_Test(abtest_id, i, start, end, stepsize, topk)
+                        abTestQueue.enqueue(addAB_Test, ABTestID, current_id, start, end, stepsize, topk, creator, dataset_id)
 
-                # Add entries for Algorithm table
-                for j in range(len(algo_list)):
-                    if algo_list[j][0] == i:
-                        # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
-                        # algo_list[j][3])
-                        abTestQueue.enqueue(addAlgorithm, ABTestID, i, algo_list[j][1], algo_list[j][2],
-                                            algo_list[j][3])
+                        # Add entries for Algorithm table
+                        for j in range(len(algo_list)):
+                            if algo_list[j][0] == i:
+                                # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
+                                # algo_list[j][3])
+                                abTestQueue.enqueue(addAlgorithm, ABTestID, current_id, algo_list[j][1], algo_list[j][2],
+                                                    algo_list[j][3])
 
-                i += 1
+                        del algo_dict[str(i)]
+                        current_id += 1
 
             # Remove algorithms from list and dicts
             algo_list = []
@@ -526,7 +525,7 @@ def usersection():
 
     session["userpage"] = information.id
     datasetname = getDatasetname(dataset_id)
-    return render_template('user.html', username=customer_id, datasetname=datasetname)
+    return render_template('user.html', username=customer_id, datasetname=datasetname, abtest_id=abtest_id, dataset_id=dataset_id)
 
 
 @app.route("/itemsection_graph", methods=['POST', 'GET'])
@@ -541,8 +540,8 @@ def itemsection_graph():
         columns = []
 
         graph_type = request.form.get('graph_select', None)
-        begin_date = request.form.get('begin_time', None)
-        end_date = request.form.get('end_time', None)
+        begin_date = request.form.get('input_startpoint', None)
+        end_date = request.form.get('input_endpoint', None)
         data = []
 
         # Compute popularity item graph

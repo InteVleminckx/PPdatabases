@@ -40,11 +40,9 @@ body {
     width: 1350px;
     background-color: var(--page-bg-color);
     border-radius: 15px;
-
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-
 }
 
 /**********************************/
@@ -53,7 +51,6 @@ body {
 .container__layer {
     width: 1250px;
     margin-bottom: 50px;
-
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -69,7 +66,6 @@ body {
     align-content: center;
     align-items: center;
     text-align: center;
-
     background-color: var(--dash-bg-color);
     box-shadow: var(--dash-sh-style);
     border: var(--dash-bd-style);
@@ -85,11 +81,9 @@ body {
     align-content: center;
     align-items: center;
     text-align: center;
-
     background-color: var(--theme-bg-color) ;
     border-radius: var(--head-bd-radius);
     height: 40px;
-
 }
 
 .container__head h2 {
@@ -136,26 +130,23 @@ body {
 /*        button container        */
 /**********************************/
 .container__button {
-
     height: 40px;
     font-size: 25px;
     font-weight: bold;
-
     border-radius: var(--dash-bd-radius);
     border: none;
-
     display: flex;
     justify-content: center;
     align-content: center;
     align-items: center;
     text-align: center;
-
     cursor: pointer;
 }
 
-.container__column button {
+.container__button button {
     background-color: var(--theme-bg-color);
     color: var(--head-tx-color);
+
 }
 
 /**********************************/
@@ -177,15 +168,12 @@ body {
     border: none;
     color: var(--theme-bg-color);
     background-color: var(--dash-bg-color);
-
 }
 
 /**********************************/
 /*       inputfile  container     */
 /**********************************/
-.container__inputfile {
-
-}
+.container__inputfile {}
 
 /**********************************/
 /*      typechecker container     */
@@ -193,11 +181,17 @@ body {
 .container__typechecker {
 
     border-radius: var(--dash-bd-radius);
-    background-color: var(--page-bg-color);
+    border: 2px solid var(--theme-bg-color);
+    box-shadow: var(--dash-sh-style);
     overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
     display: flex;
     justify-content: space-around;
+}
 
+.container__typechecker::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari and Opera */
 }
 
 .container__typechecker_row {
@@ -213,10 +207,9 @@ body {
 /*       namepicker container     */
 /**********************************/
 .container__namepicker {
-
     border-radius: var(--dash-bd-radius);
-    background-color: var(--page-bg-color);
-
+    border: 2px solid var(--theme-bg-color);
+    box-shadow: var(--dash-sh-style);
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -234,7 +227,6 @@ body {
     flex-direction: column;
     background-color: #FFFFFF;
     border-radius: var(--dash-bd-radius);
-
 }
 
 .container__tablehead {
@@ -246,24 +238,31 @@ body {
 }
 
 .container__tablebody {
-    overflow-y: auto;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
+}
+.container__tablebody::-webkit-scrollbar {
+    display: none;
 }
 
 .container__tablerow {
     display: flex;
 }
 
-.container__tableheadcontent, .container__tablerowcontent {
+.container__tableheadcontent,
+.container__tablerowcontent {
     display: flex;
     flex: 1;
     padding: .5em;
     justify-content: center;
+
 }
 
 .container__tablerow td {
     border-bottom: 1px black;
 }
-
 
 /**********************************/
 /*        slider container        */
@@ -309,7 +308,13 @@ body {
 /**********************************/
 .container__slidetable {
     overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
     border-collapse: collapse;
+}
+
+.container__slidetable::-webkit-scrollbar {
+    display: none;
 }
 
 .container__slidetablehead{
@@ -355,9 +360,7 @@ body {
     text-align: center;
 }
 
-.container__slidetablehead_infocolumn {
-
-}
+.container__slidetablehead_infocolumn {}
 
 
 /*._row {*/

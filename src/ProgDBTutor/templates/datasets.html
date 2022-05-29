@@ -149,7 +149,7 @@
                     <div class="container__content" id="form2_layer2_column1_content">
                         <div class="container__button" id="articles_button" onclick="getFile('articles_file')">Choose file</div>
                         <div style="height: 0px; width: 0px; overflow: hidden;">
-                            <input class="container__input" type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub1(this, 'articles_button');">
+                            <input class="container__input" type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub(this, 'articles_button');">
                         </div>
                         <div class="container__typechecker" id="articles_typechecker">
                             <section id="articles_typepicker"></section>
@@ -218,9 +218,6 @@ function goToABTestPage() {
     var ds = document.getElementById("datasetSelection");
     ds = ds.value;
     console.log(ds);
-    {#var link = document.getElementById('link__abtest');#}
-    {#link.href += '?selected_ds_id=' + ds;#}
-    {#window.location.href = window.location.href + "?selected_ds_id=" + ds#}
 
     let url__ = window.location.href
     let url__string = url__.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
@@ -229,6 +226,7 @@ function goToABTestPage() {
     {#var link = document.getElementById('link__abtest');#}
     {#link.href += '?selected_ds_id=' + ds;#}
     {#window.location.href = window.location.href + "?selected_ds_id=" + ds#}
+
 }
 
 $(function() {
@@ -353,7 +351,6 @@ function fetchStatusHere() {
             }
         })
 }
-
 
 window.addEventListener('load', function () {
     let fetchInterval = 5000;

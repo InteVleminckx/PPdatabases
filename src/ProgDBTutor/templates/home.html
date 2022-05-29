@@ -19,7 +19,7 @@
     margin-right: 75px;
 }
 
-.hero, .services, .main, .contact {
+.hero, .services, .main {
     overflow-x: hidden
 }
 
@@ -35,7 +35,7 @@
                 <li class="navbar_items"><a class="navbar_links" id="home-page" href="#home">Home</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="services-page" href="#services">Services</a></li>
                 <li class="navbar_items"><a class="navbar_links" id="about-page" href="#about">About</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="contact-page" href="#contact">Contact</a></li>
+{#                <li class="navbar_items"><a class="navbar_links" id="contact-page" href="#contact">Contact</a></li>#}
                 {% if isLoggedin %}
                     <li class="navbar_btn">
                         <button class="btn-1" role="button">
@@ -142,14 +142,14 @@
         </div>
 
     <!-- Contact section-->
-        <div class="contact" id="contact">
-            <div class="contact__container">
-                <div class="contact__content">
-                    <h1>Contact</h1>
-                    <button class="contact_btn"><a href="contact">Contact Us</a></button>
-                </div>
-            </div>
-        </div>
+{#        <div class="contact" id="contact">#}
+{#            <div class="contact__container">#}
+{#                <div class="contact__content">#}
+{#                    <h1>Contact</h1>#}
+{#                    <button class="contact_btn"><a href="contact">Contact Us</a></button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
 
 	{% include "footer.html" %}
 
