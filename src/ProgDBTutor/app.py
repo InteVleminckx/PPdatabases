@@ -97,10 +97,10 @@ def main():
         return render_template('home.html', app_data=app_data)
 
 
-@app.route("/contact")
-# @login_required
-def contact():
-    return render_template('contact.html', app_data=app_data)
+# @app.route("/contact")
+# # @login_required
+# def contact():
+#     return render_template('contact.html', app_data=app_data)
 
 
 # ----------------- A/B-test page -----------------#
