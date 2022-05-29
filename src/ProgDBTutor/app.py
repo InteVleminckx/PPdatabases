@@ -231,9 +231,25 @@ def getData(ds_id):
     if request.method == 'GET':
         return getDatasetInformation(ds_id)
 
+@app.route("/datasetDel/<id>", methods=['GET', 'POST'])
+def datasetDel(id):
+    print(request.form)
+    if 'loggedin' in session:
+        jobs = handelRequests(app, session, request, datasetQueue, [], id)
+        if 'jobsDataset' not in session:
+            session['jobsDataset'] = []
+        if jobs:
+            c = session['jobsDataset']
+            c.append(jobs)
+            session['jobsDataset'] = c
+
+    return {}
 
 @app.route("/datasets", methods=['GET', 'POST'])
 def datasets():
+    print(request.args)
+    dlte = request.args.get('delete_btn')
+
     if 'loggedin' in session:
         type_list = {}
         # print("enter")
@@ -271,21 +287,24 @@ def datasets():
             session['jobsDataset'] = c
 
         dataset_names = getDatasets()
-        # print("okee")
-        return render_template('datasets.html', app_data=app_data, names=dataset_names,
-                               attr_types=json.dumps(file_attr_types))
+
+        # Delete hier de dataset
+        if dlte is None:
+            return render_template('datasets.html', app_data=app_data, names=dataset_names,
+                                   attr_types=json.dumps(file_attr_types))
     return redirect(url_for('login_user'))
 
 
 @app.route("/datasets/update/<ds_id>")
 def datasetUpdate(ds_id):
+    print(type(ds_id))
     if ds_id == "-1":
         return 'no refresh'
     if 'jobsDataset' in session:
         finished = True
         dsIdinQueue = False
         if len(session['jobsDataset']) == 0:
-            return 'mo refresh'
+            return 'no refresh'
         for i in range(len(session['jobsDataset'])):
             if ds_id == str(session['jobsDataset'][i]['id']) or \
                     (session['jobsDataset'][i]['id'] == 'delete' and str(session['jobsDataset'][i]['deleted_id']) ==
@@ -305,14 +324,15 @@ def datasetUpdate(ds_id):
                     l[key] = True
                     session['jobsDataset'][i] = l
 
+            print(session['jobsDataset'])
+
             for key, value in session['jobsDataset'][i].items():
                 if not value:
                     finished = False
 
-            if finished and (str(session['jobsDataset'][i]['id']) == ds_id or (session['jobsDataset'][i]['id'] ==
-                                                                              'delete'
-                                                                          and str(session['jobsDataset'][i][
-                                                                              'deleted_id']) == ds_id)):
+            if finished and (str(session['jobsDataset'][i]['id']) == ds_id or
+                             (session['jobsDataset'][i]['id'] =='delete' and
+                              str(session['jobsDataset'][i]['deleted_id']) == ds_id)):
                 l = session['jobsDataset']
                 l.remove(session['jobsDataset'][i])
                 session['jobsDataset'] = l
