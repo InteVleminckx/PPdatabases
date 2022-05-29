@@ -159,7 +159,14 @@ thead {
 }
 .flex-fixhead-table tbody {
     height: 573px;
-    overflow-y: auto;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
+}
+
+.flex-fixhead-table tbody::-webkit-scrollbar {
+    display: none;
 }
 
 .grid-container_ {
