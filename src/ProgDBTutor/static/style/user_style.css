@@ -64,7 +64,13 @@
     justify-content: center;
     align-items: normal;
     align-content: normal;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 
+}
+#layer2_section2_column1::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari and Opera */
 }
 
 #layer2_section2_column2 {
@@ -190,6 +196,7 @@
     box-shadow: 0 0 20px -8px rgb(160 163 198);
     border: 0 solid #d9dee3;
     color: #282626;
+    width: 613px;
 }
 
 .topk_table_header h2 {
@@ -258,22 +265,6 @@
 /* reference: https://codepen.io/ */
 /*            Sarah_C/pen/jWoEWb  */
 /**********************************/
-.intervalPicker {
-    width: 600px;
-    margin-top: 20px;
-    height: 50px;
-
-    background-color: #FFFFFF;
-    box-shadow: 0 0 20px -8px rgb(160 163 198);
-    border: 0 solid #d9dee3;
-    border-radius: 8px;
-
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-}
-
-
 /* -- arrowLeft     -- */
 .arrowLeft {
 	/* duplicate the triange */
