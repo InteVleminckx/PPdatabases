@@ -1,5 +1,4 @@
-
-  /* Login */
+/* Login */
 body {
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../images/Pngtree_simple_technology_cut.jpg");
     height: 100%;
@@ -10,11 +9,13 @@ body {
 
     overflow: hidden;
 }
+
 .login_page {
     width: 360px;
     padding: 9% 0 0;
     margin: auto;
 }
+
 .form {
     position: relative;
     z-index: 1;
@@ -24,7 +25,8 @@ body {
     padding: 45px;
     text-align: center;
 }
-.form input{
+
+.form input {
     font-family: 'Kumbh Sans', sans-serif;
     outline: 1px;
     background: #f2f2f2;
@@ -35,7 +37,8 @@ body {
     box-sizing: border-box;
     font-size: 14px;
 }
-.form button{
+
+.form button {
     font-family: 'Kumbh Sans', sans-serif;
     outline: 0;
     background: #d3cc50;
@@ -48,31 +51,38 @@ body {
     cursor: pointer;
     transition: all 0.35s;
 }
-.form button:hover{
+
+.form button:hover {
     color: #fff;
 }
-.form button:after{
+
+.form button:after {
     background: #568ee8;
     transition: all 0.35s;
 }
+
 .form button:hover:after {
     width: 100%;
 }
-.form .message{
+
+.form .message {
     margin: 15px 0 0;
     color: aliceblue;
     font-size: 12px;
     margin-bottom: 2.5rem;
 }
-.form .message a{
+
+.form .message a {
     color: #4caf50;
     text-decoration: none;
 
 }
-.form .register_form{
+
+.form .register_form {
     display: none;
 }
-.cancel__btn{
+
+.cancel__btn {
 
 }
 

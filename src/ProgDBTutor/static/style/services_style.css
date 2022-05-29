@@ -85,7 +85,8 @@
 /**********************************/
 /*      select container       */
 /**********************************/
-.container__select {}
+.container__select {
+}
 
 .container__select#algoSelection {
     font-weight: normal;
@@ -111,7 +112,8 @@
 /**********************************/
 /*         button container       */
 /**********************************/
-.container__button {}
+.container__button {
+}
 
 .container__column button {
     background-color: var(--head-tx-color);
