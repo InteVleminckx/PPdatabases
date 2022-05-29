@@ -153,7 +153,8 @@
     var maxValue = 0;
     var top_kList = null;
     var dates = [];
-
+    var abtest = {{ abtest_id }};
+    var dataset = {{ dataset_id }};
 
     function fetchStatus() {
 
@@ -229,7 +230,7 @@
                 if (count == 0){
                     html_ +=     "<div class=\"topk_table_rows\">";
                 }
-                html_ +=     "<div class=\"topk_column_item\">" + item + " </div>";
+                html_ +=     "<div class=\"topk_column_item\" onclick='redirectToItemPage(\"" + item[0] + "\")'  >" + item[1] + " </div>";
                 count += 1
 
                 if (count == 3) {
@@ -256,12 +257,16 @@
             console.log(item)
             html_ += "<div class=\"container__item_row\" id=\""+ item["name"] +"\">"
 
-            html_ +=    "<div class=\"container__item_column1\" onclick='generateImage(\"" + item["url"] + "\")'> " + item["name"] + " </div>"
+            html_ += "<div class='container__item_column1' onclick='generateImage(\"" + item["url"] + "\")'>" +
+                        "<img src=\"" + item["url"] + "\"alt=\"Image\" style='height: 100%; width: 100%; object-fit: contain'> " +
+                     "</div>"
+
+            html_ +=    "<div class=\"container__item_column2\" onclick='redirectToItemPage(\"" + item["item_id"] + "\")' >"  + item["name"] + " </div>"
             if (item["purchased"]){
-                html_ += "<div class=\"container__item_column2\" style=\"color: #91ee05\">&#9745</div>";
+                html_ += "<div class=\"container__item_column3\" style=\"color: #91ee05\">&#9745</div>";
             }
             else {
-                html_ += "<div class=\"container__item_column2\" style=\"color: #b90000\">&#9746</div>";
+                html_ += "<div class=\"container__item_column3\" style=\"color: #b90000\">&#9746</div>";
             }
             html_ += "</div>";
         }
@@ -310,6 +315,13 @@
 
         var chart = new google.visualization.ColumnChart(document.getElementById('layer2_section1_column2_content'));
         chart.draw(dataitems, options);
+    }
+
+    function redirectToItemPage(id) {
+        console.log(id)
+        let url__ = window.location.href
+        let url__string = url__.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
+        window.location.href = "/itemsection?item_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();
     }
 
 </script>

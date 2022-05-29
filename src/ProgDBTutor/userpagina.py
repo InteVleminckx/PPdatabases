@@ -64,7 +64,7 @@ def getUserInformation(abtest_id, dataset_id, user_id):
                                             break
                                     if not breaked:
                                         history[date].append(
-                                            {"name": str(item[1]), "purchased": True, "url": str(item[2])})
+                                            {"name": str(item[1]), "purchased": True, "url": str(item[2]), "item_id": str(item[0])})
                                 else:
                                     breaked = False
                                     for item_ in history[date]:
@@ -73,13 +73,13 @@ def getUserInformation(abtest_id, dataset_id, user_id):
                                             break
                                     if not breaked:
                                         history[date].append(
-                                            {"name": str(item[1]), "purchased": False, "url": str(item[2])})
+                                            {"name": str(item[1]), "purchased": False, "url": str(item[2]), "item_id": str(item[0])})
 
                 if (date, algorithm_id) in recommendationsPerInterval:
                     recos = recommendationsPerInterval[(date, algorithm_id)]
                     name = algoritmes[algorithm_id]
                     recos_ = [item[1] for item in recos]
-                    recommendations[date].append({"name": name, "algorithm_id": algorithm_id, "recommendations": recos_,
+                    recommendations[date].append({"name": name, "algorithm_id": algorithm_id, "recommendations": recos,
                                                   "color": colors[colorCount % len(colors)]})
                     count = 0
                     for reco in recos:
