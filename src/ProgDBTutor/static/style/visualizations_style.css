@@ -138,8 +138,7 @@
 #layer4_column1_content,
 #layer4_section2_column1_content,
 #layer4_section2_column2_content,
-#layer4_section2_column3_content
-{
+#layer4_section2_column3_content {
     width: 300px;
 }
 
@@ -158,7 +157,6 @@
     flex-direction: column;
 }
 
-
 #layer1_column1_content {
     flex-direction: column;
     justify-content: space-between;
@@ -166,7 +164,7 @@
     align-items: flex-start;
 }
 
-#layer1_column1_content p{
+#layer1_column1_content p {
     font-size: 18px;
 }
 
@@ -200,7 +198,6 @@
     margin-right: 0;
     width: 148px;
 }
-
 
 /**********************************/
 /*        section container       */
