@@ -130,7 +130,6 @@ body {
 /*        button container        */
 /**********************************/
 .container__button {
-
     height: 40px;
     font-size: 25px;
     font-weight: bold;
@@ -144,9 +143,10 @@ body {
     cursor: pointer;
 }
 
-.container__column button {
+.container__button button {
     background-color: var(--theme-bg-color);
     color: var(--head-tx-color);
+
 }
 
 /**********************************/
@@ -181,7 +181,8 @@ body {
 .container__typechecker {
 
     border-radius: var(--dash-bd-radius);
-    background-color: var(--page-bg-color);
+    border: 2px solid var(--theme-bg-color);
+    box-shadow: var(--dash-sh-style);
     overflow-y: scroll;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
@@ -207,7 +208,8 @@ body {
 /**********************************/
 .container__namepicker {
     border-radius: var(--dash-bd-radius);
-    background-color: var(--page-bg-color);
+    border: 2px solid var(--theme-bg-color);
+    box-shadow: var(--dash-sh-style);
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -255,6 +257,7 @@ body {
     flex: 1;
     padding: .5em;
     justify-content: center;
+
 }
 
 .container__tablerow td {

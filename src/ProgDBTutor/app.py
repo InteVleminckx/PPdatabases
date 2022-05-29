@@ -533,8 +533,8 @@ def itemsection_graph():
         columns = []
 
         graph_type = request.form.get('graph_select', None)
-        begin_date = request.form.get('begin_time', None)
-        end_date = request.form.get('end_time', None)
+        begin_date = request.form.get('input_startpoint', None)
+        end_date = request.form.get('input_endpoint', None)
         data = []
 
         # Compute popularity item graph
