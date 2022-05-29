@@ -117,10 +117,8 @@
             </div>
             <div class="container__layer" id="form1_layer4">
                 <div class="container__column" id="form1_layer4_column1">
-                    <button class="container__button" id="abtestpagelink" name="abtestpagelink" role="button">
-                        <a href="services" class="container__link" id="link__abtest">
-                            Go to A/B-test page with this dataset
-                        </a>
+                    <button class="container__button" id="abtestpagelink" name="abtestpagelink" role="button" onclick="goToABTestPage();">
+                        Go to A/B-test page with this dataset
                     </button>
                 </div>
                 <div class="container__column" id="form1_layer4_column2">
@@ -214,14 +212,15 @@
 
 <script>
 
-window.onload = sendData();goToABTestPage();
+window.onload = sendData();
 
 function goToABTestPage() {
     var ds = document.getElementById("datasetSelection");
     ds = ds.value;
     console.log(ds);
-    var link = document.getElementById('link__abtest');
-    link.href += '?selected_ds_id=' + ds;
+    {#var link = document.getElementById('link__abtest');#}
+    {#link.href += '?selected_ds_id=' + ds;#}
+    window.location.href = window.location.href + "?selected_ds_id=" + ds
 }
 
 $(function() {
