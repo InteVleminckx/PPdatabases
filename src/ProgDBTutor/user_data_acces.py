@@ -378,7 +378,8 @@ def addCustomers(file_name, dataset_id, types_list):
     cursor.execute('INSERT INTO Names(dataset_id, table_name, name) VALUES (%s, %s, %s);',
                    (str(dataset_id), 'customers', types_list['customers_name_column']))
 
-    cursor.execute("CREATE INDEX customer_id_idx ON Customer (dataset_id);")
+    if dataset_id == 1:
+        cursor.execute("CREATE INDEX customer_id_idx ON Customer (dataset_id);")
 
     dbconnect.commit()
 
@@ -444,8 +445,6 @@ def addPurchases(file_name, dataset_id):
     start = time.process_time()
     cursor.execute("DROP INDEX IF EXISTS interaction_index;")
     dbconnect.commit()
-    cursor.execute("DROP INDEX IF EXISTS inter_price;")
-    dbconnect.commit()
 
     # cursor.execute('SELECT attribute FROM customer WHERE dataset_id = %s AND customer_number = -1 LIMIT 1', str(dataset_id))
     # customer = cursor.fetchone()
@@ -460,10 +459,8 @@ def addPurchases(file_name, dataset_id):
     dbconnect.commit()
     datasetId += 1
 
-    cursor.execute("CREATE INDEX interaction_index ON Interaction(t_dat, customer_id, dataset_id);")
-    dbconnect.commit()
-
-    cursor.execute("CREATE INDEX inter_price ON Interaction(t_dat, customer_id, dataset_id);")
+    if dataset_id == 1:
+        cursor.execute("CREATE INDEX interaction_index ON Interaction(t_dat, customer_id, dataset_id);")
     dbconnect.commit()
 
     print("Purchases: ", time.process_time() - start)
