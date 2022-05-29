@@ -519,7 +519,7 @@ def usersection():
 
     session["userpage"] = information.id
     datasetname = getDatasetname(dataset_id)
-    return render_template('user.html', username=customer_id, datasetname=datasetname)
+    return render_template('user.html', username=customer_id, datasetname=datasetname, abtest_id=abtest_id, dataset_id=dataset_id)
 
 
 @app.route("/itemsection_graph", methods=['POST', 'GET'])
