@@ -3,7 +3,8 @@
 /**********************************/
 .container__page {
     height: 1350px;
-
+    top: 80px;
+    position: relative;
 }
 
 /**********************************/
@@ -115,7 +116,7 @@
 }
 
 .container__tablerow {
-    height: 39px;
+    min-height: 39px;
     border-bottom: 1px solid lightgrey;
     justify-content: center;
     text-align: center;
@@ -168,6 +169,11 @@
 /**********************************/
 /*        button container        */
 /**********************************/
+.container__button {
+    background-color: transparent;
+    color: transparent;
+}
+
 .container__button button {
     color: var(--theme-bg-color);
     background-color: var(--head-tx-color);

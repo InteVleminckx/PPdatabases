@@ -31,6 +31,14 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 
 /**********************************/
@@ -43,6 +51,9 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    top: 150px;
+    position: absolute;
+
 }
 
 /**********************************/
@@ -141,6 +152,8 @@ body {
     align-items: center;
     text-align: center;
     cursor: pointer;
+    background-color: var(--theme-bg-color);
+    color: var(--head-tx-color);
 }
 
 .container__button button {
