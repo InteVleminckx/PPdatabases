@@ -350,7 +350,7 @@ def addCustomers(file_name, dataset_id, types_list):
     cursor = dbconnect.get_cursor()
     start = time.process_time()
     print('start reading customers')
-    cursor.execute("DROP INDEX IF EXISTS customer_id_idx;")
+    # cursor.execute("DROP INDEX IF EXISTS customer_id_idx;")
     dbconnect.commit()
     data_customers = pd.read_csv(file_name)
     psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
@@ -378,9 +378,7 @@ def addCustomers(file_name, dataset_id, types_list):
     cursor.execute('INSERT INTO Names(dataset_id, table_name, name) VALUES (%s, %s, %s);',
                    (str(dataset_id), 'customers', types_list['customers_name_column']))
 
-    if dataset_id == 1:
-        cursor.execute("CREATE INDEX customer_id_idx ON Customer (dataset_id);")
-
+    cursor.execute("CREATE INDEX IF NOT EXISTS customer_id_idx ON Customer (dataset_id);")
     dbconnect.commit()
 
     print("Customer: ", time.process_time() - start)
@@ -443,7 +441,7 @@ def addPurchases(file_name, dataset_id):
     data_purchases = pd.read_csv(file_name)
     cursor = dbconnect.get_cursor()
     start = time.process_time()
-    cursor.execute("DROP INDEX IF EXISTS interaction_index;")
+    # cursor.execute("DROP INDEX IF EXISTS interaction_index;")
     dbconnect.commit()
 
     # cursor.execute('SELECT attribute FROM customer WHERE dataset_id = %s AND customer_number = -1 LIMIT 1', str(dataset_id))
@@ -459,8 +457,7 @@ def addPurchases(file_name, dataset_id):
     dbconnect.commit()
     datasetId += 1
 
-    if dataset_id == 1:
-        cursor.execute("CREATE INDEX interaction_index ON Interaction(t_dat, customer_id, dataset_id);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS interaction_index ON Interaction(t_dat, customer_id, dataset_id);")
     dbconnect.commit()
 
     print("Purchases: ", time.process_time() - start)
@@ -789,8 +786,7 @@ This function makes dataset id index for the current dataset
 def createDatasetIdIndex():
     global dbconnect
     cursor = dbconnect.get_cursor()
-    cursor.execute("DROP INDEX IF EXISTS db_id_idx;")
-    cursor.execute("CREATE INDEX db_id_idx ON Dataset (dataset_id);")
+    cursor.execute("CREATE INDEX IF NOT EXISTS db_id_idx ON Dataset (dataset_id);")
     dbconnect.commit()
 
 
