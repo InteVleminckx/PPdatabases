@@ -12,10 +12,8 @@
             </div>
             {% else %}
             <div class="flash_alert flash_alert-success fade" role="alert">
+                <span class="closebutton" onclick="this.parentElement.remove();">&times;</span>
                 {{ message }}
-                <button type="button" class="close" data-dismiss="alert">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             {% endif %}
         {% endfor %}
