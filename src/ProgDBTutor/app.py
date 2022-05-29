@@ -686,9 +686,8 @@ def add_user():
                                  email=user_email, password=generate_password_hash(user_password, method='sha256'))
         print('Adding {}'.format(user_obj.to_dct()))
         addUser(user_obj)
-        # login_user(user_obj, remember=True)
 
-        flash('Account succesfully registered!', category='success')
+        flash('Account successfully registered!', category='success')
         session['loggedin'] = True
         session['username'] = user_username
         return redirect(url_for('datasets'))
@@ -703,7 +702,6 @@ def login_user():
         user_username = request.form.get('username')
         user_password = request.form.get('password')
 
-        # user = DataScientist.query.filter_by(username=user_username).first
         cursor = connection.get_cursor()
         cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
         row = cursor.fetchone()
@@ -713,8 +711,6 @@ def login_user():
             cursor1.execute("SELECT password FROM authentication WHERE username = %s", (user_username,))
             password = cursor1.fetchone()[0]
             if check_password_hash(password, user_password) or (user_username == 'admin' and password == user_password):
-                flash('Logged in successfully!', category='success')
-                # login_user(user, remember=True)
                 session['loggedin'] = True
                 session['username'] = user
                 return redirect(url_for('datasets'))
