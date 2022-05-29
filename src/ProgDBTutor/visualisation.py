@@ -90,6 +90,10 @@ def getTopkMostRecommendItemsPerAlgo(start, end, dataset_id, topk, abtest_id):
 
     topkReco = {}
     cursor = dbconnect.get_cursor()
+    cursor.execute("select name from Names where dataset_id = %s and table_name = %s;", (str(dataset_id), 'articles'))
+    name = cursor.fetchone()[0]
+    names = []
+
     for algorithmID in algorithmIDs:
         recommendations = []
         algorithm = getAlgorithm(abtest_id, algorithmID)
@@ -98,6 +102,13 @@ def getTopkMostRecommendItemsPerAlgo(start, end, dataset_id, topk, abtest_id):
             (str(abtest_id), str(algorithmID), str(start), str(end), str(topk)))
 
         rows = cursor.fetchall()
+        for row in rows:
+            cursor.execute("select a1.val from Articles a1 where a1.attribute = %s and a1.dataset_id = %s and a1.item_number in "
+                           "(select a2.item_number from Articles a2 where attribute = %s and val = %s)",
+                           (name, str(dataset_id), 'article_id', str(row[0])))
+            temp = cursor.fetchone()
+            if temp:
+                names.append(temp[0])
 
         # For popularity or recency we have to look at each day and compute the nr of active users
         if algorithm.name == 'popularity' or algorithm.name == 'recency':
@@ -121,11 +132,11 @@ def getTopkMostRecommendItemsPerAlgo(start, end, dataset_id, topk, abtest_id):
                 startPoint += stepsize
 
             for j in range(len(rows)):
-                recommendations.append({"item": str(rows[j][0]), "count": str(counter_rows[j])})
+                recommendations.append({"item": str(rows[j][0]), "count": str(counter_rows[j]), "name": names[j]})
 
         elif algorithm.name == 'itemknn':
-            for row in rows:
-                recommendations.append({"item": str(row[0]), "count": str(row[1])})
+            for j in range(len(rows)):
+                recommendations.append({"item": str(rows[j][0]), "count": str(rows[j][1]), "name": names[j]})
 
         topkReco[algorithmID] = {"name": algorithm.name, "algorithmID": algorithm.algorithm_id, "recommendations": recommendations}
 
@@ -138,15 +149,29 @@ def getTopkMostPurchasedItems(start, end, dataset_id, topk, abtest_id):
         start, end = str(abtest.start_point)[0:10], str(abtest.end_point)[0:10]
 
     cursor = dbconnect.get_cursor()
+
+    cursor.execute("select name from Names where dataset_id = %s and table_name = %s;", (str(dataset_id), 'articles'))
+    name = cursor.fetchone()[0]
+    names = []
+
     cursor.execute(
         "SELECT item_id, COUNT(item_id) FROM Interaction WHERE dataset_id = %s AND t_dat BETWEEN %s AND %s "
         "GROUP BY item_id ORDER BY COUNT(item_id) DESC LIMIT %s;", (str(dataset_id), start, end, str(topk)))
 
     purchases = []
     rows = cursor.fetchall()
-    if rows:
-        for row in rows:
-            purchases.append({'item': row[0], 'count': row[1]})
+
+    for row in rows:
+        cursor.execute(
+            "select a1.val from Articles a1 where a1.attribute = %s and a1.dataset_id = %s and a1.item_number in "
+            "(select a2.item_number from Articles a2 where attribute = %s and val = %s)",
+            (name, str(dataset_id), 'article_id', str(row[0])))
+        temp = cursor.fetchone()
+        if temp:
+            names.append(temp[0])
+
+    for i in range(len(rows)):
+        purchases.append({'item': rows[i][0], 'count': rows[i][1], 'name': names[i]})
 
     return purchases
 
