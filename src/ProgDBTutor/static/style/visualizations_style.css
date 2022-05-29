@@ -233,8 +233,7 @@
     height: 300px;
 }
 
-.container__tablehead,
-.container__tablebody .container__tablerow {
+.container__tablehead {
     height: 40px;
 }
 
@@ -244,6 +243,8 @@
 
 .container__tablebody .container__tablerow {
     border-bottom: 1px solid lightgrey;
+    min-height: 40px;
+
 }
 
 .container__tableheadcontent {
@@ -252,6 +253,10 @@
 
 .container__tablerowcontent {
     padding-top: .7em;
+    justify-content: center;
+    text-align: center;
+    align-content: center;
+    align-items: center;
 }
 
 #layer4_section2_column1_table {
@@ -349,7 +354,7 @@
 }
 
 .container__slidetablerow {
-    height: 30px;
+    min-height: 40px;
 }
 
 .container__slidetablecolumn {
