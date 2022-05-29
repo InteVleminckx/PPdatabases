@@ -15,7 +15,7 @@
 
     --dash-bd-radius: 8px;
 
-    --head-bd-radius: 8px 8px 0 0 ;
+    --head-bd-radius: 8px 8px 0 0;
     --head-tx-color: #FFFFFF;
 }
 
@@ -27,18 +27,24 @@
 }
 
 body {
-    background-color: var(--body-bg-color);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
 body::-webkit-scrollbar {
     display: none;
+}
+
+/**********************************/
+/*     custombody container       */
+/**********************************/
+.container__body {
+
+    background-color: var(--body-bg-color);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 /**********************************/
@@ -51,9 +57,8 @@ body::-webkit-scrollbar {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    top: 150px;
-    position: absolute;
-
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 /**********************************/
@@ -92,7 +97,7 @@ body::-webkit-scrollbar {
     align-content: center;
     align-items: center;
     text-align: center;
-    background-color: var(--theme-bg-color) ;
+    background-color: var(--theme-bg-color);
     border-radius: var(--head-bd-radius);
     height: 40px;
 }
@@ -186,7 +191,8 @@ body::-webkit-scrollbar {
 /**********************************/
 /*       inputfile  container     */
 /**********************************/
-.container__inputfile {}
+.container__inputfile {
+}
 
 /**********************************/
 /*      typechecker container     */
@@ -197,8 +203,8 @@ body::-webkit-scrollbar {
     border: 2px solid var(--theme-bg-color);
     box-shadow: var(--dash-sh-style);
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
     display: flex;
     justify-content: space-around;
 }
@@ -252,10 +258,11 @@ body::-webkit-scrollbar {
 
 .container__tablebody {
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 
 }
+
 .container__tablebody::-webkit-scrollbar {
     display: none;
 }
@@ -321,8 +328,8 @@ body::-webkit-scrollbar {
 /**********************************/
 .container__slidetable {
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
     border-collapse: collapse;
 }
 
@@ -330,7 +337,7 @@ body::-webkit-scrollbar {
     display: none;
 }
 
-.container__slidetablehead{
+.container__slidetablehead {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -374,76 +381,3 @@ body::-webkit-scrollbar {
 }
 
 .container__slidetablehead_infocolumn {}
-
-
-/*._row {*/
-/*    display: flex;*/
-/*    flex-direction: row;*/
-/*    flex-wrap: wrap;*/
-/*    width: 100%;*/
-/*}*/
-
-/*._column {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    flex-basis: 100%;*/
-/*    flex: 1;*/
-/*}*/
-
-/*.scroll-table {*/
-/*    !*margin-left: auto;*!*/
-/*    !*margin-right: auto;*!*/
-/*}*/
-
-/*table ,tr td{*/
-/*    border:1px solid black;*/
-/*    height: 40px;*/
-/*}*/
-/*tbody {*/
-/*    display:block;*/
-/*    height:510px;*/
-/*    overflow-y:scroll;*/
-/*}*/
-/*thead, tbody tr {*/
-/*    display:table;*/
-/*    width:100%;*/
-/*    table-layout:fixed;*/
-/*}*/
-/*thead {*/
-/*    width: calc( 100% - 1.05em );*/
-/*}*/
-/*table {*/
-/*    width:100%;*/
-/*    text-align: center;*/
-/*    border-collapse: collapse;*/
-/*    border: 0;*/
-/*}*/
-
-/*td:not(:first-child):not(:last-child) {*/
-/*  border-right: 0;*/
-/*  border-left: 0;*/
-/*}*/
-/*td:first-child {*/
-/*  border-right: 0;*/
-/*  border-left: 1px;*/
-/*}*/
-/*td:last-child {*/
-/*  border-right: 1px;*/
-/*  border-left: 0;*/
-/*}*/
-
-/*table tbody tr.highlight td {*/
-/*    background-color: #1e7e34;*/
-/*}*/
-
-/*thead tr td {*/
-/*    font-weight: bold;*/
-/*}*/
-
-
-
-
-
-
-
-

@@ -5,33 +5,17 @@
 
     <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/services_style.css') }}">
     {#    <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">#}
     <link rel="stylesheet" href="{{ url_for('static',filename='style/sharedStyle.css') }}">
 
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/flash.css') }}">
+
     <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
     <script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
 
-    {#    <link#}
-    {#      rel="stylesheet"#}
-    {#      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"#}
-    {#      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"#}
-    {#      crossorigin="anonymous"#}
-    {#    />#}
-    {#    <link#}
-    {#      rel="stylesheet"#}
-    {#      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"#}
-    {#      crossorigin="anonymous"#}
-    {#    />#}
-
 </head>
-
-<style>
-    html, body {
-        background-color: #E3E9F0;
-    }
-</style>
 
 <body>
 
@@ -44,211 +28,214 @@
         </div>
         <ul class="navbar_menu">
             <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
-            <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
             <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
-            <li class="navbar_items"><a class="navbar_links" id="visualizations-page" href="visualizations">Visualizations</a>
-            </li>
+            <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
             <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
         </ul>
     </div>
 </nav>
-<form method="POST" action="" id="form1" data-name="cForm">
-    <div class="container__page" id="abtestpage">
 
-        <div class="container__layer" id="layer1">
-            <div class="container__column" id="layer1_column1">
-                <div class="container__head" id="layer1_column1_head">
-                    <h2>Add algorithm</h2>
+<div id="flash_div" style="width: 100%; position: fixed; z-index: 999;"></div>
+
+<div class="container__body">
+    <form method="POST" action="" id="form1" data-name="cForm">
+        <div class="container__page" id="abtestpage">
+
+            <div class="container__layer" id="layer1">
+                <div class="container__column" id="layer1_column1">
+                    <div class="container__head" id="layer1_column1_head">
+                        <h2>Add algorithm</h2>
+                    </div>
+                    <div class="container__content" id="layer1_column1_content">
+
+                        {# Dataset section #}
+                        <select name="datasetSelection" id="datasetSelection" class="container__select">
+                            {% for id, name in names %}
+                                <option value="{{ id }}">Dataset: {{ name }}</option>
+                            {% endfor %}
+                        </select>
+                        {# ############### #}
+
+                        {# General parameters section #}
+                        <div class="container__row" id="layer1_column1_row1">
+                            <div class="container__innerColumn" id="layer1_column1_row1_inner1">
+                                Starting point
+                            </div>
+                            <div class="container__innerColumn" id="layer1_column1_row1_inner2">
+
+                                    <input type="date" class="container__input" id="input_startpoint"
+                                           name="input_startpoint" value="2020-01-01" required>
+                            </div>
+                        </div>
+                        <div class="container__row" id="layer1_column1_row2">
+                            <div class="container__innerColumn" id="layer1_column1_row2_inner1">
+                                End point
+                            </div>
+                            <div class="container__innerColumn" id="layer1_column1_row2_inner2">
+
+                                    <input type="date" class="container__input" id="input_endpoint" name="input_endpoint"
+                                           value="2020-01-09" required>
+                            </div>
+                        </div>
+                        <div class="container__row" id="layer1_column1_row3">
+                            <div class="container__innerColumn" id="layer1_column1_row3_inner1">
+                                Stepsize
+                            </div>
+                            <div class="container__innerColumn" id="layer1_column1_row3_inner2">
+
+                                    <input type="number" min="1" class="container__input" id="input_stepsize"
+                                           placeholder="stepsize" name="input_stepsize" value="1" required>
+                            </div>
+                        </div>
+                        <div class="container__row" id="layer1_column1_row4">
+                            <div class="container__innerColumn" id="layer1_column1_row4_inner1">
+                                Top-k
+                            </div>
+                            <div class="container__innerColumn" id="layer1_column1_row4_inner2">
+
+                                    <input type="number" min="1" class="container__input" id="input_topk" name="input_topk"
+                                           placeholder="Top-k" value="5" required>
+                            </div>
+                        </div>
+                        {# ########################## #}
+
+                        {# Algorithm section #}
+                        <div class="container__row" id="layer1_column1_row5">
+                            <div class="container__innerColumn" id="layer1_column1_row5_inner1">
+                                Algorithm and parameters
+                            </div>
+                            <div class="container__innerColumn" id="layer1_column1_row5_inner2">
+                                <select class="container__select" name="algoSelection" id="algoSelection"
+                                        onchange="switchVisibleParameters()">
+                                    <option value="popularity">popularity</option>
+                                    <option value="recency">recency</option>
+                                    <option value="itemknn">itemKNN</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        {# ################# #}
+
+                        {# Algorithm-specific parameters section #}
+                        <div class="container__section" id="section1" style="display: block">
+                            <div class="container__row" id="section1_row1">
+                                <div class="container__innerColumn" id="section1_row1_inner1">
+                                    <label for="retraininterval">Retrain interval</label>
+                                </div>
+                                <div class="container__innerColumn" id="section1_row1_inner2">
+                                    <input type="number" min="1" class="container__input" id="input_retraininterval_p"
+                                           name="input_retraininterval_p" placeholder="Retrain interval">
+                                </div>
+                            </div>
+                            <div class="container__row" id="section1_row2">
+                                <div class="container__innerColumn" id="section1_row2_inner1">
+                                    <label for="windowsize">Window size</label>
+                                </div>
+                                <div class="container__innerColumn" id="section1_row2_inner2">
+                                    <input type="number" min="1" class="container__input" id="input_windowsize_p"
+                                           name="input_windowsize_p" placeholder="Window size">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__section" id="section2" style="display: none">
+                            <div class="container__row" id="section2_row1">
+                                <div class="container__innerColumn" id="section2_row1_inner1">
+                                    <label for="retraininterval">Retrain interval</label>
+                                </div>
+                                <div class="container__innerColumn" id="section2_row1_inner2">
+                                    <input type="number" min="1" class="container__input" id="input_retraininterval_r"
+                                           name="input_retraininterval_r" placeholder="Retrain interval">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container__section" id="section3" style="display: none">
+                            <div class="container__row" id="section3_row1">
+                                <div class="container__innerColumn" id="section3_row1_inner1">
+                                    <label for="retraininterval">Retrain interval</label>
+                                </div>
+                                <div class="container__innerColumn" id="section3_row1_inner2">
+                                    <input type="number" min="1" class="container__input" id="input_retraininterval_i"
+                                           name="input_retraininterval_i" placeholder="Retrain interval">
+                                </div>
+                            </div>
+                            <div class="container__row" id="section3_row2">
+                                <div class="container__innerColumn" id="section3_row2_inner1">
+                                    <label for="window">Window size</label>
+                                </div>
+                                <div class="container__innerColumn" id="section3_row2_inner2">
+                                    <input type="number" min="1" class="container__input" id="input_windowsize_i"
+                                           name="input_windowsize_i" placeholder="Window size">
+                                </div>
+                            </div>
+                            <div class="container__row" id="section3_row3">
+                                <div class="container__innerColumn" id="section3_row3_inner1">
+                                    <label for="normalize">Normalize</label>
+                                </div>
+                                <div class="container__innerColumn" id="section3_row3_inner2">
+                                    <input type="number" min="0" max="1" class="container__input" id="input_normalize"
+                                           name="input_normalize" placeholder="Normalize">
+                                </div>
+                            </div>
+                            <div class="container__row" id="section3_row4">
+                                <div class="container__innerColumn" id="section3_row4_inner1">
+                                    <label for="k">K</label>
+                                </div>
+                                <div class="container__innerColumn" id="section3_row4_inner2">
+                                    <input type="number" min="1" class="container__input" id="input_k" name="input_k"
+                                           placeholder="k">
+                                </div>
+                            </div>
+                        </div>
+                        {# ##################################### #}
+
+                    </div>
                 </div>
-                <div class="container__content" id="layer1_column1_content">
-
-                    {# Dataset section #}
-                    <select name="datasetSelection" id="datasetSelection" class="container__select">
-                        {% for id, name in names %}
-                            <option value="{{ id }}">Dataset: {{ name }}</option>
-                        {% endfor %}
-                    </select>
-                    {# ############### #}
-
-                    {# General parameters section #}
-                    <div class="container__row" id="layer1_column1_row1">
-                        <div class="container__innerColumn" id="layer1_column1_row1_inner1">
-                            Starting point
-                        </div>
-                        <div class="container__innerColumn" id="layer1_column1_row1_inner2">
-
-                                <input type="date" class="container__input" id="input_startpoint"
-                                       name="input_startpoint" value="2020-01-01" required>
-                        </div>
-                    </div>
-                    <div class="container__row" id="layer1_column1_row2">
-                        <div class="container__innerColumn" id="layer1_column1_row2_inner1">
-                            End point
-                        </div>
-                        <div class="container__innerColumn" id="layer1_column1_row2_inner2">
-
-                                <input type="date" class="container__input" id="input_endpoint" name="input_endpoint"
-                                       value="2020-01-09" required>
-                        </div>
-                    </div>
-                    <div class="container__row" id="layer1_column1_row3">
-                        <div class="container__innerColumn" id="layer1_column1_row3_inner1">
-                            Stepsize
-                        </div>
-                        <div class="container__innerColumn" id="layer1_column1_row3_inner2">
-
-                                <input type="number" min="0" class="container__input" id="input_stepsize"
-                                       placeholder="stepsize" name="input_stepsize" value="1" required>
-                        </div>
-                    </div>
-                    <div class="container__row" id="layer1_column1_row4">
-                        <div class="container__innerColumn" id="layer1_column1_row4_inner1">
-                            Top-k
-                        </div>
-                        <div class="container__innerColumn" id="layer1_column1_row4_inner2">
-
-                                <input type="number" min="0" class="container__input" id="input_topk" name="input_topk"
-                                       placeholder="Top-k" value="5" required>
-                        </div>
-                    </div>
-                    {# ########################## #}
-
-                    {# Algorithm section #}
-                    <div class="container__row" id="layer1_column1_row5">
-                        <div class="container__innerColumn" id="layer1_column1_row5_inner1">
-                            Algorithm and parameters
-                        </div>
-                        <div class="container__innerColumn" id="layer1_column1_row5_inner2">
-                            <select class="container__select" name="algoSelection" id="algoSelection"
-                                    onchange="switchVisibleParameters()">
-                                <option value="popularity">popularity</option>
-                                <option value="recency">recency</option>
-                                <option value="itemknn">itemKNN</option>
-                            </select>
-                        </div>
-
-                    </div>
-                    {# ################# #}
-
-                    {# Algorithm-specific parameters section #}
-                    <div class="container__section" id="section1" style="display: block">
-                        <div class="container__row" id="section1_row1">
-                            <div class="container__innerColumn" id="section1_row1_inner1">
-                                <label for="retraininterval">Retrain interval</label>
-                            </div>
-                            <div class="container__innerColumn" id="section1_row1_inner2">
-                                <input type="number" min="0" class="container__input" id="input_retraininterval_p"
-                                       name="input_retraininterval_p" placeholder="Retrain interval">
-                            </div>
-                        </div>
-                        <div class="container__row" id="section1_row2">
-                            <div class="container__innerColumn" id="section1_row2_inner1">
-                                <label for="windowsize">Window size</label>
-                            </div>
-                            <div class="container__innerColumn" id="section1_row2_inner2">
-                                <input type="number" min="0" class="container__input" id="input_windowsize_p"
-                                       name="input_windowsize_p" placeholder="Window size">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container__section" id="section2" style="display: none">
-                        <div class="container__row" id="section2_row1">
-                            <div class="container__innerColumn" id="section2_row1_inner1">
-                                <label for="retraininterval">Retrain interval</label>
-                            </div>
-                            <div class="container__innerColumn" id="section2_row1_inner2">
-                                <input type="number" min="0" class="container__input" id="input_retraininterval_r"
-                                       name="input_retraininterval_r" placeholder="Retrain interval">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container__section" id="section3" style="display: none">
-                        <div class="container__row" id="section3_row1">
-                            <div class="container__innerColumn" id="section3_row1_inner1">
-                                <label for="retraininterval">Retrain interval</label>
-                            </div>
-                            <div class="container__innerColumn" id="section3_row1_inner2">
-                                <input type="number" min="0" class="container__input" id="input_retraininterval_i"
-                                       name="input_retraininterval_i" placeholder="Retrain interval">
-                            </div>
-                        </div>
-                        <div class="container__row" id="section3_row2">
-                            <div class="container__innerColumn" id="section3_row2_inner1">
-                                <label for="window">Window size</label>
-                            </div>
-                            <div class="container__innerColumn" id="section3_row2_inner2">
-                                <input type="number" min="0" class="container__input" id="input_windowsize_i"
-                                       name="input_windowsize_i" placeholder="Window size">
-                            </div>
-                        </div>
-                        <div class="container__row" id="section3_row3">
-                            <div class="container__innerColumn" id="section3_row3_inner1">
-                                <label for="normalize">Normalize</label>
-                            </div>
-                            <div class="container__innerColumn" id="section3_row3_inner2">
-                                <input type="number" min="0" max="1" class="container__input" id="input_normalize"
-                                       name="input_normalize" placeholder="Normalize">
-                            </div>
-                        </div>
-                        <div class="container__row" id="section3_row4">
-                            <div class="container__innerColumn" id="section3_row4_inner1">
-                                <label for="k">K</label>
-                            </div>
-                            <div class="container__innerColumn" id="section3_row4_inner2">
-                                <input type="number" min="0" class="container__input" id="input_k" name="input_k"
-                                       placeholder="k">
-                            </div>
-                        </div>
-                    </div>
-                    {# ##################################### #}
-
+                <div class="container__column" id="layer1_column2">
+                    <button class="container__button" id="addalgorithm_button" name="submit_button" value="algoSubmit"
+                            role="button" onclick="">
+                        Add algorithm
+                    </button>
                 </div>
             </div>
-            <div class="container__column" id="layer1_column2">
-                <button class="container__button" id="addalgorithm_button" name="submit_button" value="algoSubmit"
-                        role="button" onclick="">
-                    Add algorithm
-                </button>
+
+            <div class="container__layer" id="layer2">
+                <div class="container__column" id="layer2_column1">
+                    <div class="container__content" id="layer2_column1_content">
+                        {# Added algorithms table #}
+                        <table class="container__table" id="layer2_column1_table">
+                            <thead class="container__tablehead" id="layer2_column1_table_head">
+                            <tr class="container__tablerow" id="layer2_column1_table_head_row1">
+                                {# Table headers #}
+                                <th class="container__tableheadcontent" id="table_head_row1_column1">
+                                    Algorithm number
+                                </th>
+                                <th class="container__tableheadcontent" id="table_head_row1_column2">
+                                    Algorithm name
+                                </th>
+                                <th class="container__tableheadcontent" id="table_head_row1_column3">
+                                    Remove
+                                </th>
+                                {# ############# #}
+                            </tr>
+                            </thead>
+                            <tbody class="container__tablebody" id="layer2_column1_table_body">
+                                {# Table content will be filled with javascript #}
+                            </tbody>
+                        </table>
+                        {# ###################### #}
+                    </div>
+                </div>
+                <div class="container__column" id="layer2_column2">
+                    <button class="container__button" id="executeabtest_button" name="submit_button" value="abtestSubmit"
+                            role="button" onclick="">
+                        Execute A/B-test
+                    </button>
+                </div>
             </div>
+
         </div>
-
-        <div class="container__layer" id="layer2">
-            <div class="container__column" id="layer2_column1">
-                <div class="container__content" id="layer2_column1_content">
-                    {# Added algorithms table #}
-                    <table class="container__table" id="layer2_column1_table">
-                        <thead class="container__tablehead" id="layer2_column1_table_head">
-                        <tr class="container__tablerow" id="layer2_column1_table_head_row1">
-                            {# Table headers #}
-                            <th class="container__tableheadcontent" id="table_head_row1_column1">
-                                Algorithm number
-                            </th>
-                            <th class="container__tableheadcontent" id="table_head_row1_column2">
-                                Algorithm name
-                            </th>
-                            <th class="container__tableheadcontent" id="table_head_row1_column3">
-                                Remove
-                            </th>
-                            {# ############# #}
-                        </tr>
-                        </thead>
-                        <tbody class="container__tablebody" id="layer2_column1_table_body">
-                            {# Table content will be filled with javascript #}
-                        </tbody>
-                    </table>
-                    {# ###################### #}
-                </div>
-            </div>
-            <div class="container__column" id="layer2_column2">
-                <button class="container__button" id="executeabtest_button" name="submit_button" value="abtestSubmit"
-                        role="button" onclick="">
-                    Execute A/B-test
-                </button>
-            </div>
-        </div>
-
-    </div>
-</form>
+    </form>
+</div>
 
 
 
@@ -333,7 +320,13 @@
                     {#console.log(algo_id);#}
                     {#console.log(algo_list);#}
                     {#console.log(algo_dict);#}
-                    generateAttrHtml(data);
+                    if (data['changed']) {
+                        generateAttrHtml(data);
+                    }
+                    else {
+                        $('#flash_div').load('{{ url_for('get_flashes') }}')
+                    }
+
                 },
             });
         });

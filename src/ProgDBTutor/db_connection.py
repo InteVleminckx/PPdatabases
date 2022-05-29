@@ -2,6 +2,9 @@ import psycopg2
 
 
 class DBConnection:
+    """
+    Objects of this class can connect easily to the database. They use the information from config.py
+    """
     def __init__(self, dbname, dbuser):
         try:
             self.conn = psycopg2.connect("dbname='{}' user='{}'".format(dbname, dbuser))
@@ -14,7 +17,6 @@ class DBConnection:
 
     def get_connection(self):
         return self.conn
-
 
     def get_cursor(self):
         return self.conn.cursor()

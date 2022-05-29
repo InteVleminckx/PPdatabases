@@ -14,13 +14,16 @@ de datasets page
 
 
 def handelRequests(app, session, request, taskQueue, type_list):
+    """
+    handle the possible requests for the datasets
+    """
     # Remove and select dataset form
     if request.method == 'GET':
 
         rqst = request.args.get('datasetSelection')
         dlte = request.args.get('delete_btn')
 
-        # Delete hier de dataset
+        # Delete the dataset here
         if dlte is not None:
             job = taskQueue.enqueue(removeDataset, session['username'], int(rqst), job_timeout=600)
             return {'id': 'delete', job.id: False, 'deleted_id': int(rqst)}
@@ -33,6 +36,9 @@ def handelRequests(app, session, request, taskQueue, type_list):
 
 
 def addDatasetHere(app, session, tq, type_list):
+    """
+    Function to add a dataset to the database, this will call the appropriate import functions
+    """
     if session['username'] == 'admin':  # checken of de user de admin is
 
         dataset_id = importDataset(tq)
@@ -47,6 +53,9 @@ def addDatasetHere(app, session, tq, type_list):
 
 
 def removeDataset(user, dataset_id):
+    """
+    remove the dataset from the database
+    """
     if user == 'admin':  # checken of de user de admin is
         cursor = dbconnect.get_cursor()
         cursor.execute('DELETE FROM Dataset WHERE dataset_id = %s', (str(dataset_id)))
@@ -56,6 +65,9 @@ def removeDataset(user, dataset_id):
 
 
 def getDatasetInformation(dataset_id):
+    """
+    return all information of a dataset with a certain id
+    """
     cursor = dbconnect.get_cursor()
     numberOfUser = getNumberOfUsers(cursor, dataset_id)
     numberOfArticles = getNumberOfArticles(cursor, dataset_id)
@@ -70,6 +82,9 @@ def getDatasetInformation(dataset_id):
     return dictNumbers
 
 def importDataset(tq):
+    """
+    import a dataset by generating a new ID
+    """
 
     datasetname = request.form['dataset_name']
     datasetId = int(getMaxDatasetID()) + 1
@@ -78,6 +93,9 @@ def importDataset(tq):
 
 
 def getCSVHeader(app, csv_filename):
+    """
+    Get the header for a certain csv file
+    """
     df = request.files[csv_filename]
     uploaded_file = secure_filename(df.filename)
     filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
@@ -85,7 +103,10 @@ def getCSVHeader(app, csv_filename):
     header = pd.read_csv(filename, header=0, nrows=0).columns.tolist()
     return header
 
-def importArticles(app, dataset_id, tq, type_list): #\
+def importArticles(app, dataset_id, tq, type_list):
+    """
+    import the articles from the csv file into the database
+    """
 
     print(request.files)
     af = request.files['articles_file']
@@ -98,6 +119,9 @@ def importArticles(app, dataset_id, tq, type_list): #\
 
 
 def importCustomers(app, dataset_id, tq, type_list):
+    """
+    import the curtomers from the csv file into the database
+    """
     cf = request.files['customers_file']
     uploaded_file = secure_filename(cf.filename)
     cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
@@ -108,6 +132,9 @@ def importCustomers(app, dataset_id, tq, type_list):
 
 
 def importPurchases(app, dataset_id, tq):
+    """
+    import the purchases from the csv file into the database
+    """
     pf = request.files['purchases_file']
     uploaded_file = secure_filename(pf.filename)
     pf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
@@ -117,6 +144,9 @@ def importPurchases(app, dataset_id, tq):
     return job.id
 
 def getCSVHeader(app, csv_filename):
+    """
+    Get the header for a certain csv file
+    """
     df = request.files[csv_filename]
     uploaded_file = secure_filename(df.filename)
     filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
@@ -126,6 +156,9 @@ def getCSVHeader(app, csv_filename):
 
 
 def getNumberOfUsers(cursor, dataset_id):
+    """
+    Get the number of all users from the dataset
+    """
 
     cursor.execute('SELECT attribute FROM customer where dataset_id = %s limit 1', str(dataset_id), )
     attr = cursor.fetchone()
@@ -142,6 +175,9 @@ def getNumberOfUsers(cursor, dataset_id):
     return row[0] - 1
 
 def getNumberOfArticles(cursor, dataset_id):
+    """
+    get all Items that the store has to offer
+    """
 
     cursor.execute('SELECT attribute FROM Articles WHERE dataset_id = %s LIMIT 1', (str(dataset_id), ))
     attribute = cursor.fetchone()
@@ -159,6 +195,9 @@ def getNumberOfArticles(cursor, dataset_id):
 
 
 def getNumberOfInteractions(cursor, dataset_id):
+    """
+    Get number of interactions for the entire dataset
+    """
     cursor.execute('SELECT count(*) FROM Interaction WHERE dataset_id = %s;', (str(dataset_id)))
     row = cursor.fetchone()
     if not row:
@@ -166,6 +205,9 @@ def getNumberOfInteractions(cursor, dataset_id):
     return row[0]
 
 def getActiveUsers(cursor, dataset_id):
+    """
+    Get all active users for the entire dataset
+    """
     cursor.execute('SELECT count(DISTINCT customer_id), t_dat, count(*) FROM interaction WHERE dataset_id = %s GROUP BY t_dat;', (str(dataset_id)))
     rows = cursor.fetchall()
     users = list()
@@ -210,6 +252,9 @@ def getActiveUsers(cursor, dataset_id):
     return users, purchases
 
 def getPriceDistribution(cursor, dataset_id):
+    """
+    Get the price distribution for the entire dataset
+    """
 
     cursor.execute('SELECT min(price) as min, max(price) as max, (max(price) - min(price))/20 as interval FROM Interaction WHERE dataset_id = %s', (str(dataset_id)))
     row = cursor.fetchone()

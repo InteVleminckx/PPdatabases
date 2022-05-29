@@ -1,3 +1,7 @@
+.container__body {
+    height: 100%;
+}
+
 /**********************************/
 /*       algemene container       */
 /**********************************/
@@ -8,7 +12,8 @@
 /**********************************/
 /*       layer container       */
 /**********************************/
-.container__layer {}
+.container__layer {
+}
 
 #layer1 {
     height: 30px;
@@ -23,7 +28,8 @@
 /**********************************/
 /*       column container       */
 /**********************************/
-.container__column {}
+.container__column {
+}
 
 #layer1 .container__column,
 #layer2_section1,
@@ -31,8 +37,7 @@
 #layer2_section1_column2,
 #layer2_section2,
 #layer2_section2_column1,
-#layer2_section2_column2
-{
+#layer2_section2_column2 {
     width: 613px;
 }
 
@@ -66,10 +71,11 @@
     align-items: normal;
     align-content: normal;
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 
 }
+
 #layer2_section2_column1::-webkit-scrollbar {
     display: none; /* Hide scrollbar for Chrome, Safari and Opera */
 }
@@ -136,8 +142,8 @@
 
 .container__item_table {
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
 .container__item_table::-webkit-scrollbar {
@@ -248,8 +254,8 @@
     justify-content: space-between;
 }
 
-.topk_table .topk_table_rows:nth-child(even){
-    background-color: rgba(0,0,0, .2)
+.topk_table .topk_table_rows:nth-child(even) {
+    background-color: rgba(0, 0, 0, .2)
 }
 
 .topk_column_item {
@@ -267,105 +273,89 @@
 /**********************************/
 /* -- arrowLeft     -- */
 .arrowLeft {
-	/* duplicate the triange */
-	position: relative;
-	height: 0px; width: 0px;
-	border: 8px solid;
-	border-color:
-        var(--theme-bg-color)
-		var(--theme-bg-color)
-		transparent
-		transparent;
-	transform: rotate(-135deg);
+    /* duplicate the triange */
+    position: relative;
+    height: 0px;
+    width: 0px;
+    border: 8px solid;
+    border-color: var(--theme-bg-color) var(--theme-bg-color) transparent transparent;
+    transform: rotate(-135deg);
     cursor: pointer;
 }
 
 .arrowLeft:before, .arrowLeft:after {
-	content: '';
-	display: block;
-	position: absolute;
+    content: '';
+    display: block;
+    position: absolute;
 
-	/* set up more triangles */
-	height: 0; width: 0;
+    /* set up more triangles */
+    height: 0;
+    width: 0;
 
-	/* half the parent border
-	   rounded up */
-	border: 5px solid;
+    /* half the parent border
+       rounded up */
+    border: 5px solid;
 }
 
 .arrowLeft:before {
-	border-color:
-		var(--theme-bg-color)
-		transparent
-		transparent
-		var(--theme-bg-color);
-	display: block;
-	top: -1px; right: 0px;
-	transform-origin: top right;
-	transform: rotate(45deg);
+    border-color: var(--theme-bg-color) transparent transparent var(--theme-bg-color);
+    display: block;
+    top: -1px;
+    right: 0px;
+    transform-origin: top right;
+    transform: rotate(45deg);
 }
 
 .arrowLeft:after {
-	border-color:
-		transparent
-		var(--theme-bg-color)
-		var(--theme-bg-color)
-		transparent;
-	top: 0px; right: -1px;
-	transform-origin: top right;
-	transform: rotate(-45deg);
+    border-color: transparent var(--theme-bg-color) var(--theme-bg-color) transparent;
+    top: 0px;
+    right: -1px;
+    transform-origin: top right;
+    transform: rotate(-45deg);
 }
 
 /* -- arrowRight     -- */
 
 .arrowRight {
-	/* duplicate the triange */
-	position: relative;
-	height: 0px; width: 0px;
-	border: 8px solid;
-	border-color:
-		var(--theme-bg-color)
-		var(--theme-bg-color)
-		transparent
-		transparent;
-	transform: rotate(45deg);
+    /* duplicate the triange */
+    position: relative;
+    height: 0px;
+    width: 0px;
+    border: 8px solid;
+    border-color: var(--theme-bg-color) var(--theme-bg-color) transparent transparent;
+    transform: rotate(45deg);
     cursor: pointer;
 }
 
 .arrowRight:before, .arrowRight:after {
-	content: '';
-	display: block;
-	position: absolute;
+    content: '';
+    display: block;
+    position: absolute;
 
-	/* set up more triangles */
-	height: 0; width: 0;
+    /* set up more triangles */
+    height: 0;
+    width: 0;
 
-	/* half the parent border
-	   rounded up */
-	border: 5px solid;
+    /* half the parent border
+       rounded up */
+    border: 5px solid;
 }
 
 .arrowRight:before {
-	border-color:
-		var(--theme-bg-color)
-		transparent
-		transparent
-		var(--theme-bg-color);
-	display: block;
-	top: -1px; right: 0px;
-	transform-origin: top right;
-	transform: rotate(45deg);
+    border-color: var(--theme-bg-color) transparent transparent var(--theme-bg-color);
+    display: block;
+    top: -1px;
+    right: 0px;
+    transform-origin: top right;
+    transform: rotate(45deg);
 }
 
 .arrowRight:after {
-	border-color:
-		transparent
-		var(--theme-bg-color)
-		var(--theme-bg-color)
-		transparent;
-	top: 0px; right: -1px;
-	transform-origin: top right;
-	transform: rotate(-45deg);
+    border-color: transparent var(--theme-bg-color) var(--theme-bg-color) transparent;
+    top: 0px;
+    right: -1px;
+    transform-origin: top right;
+    transform: rotate(-45deg);
 }
 
 #counterInterval {

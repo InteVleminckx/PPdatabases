@@ -49,9 +49,6 @@ app_data['app_name'] = config_data['app_name']
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# algo_list = list()
-algo_dict = dict()
-
 engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
 db = scoped_session(sessionmaker(bind=engine))
 
@@ -62,24 +59,7 @@ abTestQueue = Queue('queue2', connection=rds)  # queue for abTest processes
 
 # INITIALIZE SINGLETON SERVICES
 
-
-# algo_id = 1
-abtest_id = getMaxABTestID() + 1
-
 file_attr_types = ["string", "float", "int", "image_url"]
-
-# login_manager = LoginManager()
-# login_manager.login_view = 'app.login_user'
-# login_manager.init_app(app)
-
-
-# @login_manager.user_loader
-# def load_user(username):
-#
-#     cursor = user_data_access.dbconnect.get_cursor()
-#     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (username,))
-#
-#     return cursor
 
 DEBUG = True
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
@@ -95,13 +75,6 @@ def main():
         return render_template('home.html', app_data=app_data, isLoggedin=session['loggedin'])
     else:
         return render_template('home.html', app_data=app_data)
-
-
-# @app.route("/contact")
-# # @login_required
-# def contact():
-#     return render_template('contact.html', app_data=app_data)
-
 
 # ----------------- A/B-test page -----------------#
 
@@ -154,17 +127,13 @@ def addalgorithm():
                 algo_id += 1
 
         data_dict = {'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict, 'changed': changed}
-        # print("success")
-        # print(data_dict)
         return data_dict
 
 @app.route("/get_flashes", methods=['GET', 'POST'])
-# @login_required
 def get_flashes():
     return render_template('_flashes.html')
 
 @app.route("/services", methods=['GET', 'POST'])
-# @login_required
 def services():
     if 'loggedin' in session:
 
@@ -264,7 +233,6 @@ def getData(ds_id):
 
 
 @app.route("/datasets", methods=['GET', 'POST'])
-# @login_required
 def datasets():
     if 'loggedin' in session:
         type_list = {}
@@ -379,7 +347,6 @@ def fileupload():
 # ----------------- A/B-test Visualization page -----------------#
 
 @app.route("/visualizations")
-# @login_required
 def visualizations():
 
     # print(request.args)
@@ -496,7 +463,7 @@ def testlist():
 def abTestRemove():
     data = request.get_json()
     abTest_id = data['abtest_id']
-
+    print(abTest_id)
     cursor = connection.get_cursor()
     cursor.execute("DELETE FROM ABTest WHERE abtest_id = %s", (str(abTest_id),))
     connection.commit()
@@ -686,9 +653,8 @@ def add_user():
                                  email=user_email, password=generate_password_hash(user_password, method='sha256'))
         print('Adding {}'.format(user_obj.to_dct()))
         addUser(user_obj)
-        # login_user(user_obj, remember=True)
 
-        flash('Account succesfully registered!', category='success')
+        flash('Account successfully registered!', category='success')
         session['loggedin'] = True
         session['username'] = user_username
         return redirect(url_for('datasets'))
@@ -703,7 +669,6 @@ def login_user():
         user_username = request.form.get('username')
         user_password = request.form.get('password')
 
-        # user = DataScientist.query.filter_by(username=user_username).first
         cursor = connection.get_cursor()
         cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
         row = cursor.fetchone()
@@ -713,8 +678,6 @@ def login_user():
             cursor1.execute("SELECT password FROM authentication WHERE username = %s", (user_username,))
             password = cursor1.fetchone()[0]
             if check_password_hash(password, user_password) or (user_username == 'admin' and password == user_password):
-                flash('Logged in successfully!', category='success')
-                # login_user(user, remember=True)
                 session['loggedin'] = True
                 session['username'] = user
                 return redirect(url_for('datasets'))
@@ -729,7 +692,6 @@ def login_user():
 
 
 @app.route("/logout", methods=['GET', 'POST'])
-# @login_required
 def logout():
     # logout_user()
     session.pop('loggedin', None)
@@ -737,6 +699,7 @@ def logout():
     session.pop('abVisualistation', None)
     session.pop('userpage', None)
     # session.pop('_flashes', None)
+    # session['_flashes'].clear()
     return redirect(url_for('login_user'))
 
 

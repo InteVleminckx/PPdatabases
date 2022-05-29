@@ -10,6 +10,10 @@ from Metrics import *
 import sys
 
 def getInfoVisualisationPage(abtest_id, dataset_id):
+    """
+    Functions get all the relevant information for the visualizations page for an ABTest
+    :return: a json object containing all the information
+    """
     cursor = dbconnect.get_cursor()
     cursor.execute("select start_point, end_point, stepsize, topk from abtest where abtest_id = %s limit 1;",
                    (str(abtest_id),))
@@ -35,6 +39,9 @@ def getInfoVisualisationPage(abtest_id, dataset_id):
 
 
 def getPurchasesAndActiveUsersOverTime(start, end):
+    """
+    Function to get the number of Purchases and Active Users between a certain interval (Metric)
+    """
     cursor = dbconnect.get_cursor()
     cursor.execute(
         "select count(distinct customer_id), count(*), t_dat from interaction where t_dat between %s and %s group by t_dat order by t_dat;",
@@ -56,6 +63,10 @@ def getPurchasesAndActiveUsersOverTime(start, end):
 
 
 def getAlgorithms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
+    """
+    Function to get all relevant information about an algorithm
+    :return:
+    """
     algorithmIDs = getAlgorithmIds(abtest_id, dataset_id)
     if algorithmIDs is None:
         return False
@@ -65,6 +76,8 @@ def getAlgorithms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
     ctr = {}
     ard = {}
     argRevPr = {}
+
+    # go over each algorithm and obtain data for it
     for algorithmID in algorithmIDs:
         algo = getAlgorithm(abtest_id, algorithmID)
         algorithms[str(algorithmID)] = {"name": algo.name, "params": algo.params, "algorithm_id": algo.algorithm_id}
@@ -77,12 +90,18 @@ def getAlgorithms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
 
 
 def getCTR(algorithm_id, abtest_id, dataset_id, startpoint, endpoint, stepsize, algoName):
+    """
+    Function gets the CTR, AR and ARPU and returns it to the visualization
+    """
     ctr = getClickThroughRate(startpoint, endpoint, abtest_id, algorithm_id, dataset_id, stepsize, algoName)
     arad, arpuad = getAR_and_ARPU(7, startpoint, endpoint, abtest_id, algorithm_id, dataset_id, int(stepsize), algoName)
     return ctr, arad, arpuad
 
 
 def getTopkMostRecommendItemsPerAlgo(start, end, dataset_id, topk, abtest_id):
+    """
+    Function gets the topK from the database and returns it in a json object
+    """
     algorithmIDs = getAlgorithmIds(abtest_id, dataset_id)
     if start == "":
         abtest = getAB_Test(abtest_id)
@@ -90,10 +109,12 @@ def getTopkMostRecommendItemsPerAlgo(start, end, dataset_id, topk, abtest_id):
 
     topkReco = {}
     cursor = dbconnect.get_cursor()
+
     cursor.execute("select name from Names where dataset_id = %s and table_name = %s;", (str(dataset_id), 'articles'))
     name = cursor.fetchone()[0]
     names = []
-
+    
+    # get the topk per algorithm
     for algorithmID in algorithmIDs:
         recommendations = []
         algorithm = getAlgorithm(abtest_id, algorithmID)
@@ -144,6 +165,9 @@ def getTopkMostRecommendItemsPerAlgo(start, end, dataset_id, topk, abtest_id):
 
 
 def getTopkMostPurchasedItems(start, end, dataset_id, topk, abtest_id):
+    """
+    Function to return the most purchased items by users (not recommendations)
+    """
     if start == "":
         abtest = getAB_Test(abtest_id)
         start, end = str(abtest.start_point)[0:10], str(abtest.end_point)[0:10]
@@ -177,10 +201,16 @@ def getTopkMostPurchasedItems(start, end, dataset_id, topk, abtest_id):
 
 
 def getNumberUniqueActiveUsers(list_users):
+    """
+    Function returns the number of active users
+    """
     return len(list_users)
 
 
 def getTotaleRevenue(start, end, dataset_id, abtest_id):
+    """
+    Function returns the total revenue between an interval (this is not the revenue per user Metric)
+    """
     if start == "":
         abtest = getAB_Test(abtest_id)
         start, end = str(abtest.start_point)[0:10], str(abtest.end_point)[0:10]
@@ -197,6 +227,9 @@ def getTotaleRevenue(start, end, dataset_id, abtest_id):
 
 
 def getListOfActiveUsers(start, end, dataset_id, abtest_id):
+    """
+    Function returns a list of all the active users between an interval
+    """
     if start == "":
         abtest = getAB_Test(abtest_id)
         start, end = str(abtest.start_point)[0:10], str(abtest.end_point)[0:10]
@@ -218,6 +251,7 @@ def getListOfActiveUsers(start, end, dataset_id, abtest_id):
         # userCTR = getUsersCTR(start, end, dataset_id, user[0], cursor, abtest_id)
         userInformation[str(user[0])] = {"totalePurchases": 0, "purchasesOverTime": 0, "CTR": 0}
 
+    # obtain all the user information
     userInformation = getUsersTotalPurchases(dataset_id, start, end, userInformation, cursor)
     userInformation = getUsersPurchasesOverTime(start, end, dataset_id, cursor, userInformation)
     userInformation = getUsersCTR(start, end, dataset_id, userInformation, cursor, abtest_id)
@@ -238,6 +272,9 @@ def getListOfActiveUsers(start, end, dataset_id, abtest_id):
 
 
 def getUsersTotalPurchases(dataset_id, start, end, userInformation, cursor):
+    """
+    Get the total purchases made by this user
+    """
 
     cursor.execute(
         "select count(i1.customer_id), i1.customer_id from interaction i1 where i1.dataset_id = %s and i1.customer_id "
@@ -253,7 +290,9 @@ def getUsersTotalPurchases(dataset_id, start, end, userInformation, cursor):
 
 
 def getUsersPurchasesOverTime(start, end, dataset_id, cursor, userInformation):
-
+    """
+    Get all the purchases of a user over the time
+    """
     cursor.execute(
         "select count(i1.customer_id), i1.customer_id from interaction i1 where i1.dataset_id = %s and i1.t_dat between %s and %s and i1.customer_id "
         "in( select i2.customer_id from interaction i2 where i2.dataset_id = %s and i2.t_dat between %s and %s) group by customer_id;",
@@ -268,20 +307,22 @@ def getUsersPurchasesOverTime(start, end, dataset_id, cursor, userInformation):
 
 
 def getUsersCTR(start, end, dataset_id, userinformation, cursor, abtest_id):
+    """
+    This function calculates the CTR for all the users
+    """
     abtest = getAB_Test(abtest_id)
     curDate = datetime.strptime(start, "%Y-%m-%d")
     end = datetime.strptime(end, "%Y-%m-%d")
-    stepsize_ = timedelta(days=int(abtest.stepsize))
     recommendationsCount = 0
 
     while curDate <= end:
 
-        # Bij elke stepsize hebben we een nieuwe recommendation dus bekijken we ook de ctr
+        # For each stepsize, we have a new recommendation so we also have a new CTR
         recommendationsCount += 1
 
         date = str(curDate)[0:10]
 
-        # bij recommendations is de stepsize gelijk aan het endpoint, we vragen dus eerst alle recommendations op
+        # each stepsize, the current date is equal to the endpoint of a recommendation, so we can just request it
         cursor.execute(
             'select customer_id, item_number from recommendation where dataset_id = %s and abtest_id = %s and end_point = %s',
             (str(dataset_id), str(abtest_id), date))
@@ -290,7 +331,7 @@ def getUsersCTR(start, end, dataset_id, userinformation, cursor, abtest_id):
         if recommendations is None:
             continue
 
-        # Nu gaan we alle interactions opvragen waar deze recommendations voor gedaan zijn
+        # Now we request all the interactions over the same interval
         cursor.execute(
             'select customer_id, item_id from interaction where dataset_id = %s and t_dat between %s and %s',
             (str(dataset_id), date, str(curDate + (timedelta(days=int(abtest.stepsize) - 1)))[0:10]))
@@ -299,7 +340,7 @@ def getUsersCTR(start, end, dataset_id, userinformation, cursor, abtest_id):
         dirInteraction = {}
         dirRecommendations = {}
 
-        # We zetten alle items samen per customer id
+        # Make a Dict in which we save all interactions with customer_id as the key
         for id, item in interactions:
 
             if id not in dirInteraction:
@@ -307,7 +348,7 @@ def getUsersCTR(start, end, dataset_id, userinformation, cursor, abtest_id):
             else:
                 dirInteraction[str(id)].append(item)
 
-        # We zetten alle recommendations samen per customer id
+        # We group the recommendations too
         for id, item in recommendations:
 
             if id not in dirRecommendations:
@@ -315,14 +356,14 @@ def getUsersCTR(start, end, dataset_id, userinformation, cursor, abtest_id):
             else:
                 dirRecommendations[str(id)].append(item)
 
-        # We lopen over de interactions
+        # Loop over the interactions
         for id, items in dirInteraction.items():
 
-            # We controleren of de id bestaan in de recommendation
+            # Check if the id exists in the recommendation
             if id in dirRecommendations:
-                # We controleren of de aankopen van de user in de recommendations zitten
+                # Check if any of the purchases was recommended
                 if any(reco in items for reco in dirRecommendations[id]):
-                    # Zit in zijn recommendation dus we doen de count + 1
+                    # If so, set the CTR to 1 for this user
                     userinformation[str(id)]["CTR"] += 1
                     break
             else:
