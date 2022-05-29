@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-{#    <link rel="stylesheet" href="{{ url_for('static',filename='style/user_style.css') }}">#}
-    <link rel="stylesheet" href="{{ url_for('static',filename='style/home_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
-{#    <link rel="stylesheet" href="{{ url_for('static',filename='style/visualizations_style.css') }}">#}
     <link rel="stylesheet" href="{{ url_for('static',filename='style/item_style.css') }}">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
@@ -32,155 +30,155 @@
         </ul>
     </div>
 </nav>
+<div class="container__body">
+    <form method="POST" action="" name="form1" id="form1">
 
-<form method="POST" action="" name="form1" id="form1">
+        {# Item page #}
+        <div class="container__page" id="itempage">
 
-    {# Item page #}
-    <div class="container__page" id="itempage">
+            {# Layer 1 #}
+            <div class="container__layer" id="layer1">
 
-        {# Layer 1 #}
-        <div class="container__layer" id="layer1">
+                {# Column table information item #}
+                <div class="container__column" id="layer1_column1">
 
-            {# Column table information item #}
-            <div class="container__column" id="layer1_column1">
+                    {# content of the table information #}
+                    <div class="container__content" id="layer1_column1_content">
 
-                {# content of the table information #}
-                <div class="container__content" id="layer1_column1_content">
-
-                    {# Table item information #}
-                    <table class="container__table" id="layer1_column1_table">
-                        <thead class="container__tablehead" id="layer1_column1_table_head">
-                            <tr class="container__tablerow" id="layer1_column1_table_head_row1">
-                                {# Table headers #}
-                                <th class="container__tableheadcontent" id="table_head_row1_column1">Attribute</th>
-                                <th class="container__tableheadcontent" id="table_head_row1_column2">Value</th>
-                                {# ############# #}
-                            </tr>
-                        </thead>
-                        <tbody class="container__tablebody" id="layer1_column1_table_body">
-                            {% for attr, val in attr_val %}
-                                <tr class='container__tablerow'>
-                                    <td class='container__tablerowcontent' data-label="Attribute">{{ attr }}</td>
-                                    <td class='container__tablerowcontent' data-label="Value">{{ val }}</td>
+                        {# Table item information #}
+                        <table class="container__table" id="layer1_column1_table">
+                            <thead class="container__tablehead" id="layer1_column1_table_head">
+                                <tr class="container__tablerow" id="layer1_column1_table_head_row1">
+                                    {# Table headers #}
+                                    <th class="container__tableheadcontent" id="table_head_row1_column1">Attribute</th>
+                                    <th class="container__tableheadcontent" id="table_head_row1_column2">Value</th>
+                                    {# ############# #}
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="container__tablebody" id="layer1_column1_table_body">
+                                {% for attr, val in attr_val %}
+                                    <tr class='container__tablerow'>
+                                        <td class='container__tablerowcontent' data-label="Attribute">{{ attr }}</td>
+                                        <td class='container__tablerowcontent' data-label="Value">{{ val }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {# ###################### #}
+
+                    </div>
+                    {# ################################ #}
+
+                </div>
+                {# ############################# #}
+
+                {# Column item picture and interval picker #}
+                <div class="container__column" id="layer1_section1">
+
+                    {# Column item picture #}
+                    <div class="container__column" id="layer1_section1_column1">
+
+                        {# Head of the picture column #}
+                        <div class="container__head" id="section1_column1_head">
+                            <h2>Picture of the article</h2>
+                        </div>
+                        {# ########################## #}
+
+                        {# Content of the picture column #}
+                        <div class="container__content" id="section1_column1_content">
+                            {% if item_picture %}
+                                <img src="{{ item_picture }}" style=" width:100%; height:100%; object-fit: contain"alt="Picture of an item">
+                            {% else %}
+                                <img src="" style=" width:100%; height:100%; object-fit: contain" alt="Picture of an item">
+                            {% endif %}
+                        </div>
+                        {# ############################# #}
+
+                    </div>
+                    {# ################### #}
+
+                    {# Column interval picker #}
+                    <div class="container__column" id="layer1_section1_column2">
+
+                        {# Content of the interval picker #}
+                        <div class="container__content" id="section1_column2_content">
+
+                            {# row 1 #}
+                            <div class="container__row" id="section1_row1">
+                                {# type graph picker #}
+                                <div class="container__innerColumn" id="section1_row1_inner1">
+                                    <select class="container__select" id="graph_select" name="graph_select">
+                                        <option value="Popularity item">Popularity item</option>
+                                        <option value="Recommendation count">Recommendation count</option>
+                                        <option value="Recommendation correctness">Recommendation correctness</option>
+                                    </select>
+                                </div>
+                                {# ################# #}
+                                <div class="container__innerColumn" id="section1_row1_inner2">
+                                    <div class="container__button" id="section1_buttongraph">
+                                        <button id="submit_graph" name="submit_graph" role="button" >
+                                            Show graph
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {# ##### #}
+
+                            {# row 2 #}
+                            <div class="container__row" id="section1_row2">
+                                <div class="container__innerColumn" id="section1_row2_inner1">
+                                    <input type="date" class="container__input" id="input_startpoint"
+                                           name="input_startpoint" value="2020-01-01"
+                                           placeholder="Begin" required>
+                                </div>
+                                <div class="container__innerColumn" id="section1_row2_inner2">
+                                    <input type="date" class="container__input" id="input_endpoint"
+                                           name="input_endpoint" value="2020-01-09"
+                                           placeholder="End" required>
+                                </div>
+                            </div>
+                            {# #### #}
+
+                        </div>
+                        {# ############################## #}
+
+                    </div>
                     {# ###################### #}
 
                 </div>
-                {# ################################ #}
+                {# ####################################### #}
 
             </div>
-            {# ############################# #}
+            {# ####### #}
 
-            {# Column item picture and interval picker #}
-            <div class="container__column" id="layer1_section1">
+            {# Layer 2 #}
+            <div class="container__layer" id="layer2">
 
-                {# Column item picture #}
-                <div class="container__column" id="layer1_section1_column1">
+                {# Column graphs #}
+                <div class="container__column" id="layer2_column1">
 
-                    {# Head of the picture column #}
-                    <div class="container__head" id="section1_column1_head">
-                        <h2>Picture of the article</h2>
+                    {# Head of the graphs #}
+                    <div class="container__head" id="layer2_column1_head">
+                        <h2>Choose a graph</h2>
                     </div>
-                    {# ########################## #}
+                    {# ################## #}
 
-                    {# Content of the picture column #}
-                    <div class="container__content" id="section1_column1_content">
-                        {% if item_picture %}
-                            <img src="{{ item_picture }}" style=" width:100%; height:100%; object-fit: contain"alt="Picture of an item">
-                        {% else %}
-                            <img src="" style=" width:100%; height:100%; object-fit: contain" alt="Picture of an item">
-                        {% endif %}
+                    {# Content of the graphs #}
+                    <div class="container__content" id="layer2_column1_content">
+
                     </div>
-                    {# ############################# #}
+                    {# ##################### #}
 
                 </div>
-                {# ################### #}
-
-                {# Column interval picker #}
-                <div class="container__column" id="layer1_section1_column2">
-
-                    {# Content of the interval picker #}
-                    <div class="container__content" id="section1_column2_content">
-
-                        {# row 1 #}
-                        <div class="container__row" id="section1_row1">
-                            {# type graph picker #}
-                            <div class="container__innerColumn" id="section1_row1_inner1">
-                                <select class="container__select" id="graph_select" name="graph_select">
-                                    <option value="Popularity item">Popularity item</option>
-                                    <option value="Recommendation count">Recommendation count</option>
-                                    <option value="Recommendation correctness">Recommendation correctness</option>
-                                </select>
-                            </div>
-                            {# ################# #}
-                            <div class="container__innerColumn" id="section1_row1_inner2">
-                                <div class="container__button" id="section1_buttongraph">
-                                    <button id="submit_graph" name="submit_graph" role="button" >
-                                        Show graph
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        {# ##### #}
-
-                        {# row 2 #}
-                        <div class="container__row" id="section1_row2">
-                            <div class="container__innerColumn" id="section1_row2_inner1">
-                                <input type="date" class="container__input" id="input_startpoint"
-                                       name="input_startpoint" value="2020-01-01"
-                                       placeholder="Begin" required>
-                            </div>
-                            <div class="container__innerColumn" id="section1_row2_inner2">
-                                <input type="date" class="container__input" id="input_endpoint"
-                                       name="input_endpoint" value="2020-01-09"
-                                       placeholder="End" required>
-                            </div>
-                        </div>
-                        {# #### #}
-
-                    </div>
-                    {# ############################## #}
-
-                </div>
-                {# ###################### #}
+                {# ############# #}
 
             </div>
-            {# ####################################### #}
+            {# ####### #}
 
         </div>
-        {# ####### #}
-
-        {# Layer 2 #}
-        <div class="container__layer" id="layer2">
-
-            {# Column graphs #}
-            <div class="container__column" id="layer2_column1">
-
-                {# Head of the graphs #}
-                <div class="container__head" id="layer2_column1_head">
-                    <h2>Choose a graph</h2>
-                </div>
-                {# ################## #}
-
-                {# Content of the graphs #}
-                <div class="container__content" id="layer2_column1_content">
-
-                </div>
-                {# ##################### #}
-
-            </div>
-            {# ############# #}
-
-        </div>
-        {# ####### #}
-
-    </div>
-    {# ######### #}
-</form>
-
+        {# ######### #}
+    </form>
+</div>
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart', 'bar']});
 

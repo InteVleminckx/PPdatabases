@@ -86,7 +86,9 @@ tr {
                         <td>{{ item['stepsize'] }}</td>
                         <td>{{ item['topk'] }}</td>
                         <td>{{ item['algorithms']|length }}</td>
-                        <td><div style="color:red; cursor: pointer;" onclick="removeABTest({{ item['dataset_id'] }})">&times;</div></td>
+                        <td>
+                            <div style="color:red; cursor: pointer;" onclick="removeABTest({{ item['abtest_id'] }})">&times;</div>
+                        </td>
                     </tr>
                 {% endfor %}
                 <tr style="text-align: center" id="15">

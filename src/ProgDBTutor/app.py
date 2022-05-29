@@ -463,7 +463,7 @@ def testlist():
 def abTestRemove():
     data = request.get_json()
     abTest_id = data['abtest_id']
-
+    print(abTest_id)
     cursor = connection.get_cursor()
     cursor.execute("DELETE FROM ABTest WHERE abtest_id = %s", (str(abTest_id),))
     connection.commit()
