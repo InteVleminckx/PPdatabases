@@ -13,11 +13,24 @@ import recency_algorithm as recency
 import ItemKNN as itemknn
 
 def deleteABTest(abtest_id):
+    """
+    Function to delete an ABTest from the database
+    :param abtest_id: the id of the ABTest we need to delete
+    :return: /
+    """
     cursor = dbconnect.get_cursor()
     cursor.execute("DELETE FROM ABTest WHERE abtest_id = %s", (abtest_id))
     cursor.commit()
 
 def startAB(abtest_id, dataset_id):
+    """
+    Function to an ABTest with the appropriate algorithm or algorithms
+    :param abtest_id: the id of the ABTest we want to run
+    :param dataset_id: the id of the dataset where the ABTest belongs to
+    :return: /
+    """
+
+    # obtain general information about the ABTest
     abtest = getAB_Test(abtest_id)
     algorithm_ids = abtest.algorithm_id
     startpoint = str(abtest.start_point)
@@ -25,20 +38,24 @@ def startAB(abtest_id, dataset_id):
     stepsize = abtest.stepsize
     topk = abtest.topk
 
+    # run each algorithm separately so we can compare them later
     for algorithm_id in algorithm_ids:
         algorithm = getAlgorithm(abtest_id, algorithm_id)
 
+        # Popularity Algorithm
         if algorithm.name == 'popularity':
             retraininterval = int(algorithm.params["retraininterval"])
             windowsize = int(algorithm.params["windowsize"])
             popAlgo = popularity.Popularity(dataset_id, abtest_id, algorithm_id, startpoint, endpoint, stepsize, topk, windowsize, retraininterval)
             popAlgo.popularity()
 
+        # Recency Algorithm
         elif algorithm.name == 'recency':
             retraininterval = int(algorithm.params["retraininterval"])
             recAlgo = recency.Recency(dataset_id, abtest_id, algorithm_id, startpoint, endpoint, topk, stepsize, retraininterval)
             recAlgo.recency()
 
+        # ItemKNN Algorithm
         elif algorithm.name == 'itemknn':
             retraininterval = int(algorithm.params["retraininterval"])
             windowsize = int(algorithm.params["window"])
@@ -48,34 +65,11 @@ def startAB(abtest_id, dataset_id):
                                        normalize, k, windowsize, retraininterval)
             itemAlgo.iknn()
 
-def getAB_Pop_Active(abtest_id, dataset_id):
-    dataset_id = 0
-    abtest = getAB_Test(abtest_id)
-
-    curDate = abtest.start_point
-
-    items = list()
-    users = list()
-    while curDate <= abtest.end_point:
-        curDate_str = str(curDate)[0:10]
-        numberOfItems = getNumberOfInteractions(dataset_id, curDate_str)
-        numberOfActiveUsers = getNumberOfActiveUsers(dataset_id, curDate_str)
-
-        items.append({"date": curDate_str, "purchases": numberOfItems})
-        users.append({"date": curDate_str, "active_users": numberOfActiveUsers})
-
-        curDate += datetime.timedelta(days=1)
-
-    sys.stdout = open("static/metrics1.js", "w")
-
-    dictItems = jsn.dumps(items)
-    dictUsers = jsn.dumps(users)
-
-    print("var items = '{}' ".format(dictItems))
-    print("var users = '{}' ".format(dictUsers))
-    sys.stdout.close()
 
 def getCTR(abtest_id, dataset_id):
+    """
+    Function unused (for debug only)
+    """
     abtest = getAB_Test(abtest_id)
 
     curDate = abtest.start_point
@@ -89,7 +83,7 @@ def getCTR(abtest_id, dataset_id):
 
 
             algorithm = getAlgorithm(abtest_id, algorithm_id)
-            numberOfClicks = getClickTroughRate(abtest_id, algorithm_id,dataset_id, curDate_str)
+            numberOfClicks = getClickTroughRate(abtest_id, algorithm_id, dataset_id, curDate_str)
             ctr.append({"date": curDate_str, "clicks": numberOfClicks, "algo_name": algorithm.name, "params": algorithm.params})
             curDate += datetime.timedelta(days=1)
 
@@ -105,8 +99,41 @@ def getCTR(abtest_id, dataset_id):
     sys.stdout.close()
 
 
+# def getAB_Pop_Active(abtest_id, dataset_id):
+#     """
+#     Function unused (for debug only)
+#     """
+#     dataset_id = 0
+#     abtest = getAB_Test(abtest_id)
+#
+#     curDate = abtest.start_point
+#
+#     items = list()
+#     users = list()
+#     while curDate <= abtest.end_point:
+#         curDate_str = str(curDate)[0:10]
+#         numberOfItems = getNumberOfInteractions(dataset_id, curDate_str)
+#         numberOfActiveUsers = getNumberOfActiveUsers(dataset_id, curDate_str)
+#
+#         items.append({"date": curDate_str, "purchases": numberOfItems})
+#         users.append({"date": curDate_str, "active_users": numberOfActiveUsers})
+#
+#         curDate += datetime.timedelta(days=1)
+#
+#     sys.stdout = open("static/metrics1.js", "w")
+#
+#     dictItems = jsn.dumps(items)
+#     dictUsers = jsn.dumps(users)
+#
+#     print("var items = '{}' ".format(dictItems))
+#     print("var users = '{}' ".format(dictUsers))
+#     sys.stdout.close()
+
 
 # def getABtestResults(abtest_id, dataset_id):
+#     """
+#     Function unused (for debug only)
+#     """
 #     cursor = dbconnect.get_cursor()
 #     abtest = getAB_Test(abtest_id)
 #     topk = abtest.topk

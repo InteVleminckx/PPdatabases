@@ -7,17 +7,17 @@ from datetime import timedelta
 
 from user_data_acces import *
 
+# Metrics are separated from other queries, so we need to connect to the database here
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
-
-
-# user_data_access = UserDataAcces(connection)
 
 
 # METRIC: Purchases
 def getNrOfPurchases(startDate, endDate):
+    """
+    :return: number of purchases made from {startDate} to {endDate}
+    """
     cursor = connection.get_cursor()
 
-    # "SELECT count(*) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate)
     cursor.execute("SELECT count(*) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate))
 
     if cursor is None:
@@ -27,9 +27,12 @@ def getNrOfPurchases(startDate, endDate):
 
 # METRIC: Active Users
 def getNrOfActiveUsers(startDate, endDate):
+    """
+    Active users are users who bought at least 1 item in the interval
+    :return: number of active users made from {startDate} to {endDate}
+    """
     cursor = connection.get_cursor()
 
-    # "SELECT count(DISTINCT customer_id) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate)
     cursor.execute("SELECT count(DISTINCT customer_id) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;",
                    (startDate, endDate))
 
@@ -39,95 +42,113 @@ def getNrOfActiveUsers(startDate, endDate):
 
 
 def getClickThroughRate(startDate, endDate, abtestID, algorithmID, datasetID, stepsize, algoName):
+    """
+    Generate the CTR for each step for the entire ABTest
+    :precondition: The Algorithms must have run
+    :return: a Dictionary with {key=date, value=CTR for that date}
+    """
     cursor = connection.get_cursor()
     print("startctr")
 
     ctr = {}
 
+    # gather information about the time interval
     curDate = datetime.strptime(startDate, "%Y-%m-%d")
     end = datetime.strptime(endDate, "%Y-%m-%d")
     stepsize_ = timedelta(days=int(stepsize))
 
+    # For each stepsize, we have a new recommendation so we also generate a new CTR
+    # To make it easier, we split the CTR in 2 (popularity + recency) and (itemknn)
     while curDate <= end:
 
-        # Bij elke stepsize hebben we een nieuwe recommendation dus bekijken we ook de ctr
-
-        # Om het ons makkelijker te maken gaan we dit opslitsen in een geval waar we als algo pop of rec hebben of als algo itemknn
+        # Popularity or Recency
         if algoName != 'itemknn':
             date = str(curDate)[0:10]
-            # bij recommendations is de stepsize gelijk aan het endpoint, we vragen dus eerst alle recommendations op
+
+            # There are recommendations for each stepsize so we can just request them from the database
             cursor.execute(
                 'select item_number from recommendation where dataset_id = %s and abtest_id = %s and algorithm_id = %s and end_point = %s',
                 (str(datasetID), str(abtestID), str(algorithmID), date))
 
+            # get recommendations, if there aren't any, then the CTR will be 0 for that day
             recommendations = cursor.fetchall()
             if recommendations is None:
                 ctr[date] = 0
                 continue
 
-            # Nu gaan we alle interactions opvragen waar deze recommendations voor gedaan zijn
+            # Now request all interactions from the same interval as the recommendation
             cursor.execute(
                 'select customer_id, item_id from interaction where dataset_id = %s and t_dat between %s and %s',
                 (str(datasetID), date, str(curDate + (timedelta(days=int(stepsize) - 1)))[0:10]))
             interactions = cursor.fetchall()
 
-            # We vragen het aantal actieve gebruikers op
+            # Now request all active users, again in that same interval
             cursor.execute(
                 'select count(distinct customer_id) from interaction where dataset_id = %s and t_dat between %s and %s',
                 (str(datasetID), date, str(curDate + (timedelta(days=int(stepsize) - 1)))[0:10]))
 
             activeUsers = int(cursor.fetchone()[0])
 
+            # save all interactions
             dirInteraction = {}
 
-            # We zetten alle aankopen samen per user
+            # save the interactions in a Dict like this {key=customer_id, value=list(purchases)}
             for id, item in interactions:
                 if id not in dirInteraction:
                     dirInteraction[id] = [item]
                 else:
                     dirInteraction[id].append(item)
 
+            # count holds the amount of users that bought at least 1 recommendation
             count = 0
 
-            # We gaan over alle interaction per gebruiker
+            # Loop over all pruchases of the user
             for id, items in dirInteraction.items():
-                # We controleren of een van de gekochte items van de gebruiker in zijn recommendation zit
+                # Check if any of the purchases in also recommended
                 if any(reco[0] in items for reco in recommendations):
-                    # We doen de count omhoog
+                    # if so, we increase the count
                     count += 1
 
+            # the ctr for that day will be the number of users who bought a recommendation
+            # divided by the total amount of active users (in that time interval)
             ctr[date] = round(count / activeUsers, 2)
 
+        # ItemKNN
         else:
             date = str(curDate)[0:10]
 
-            # bij recommendations is de stepsize gelijk aan het endpoint, we vragen dus eerst alle recommendations op
+            # There are recommendations for each stepsize so we can just request them from the database
             cursor.execute(
                 'select customer_id, item_number from recommendation where dataset_id = %s and abtest_id = %s and algorithm_id = %s and end_point = %s',
                 (str(datasetID), str(abtestID), str(algorithmID), date))
 
+            # get recommendations, if there aren't any, then the CTR will be 0 for that day
             recommendations = cursor.fetchall()
             if recommendations is None:
                 ctr[date] = 0
                 continue
 
-            # Nu gaan we alle interactions opvragen waar deze recommendations voor gedaan zijn
+            # Now request all interactions from the same interval as the recommendation
             cursor.execute(
                 'select customer_id, item_id from interaction where dataset_id = %s and t_dat between %s and %s',
                 (str(datasetID), date, str(curDate + (timedelta(days=int(stepsize) - 1)))[0:10]))
             interactions = cursor.fetchall()
 
-            # We vragen het aantal actieve users op
+            # Now request all active users, again in that same interval
             cursor.execute(
                 'select count(distinct customer_id) from interaction where dataset_id = %s and t_dat between %s and %s',
                 (str(datasetID), date, str(curDate + (timedelta(days=int(stepsize) - 1)))[0:10]))
 
             activeUsers = int(cursor.fetchone()[0])
 
+            # Since ItemKNN works with recommendations specific for users,
+            # save the interactions separately from the recommendations
+            # Both dictionaries will have the key=customer_id so we can do a very fast check
+            # to see if a recommendation was bought or not
             dirInteraction = {}
             dirRecommendations = {}
 
-            # We zetten alle items samen per customer id
+            # Insert items in the dict {key=customer_id, value=list(purchases)}
             for id, item in interactions:
 
                 if id not in dirInteraction:
@@ -135,7 +156,7 @@ def getClickThroughRate(startDate, endDate, abtestID, algorithmID, datasetID, st
                 else:
                     dirInteraction[id].append(item)
 
-            # We zetten alle recommendations samen per customer id
+            # Insert items in the dict {key=customer_id, value=list(recommendations)}
             for id, item in recommendations:
 
                 if id not in dirRecommendations:
@@ -143,18 +164,20 @@ def getClickThroughRate(startDate, endDate, abtestID, algorithmID, datasetID, st
                 else:
                     dirRecommendations[id].append(item)
 
+            # count holds the amount of users that bought at least 1 recommendation
             count = 0
 
-            # We lopen over de interactions
+            # Loop over all Purchases
             for id, items in dirInteraction.items():
-
-                # We controleren of de id bestaan in de recommendation
+                # Check if there are recommendations for a certain user
                 if id in dirRecommendations:
-                    # We controleren of de aankopen van de user in de recommendations zitten
+                    # Check if the user bought at least 1 recommendation
                     if any(reco in items for reco in dirRecommendations[id]):
-                        # Zit in zijn recommendation dus we doen de count + 1
+                        # If so, increase the count by 1
                         count += 1
 
+            # the ctr for that day will be the number of users who bought a recommendation
+            # divided by the total amount of active users (in that time interval)
             ctr[date] = round(count / activeUsers, 2)
 
         curDate += stepsize_
@@ -163,6 +186,12 @@ def getClickThroughRate(startDate, endDate, abtestID, algorithmID, datasetID, st
 
 
 def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, stepSize, algoName):
+    """
+    Generate the Attribution Rate and the Average Revenue per User in the same function
+    We do this to avoid a lot of code duplication
+    :return: 2 Dictionary's with {key=date, value=AR/ARPU for that date}
+    """
+
     # hardcoded 7 or 30 days
     if days not in [7, 30]:
         days = 7
@@ -173,44 +202,44 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, s
     ar = {}
     arpu = {}
 
+    # gather information about the time interval
     curDate = datetime.strptime(startDate, "%Y-%m-%d")
     end = datetime.strptime(endDate, "%Y-%m-%d")
     stepsize_ = timedelta(days=int(stepSize))
 
+    # loop over the ABTest
     while curDate <= end:
 
-        # Bij elke stepsize hebben we een nieuwe recommendation dus bekijken we ook de ctr
-
-        # Om het ons makkelijker te maken gaan we dit opslitsen in een geval waar we als algo pop of rec hebben of als algo itemknn
+        # Popularity or Recency
         if algoName != 'itemknn':
             date = str(curDate)[0:10]
             _7days = str(curDate - timedelta(days=7))[0:10]
 
-            # bij recommendations is de stepsize gelijk aan het endpoint, we vragen dus eerst alle recommendations op
+            # initialize useful values
             tempDate = curDate
             moveOn = False
             recommendations = []
 
-            # ga over 7 dagen en zoek recommendations
-            for i in range(7):
+            # go over {days} days and find all recommendations. This is needed because recommendations aren't
+            # per stepsize here size D is hardcoded to 7 or 30 and the stepsize doesn't need to be either of that
+            for i in range(days):
 
                 cursor.execute(
                     'select item_number from recommendation where dataset_id = %s and abtest_id = %s and algorithm_id = %s and end_point = %s',
                     (str(datasetID), str(abtestID), str(algorithmID), tempDate))
 
-                # ga een dag lager
                 tempDate = tempDate - timedelta(days=1)
 
-                # kijk of er voor die dag recommendations bestaan
+                # Check if there are recommendations for that day and if so, add them to the list
                 _recommendations = cursor.fetchall()
                 if _recommendations is None:
                     continue
 
-                # voeg de recommendations voor die dag toe aan de lijst van alle recommendations
                 moveOn = True
                 for recommendation in _recommendations:
                     recommendations.append(recommendation[0])
 
+            # if no recommendations are found at all for the last {days} days, don't proceed
             if not moveOn:
                 ar[date] = 0
                 arpu[date] = 0
@@ -218,7 +247,7 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, s
 
             recommendations = list(set(recommendations))
 
-            # Nu gaan we alle interactions opvragen waar deze recommendations voor gedaan zijn
+            # If there are recommendations, we request the interactions over the same interval
             cursor.execute(
                 'select customer_id, item_id, price from interaction where dataset_id = %s and t_dat between %s and %s',
                 (str(datasetID), date, str(curDate + (timedelta(days=int(stepSize) - 1)))[0:10]))
@@ -226,7 +255,7 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, s
 
             dirInteraction = {}
 
-            # We zetten alle aankopen samen per user
+            # Make a Dict for the interactions {key=customer_id, value=list( list(items) , list(prizes) )}
             for id, item, price in interactions:
                 if id not in dirInteraction:
                     dirInteraction[id] = [[item], [price]]
@@ -238,69 +267,70 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, s
             price = 0
             nrOfInteractions = 0
 
-            # ga over de items van alle users
+            # Loop over all interactions
             for id_, items in dirInteraction.items():
                 nrOfInteractions += len(items[0])
 
-                # ga over de items van 1 specifieke user
+                # Loop over the purchases of a specific user
                 for i in range(len(items[0])):
-                    # als dat item gerecommend was, verhoog count en price
+                    # If it was recommended, increase count by 1 and price by whatever the price of the item is
                     if items[0][i] in recommendations:
                         count += 1
                         price += items[1][i]
 
+            # AR is the number of recommended items bought divided by all purchases
+            # ARPU is the price of all recommended items bought divided by all purchases
             ar[date] = round(count / nrOfInteractions, 2)
             arpu[date] = price / nrOfInteractions
 
+        # ItemKNN
         else:
             date = str(curDate)[0:10]
             _7days = str(curDate - timedelta(days=7))[0:10]
 
-            # bij recommendations is de stepsize gelijk aan het endpoint, we vragen dus eerst alle recommendations op
+            # initialize useful values
             tempDate = curDate
             moveOn = False
             recommendations = []
 
-            # ga over 7 dagen en zoek recommendations
-            for i in range(7):
+            # go over {days} days and find all recommendations. This is needed because recommendations aren't
+            # per stepsize here size D is hardcoded to 7 or 30 and the stepsize doesn't need to be either of that
+            for i in range(days):
 
                 cursor.execute(
                     'select customer_id, item_number from recommendation where dataset_id = %s and abtest_id = %s and algorithm_id = %s and end_point = %s',
                     (str(datasetID), str(abtestID), str(algorithmID), tempDate))
 
-                # ga een dag lager
                 tempDate = tempDate - timedelta(days=1)
 
-                # kijk of er voor die dag recommendations bestaan
+                # Check if there are recommendations for that day and if so, add them to the list
                 _recommendations = cursor.fetchall()
                 if _recommendations is None:
                     continue
 
-                # voeg de recommendations voor die dag toe aan de lijst van alle recommendations
                 moveOn = True
 
                 if _recommendations not in recommendations:
                     recommendations.append(_recommendations)
 
-                # recommendations.append(_recommendations)
-
+            # if no recommendations are found at all for the last {days} days, don't proceed
             if not moveOn:
                 ar[date] = 0
                 arpu[date] = 0
                 continue
 
-            # recommendations = list(set(recommendations))
-
-            # Nu gaan we alle interactions opvragen waar deze recommendations voor gedaan zijn
+            # If there are recommendations, we request the interactions over the same interval
             cursor.execute(
                 'select customer_id, item_id, price from interaction where dataset_id = %s and t_dat between %s and %s',
                 (str(datasetID), date, str(curDate + (timedelta(days=int(stepSize) - 1)))[0:10]))
             interactions = cursor.fetchall()
 
+            # make 2 seperate Dict's for the interactions and for the recommendations
+            # with as key=customer_id
             dirInteraction = {}
             dirRecommendations = {}
 
-            # We zetten alle items samen per customer id
+            # Make a Dict for the interactions {key=customer_id, value=list( list(items) , list(prizes) )}
             for id, item, price in interactions:
 
                 if id not in dirInteraction:
@@ -309,9 +339,8 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, s
                     dirInteraction[id][0].append(item)
                     dirInteraction[id][1].append(price)
 
-            # er kunnen meerdere recommendation modellen zijn.
+            # Save the recommendations in a Dict but Loop over all models first
             for recom in recommendations:
-                # print(recom)
                 for id, item in recom:
 
                     if id not in dirRecommendations:
@@ -323,21 +352,23 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, s
             price = 0
             nrOfInteractions = 0
 
-            # ga over alle items van alle users
+            # Loop over all interactions
             for id_, items in dirInteraction.items():
                 nrOfInteractions += len(items[0])
 
-                # kijk of er voor die user recommendations zijn
+                # Check if there are recommendations for a certain user
                 if id_ in dirRecommendations:
 
-                    # ga over de items van een specifieke user
+                    # Loop over the items of the user
                     for i in range(len(items[0])):
 
-                        # als dat item gerecommend was, verhoog count en price
+                        # If a recommended item was also bought, increase count+price
                         if items[0][i] in dirRecommendations[id_]:
                             count += 1
                             price += items[1][i]
 
+            # AR is the number of recommended items bought divided by all purchases
+            # ARPU is the price of all recommended items bought divided by all purchases
             ar[date] = round(count / nrOfInteractions, 2)
             arpu[date] = price / nrOfInteractions
 
@@ -345,124 +376,3 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, s
 
     return ar, arpu
 
-
-# def getAR_and_ARPU(days, startDate, endDate, abtestID, resultID, datasetID, stepSize, algoName):
-#     # hardcoded 7 or 30 days
-#     if days not in [7, 30]:
-#         days = 7
-#
-#     startDate = str(startDate)[0:10]
-#     endDate = str(endDate)[0:10]
-#
-#     cursor = connection.get_cursor()
-#     print("startAR_ARPU")
-#     intervalDates = []
-#
-#     # initial values: date2 is altijd voor date1
-#     date1 = endDate
-#     date2 = str(datetime.strptime(str(date1)[0:10], '%Y-%m-%d') - timedelta(days=days))[0:10]
-#     _end = datetime.strptime(str(startDate)[0:10], '%Y-%m-%d') - timedelta(days=days)
-#
-#     while _end <= datetime.strptime(str(date2)[0:10], '%Y-%m-%d'):
-#         intervalDates.append([date2, date1])
-#
-#         # update
-#         date1 = str(datetime.strptime(str(date1)[0:10], '%Y-%m-%d') - timedelta(days=stepSize))[0:10]
-#         date2 = str(datetime.strptime(str(date2)[0:10], '%Y-%m-%d') - timedelta(days=stepSize))[0:10]
-#
-#     # get all purchases that were recommended
-#     cursor.execute(
-#         'select i.t_dat, i.customer_id, i.item_id, i.price from interaction i where i.dataset_id = %s and i.t_dat between %s and %s and exists(select * from recommendation r where'
-#         ' r.item_number = i.item_id and ( r.customer_id = i.customer_id  or r.customer_id = -1) and r.start_point < i.t_dat and i.t_dat <= r.end_point  and r.abtest_id = %s and r.result_id = %s and r.dataset_id = %s) '
-#         'order by customer_id;',
-#         (str(datasetID), str(startDate), str(endDate), str(abtestID), str(resultID), str(datasetID))
-#     )
-#     recommended_purchases = cursor.fetchall()
-#
-#     # get all purchases that were not recommended
-#     cursor.execute(
-#         'select i.t_dat, i.customer_id, i.item_id, i.price from interaction i where i.dataset_id = %s and i.t_dat between %s and %s and not exists(select * from recommendation r where'
-#         ' r.item_number = i.item_id and ( r.customer_id = i.customer_id  or r.customer_id = -1) and r.start_point < i.t_dat and i.t_dat <= r.end_point  and r.abtest_id = %s and r.result_id = %s and r.dataset_id = %s) '
-#         'order by i.customer_id, i.t_dat;',
-#         (str(datasetID), str(startDate), str(endDate), str(abtestID), str(resultID), str(datasetID))
-#     )
-#     not_recommended_purchases = cursor.fetchall()
-#
-#     # {customer_id: [[item_id], [t_dat], [was_recommended], [price]]}
-#     DATA = {}
-#
-#     for row in recommended_purchases:
-#
-#         # als entry nog niet bestaat -> maak een nieuwe entry
-#         if row[1] not in DATA:
-#             DATA[row[1]] = [[], [], [], []]
-#
-#         # voeg data toe aan de entry
-#         DATA[row[1]][3].append(row[3])  # price
-#         DATA[row[1]][0].append(row[2])  # item_id
-#         DATA[row[1]][1].append(row[0])  # date
-#         DATA[row[1]][2].append(True)  # bool: was_recommended
-#
-#     for row in not_recommended_purchases:
-#
-#         # als entry nog niet bestaat -> maak een nieuwe entry
-#         if row[1] not in DATA:
-#             DATA[row[1]] = [[], [], [], []]
-#
-#         # voeg data toe aan de entry
-#         DATA[row[1]][3].append(0)  # price = 0 because not recommended
-#         DATA[row[1]][0].append(row[2])  # item_id
-#         DATA[row[1]][1].append(row[0])  # date
-#         DATA[row[1]][2].append(False)  # bool: was_recommended
-#
-#     returnValue = []
-#
-#     for interval in intervalDates:
-#         AR = 0
-#         ARPU = 0
-#         nrOfPurchases = 0
-#
-#         # ga over alle customers
-#         for key, value in DATA.items():
-#             # ga over de data van een bepaalde customer
-#
-#             for i in range(len(value[0])):
-#                 t_dat = datetime.strptime(str(value[1][i])[0:10], '%Y-%m-%d')
-#
-#                 # als die customer een aankoop heeft binnen het interval -> doe er iets mee
-#                 if datetime.strptime(str(interval[0])[0:10], '%Y-%m-%d') < t_dat <= datetime.strptime(
-#                         str(interval[1])[0:10], '%Y-%m-%d'):
-#                     nrOfPurchases += 1
-#
-#                     # als de item recommended was
-#                     if value[2][i]:
-#                         AR += 1
-#                         ARPU += value[3][i]  # items[3] holds the price of the purchase
-#
-#         if nrOfPurchases != 0:
-#             AR = AR / nrOfPurchases
-#             ARPU = ARPU / nrOfPurchases
-#
-#         returnValue.append([interval, AR, ARPU])
-#
-#     """
-#     returnValue is een lijst van lijsten.
-#     in elke lijst zit op
-#     index 0: het interval
-#     index 1: de Attribution Rate voor dat interval
-#     index 2: de Average Revenue Per User voor dat interval
-#     """
-#
-#     arad = {}
-#     arpuad = {}
-#
-#     returnValue.reverse()
-#
-#     for value in returnValue:
-#         arad[value[0][1]] = round(value[1], 2)
-#         arpuad[value[0][1]] = value[2]
-#
-#     # print(arad)
-#     # print(arpuad)
-#
-#     return arad, arpuad
