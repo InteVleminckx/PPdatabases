@@ -728,7 +728,7 @@
         for (const [key, value] of Object.entries(dataPurchases)) {
 
             html_ += "<tr class='container__tablerow'>"
-            html_ += "<td class='container__tablerowcontent' style='cursor: pointer' onclick='redirectToItemPage(" + value["item"] + ")' data-label=\"Item-id\">" + value["item"] + "</td>"
+            html_ += "<td class='container__tablerowcontent' style='cursor: pointer' onclick='redirectToItemPage(" + value["item"] + ")' data-label=\"Item-id\">" + value["name"] + "</td>"
             html_ += "<td class='container__tablerowcontent' data-label=\"Count\">" + value["count"] + "</td>"
             html_ += "</tr>"
 
@@ -755,7 +755,7 @@
             for (const recommendation of value["recommendations"]) {
 
                 html_ += "<div class=\"container__slidetablerow\">"
-                html_ += "     <div style='cursor: pointer' onclick='redirectToItemPage(" + recommendation["item"] + ")' class=\"container__slidetablecolumn\">" + recommendation["item"] + "</div>"
+                html_ += "     <div style='cursor: pointer' onclick='redirectToItemPage(" + recommendation["item"] + ")' class=\"container__slidetablecolumn\">" + recommendation["name"] + "</div>"
                 html_ += "     <div class=\"container__slidetablecolumn\">" + recommendation["count"] + "</div>"
                 html_ += "</div>"
 
