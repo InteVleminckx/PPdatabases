@@ -15,7 +15,6 @@
     width: 613px;
     margin-top: 50px;
     flex-direction: column;
-
 }
 
 /**********************************/
@@ -25,16 +24,16 @@
     justify-content: space-between;
 }
 
-#layer1_column1, #layer2_column1 {
+#layer1_column1,
+#layer2_column1 {
     height: 585px;
 }
 
-#layer1_column2, #layer2_column2 {
+#layer1_column2,
+#layer2_column2 {
     height: 40px;
     justify-content: center;
-
 }
-
 
 /**********************************/
 /*         head container         */
@@ -50,12 +49,12 @@
     width: 613px;
 }
 
-.container__content#layer1_column1_content {
+#layer1_column1_content {
     height: 545px;
     flex-direction: column;
 }
 
-.container__content#layer2_column1_content {
+#layer2_column1_content {
     height: 585px;
 }
 
@@ -84,9 +83,7 @@
 /**********************************/
 /*      select container       */
 /**********************************/
-.container__select {
-
-}
+.container__select {}
 
 .container__select#algoSelection {
     font-weight: normal;
@@ -96,8 +93,8 @@
 /**********************************/
 /*        input container         */
 /**********************************/
-.container__input, .container__select#algoSelection {
-
+.container__input,
+#algoSelection {
     height: 40px;
     width: 140px;
     font-size: 13px;
@@ -112,9 +109,7 @@
 /**********************************/
 /*         button container       */
 /**********************************/
-.container__button {
-
-}
+.container__button {}
 
 .container__column button {
     background-color: var(--head-tx-color);
@@ -129,16 +124,14 @@
     width: 613px;
 }
 
-.container__tablehead {
+.container__tablehead,
+.container__tablebody .container__tablerow {
     height: 40px;
 }
 
 .container__tablebody .container__tablerow {
-    height: 40px;
     border-bottom: 1px solid lightgrey;
 }
-
-
 
 /*._dropdown {*/
 /*    display: inline-block;*/
