@@ -8,10 +8,13 @@
 	<link rel="stylesheet" href="{{ url_for('static',filename='style/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/sharedStyle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/flash.css') }}">
+
 
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 </head>
 <style>
     html, body {
@@ -38,6 +41,7 @@
     </div>
 </nav>
 
+<div id="flash_div" style="width: 100%; position: fixed; z-index: 999;"></div>
 
 <div class="container__page" id="datasetpage">
 
@@ -212,7 +216,13 @@
 
 <script>
 
-window.onload = sendData();
+window.onload = sendData();showFlashMessages();
+
+function showFlashMessages() {
+    $('#flash_div').load('{{ url_for('get_flashes') }}')
+}
+
+
 
 function goToABTestPage() {
     var ds = document.getElementById("datasetSelection");
