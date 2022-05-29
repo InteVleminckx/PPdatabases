@@ -1,0 +1,37 @@
+.flash_alert {
+    padding: 20px;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+}
+
+.flash_alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.flash_alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.flash_fade {
+    transition: opacity .15s linear;
+}
+
+.closebutton {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 0;
+}
+
+.closebutton:hover {
+    color: black;
+}
