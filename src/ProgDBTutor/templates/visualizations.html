@@ -285,7 +285,7 @@
                             <tr class="container__tablerow" id="layer4_section2_column1_table_head_row1">
                                 {# Table headers #}
                                 <th class="container__tableheadcontent" id="section2_table_head_row1_column1">
-                                    Item-id
+                                    Item
                                 </th>
                                 <th class="container__tableheadcontent" id="section2_table_head_row1_column2">
                                     Count
@@ -727,7 +727,7 @@
         for (const [key, value] of Object.entries(dataPurchases)) {
 
             html_ += "<tr class='container__tablerow'>"
-            html_ += "<td class='container__tablerowcontent' style='cursor: pointer' onclick='redirectToItemPage(" + value["item"] + ")' data-label=\"Item-id\">" + value["name"] + "</td>"
+            html_ += "<td class='container__tablerowcontent' style='cursor: pointer' onclick='redirectToItemPage(" + value["item"] + ")' data-label=\"Item\">" + value["name"] + "</td>"
             html_ += "<td class='container__tablerowcontent' data-label=\"Count\">" + value["count"] + "</td>"
             html_ += "</tr>"
 
@@ -744,7 +744,7 @@
             html_ += "    <h2>" + value["name"] + "</h2>"
             html_ += "    <p>Algorithm number: " + key.toString() + "</p>"
             html_ +=      "<div class='container__slidetablehead_info'>"
-            html_ += "          <p class='container__slidetable_infocolumn'> Item-id </p>"
+            html_ += "          <p class='container__slidetable_infocolumn'> Item </p>"
             html_ += "          <p class='container__slidetable_infocolumn'> Count </p>"
             html_ +=      "</div>"
             html_ += "</div>"
