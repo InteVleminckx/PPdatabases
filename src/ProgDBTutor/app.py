@@ -1,34 +1,30 @@
 # TUTORIAL Len Feremans, Sandy Moens and Joey De Pauw
 # see tutor https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
-import json
-import time
+#import json
+#import time
 
 from flask import Flask, request, session, jsonify, flash, redirect, url_for
 from flask.templating import render_template
-from flask_login import login_user, login_required, logout_user, current_user, UserMixin
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import scoped_session, sessionmaker
+#from flask_login import login_user, login_required, logout_user, current_user, UserMixin
+#from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy.orm import scoped_session, sessionmaker
 import redis
 from rq import Queue
 
-# from config import config_data
-# from db_connection import DBConnection
-from user_data_acces import *  # , UserDataAcces
-# from user_data_acces import UserDataAcces
+#from user_data_acces import *  # , UserDataAcces
 
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
+#from werkzeug.utils import secure_filename
 
-import pandas as pd
-import csv
-import os
+#import pandas as pd
+#import csv
+#import os
 import a_b_tests as abtest
-from datetime import datetime, timedelta
+#from datetime import datetime, timedelta
 
-from config import config_data
-from db_connection import DBConnection
+#from config import config_data
+#from db_connection import DBConnection
 
-# from user_data_acces import UserDataAcces
 
 """
 Imports voor pages
@@ -198,14 +194,11 @@ def services():
                 for i in range(1, algo_id + 1):
                     if str(i) in algo_dict:
                         # Add entry for ABtest table
-                        # addAB_Test(abtest_id, i, start, end, stepsize, topk)
                         abTestQueue.enqueue(addAB_Test, ABTestID, current_id, start, end, stepsize, topk, creator, dataset_id)
 
                         # Add entries for Algorithm table
                         for j in range(len(algo_list)):
                             if algo_list[j][0] == i:
-                                # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
-                                # algo_list[j][3])
                                 abTestQueue.enqueue(addAlgorithm, ABTestID, current_id, algo_list[j][1], algo_list[j][2],
                                                     algo_list[j][3])
 
@@ -219,16 +212,9 @@ def services():
             connection.commit()
 
             # Call function to start a/b tests
-            # abtest.startAB(maxABtestID, dataset_id)
-            # abtest.getABtestResults(maxABtestID, dataset_id)
-            # abtest.getAB_Pop_Active(maxABtestID, dataset_id)
-
             abtest_job = abTestQueue.enqueue(abtest.startAB, args=(ABTestID, dataset_id), job_timeout=3600, meta=algo_times)
             session["algo_times"] = abtest_job.id
 
-            # abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id, job_timeout=3600)
-            # jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
-            # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
             jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
 
             recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, topk, ABTestID)
@@ -237,9 +223,6 @@ def services():
             listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID)
 
             session["abVisualistation"] = [jobABvisualisations.id, recos.id, totPurch.id, totRev.id, listUsers.id]
-
-            # return redirect(url_for('visualizations')) #TODO if not work turn on
-
             data_dict = {'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}
 
             return data_dict
@@ -275,23 +258,14 @@ def getData(ds_id):
 
 @app.route("/datasets", methods=['GET', 'POST'])
 def datasets():
-
-
     """
     Main function that renders the dataset page. Used to setup the type list for the uploaded files.
     :return:
     """
-
-    print(request.args)
-    dlte = request.args.get('delete_btn')
-
-
     if 'loggedin' in session:
         type_list = {}
-        # print("enter")
 
         if request.method == 'POST':
-            # print(request.form)
             type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '',
                          'customers_name_column': ''}
             type_item = 0
@@ -336,63 +310,56 @@ def datasets():
 
 @app.route("/datasets/update/<ds_id>")
 def datasetUpdate(ds_id):
-
-
     """
-
-    :return:
+    This function returns done if the dataset with the given id is in the dataset
+    :return: string
     """
-
-    print(type(ds_id))
-
-    if ds_id == "-1":
+    if ds_id == "-1":   #if no id is selected
         return 'no refresh'
     if 'jobsDataset' in session:
         finished = True
         dsIdinQueue = False
-        if len(session['jobsDataset']) == 0:
+        if len(session['jobsDataset']) == 0:    # if the queue is empty
             return 'no refresh'
         for i in range(len(session['jobsDataset'])):
-            if ds_id == str(session['jobsDataset'][i]['id']):
+            if ds_id == str(session['jobsDataset'][i]['id']):   #If the given id is present between the recent processes
                 dsIdinQueue = True
-            for key, value in session['jobsDataset'][i].items():
+            for key, value in session['jobsDataset'][i].items():    #Loop over the job id's
                 if key == 'id' or value == True:
                     continue
                 j = datasetQueue.fetch_job(key)
                 if j is not None:
-                    if str(j.get_status()) == "finished":
+                    if str(j.get_status()) == "finished":   #if the job has been finisched
                         l = session['jobsDataset'][i]
                         l[key] = True
                         session['jobsDataset'][i] = l
-                else:
+                else:   #if the job result is not in the queue anymore, its finished
                     l = session['jobsDataset'][i]
                     l[key] = True
                     session['jobsDataset'][i] = l
 
-            print(session['jobsDataset'])
-
-            for key, value in session['jobsDataset'][i].items():
-                if not value:
+            for key, value in session['jobsDataset'][i].items():    #checking if reading in a dataset is finished
+                if key != 'id' and value == False:
                     finished = False
 
+            #if dataset with given id is completly read in
             if finished and str(session['jobsDataset'][i]['id']) == ds_id:
                 l = session['jobsDataset']
                 l.remove(session['jobsDataset'][i])
                 session['jobsDataset'] = l
                 return 'done'
-            elif finished:
+            elif finished:  #if reading in a dataset has finisched but its not selected, delete from list
                 l = session['jobsDataset']
                 l.remove(session['jobsDataset'][i])
                 session['jobsDataset'] = l
 
-        if not dsIdinQueue:
+        if not dsIdinQueue: #If the dataset with the given id is not in the list, so it already finished
             return 'done'
 
     return 'notDone'
 
 @app.route("/fileupload", methods=['GET', 'POST'])
 def fileupload():
-
     """
     Returns the headers of each of the uploaded files.
     :return: (dict)
@@ -421,10 +388,7 @@ def visualizations():
     Main function that renders the vizualisations page.
     :return:
     """
-
-    # print(request.args)
     if len(request.args) > 0:
-
         ABTestID = request.args["abtest_id"]
         dataset_id = request.args["dataset_id"]
         abtest = getAB_Test(ABTestID)
@@ -442,12 +406,6 @@ def visualizations():
 
 @app.route("/visualizations/request", methods=["GET", "POST"])
 def visualizationsRequest():
-
-    """
-
-    :return:
-    """
-
     if request.method == "POST":
         data = request.get_json()
         dataset_id = data["dataset_id"]
@@ -468,18 +426,11 @@ def visualizationsRequest():
 
 @app.route("/visualizations/updateRequest")
 def visualizationsUpdateRequest():
-
-    """
-
-    :return:
-    """
-
     if "abVisualistationRequest" in session:
         job = session["abVisualistationRequest"]
         job_ = abTestQueue.fetch_job(job[-1])
         if job_ is not None:
             if str(job_.get_status()) == "finished":
-                # visualization = abTestQueue.fetch_job(job[0]).result
                 topkReco = abTestQueue.fetch_job(job[0]).result
                 topkPurchases = abTestQueue.fetch_job(job[1]).result
                 totRev = abTestQueue.fetch_job(job[2]).result
@@ -492,12 +443,10 @@ def visualizationsUpdateRequest():
 
 @app.route("/visualizations/update")
 def visualizationsUpdate():
-
     """
-
+    Route used to update the visualization page
     :return:
     """
-
     if "abVisualistation" in session:
         job = session["abVisualistation"]
         job_ = abTestQueue.fetch_job(job[-1])
@@ -590,12 +539,10 @@ def abTestRemove():
 
 @app.route("/usersection/update")
 def usersectionUpdate():
-
     """
-
+    Route used to update the contents of the user page
     :return:
     """
-
     if "userpage" in session:
         userpage = session["userpage"]
         job = abTestQueue.fetch_job(userpage)
@@ -627,12 +574,10 @@ def usersection():
 
 @app.route("/itemsection_graph", methods=['POST', 'GET'])
 def itemsection_graph():
-
     """
-
+    Route that is used to compute all the values needed for the graphs on the item page
     :return:
     """
-
     if request.method == 'POST':
         dataset_id = request.form.get('dataset_id', None)
         abtest_id = request.form.get("abtest_id", None)
@@ -785,7 +730,6 @@ def add_user():
     cursor = connection.get_cursor()
     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
     row = cursor.fetchone()
-    # user = DataScientist.query.filter_by(username=user_username).first
 
     # some basic checks (if they trigger, they 'flash' a message on the page (see the login.html doc))
     if row is not None:  # check to see if user with the email already exists in the database
@@ -846,18 +790,13 @@ def logout():
     Logs the user out on the website.
     :return:
     """
-
-    # logout_user()
     session.pop('loggedin', None)
     session.pop('username', None)
     session.pop('abVisualistation', None)
     session.pop('userpage', None)
-    # session.pop('_flashes', None)
-    # session['_flashes'].clear()
     return redirect(url_for('login_user'))
 
 
 # RUN DEV SERVER
 if __name__ == "__main__":
-    # os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
     app.run(HOST, debug=False)

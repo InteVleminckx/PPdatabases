@@ -1,11 +1,11 @@
-from config import config_data
-from db_connection import DBConnection
+#from config import config_data
+#from db_connection import DBConnection
 from user_data_acces import *
 
 from datetime import datetime
 from datetime import timedelta
 from rq import get_current_job
-import time as tm
+#import time as tm
 from Metrics import amountRecommendationDays
 from copy import copy
 
@@ -88,27 +88,3 @@ class Recency:
         if self.currentModel is not None:
             for item_id in self.currentModel:
                 addRecommendation(self.ABTestID, self.algorithmID, self.datasetID, -1, item_id[0], *recommendWindow)
-
-
-# TESTCODE (DEBUG ONLY)
-#
-# # start: 1 juli 2020
-# startDate = "2020-07-01 00:00:01"
-#
-# # end: 14 juli 2020
-# endDate = "2020-07-14 23:59:59"
-#
-# # topK
-# k = 5
-#
-# # stepSize: 1 week (geeft meest recente dingen binnen die week)
-# step = 1
-#
-# # retrain interval (retrain every 7 days)
-# retrain = 7
-#
-# recency = Recency(connection, startDate, endDate, k, step, retrain)
-# recency.recommend()
-#
-# # 1 week later (1 retrain interval so retrain)
-# recency.reTrain()

@@ -246,9 +246,6 @@ def getListOfActiveUsers(start, end, dataset_id, abtest_id):
     userInformation_ = []
     userInformation = {}
     for user in users:
-        # totalPurch = getUsersTotalPurchases(dataset_id, user[0], cursor)
-        # purchOverTime = getUsersPurchasesOverTime(start, end, dataset_id, user[0], cursor)
-        # userCTR = getUsersCTR(start, end, dataset_id, user[0], cursor, abtest_id)
         userInformation[str(user[0])] = {"totalePurchases": 0, "purchasesOverTime": 0, "CTR": 0}
 
     # obtain all the user information
