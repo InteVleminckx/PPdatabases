@@ -28,6 +28,7 @@
 
 body {
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
 }
@@ -60,6 +61,8 @@ body::-webkit-scrollbar {
     margin-top: 50px;
     margin-bottom: 50px;
 }
+
+
 
 /**********************************/
 /*       layer container       */
@@ -205,6 +208,7 @@ body::-webkit-scrollbar {
     overflow-y: scroll;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+    -webkit-overflow-scrolling: touch;
     display: flex;
     justify-content: space-around;
 }
@@ -258,6 +262,7 @@ body::-webkit-scrollbar {
 
 .container__tablebody {
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
 
@@ -328,6 +333,7 @@ body::-webkit-scrollbar {
 /**********************************/
 .container__slidetable {
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
     border-collapse: collapse;
@@ -381,3 +387,15 @@ body::-webkit-scrollbar {
 }
 
 .container__slidetablehead_infocolumn {}
+
+/****************1350 MEDIA SECTION******************/
+@media screen and (max-width: 1350px)  {
+    /**********************************/
+    /*       algemene container       */
+    /**********************************/
+    .container__page {
+        width: 713px;
+        flex-direction: column;
+    }
+
+}

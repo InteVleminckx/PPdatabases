@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/services_style.css') }}">
-    {#    <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">#}
     <link rel="stylesheet" href="{{ url_for('static',filename='style/sharedStyle.css') }}">
-
     <link rel="stylesheet" href="{{ url_for('static',filename='style/flash.css') }}">
 
     <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
@@ -18,7 +16,7 @@
 </head>
 
 <body>
-
+{#<script src="../static/style/app1.js"></script>#}
 <nav class="navbar" id="navbar">
     <div class="navbar_container">
         <div class="navbar_toggle" id="mobile-menu">
@@ -237,9 +235,6 @@
     </form>
 </div>
 
-
-
-
 <script src="../static/jquery-3.2.1.js">
 </script>
 <script>
@@ -363,26 +358,65 @@
     $(function () {
         $('#executeabtest_button').click(function (event) {
             event.preventDefault();
-            var form_data = $('#form1').serializeArray();
-            data_dict = {'form_data': {}, 'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}; // alle data die we willen versturen
-            for (var el of form_data) { // de form elementen aan de data_dict toevoegen.
-                data_dict['form_data'][el['name']] = el['value'];
+            var selectIndex = document.getElementById("datasetSelection");
+            var stepsize = document.getElementById("input_stepsize");
+            var topk = document.getElementById("input_topk");
+
+            var algoSelect = document.getElementById("algoSelection");
+
+            if (selectIndex.selectedIndex < 0 || stepsize.value <= 0 || topk.value <= 0) {
+                alert("No dataset selected or bad general arguments. General parameters need to be positive integers.")
             }
-            console.log(data_dict)
+            else if (Object.keys(algo_dict).length < 1) {
+                alert("Not enough algorithms added to run A/B-test.");
+            }
 
-            $.ajax({
-                type: 'POST',
-                url: '/services',
-                data: JSON.stringify(data_dict),
-                contentType: 'application/json; charset=utf-8',
-                cache: false,
-                processData: false,
-                success: function (data) {
-                    {#console.log(data);#}
-                    window.location.href = "{{ url_for('visualizations') }}"; // de redirect naar andere pagina in javascript
+            else if (algoSelect.value === "popularity") {
+                var retrain_int = document.getElementById("input_retraininterval_p");
+                var windowsize = document.getElementById("input_windowsize_p");
+                if (retrain_int.value === "" || retrain_int.value <= 0 || windowsize.value === "" || windowsize.value <= 0) {
+                    alert("Bad algorithm parameters. Make sure they are positive integers.");
+                }
+            }
+            else if (algoSelect.value === "recency") {
+                var retrain_int = document.getElementById("input_retraininterval_r");
+                if (retrain_int.value === "" || retrain_int.value <= 0) {
+                    alert("Bad algorithm parameter(s). Make sure they are positive integers.");
+                }
+            }
+            else if (algoSelect.value === "itemknn") {
+                var retrain_int = document.getElementById("input_retraininterval_i");
+                var windowsize = document.getElementById("input_windowsize_i");
+                var normalize = document.getElementById("input_normalize");
+                var k = document.getElementById("input_k");
+                if (retrain_int.value === "" || retrain_int.value <= 0 || windowsize.value === "" || windowsize.value <= 0 || normalize.value === "" || normalize.value < 0 || k.value === "" || k.value <= 0) {
+                    alert("Bad algorithm parameters. Make sure they are positive integers (the normalize parameter is allowed to be 0).");
+                }
+            }
 
-                },
-            });
+            else {
+                var form_data = $('#form1').serializeArray();
+                data_dict = {'form_data': {}, 'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}; // alle data die we willen versturen
+                for (var el of form_data) { // de form elementen aan de data_dict toevoegen.
+                    data_dict['form_data'][el['name']] = el['value'];
+                }
+                console.log(data_dict)
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/services',
+                    data: JSON.stringify(data_dict),
+                    contentType: 'application/json; charset=utf-8',
+                    cache: false,
+                    processData: false,
+                    success: function (data) {
+                        {#console.log(data);#}
+
+                        window.location.href = "{{ url_for('visualizations') }}"; // de redirect naar andere pagina in javascript
+
+                    },
+                });
+            }
         });
     });
 
@@ -414,6 +448,17 @@
             delete algo_dict[algo_id];
         }
     }
+
+
+    const menu = document.getElementById("mobile-menu");
+    const menuLinks = document.querySelector(".navbar_menu")
+    // Display Mobile Menu
+    const mobileMenu = () => {
+        menu.classList.toggle('is-active');
+        menuLinks.classList.toggle('active');
+    }
+
+    menu.addEventListener('click', mobileMenu);
 
 </script>
 

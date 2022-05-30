@@ -89,6 +89,15 @@
     height: 140px;
 }
 
+.container__mobile {
+        display: flex;
+        flex-wrap: wrap;
+        width: 613px;
+        justify-content: space-between;
+        flex-direction: row;
+}
+
+
 /**********************************/
 /*         head container         */
 /**********************************/
@@ -364,3 +373,74 @@
 .container__slidetablehead_info p {
     width: 110px;
 }
+
+/****************1350 MEDIA SECTION******************/
+@media screen and (max-width: 1350px) {
+    /**********************************/
+    /*     custombody container       */
+    /**********************************/
+    .container__body {
+        height: 3160px;
+    }
+
+    /**********************************/
+    /*       algemene container       */
+    /**********************************/
+    .container__page {
+        height: 3060px;
+
+    }
+
+    #layer1 {
+        margin-top: 50px;
+        height: 420px;
+        flex-direction: column;
+        width: 613px;
+        margin-left: 50px;
+        margin-bottom: 20px;
+    }
+
+    #layer2 {
+        margin-top: 20px;
+        height: 600px;
+        flex-direction: column;
+        margin-left: 50px;
+        width: 613px;
+        margin-bottom: 20px;
+    }
+
+    #layer3 {
+        height: 610px;
+        flex-direction: column;
+        margin-left: 50px;
+        width: 613px;
+        margin-bottom: 20px;
+    }
+
+    #layer4 {
+        height: 1250px;
+        width: 613px;
+        flex-direction: column;
+        margin-left: 50px;
+
+    }
+
+    .container__mobile {
+        display: flex;
+        flex-wrap: wrap;
+        width: 613px;
+        justify-content: space-between;
+        flex-direction: row;
+        /*margin-left: 50px;*/
+    }
+
+    #layer4_section3_column1 {
+        margin-bottom: 10px;
+    }
+
+
+
+
+
+}
+/****************************************************/

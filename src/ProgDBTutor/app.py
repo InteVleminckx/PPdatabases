@@ -6,9 +6,7 @@ import time
 from flask import Flask, request, session, jsonify, flash, redirect, url_for
 from flask.templating import render_template
 from flask_login import login_user, login_required, logout_user, current_user, UserMixin
-from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 import redis
 from rq import Queue
@@ -49,9 +47,6 @@ app_data['app_name'] = config_data['app_name']
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-engine = create_engine('postgresql://app@localhost:5432/db_recommended4you')
-db = scoped_session(sessionmaker(bind=engine))
-
 # For threading
 rds = redis.Redis()
 datasetQueue = Queue('queue1', connection=rds)  # queue for dataset processes
@@ -69,6 +64,11 @@ HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
 @app.route("/")
 @app.route("/home")
 def main():
+    """
+    Main function for home page.
+    :return:
+    """
+
     l = session.get('loggedin', False)
 
     if l:
@@ -80,6 +80,11 @@ def main():
 
 @app.route("/services/addalgorithm", methods=['GET', 'POST'])
 def addalgorithm():
+
+    """
+    Adds an algorithm to the list of algorithms (for the A/B-test page).
+    :return: (dict)
+    """
     if request.method == 'POST':
 
         dataDict = request.get_json()
@@ -89,7 +94,7 @@ def addalgorithm():
         algo_dict = dataDict['algo_dict']
 
         algo = form_data['algoSelection']
-        changed = True
+        changed = True # False when not all algorithm parameters have been filled in.
         if algo == "popularity":
             windowsize = form_data['input_windowsize_p']
             retraininterval = form_data['input_retraininterval_p']
@@ -131,10 +136,21 @@ def addalgorithm():
 
 @app.route("/get_flashes", methods=['GET', 'POST'])
 def get_flashes():
+    """
+    Returns the template that contains html code for the flash messages.
+    :return:
+    """
+
     return render_template('_flashes.html')
 
 @app.route("/services", methods=['GET', 'POST'])
 def services():
+
+    """
+    Main function that renders the A/B-test page. Submitted A/B-tests are handled here too.
+    :return:
+    """
+
     if 'loggedin' in session:
 
         if request.method == 'POST':
@@ -143,7 +159,7 @@ def services():
 
             # Make dictionary to store results from abtest_job
             algo_times = dict()
-
+    
             form_data = dataDict['form_data']
             algo_id = dataDict['algo_id']
             algo_list = dataDict['algo_list']
@@ -157,10 +173,12 @@ def services():
             end = form_data['input_endpoint']
             stepsize = form_data['input_stepsize']
             topk = form_data['input_topk']
-            dataset = form_data['datasetSelection']
+            dataset = 0
+            if 'datasetSelection' in form_data:
+                dataset = form_data['datasetSelection']
+
             ABTestID = getMaxABTestID() + 1
-            if not dataset:
-                return redirect(url_for('visualizations'))
+
             dataset_id = ""
             for char in dataset:
                 if char.isdigit():
@@ -235,14 +253,32 @@ def services():
 
 @app.route("/datasets/<ds_id>", methods=['GET', 'POST'])
 def getData(ds_id):
+
+    """
+    Gets all the information for the dataset with given dataset id.
+    :return: (list(dict)) [{'users': numberOfUser, 'articles': numberOfArticles, 'interactions': numberOfInteractions, 'distributions': getPriceDistribution(cursor, dataset_id),
+                    'activeUsers': activeUsers, 'interactionPerMonth' : interactionsPermonth}]
+    """
+
     if request.method == 'GET':
         print("/datasets/<ds_id>")
         return getDatasetInformation(ds_id)
 
+
+
+
 @app.route("/datasets", methods=['GET', 'POST'])
 def datasets():
+
+
+    """
+    Main function that renders the dataset page. Used to setup the type list for the uploaded files.
+    :return:
+    """
+
     print(request.args)
     dlte = request.args.get('delete_btn')
+
 
     if 'loggedin' in session:
         type_list = {}
@@ -257,20 +293,16 @@ def datasets():
                 type_list['articles_types'].append(request.form.get(f"{type_item}"))
                 type_item += 1
             type_item = -1
-            # print("1")
             while request.form.get(f"{type_item}"):
                 type_list['customers_types'].append(request.form.get(f"{type_item}"))
                 type_item -= 1
             art_col_name = request.form.get("articles_name_column")
-            # print("2")
             if art_col_name:
                 type_list['articles_name_column'] = art_col_name
             cust_col_name = request.form.get("customers_name_column")
-            # print("3")
             if cust_col_name:
                 type_list['customers_name_column'] = cust_col_name
 
-        # handelRequests(app, session, request, datasetQueue, type_list)
         session['jobsDataset'] = []
         jobs = handelRequests(app, session, request, datasetQueue, type_list)
         if 'jobsDataset' not in session:
@@ -293,12 +325,21 @@ def datasets():
         # Delete hier de dataset
         return render_template('datasets.html', app_data=app_data, names=dataset_names,
                                    attr_types=json.dumps(file_attr_types))
+
     return redirect(url_for('login_user'))
 
 
 @app.route("/datasets/update/<ds_id>")
 def datasetUpdate(ds_id):
+
+
+    """
+
+    :return:
+    """
+
     print(type(ds_id))
+
     if ds_id == "-1":
         return 'no refresh'
     if 'jobsDataset' in session:
@@ -307,9 +348,7 @@ def datasetUpdate(ds_id):
         if len(session['jobsDataset']) == 0:
             return 'no refresh'
         for i in range(len(session['jobsDataset'])):
-            if ds_id == str(session['jobsDataset'][i]['id']) or \
-                    (session['jobsDataset'][i]['id'] == 'delete' and str(session['jobsDataset'][i]['deleted_id']) ==
-                     ds_id):
+            if ds_id == str(session['jobsDataset'][i]['id']):
                 dsIdinQueue = True
             for key, value in session['jobsDataset'][i].items():
                 if key == 'id' or value == True:
@@ -331,9 +370,7 @@ def datasetUpdate(ds_id):
                 if not value:
                     finished = False
 
-            if finished and (str(session['jobsDataset'][i]['id']) == ds_id or
-                             (session['jobsDataset'][i]['id'] =='delete' and
-                              str(session['jobsDataset'][i]['deleted_id']) == ds_id)):
+            if finished and str(session['jobsDataset'][i]['id']) == ds_id:
                 l = session['jobsDataset']
                 l.remove(session['jobsDataset'][i])
                 session['jobsDataset'] = l
@@ -351,17 +388,23 @@ def datasetUpdate(ds_id):
 
 @app.route("/fileupload", methods=['GET', 'POST'])
 def fileupload():
+
+    """
+    Returns the headers of each of the uploaded files.
+    :return: (dict)
+    """
+
     if request.method == 'POST':
         headerDict = {}
         if request.files.get('articles_file').filename != '':
-            headerList = getCSVHeader(app, 'articles_file')
+            headerList = getCSVHeader(app, 'articles_file', session)
             headerDict['articles_attr'] = headerList
             headerDict['changed'] = 'articles_attr'
+
         if request.files.get('customers_file').filename != '':
-            headerList = getCSVHeader(app, 'customers_file')
+            headerList = getCSVHeader(app, 'customers_file', session)
             headerDict['customers_attr'] = headerList
             headerDict['changed'] = 'customers_attr'
-        # print(headerDict)
         return headerDict
 
 
@@ -369,6 +412,11 @@ def fileupload():
 
 @app.route("/visualizations")
 def visualizations():
+
+    """
+    Main function that renders the vizualisations page.
+    :return:
+    """
 
     # print(request.args)
     if len(request.args) > 0:
@@ -392,6 +440,11 @@ def visualizations():
 @app.route("/visualizations/request", methods=["GET", "POST"])
 def visualizationsRequest():
 
+    """
+
+    :return:
+    """
+
     if request.method == "POST":
         data = request.get_json()
         dataset_id = data["dataset_id"]
@@ -412,6 +465,12 @@ def visualizationsRequest():
 
 @app.route("/visualizations/updateRequest")
 def visualizationsUpdateRequest():
+
+    """
+
+    :return:
+    """
+
     if "abVisualistationRequest" in session:
         job = session["abVisualistationRequest"]
         job_ = abTestQueue.fetch_job(job[-1])
@@ -430,6 +489,12 @@ def visualizationsUpdateRequest():
 
 @app.route("/visualizations/update")
 def visualizationsUpdate():
+
+    """
+
+    :return:
+    """
+
     if "abVisualistation" in session:
         job = session["abVisualistation"]
         job_ = abTestQueue.fetch_job(job[-1])
@@ -451,6 +516,12 @@ def visualizationsUpdate():
 
 @app.route("/testlist")
 def testlist():
+
+    """
+    Main function that renders the testlist page.
+    :return:
+    """
+
     creator = session['username']
     testList = []
     cursor = connection.get_cursor()
@@ -462,8 +533,7 @@ def testlist():
              'endpoint': str(row[4])[:10], 'stepsize': row[5], 'topk': row[6], 'algorithms': None}
         testList.append(d)
     for i in range(len(testList)):
-        algos = {}  # per (key, value), de value bevat op index 0 de naam van de algoritme en alles erna zijn de
-        # parameters.
+        algos = {}
 
         cursor.execute("SELECT distinct(a.param_name), a.algorithm_id, a.name, a.value FROM Algorithm a, ABTest ab WHERE "
                        "a.abtest_id = %s AND a.abtest_id = ab.abtest_id AND ab.creator = %s", (testList[i]['abtest_id'], creator))
@@ -475,16 +545,19 @@ def testlist():
 
         testList[i]['algorithms'] = algos
 
-    print(testList)
-
     return render_template('testlist.html', app_data=app_data, testList=testList)
 
 
 @app.route("/abTestRemove", methods=['GET', 'POST'])
 def abTestRemove():
+
+    """
+    Removes an A/B-test (from the database).
+    :return:
+    """
+
     data = request.get_json()
     abTest_id = data['abtest_id']
-    print(abTest_id)
     cursor = connection.get_cursor()
     cursor.execute("DELETE FROM ABTest WHERE abtest_id = %s", (str(abTest_id),))
     connection.commit()
@@ -495,11 +568,15 @@ def abTestRemove():
 
 @app.route("/usersection/update")
 def usersectionUpdate():
-    print("update")
+
+    """
+
+    :return:
+    """
+
     if "userpage" in session:
         userpage = session["userpage"]
         job = abTestQueue.fetch_job(userpage)
-        print(job.get_status())
         if job is not None:
             if str(job.get_status()) == "finished":
                 recommendations, history, interval, graph, topkListprint, dates = job.result
@@ -510,6 +587,12 @@ def usersectionUpdate():
 
 @app.route("/usersection")
 def usersection():
+
+    """
+    Main function that renders the user page.
+    :return:
+    """
+
     dataset_id = request.args.get("dataset_id")
     customer_id = request.args.get("customer_id")
     abtest_id = request.args.get("abtest_id")
@@ -522,6 +605,12 @@ def usersection():
 
 @app.route("/itemsection_graph", methods=['POST', 'GET'])
 def itemsection_graph():
+
+    """
+
+    :return:
+    """
+
     if request.method == 'POST':
         dataset_id = request.form.get('dataset_id', None)
         abtest_id = request.form.get("abtest_id", None)
@@ -622,14 +711,18 @@ def itemsection_graph():
         d = {'graph_type': graph_type, 'data': data, 'numbers': numbers, 'maxYValue': maxYValue, 'name': 'item_graph',
              'columns': columns}
 
-        print(request.form, d)
-
         return d
 
 
 # ----------------- Item section page -----------------#
 @app.route("/itemsection", methods=['POST', 'GET'])
 def itemsection():
+
+    """
+    Main function that renders the item page.
+    :return:
+    """
+
     abtest_id = request.args.get("abtest_id")
     dataset_id = request.args.get("dataset_id")
     item_id = request.args.get("item_id")
@@ -655,6 +748,12 @@ def itemsection():
 
 @app.route("/register", methods=['GET', 'POST'])
 def add_user():
+
+    """
+    Registers a user on the website and adds him to the database.
+    :return: Redirect to datasets page if successful, stays on login page if unsuccessful.
+    """
+
     user_firstname = request.form.get('firstname')
     user_lastname = request.form.get('lastname')
     user_username = request.form.get('username')
@@ -685,6 +784,12 @@ def add_user():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login_user():
+
+    """
+    Logs a user in on the website.
+    :return: Redirect to datasets page if successful, stays on login page if unsuccessful.
+    """
+
     if request.method == 'POST':
 
         user_username = request.form.get('username')
@@ -714,6 +819,12 @@ def login_user():
 
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
+
+    """
+    Logs the user out on the website.
+    :return:
+    """
+
     # logout_user()
     session.pop('loggedin', None)
     session.pop('username', None)

@@ -42,7 +42,7 @@
 
 <div id="flash_div" style="width: 100%; position: fixed; z-index: 999;"></div>
 
-<div class="container__body">
+<div class="container__body" id="body_id" >
     <div class="container__page" id="datasetpage">
 
 {######################################################################################################################}
@@ -443,11 +443,26 @@ function toggleDatasetView() {
         section1.style.display = "block";
         section2.style.display = "none";
         document.getElementById("datasetpage").style.height = "710px";
+        document.getElementById("body_id").style.height = "810px";
+        console.log(window.innerWidth)
+
+        if (window.innerWidth < 1350) {
+            document.getElementById("datasetpage").style.height = "1770px";
+            document.getElementById("body_id").style.height = "1870px";
+        }
+
     }
     else {
         section1.style.display = "none";
         section2.style.display = "block";
         document.getElementById("datasetpage").style.height = "800px";
+        document.getElementById("body_id").style.height = "900px";
+
+        if (window.innerWidth < 1350) {
+            document.getElementById("datasetpage").style.height = "2100px";
+            document.getElementById("body_id").style.height = "2200px";
+        }
+
     }
     event.preventDefault();
 }
@@ -455,6 +470,16 @@ function toggleDatasetView() {
 $('button.container__button#add_btn').click(function(e) {
     e.preventDefault();
 });
+
+    const menu = document.getElementById("mobile-menu");
+    const menuLinks = document.querySelector(".navbar_menu")
+    // Display Mobile Menu
+    const mobileMenu = () => {
+        menu.classList.toggle('is-active');
+        menuLinks.classList.toggle('active');
+    }
+
+    menu.addEventListener('click', mobileMenu);
 
 
 </script>

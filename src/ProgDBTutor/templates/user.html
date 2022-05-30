@@ -323,6 +323,16 @@
         window.location.href = "/itemsection?item_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();
     }
 
+    const menu = document.getElementById("mobile-menu");
+    const menuLinks = document.querySelector(".navbar_menu")
+    // Display Mobile Menu
+    const mobileMenu = () => {
+        menu.classList.toggle('is-active');
+        menuLinks.classList.toggle('active');
+    }
+
+    menu.addEventListener('click', mobileMenu);
+
 </script>
 
 </html>

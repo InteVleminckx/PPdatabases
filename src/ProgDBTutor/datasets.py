@@ -25,8 +25,7 @@ def handelRequests(app, session, request, taskQueue, type_list):
 
         # Delete the dataset here
         if dlte is not None:
-            job = taskQueue.enqueue(removeDataset, session['username'], int(rqst), job_timeout=600)
-            return {'id': 'delete', job.id: False, 'deleted_id': int(rqst)}
+            taskQueue.enqueue(removeDataset, session['username'], int(rqst), job_timeout=600)
 
     # Add dataset form
     elif request.method == 'POST':
@@ -42,8 +41,8 @@ def addDatasetHere(app, session, tq, type_list):
     if session['username'] == 'admin':  # checken of de user de admin is
 
         dataset_id = importDataset(tq)
-        id1 = importArticles(app, dataset_id, tq, type_list)
-        id2 = importCustomers(app, dataset_id, tq, type_list)
+        id1 = importArticles(app, dataset_id, tq, type_list, session)
+        id2 = importCustomers(app, dataset_id, tq, type_list, session)
         id3 = importPurchases(app, dataset_id, tq)
         tq.enqueue(createDatasetIdIndex, job_timeout=600)
         return {'id': dataset_id, id1: False, id2: False, id3: False}
@@ -92,40 +91,48 @@ def importDataset(tq):
     return datasetId
 
 
-def getCSVHeader(app, csv_filename):
-    """
-    Get the header for a certain csv file
-    """
-    df = request.files[csv_filename]
-    uploaded_file = secure_filename(df.filename)
-    filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-    df.save(filename)
-    header = pd.read_csv(filename, header=0, nrows=0).columns.tolist()
-    return header
+# def getCSVHeader(app, csv_filename):
+#     """
+#     Get the header for a certain csv file
+#     """
+#     df = request.files[csv_filename]
+#     uploaded_file = secure_filename(df.filename)
+#     filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+#     df.save(filename)
+#     header = pd.read_csv(filename, header=0, nrows=0).columns.tolist()
+#     return header
 
-def importArticles(app, dataset_id, tq, type_list):
+def importArticles(app, dataset_id, tq, type_list, session):
     """
     import the articles from the csv file into the database
     """
 
-    print(request.files)
-    af = request.files['articles_file']
-    uploaded_file = secure_filename(af.filename)
-    af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-    af.save(af_filename)
+    af_filename = ""
+    try:
+        af_filename = session['articlesFile']
+    except:
+        af = request.files['articles_file']
+        uploaded_file = secure_filename(af.filename)
+        af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+        af.save(af_filename)
     # Add articles to database
     job = tq.enqueue(addArticles, af_filename, dataset_id, type_list, job_timeout=1200)
     return job.id
 
 
-def importCustomers(app, dataset_id, tq, type_list):
+def importCustomers(app, dataset_id, tq, type_list, session):
     """
     import the curtomers from the csv file into the database
     """
-    cf = request.files['customers_file']
-    uploaded_file = secure_filename(cf.filename)
-    cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-    cf.save(cf_filename)
+
+    cf_filename = ""
+    try:
+        cf_filename = session['customersFile']
+    except:
+        cf = request.files['customers_file']
+        uploaded_file = secure_filename(cf.filename)
+        cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
+        cf.save(cf_filename)
     # Add customers to database
     job = tq.enqueue(addCustomers, cf_filename, dataset_id, type_list, job_timeout=1200)
     return job.id
@@ -143,7 +150,7 @@ def importPurchases(app, dataset_id, tq):
     job = tq.enqueue(addPurchases, pf_filename, dataset_id, job_timeout=3600)
     return job.id
 
-def getCSVHeader(app, csv_filename):
+def getCSVHeader(app, csv_filename, session):
     """
     Get the header for a certain csv file
     """
@@ -151,6 +158,10 @@ def getCSVHeader(app, csv_filename):
     uploaded_file = secure_filename(df.filename)
     filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
     df.save(filename)
+    if csv_filename == "articles_file":
+        session['articlesFile'] = filename
+    elif csv_filename == "customers_file":
+        session['customersFile'] = filename
     header = pd.read_csv(filename, header=0, nrows=0).columns.tolist()
     return header
 

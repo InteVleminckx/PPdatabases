@@ -8,8 +8,6 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/navbar.css') }}">
-
-    <script src="../static/style/app1.js"></script>
     <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
     <script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -90,138 +88,6 @@ tr {
                         </td>
                     </tr>
                 {% endfor %}
-                <tr style="text-align: center" id="15">
-                    <td style="text-decoration: underline;color: #0000EE;cursor: pointer;" onclick="goToTestList(15, 10);">15</td>
-                    <td>10</td>
-                    <td>name</td>
-                    <td>a</td>
-                    <td>b</td>
-                    <td>5</td>
-                    <td>10</td>
-                    <td>Algorithms</td>
-                    <td><div style="color:red; cursor: pointer;">&times;</div></td>
-                </tr>
-        {#        <tr style="text-align: center" id="1">#}
-        {#            <td>10</td>#}
-        {#            <td>2</td>#}
-        {#            <td>H&M</td>#}
-        {#            <td>01-01-2020</td>#}
-        {#            <td>09-01-2020</td>#}
-        {#            <td>2</td>#}
-        {#            <td>5</td>#}
-        {#            <td>Algorithms</td>#}
-        {#            <td><div style="color:red; cursor: pointer;" onclick="removeABTest('1')">&times;</div></td>#}
-        {#        </tr>#}
-        {#        <tr style="text-align: center">#}
-        {#            <td>2</td>#}
-        {#            <td>2</td>#}
-        {#            <td>H&M</td>#}
-        {#            <td>01-01-2020</td>#}
-        {#            <td>09-01-2020</td>#}
-        {#            <td>2</td>#}
-        {#            <td>5</td>#}
-        {#            <td>Algorithms</td>#}
-        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-        {#        </tr>#}
-        {#        <tr style="text-align: center">#}
-        {#            <td>2</td>#}
-        {#            <td>2</td>#}
-        {#            <td>H&M</td>#}
-        {#            <td>01-01-2020</td>#}
-        {#            <td>09-01-2020</td>#}
-        {#            <td>2</td>#}
-        {#            <td>5</td>#}
-        {#            <td>Algorithms</td>#}
-        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-        {#        </tr>#}
-        {#        <tr style="text-align: center">#}
-        {#            <td>2</td>#}
-        {#            <td>2</td>#}
-        {#            <td>H&M</td>#}
-        {#            <td>01-01-2020</td>#}
-        {#            <td>09-01-2020</td>#}
-        {#            <td>2</td>#}
-        {#            <td>5</td>#}
-        {#            <td>Algorithms</td>#}
-        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-        {#        </tr>#}
-        {#        <tr style="text-align: center">#}
-        {#            <td>2</td>#}
-        {#            <td>2</td>#}
-        {#            <td>H&M</td>#}
-        {#            <td>01-01-2020</td>#}
-        {#            <td>09-01-2020</td>#}
-        {#            <td>2</td>#}
-        {#            <td>5</td>#}
-        {#            <td>Algorithms</td>#}
-        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-        {#        </tr>#}
-        {#        <tr style="text-align: center">#}
-        {#            <td>2</td>#}
-        {#            <td>2</td>#}
-        {#            <td>H&M</td>#}
-        {#            <td>01-01-2020</td>#}
-        {#            <td>09-01-2020</td>#}
-        {#            <td>2</td>#}
-        {#            <td>5</td>#}
-        {#            <td>Algorithms</td>#}
-        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-        {#        </tr>#}
-        {#        <tr style="text-align: center">#}
-        {#            <td>2</td>#}
-        {#            <td>2</td>#}
-        {#            <td>H&M</td>#}
-        {#            <td>01-01-2020</td>#}
-        {#            <td>09-01-2020</td>#}
-        {#            <td>2</td>#}
-        {#            <td>5</td>#}
-        {#            <td>Algorithms</td>#}
-        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-        {#        </tr>#}
-        {#        <tr style="text-align: center">#}
-        {#            <td>2</td>#}
-        {#            <td>2</td>#}
-        {#            <td>H&M</td>#}
-        {#            <td>01-01-2020</td>#}
-        {#            <td>09-01-2020</td>#}
-        {#            <td>2</td>#}
-        {#            <td>5</td>#}
-        {#            <td>Algorithms</td>#}
-        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-        {#        </tr>#}
-        {#        <tr style="text-align: center">#}
-        {#            <td>2</td>#}
-        {#            <td>2</td>#}
-        {#            <td>H&M</td>#}
-        {#            <td>01-01-2020</td>#}
-        {#            <td>09-01-2020</td>#}
-        {#            <td>2</td>#}
-        {#            <td>5</td>#}
-        {#            <td>Algorithms</td>#}
-        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-        {#        </tr>#}
-        {#        <tr style="text-align: center">#}
-        {#            <td>2</td>#}
-        {#            <td>2</td>#}
-        {#            <td>H&M</td>#}
-        {#            <td>01-01-2020</td>#}
-        {#            <td>09-01-2020</td>#}
-        {#            <td>2</td>#}
-        {#            <td>5</td>#}
-        {#            <td>Algorithms</td>#}
-        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-        {#        </tr>#}
-        {#        <tr style="text-align: center">#}
-        {#            <td>5</td>#}
-        {#            <td>5</td>#}
-        {#            <td>H&M</td>#}
-        {#            <td>01-01-2020</td>#}
-        {#            <td>09-01-2020</td>#}
-        {#            <td>2</td>#}
-        {#            <td>5</td>#}
-        {#            <td>Algorithms</td>#}
-        {#            <td><div style="color:red; cursor: pointer;">&times;</div></td>#}
-        {#        </tr>#}
                 </tbody>
             </table>
         </div>
@@ -357,6 +223,16 @@ function showAlgorithms(algorithm_values) {
     attrElem.innerHTML = _html;
 
 }
+
+    const menu = document.getElementById("mobile-menu");
+    const menuLinks = document.querySelector(".navbar_menu")
+    // Display Mobile Menu
+    const mobileMenu = () => {
+        menu.classList.toggle('is-active');
+        menuLinks.classList.toggle('active');
+    }
+
+    menu.addEventListener('click', mobileMenu);
 
 </script>
 
