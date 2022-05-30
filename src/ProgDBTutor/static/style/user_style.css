@@ -369,3 +369,39 @@
     align-items: center;
     width: 200px;
 }
+
+/****************1350 MEDIA SECTION******************/
+@media screen and (max-width: 1350px) {
+    /**********************************/
+    /*     custombody container       */
+    /**********************************/
+    .container__body {
+        height: 1440px;
+    }
+
+    /**********************************/
+    /*       algemene container       */
+    /**********************************/
+    .container__page {
+        height: 1340px;
+
+    }
+
+    #layer1 {
+        width: 613px;
+        height: 70px;
+        flex-direction: column;
+        margin-bottom: 10px;
+        margin-left: 50px;
+    }
+
+    #layer2 {
+        width: 613px;
+        height: 1160px;
+        flex-direction: column;
+        margin-left: 50px;
+    }
+
+}
+/****************************************************/
+
