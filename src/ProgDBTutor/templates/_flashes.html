@@ -3,12 +3,12 @@
     {% if messages %}
         {% for category, message in messages %}
             {% if category == 'error' %}
-            <div class="flash_alert flash_alert-danger fade" role="alert">
+            <div class="flash_alert flash_alert-danger flash_fade" role="alert">
                 <span class="closebutton" onclick="this.parentElement.remove();">&times;</span>
                 {{ message }}
             </div>
             {% else %}
-            <div class="flash_alert flash_alert-success fade" role="alert">
+            <div class="flash_alert flash_alert-success flash_fade" role="alert">
                 <span class="closebutton" onclick="this.parentElement.remove();">&times;</span>
                 {{ message }}
             </div>
