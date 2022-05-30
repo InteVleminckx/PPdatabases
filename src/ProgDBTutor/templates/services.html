@@ -17,6 +17,8 @@
 
 <body>
 {#<script src="../static/style/app1.js"></script>#}
+
+{# Navigation bar #}
 <nav class="navbar" id="navbar">
     <div class="navbar_container">
         <div class="navbar_toggle" id="mobile-menu">
@@ -32,20 +34,29 @@
         </ul>
     </div>
 </nav>
+{# ############## #}
 
+{# Flash messages #}
 <div id="flash_div" style="width: 100%; position: fixed; z-index: 999;"></div>
+{# ############## #}
 
+{# Body of the ab test page #}
 <div class="container__body">
+    {# form1 #}
     <form method="POST" action="" id="form1" data-name="cForm">
+        {# abtest page #}
         <div class="container__page" id="abtestpage">
-
+            {# layer1 #}
             <div class="container__layer" id="layer1">
+                {# column1 #}
                 <div class="container__column" id="layer1_column1">
+                    {# Header of the column #}
                     <div class="container__head" id="layer1_column1_head">
                         <h2>Add algorithm</h2>
                     </div>
+                    {# #################### #}
+                    {# Content of the column #}
                     <div class="container__content" id="layer1_column1_content">
-
                         {# Dataset section #}
                         <select name="datasetSelection" id="datasetSelection" class="container__select">
                             {% for id, name in names %}
@@ -53,7 +64,6 @@
                             {% endfor %}
                         </select>
                         {# ############### #}
-
                         {# General parameters section #}
                         <div class="container__row" id="layer1_column1_row1">
                             <div class="container__innerColumn" id="layer1_column1_row1_inner1">
@@ -96,7 +106,6 @@
                             </div>
                         </div>
                         {# ########################## #}
-
                         {# Algorithm section #}
                         <div class="container__row" id="layer1_column1_row5">
                             <div class="container__innerColumn" id="layer1_column1_row5_inner1">
@@ -113,7 +122,6 @@
 
                         </div>
                         {# ################# #}
-
                         {# Algorithm-specific parameters section #}
                         <div class="container__section" id="section1" style="display: block">
                             <div class="container__row" id="section1_row1">
@@ -185,19 +193,27 @@
                             </div>
                         </div>
                         {# ##################################### #}
-
                     </div>
+                    {# ##################### #}
                 </div>
+                {# ####### #}
+                {# column2 #}
                 <div class="container__column" id="layer1_column2">
+                    {# Button for adding an algorithm #}
                     <button class="container__button" id="addalgorithm_button" name="submit_button" value="algoSubmit"
                             role="button" onclick="">
                         Add algorithm
                     </button>
+                    {# ############################## #}
                 </div>
+                {# ####### #}
             </div>
-
+            {# ###### #}
+            {# layer2 #}
             <div class="container__layer" id="layer2">
+                {# column1 #}
                 <div class="container__column" id="layer2_column1">
+                    {# Content of the column #}
                     <div class="container__content" id="layer2_column1_content">
                         {# Added algorithms table #}
                         <table class="container__table" id="layer2_column1_table">
@@ -222,18 +238,27 @@
                         </table>
                         {# ###################### #}
                     </div>
+                    {# ##################### #}
                 </div>
+                {# ####### #}
+                {# column2 #}
                 <div class="container__column" id="layer2_column2">
+                    {# Button for starting the abtest #}
                     <button class="container__button" id="executeabtest_button" name="submit_button" value="abtestSubmit"
                             role="button" onclick="">
                         Execute A/B-test
                     </button>
+                    {# ############################## #}
                 </div>
+                {# ####### #}
             </div>
-
+            {# ###### #}
         </div>
+        {# ########### #}
     </form>
+    {# ##### #}
 </div>
+{# ######################## #}
 
 <script src="../static/jquery-3.2.1.js">
 </script>
