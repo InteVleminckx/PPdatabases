@@ -1,10 +1,10 @@
-from config import config_data
-from db_connection import DBConnection
+# from config import config_data
+# from db_connection import DBConnection
 from user_data_acces import *
 
 from datetime import datetime
 from datetime import timedelta
-import time as tm
+# import time as tm
 from typing import List
 from rq import get_current_job
 from itemKNN.src.algorithm.iknn import ItemKNNAlgorithm, ItemKNNIterativeAlgorithm
@@ -23,7 +23,6 @@ class ItemKNN:
         self.datasetID = dataset_id
         self.ABTestID = abtest_id
         self.algorithmID = algorithm_id
-
         self.start = datetime.strptime(_start, '%Y-%m-%d %H:%M:%S')
         self.end = datetime.strptime(_end, '%Y-%m-%d %H:%M:%S')
         self.top_k = top_k
@@ -32,11 +31,8 @@ class ItemKNN:
         self.K = K
         self.windowSize = timedelta(days=window)
         self.retrainInterval = timedelta(days=retrainInterval)
-
         self.currentDate = self.start
-
         self.simulationTime = None
-
         self.currentModel = None
         self.estimated = False
 
@@ -65,7 +61,6 @@ class ItemKNN:
         # get the end of the dataset
         cursor.execute("select t_dat from interaction where dataset_id = %s order by t_dat desc limit 1;",
                        (str(self.datasetID),))
-
         endDateDataset = cursor.fetchone()[0]
         endDateDataset = datetime.strptime(str(endDateDataset)[0:10], "%Y-%m-%d")
 
@@ -89,6 +84,7 @@ class ItemKNN:
             if self.currentDate == nextRecommend:
                 self.recommend(startDateDataset, self.currentDate)
                 nextRecommend += deltaStepsize
+                # Compute the time to process one stepsize ==> use that for estimation
                 if not self.estimated:
                     self.estimated = True
                     recomDays = amountRecommendationDays(copy(self.start), copy(self.end), deltaStepsize)

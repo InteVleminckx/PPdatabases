@@ -29,79 +29,69 @@
         </ul>
     </div>
 </nav>
-<div class="container__body" id="body_page">
-    <form method="POST" action="" name="form1" id="form1">
 
+{# Body of the item page #}
+<div class="container__body" id="body_page">
+    {# form1 #}
+    <form method="POST" action="" name="form1" id="form1">
         {# Item page #}
         <div class="container__page" id="itempage">
-
             {# Layer 1 #}
             <div class="container__layer" id="layer1">
-
                 {# Column table information item #}
                 <div class="container__column" id="layer1_column1">
-
                     {# content of the table information #}
                     <div class="container__content" id="layer1_column1_content">
-
                         {# Table item information #}
                         <table class="container__table" id="layer1_column1_table">
                             <thead class="container__tablehead" id="layer1_column1_table_head">
-                                <tr class="container__tablerow" id="layer1_column1_table_head_row1">
-                                    {# Table headers #}
-                                    <th class="container__tableheadcontent" id="table_head_row1_column1">Attribute</th>
-                                    <th class="container__tableheadcontent" id="table_head_row1_column2">Value</th>
-                                    {# ############# #}
-                                </tr>
+                            <tr class="container__tablerow" id="layer1_column1_table_head_row1">
+                                {# Table headers #}
+                                <th class="container__tableheadcontent" id="table_head_row1_column1">Attribute</th>
+                                <th class="container__tableheadcontent" id="table_head_row1_column2">Value</th>
+                                {# ############# #}
+                            </tr>
                             </thead>
                             <tbody class="container__tablebody" id="layer1_column1_table_body">
-                                {% for attr, val in attr_val %}
-                                    <tr class='container__tablerow'>
-                                        <td class='container__tablerowcontent' data-label="Attribute">{{ attr }}</td>
-                                        <td class='container__tablerowcontent' data-label="Value">{{ val }}</td>
-                                    </tr>
-                                {% endfor %}
+                            {% for attr, val in attr_val %}
+                                <tr class='container__tablerow'>
+                                    <td class='container__tablerowcontent' data-label="Attribute">{{ attr }}</td>
+                                    <td class='container__tablerowcontent' data-label="Value">{{ val }}</td>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                         {# ###################### #}
-
                     </div>
                     {# ################################ #}
-
                 </div>
                 {# ############################# #}
-
                 {# Column item picture and interval picker #}
                 <div class="container__column" id="layer1_section1">
-
                     {# Column item picture #}
                     <div class="container__column" id="layer1_section1_column1">
-
                         {# Head of the picture column #}
                         <div class="container__head" id="section1_column1_head">
                             <h2>Picture of the article</h2>
                         </div>
                         {# ########################## #}
-
                         {# Content of the picture column #}
                         <div class="container__content" id="section1_column1_content">
                             {% if item_picture %}
-                                <img src="{{ item_picture }}" style=" width:100%; height:100%; object-fit: contain"alt="Picture of an item">
+                                <img src="{{ item_picture }}" style=" width:100%; height:100%; object-fit: contain"
+                                     alt="Picture of an item">
                             {% else %}
-                                <img src="" style=" width:100%; height:100%; object-fit: contain" alt="Picture of an item">
+                                <img src="" style=" width:100%; height:100%; object-fit: contain"
+                                     alt="Picture of an item">
                             {% endif %}
                         </div>
                         {# ############################# #}
-
                     </div>
                     {# ################### #}
-
                     {# Column interval picker #}
                     <div class="container__column" id="layer1_section1_column2">
-
                         {# Content of the interval picker #}
                         <div class="container__content" id="section1_column2_content">
-
                             {# row 1 #}
                             <div class="container__row" id="section1_row1">
                                 {# type graph picker #}
@@ -115,14 +105,13 @@
                                 {# ################# #}
                                 <div class="container__innerColumn" id="section1_row1_inner2">
                                     <div class="container__button" id="section1_buttongraph">
-                                        <button id="submit_graph" name="submit_graph" role="button" >
+                                        <button id="submit_graph" name="submit_graph" role="button">
                                             Show graph
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             {# ##### #}
-
                             {# row 2 #}
                             <div class="container__row" id="section1_row2">
                                 <div class="container__innerColumn" id="section1_row2_inner1">
@@ -137,87 +126,76 @@
                                 </div>
                             </div>
                             {# #### #}
-
                         </div>
                         {# ############################## #}
-
                     </div>
                     {# ###################### #}
-
                 </div>
                 {# ####################################### #}
-
             </div>
             {# ####### #}
-
             {# Layer 2 #}
             <div class="container__layer" id="layer2">
-
                 {# Column graphs #}
                 <div class="container__column" id="layer2_column1">
-
                     {# Head of the graphs #}
                     <div class="container__head" id="layer2_column1_head">
                         <h2>Choose a graph</h2>
                     </div>
                     {# ################## #}
-
                     {# Content of the graphs #}
-                    <div class="container__content" id="layer2_column1_content">
-
-                    </div>
+                    <div class="container__content" id="layer2_column1_content"></div>
                     {# ##################### #}
                     <div class="container__button" id="layer2_buttongraph">
-                        <button id="graph_rotater" name="graph_rotater" role="button" >
+                        <button id="graph_rotater" name="graph_rotater" role="button">
                             Rotate
                         </button>
                     </div>
-
                 </div>
                 {# ############# #}
-
             </div>
             {# ####### #}
-
         </div>
         {# ######### #}
     </form>
+    {# ##### #}
 </div>
+{# ##################### #}
+
 <script type="text/javascript">
-    google.charts.load('current', {'packages':['corechart', 'bar']});
+    google.charts.load('current', {'packages': ['corechart', 'bar']});
 
     let rotation = false;
-   $(function() {
-       $('#submit_graph').click(function() {
-           var form_data = new FormData($('#form1')[0]);
-           form_data.append('dataset_id', '{{ dataset_id }}')
-           form_data.append('abtest_id', '{{ abtest_id }}')
-           form_data.append('item_id', '{{ item_id }}')
-           console.log(form_data);
-           $.ajax({
-               type: 'POST',
-               url: '/itemsection_graph',
-               data: form_data,
-               contentType: false,
-               cache: false,
-               processData: false,
-               success: function(data) {
-                   graph(data);
+    $(function () {
+        $('#submit_graph').click(function () {
+            var form_data = new FormData($('#form1')[0]);
+            form_data.append('dataset_id', '{{ dataset_id }}')
+            form_data.append('abtest_id', '{{ abtest_id }}')
+            form_data.append('item_id', '{{ item_id }}')
+            $.ajax({
+                type: 'POST',
+                url: '/itemsection_graph',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    graph(data);
                 },
             });
-       });
-   });
+        });
+    });
 
-  $(function() {
-       $('#graph_rotater').click(function() {
-           rotation = !rotation;
+    $(function () {
+        $('#graph_rotater').click(function () {
+            rotation = !rotation;
 
-           let layer = document.getElementById("layer2")
-           let graph = document.getElementById("layer2_column1");
-           let head = document.getElementById("layer2_column1_head");
-           let content = document.getElementById("layer2_column1_content");
-           let body = document.getElementById("body_page");
-           let page = document.getElementById("itempage");
+            let layer = document.getElementById("layer2")
+            let graph = document.getElementById("layer2_column1");
+            let head = document.getElementById("layer2_column1_head");
+            let content = document.getElementById("layer2_column1_content");
+            let body = document.getElementById("body_page");
+            let page = document.getElementById("itempage");
 
             if (rotation) {
                 layer.style.transform = "rotate(90deg)";
@@ -227,9 +205,7 @@
                 content.style.width = "1000px";
                 body.style.height = "2470px";
                 page.style.height = "2370px";
-            }
-
-            else {
+            } else {
                 layer.style.transform = "rotate(0deg)";
 
                 layer.style.justifyContent = "center"
@@ -249,13 +225,13 @@
 
         });
 
-   });
+    });
 
-    $('button#submit_graph').click(function (e){
+    $('button#submit_graph').click(function (e) {
         e.preventDefault();
     })
 
-    $('button#graph_rotater').click(function (e){
+    $('button#graph_rotater').click(function (e) {
         e.preventDefault();
     })
 
@@ -286,8 +262,7 @@
             };
             // Convert the Classic options to Material options.
             chart.draw(dataitems, google.charts.Bar.convertOptions(options));
-        }
-        else if (d['graph_type'] == "Recommendation count") {
+        } else if (d['graph_type'] == "Recommendation count") {
             document.getElementById("layer2_column1_head").innerHTML = "<h2> Recommendation count </h2>"
             dataitems = new google.visualization.arrayToDataTable(d['data']);
             chart = new google.visualization.LineChart(document.getElementById("layer2_column1_content"));
@@ -303,8 +278,7 @@
             };
             // Convert the Classic options to Material options.
             chart.draw(dataitems, options);
-        }
-        else if (d['graph_type'] == "Recommendation correctness") {
+        } else if (d['graph_type'] == "Recommendation correctness") {
             document.getElementById("layer2_column1_head").innerHTML = "<h2> Recommendation correctness </h2>"
             dataitems = new google.visualization.DataTable();
             dataitems.addColumn('string', 'Date');
@@ -321,12 +295,9 @@
                 legend: {position: 'bottom'},
                 curveType: 'function',
                 vAxis: {
-                    viewWindow: {
-                    }
+                    viewWindow: {}
                 },
-                series: {
-
-                },
+                series: {},
                 bar: {groupWidth: "90%"},
             };
 

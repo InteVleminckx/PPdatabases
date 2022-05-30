@@ -10,10 +10,10 @@ LIMIT 2;
 
 from datetime import datetime, timedelta
 # from app import user_data_access
-import time as tm
+#import time as tm
 
-from config import config_data
-from db_connection import DBConnection
+#from config import config_data
+#from db_connection import DBConnection
 from user_data_acces import *
 from rq import get_current_job
 from Metrics import amountRecommendationDays
@@ -65,6 +65,7 @@ class Popularity:
             if self.currentDate == nextRecommend:
                 self.recommend()
                 nextRecommend += self.stepsize
+                # Compute the time to process one stepsize ==> use that for estimation
                 if not self.estimated:
                     self.estimated = True
                     recomDays = amountRecommendationDays(copy(self.startPoint), copy(self.endPoint), copy(self.stepsize))
@@ -83,7 +84,6 @@ class Popularity:
         Retrain the algorithm: Do this for all active users together
         :return: /
         """
-
         # train window is from {windowSize} before current date until now
         trainWindow = (str(self.currentDate - self.window)[0:10], str(self.currentDate)[0:10])
         self.currentModel = getPopularityItem(self.dataset_id, *trainWindow, self.topk)
@@ -101,11 +101,3 @@ class Popularity:
             for item_id, count in self.currentModel:
                 addRecommendation(self.abtest_id, self.algorithm_id, self.dataset_id, -1, str(item_id),
                                   *recommendWindow)
-
-
-# DEBUG ONLY
-def main():
-    algo = Popularity(0, 100, 0, "2020-01-01", "2020-02-15", 1, 10, 2, 3)
-    algo.recommend()
-
-# main()

@@ -1,23 +1,23 @@
 <html>
 <head>
-	<title>{{app_data['app_name']}}</title>
-    
+    <title>{{ app_data['app_name'] }}</title>
+
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-<!--	https://www.flaticon.com/free-icon/data-science_4108980?term=data%20science&page=1&position=81&page=1&position=81&related_id=4108980&origin=tag-->
-    
-	<link rel="stylesheet" href="{{ url_for('static',filename='style/bootstrap-4.0.0.min.css') }}">
+    <!--	https://www.flaticon.com/free-icon/data-science_4108980?term=data%20science&page=1&position=81&page=1&position=81&related_id=4108980&origin=tag-->
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/bootstrap-4.0.0.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/navbar.css') }}">
 
-	<link rel="stylesheet" href="../static/style/footer_style.css">
-	<link rel="stylesheet" href="../static/style/home_style.css">
+    <link rel="stylesheet" href="../static/style/footer_style.css">
+    <link rel="stylesheet" href="../static/style/home_style.css">
 
-	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
-	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
+    <script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
 </head>
 <body>
 
-	{% block content %}{% endblock %}
-    <script src="../static/style/app1.js"></script>
+{% block content %}{% endblock %}
+<script src="../static/style/app1.js"></script>
 </body>
 </html>
 
