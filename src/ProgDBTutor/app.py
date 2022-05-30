@@ -253,21 +253,8 @@ def getData(ds_id):
     """
 
     if request.method == 'GET':
+        print("/datasets/<ds_id>")
         return getDatasetInformation(ds_id)
-
-@app.route("/datasetDel/<id>", methods=['GET', 'POST'])
-def datasetDel(id):
-    print(request.form)
-    if 'loggedin' in session:
-        jobs = handelRequests(app, session, request, datasetQueue, [], id)
-        if 'jobsDataset' not in session:
-            session['jobsDataset'] = []
-        if jobs:
-            c = session['jobsDataset']
-            c.append(jobs)
-            session['jobsDataset'] = c
-
-    return {}
 
 @app.route("/datasets", methods=['GET', 'POST'])
 def datasets():
@@ -316,9 +303,16 @@ def datasets():
 
         dataset_names = getDatasets()
 
+        if jobs:
+            if jobs['id'] == 'delete':
+                deleted_id = jobs['deleted_id']
+                for i in range(len(dataset_names)):
+                    if dataset_names[i][0] == deleted_id:
+                        del dataset_names[i]
+                        break
+
         # Delete hier de dataset
-        if dlte is None:
-            return render_template('datasets.html', app_data=app_data, names=dataset_names,
+        return render_template('datasets.html', app_data=app_data, names=dataset_names,
                                    attr_types=json.dumps(file_attr_types))
 
     return redirect(url_for('login_user'))
