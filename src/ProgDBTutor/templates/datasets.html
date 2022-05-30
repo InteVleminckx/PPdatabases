@@ -612,6 +612,11 @@
 
     menu.addEventListener('click', mobileMenu);
 
+    $(document).ready(function() {
+    setTimeout(function () {
+        $('.flash_alert').fadeOut('slow').remove();
+    }, 5000); // <-- time in milliseconds
+    });
 
 </script>
 
