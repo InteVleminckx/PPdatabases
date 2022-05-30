@@ -37,7 +37,7 @@
 </nav>
 {# ############## #}
 
-<div class="container__body">
+<div class="container__body" id="body_page">
 
     {# Visualizations page with estimating time #}
     <div class="container__page" id="estimationpage" style="display: flex">
@@ -520,6 +520,15 @@
     var abtest = null;
     var dataset = null;
 
+    let info = null;
+
+    if ((window.location.href).toString().substring((window.location.href).toString().length-8, (window.location.href).toString().length) == "testlist") {
+        let fetchInterval = 1000;
+        fetchAlgorithmsTime();
+        interval = setInterval(fetchStatus, fetchInterval)
+        visualizePage();
+    }
+
     function fetchStatus() {
         fetch(`/visualizations/update`)
             .then(function (response) {
@@ -529,7 +538,7 @@
                 let all = JSON.parse(text)
                 if (Object.keys(all).length > 0 && entered == false) {
                     entered = true;
-                    let info = all["visualization"]
+                    info = all["visualization"]
 
                     startPoint = info["startpoint"];
                     endPoint = info["endpoint"];
@@ -912,7 +921,15 @@
 
                     html_ += "<tr class='container__tablerow'>"
                         html_ += "<td class='container__tableheadcontent' data-label=\"Algorithms\">" + row[0].toString() + "</td>"
-                        html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\">" + row[1].toString() + " seconds </td>"
+
+
+                        if  (row[1].toString() == "0.0") {
+                            html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\"> Not calculated yet </td>"
+                        }
+                        else {
+                            html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\">" + row[1].toString() + " seconds </td>"
+                        }
+
                     html_ += "</tr>"
 
                 }
@@ -968,13 +985,31 @@
     $(function() {
        $('#column3_button').click(function(e) {
            e.preventDefault();
-
-           document.getElementById("estimationpage").style.display = "none";
-           document.getElementById("visualizationspage").style.display = "flex";
-
+           visualizePage();
        });
 
     });
+
+    function visualizePage() {
+       document.getElementById("estimationpage").style.display = "none";
+       document.getElementById("visualizationspage").style.display = "flex";
+       document.getElementById("body_page").style.height = "1770px"
+
+        let dataUsersPurch = info["graphPurchAndUsers"]
+        let algorihtms = info["algorithms"]
+        let ctr = info["ctr"]
+        let arad = info["ar@d"]
+        let arpuad = info["arpu@d"]
+
+        google.charts.load('current', {packages: ['corechart', 'line']});
+        {#google.charts.setOnLoadCallback(drawActUsersAndPurchChart);#}
+        google.setOnLoadCallback(function () {
+            drawActUsersAndPurchChart(dataUsersPurch);
+            drawCTRandARAD(ctr, arad)
+            drawARPUAD(arpuad)
+        });
+
+    }
 
     window.addEventListener('load', function () {
         let fetchInterval = 1000;

@@ -2,10 +2,16 @@
 /*       Estimation section       */
 /**********************************/
 
-#estimationpage {
-    width: 713px;
-    height: 713px;
+.container__body {
+    height: 100vh;
 }
+
+#estimationpage {
+
+    height: 713px;
+    width: 713px;
+}
+
 
 #layer1_es,
 #layer2_es,
