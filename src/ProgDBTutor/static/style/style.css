@@ -61,6 +61,8 @@ body::-webkit-scrollbar {
     margin-bottom: 50px;
 }
 
+
+
 /**********************************/
 /*       layer container       */
 /**********************************/
@@ -381,3 +383,15 @@ body::-webkit-scrollbar {
 }
 
 .container__slidetablehead_infocolumn {}
+
+/****************1350 MEDIA SECTION******************/
+@media screen and (max-width: 1350px)  {
+    /**********************************/
+    /*       algemene container       */
+    /**********************************/
+    .container__page {
+        width: 713px;
+        flex-direction: column;
+    }
+
+}
