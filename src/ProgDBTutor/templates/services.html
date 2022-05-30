@@ -360,26 +360,35 @@
     $(function () {
         $('#executeabtest_button').click(function (event) {
             event.preventDefault();
-            var form_data = $('#form1').serializeArray();
-            data_dict = {'form_data': {}, 'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}; // alle data die we willen versturen
-            for (var el of form_data) { // de form elementen aan de data_dict toevoegen.
-                data_dict['form_data'][el['name']] = el['value'];
+            var selectIndex = document.getElementById("datasetSelection");
+            var stepsize = document.getElementById("input_stepsize");
+            var topk = document.getElementById("input_topk");
+            if (selectIndex.selectedIndex < 0 || stepsize.value <= 0 || topk.value <= 0) {
+                alert("No dataset selected or bad general arguments. General parameters need to be positive integers.")
             }
-            console.log(data_dict)
+            else {
+                var form_data = $('#form1').serializeArray();
+                data_dict = {'form_data': {}, 'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}; // alle data die we willen versturen
+                for (var el of form_data) { // de form elementen aan de data_dict toevoegen.
+                    data_dict['form_data'][el['name']] = el['value'];
+                }
+                console.log(data_dict)
 
-            $.ajax({
-                type: 'POST',
-                url: '/services',
-                data: JSON.stringify(data_dict),
-                contentType: 'application/json; charset=utf-8',
-                cache: false,
-                processData: false,
-                success: function (data) {
-                    {#console.log(data);#}
-                    window.location.href = "{{ url_for('visualizations') }}"; // de redirect naar andere pagina in javascript
+                $.ajax({
+                    type: 'POST',
+                    url: '/services',
+                    data: JSON.stringify(data_dict),
+                    contentType: 'application/json; charset=utf-8',
+                    cache: false,
+                    processData: false,
+                    success: function (data) {
+                        {#console.log(data);#}
 
-                },
-            });
+                        window.location.href = "{{ url_for('visualizations') }}"; // de redirect naar andere pagina in javascript
+
+                    },
+                });
+            }
         });
     });
 

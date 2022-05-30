@@ -731,7 +731,7 @@
         for (const [key, value] of Object.entries(dataPurchases)) {
 
             html_ += "<tr class='container__tablerow'>"
-            html_ += "<td class='container__tablerowcontent' style='cursor: pointer' onclick='redirectToItemPage(" + value["item"] + ")' data-label=\"Item-id\">" + value["name"] + "</td>"
+            html_ += "<td class='container__tablerowcontent' style='cursor: pointer' onclick='redirectToItemPage(" + value["item"] + ")' data-label=\"Item\">" + value["name"] + "</td>"
             html_ += "<td class='container__tablerowcontent' data-label=\"Count\">" + value["count"] + "</td>"
             html_ += "</tr>"
 
@@ -748,7 +748,7 @@
             html_ += "    <h2>" + value["name"] + "</h2>"
             html_ += "    <p>Algorithm number: " + key.toString() + "</p>"
             html_ +=      "<div class='container__slidetablehead_info'>"
-            html_ += "          <p class='container__slidetable_infocolumn'> Item-id </p>"
+            html_ += "          <p class='container__slidetable_infocolumn'> Item </p>"
             html_ += "          <p class='container__slidetable_infocolumn'> Count </p>"
             html_ +=      "</div>"
             html_ += "</div>"
