@@ -37,11 +37,10 @@
 </nav>
 {# ############## #}
 
+{# body of the visualizations page #}
 <div class="container__body" id="body_page">
-
     {# Visualizations page with estimating time #}
     <div class="container__page" id="estimationpage" style="display: flex">
-
         {# Layer1_es #}
         <div class="container__layer" id="layer1_es">
             {# estimation time head column #}
@@ -55,7 +54,6 @@
             {# ########################### #}
         </div>
         {# ######### #}
-
         {# Layer2_es #}
         <div class="container__layer" id="layer2_es">
             {# estimation time table #}
@@ -85,21 +83,18 @@
                 {# ############# #}
             </div>
             {# ##################### #}
-
         </div>
         {# ######### #}
-
         {# Layer3_es #}
         <div class="container__layer" id="layer3_es">
             {# Redirect part to visualistation page #}
             <div class="container__column" id="layer3_es_column1">
                 {# content button #}
                 <div class="container_content" id="layer3_es_column1_content">
-
                     {# Button redirect to visualization section #}
-                        <button class="container__button" id="column3_button" style="visibility: hidden" >View AB-test</button>
+                    <button class="container__button" id="column3_button" style="visibility: hidden">View AB-test
+                    </button>
                     {# ######################################## #}
-
                 </div>
                 {# ############## #}
             </div>
@@ -108,22 +103,17 @@
         {# ######### #}
     </div>
     {# ######################################## #}
-
-
     {# Visualizations page  when ABtest is done#}
-    <div class="container__page" id="visualizationspage" style="display: none" >
+    <div class="container__page" id="visualizationspage" style="display: none">
         {# Layer1 #}
         <div class="container__layer" id="layer1">
-
             {# abtest standard parameters #}
             <div class="container__column" id="layer1_column1">
-
                 {# Header standard parameters #}
                 <div class="container__head" id="layer1_column1_head">
                     <h2>AB-test information</h2>
                 </div>
                 {# ########################## #}
-
                 {# content standard parameters #}
                 <div class="container__content" id="layer1_column1_content">
                     {# row for abtest id and datasetname#}
@@ -142,7 +132,6 @@
                         </div>
                     </div>
                     {# ################################ #}
-
                     {# row for topk and stepsize#}
                     <div class="container__row" id="layer1_column1_row2">
                         <div class="container__innerColumn" id="layer1_column1_row2_inner1">
@@ -159,7 +148,6 @@
                         </div>
                     </div>
                     {# ######################## #}
-
                     {# row for start-and endpoint#}
                     <div class="container__row" id="layer1_column1_row3">
                         <div class="container__innerColumn" id="layer1_column1_row3_inner1">
@@ -176,60 +164,46 @@
                         </div>
                     </div>
                     {# ######################### #}
-
                 </div>
                 {# ########################### #}
-
             </div>
             {# ########################## #}
-
             <div class="container__mobile">
                 {# Total purchases abtest #}
                 <div class="container__column" id="layer1_column2">
-
                     {# Header total purchases #}
                     <div class="container__head" id="layer1_column2_head">
-                    <h2>Totale purchases</h2>
+                        <h2>Totale purchases</h2>
                     </div>
                     {# ###################### #}
-
                     {# content total purchases #}
                     <div class="container__content" id="layer1_column2_content">
-                    <p id="purchases"></p>
+                        <p id="purchases"></p>
                     </div>
                     {# ####################### #}
-
                 </div>
                 {# ###################### #}
-
                 {# Unique active users abtest #}
                 <div class="container__column" id="layer1_column3">
-
                     {# Header unique active users #}
                     <div class="container__head" id="layer1_column3_head">
-                    <h2>Active users</h2>
+                        <h2>Active users</h2>
                     </div>
                     {# ########################## #}
-
                     {# content unique active users #}
                     <div class="container__content" id="layer1_column3_content">
-                    <p id="users"></p>
+                        <p id="users"></p>
                     </div>
                     {# ########################### #}
-
                 </div>
                 {# ########################## #}
             </div>
-
         </div>
         {# ###### #}
-
         {# Layer2 #}
         <div class="container__layer" id="layer2">
-
             {# Table algorithmes #}
             <div class="container__column" id="layer2_column1">
-
                 {# Content table algorithmes #}
                 <div class="container__content" id="layer2_column1_content">
                     {# Added algorithms table #}
@@ -252,95 +226,67 @@
                     </table>
                 </div>
                 {# ######################### #}
-
             </div>
             {# ################# #}
-
             {# Graph purchases and active users #}
             <div class="container__column" id="layer2_column2">
-
                 {# Header graph purchases and active users #}
                 <div class="container__head" id="layer2_column2_head">
                     <h2>Purchases and active user per day</h2>
                 </div>
                 {# ######################################## #}
-
                 {# Content graph purchases and active users #}
-                <div class="container__content" id="layer2_column2_content">
-
-                </div>
+                <div class="container__content" id="layer2_column2_content"></div>
                 {# ######################################## #}
-
             </div>
             {# ################################ #}
-
         </div>
         {# ###### #}
-
         {# Layer3 #}
         <div class="container__layer" id="layer3">
-
             {# Graph ar@d and CTR#}
             <div class="container__column" id="layer3_column1">
-
                 {# Header graph ar@d and CTR #}
                 <div class="container__head" id="layer3_column1_head">
                     <h2>CTR and ar@d per timestamp</h2>
                 </div>
                 {# ######################### #}
-
                 {# Content graph ar@d and CTR #}
-                <div class="container__content" id="layer3_column1_content">
-
-                </div>
+                <div class="container__content" id="layer3_column1_content"></div>
                 {# ########################## #}
-
             </div>
             {# ################# #}
-
             {# Graph arpu@d #}
             <div class="container__column" id="layer3_column2">
-
                 {# Header graph arpu@d #}
                 <div class="container__head" id="layer3_column2_head">
                     <h2>Arpu@d per timestamp</h2>
                 </div>
                 {# ################### #}
-
                 {# Content graph apru@d #}
-                <div class="container__content" id="layer3_column2_content">
-
-                </div>
+                <div class="container__content" id="layer3_column2_content"></div>
                 {# #################### #}
-
             </div>
             {# ############ #}
-
         </div>
         {# ###### #}
-
         {# Layer4 #}
         <div class="container__layer" id="layer4">
-
             <div class="container__mobile">
-                                {# Table algorithms with own topk #}
+                {# Table algorithms with own topk #}
                 <div class="container__column" id="layer4_column1">
-
                     {# Header of the algorithms table #}
                     <div class="container__head" id="layer4_column1_head">
                         <h2>Top-k most recommended</h2>
                     </div>
                     {# ############################## #}
-
                     {# Content of the algorithms table #}
                     <div class="container__content" id="layer4_column1_content">
                         <div class="container__slidetable" id="table_topkrecommendations"></div>
                     </div>
                     {# ############################### #}
-
                 </div>
                 {# ############################## #}
-
                 {# Extra section #}
                 <div class="container__column" id="layer4_column2">
 
@@ -351,7 +297,6 @@
                             <h2>Top-k most purchased</h2>
                         </div>
                         {# ############################## #}
-
                         {# Content of the most purchasd table #}
                         <div class="container__content" id="layer4_section2_column1_content">
                             {# Added topk most purchased table #}
@@ -376,7 +321,6 @@
                         {# ############################### #}
                     </div>
                     {# ######################### #}
-
                     {# Unique active user over time #}
                     <div class="container__column" id="layer4_section2_column2">
                         {# Header of the algorithms table #}
@@ -384,7 +328,6 @@
                             <h2>Unique users</h2>
                         </div>
                         {# ############################## #}
-
                         {# Content of the algorithms table #}
                         <div class="container__content" id="layer4_section2_column2_content">
                             <p id="unique_users"></p>
@@ -392,7 +335,6 @@
                         {# ############################### #}
                     </div>
                     {# ############################ #}
-
                     {# Total revenue over time #}
                     <div class="container__column" id="layer4_section2_column3">
                         {# Header of the algorithms table #}
@@ -400,7 +342,6 @@
                             <h2>Total revenue</h2>
                         </div>
                         {# ############################## #}
-
                         {# Content of the algorithms table #}
                         <div class="container__content" id="layer4_section2_column3_content">
                             <p id="total_revenue"></p>
@@ -408,14 +349,11 @@
                         {# ############################### #}
                     </div>
                     {# ####################### #}
-
                 </div>
                 {# ############ #}
-                </div>
-
+            </div>
             {# Extra section#}
             <div class="container__column" id="layer4_column3">
-
                 {# Table list of active users over time #}
                 <div class="container__column" id="layer4_section3_column1">
                     {# Added list of users table #}
@@ -449,7 +387,6 @@
                     {# ###################### #}
                 </div>
                 {# #################################### #}
-
                 {# Slider for changing timestamp interval #}
                 <div class="container__column" id="layer4_section3_column2">
                     {# Slider #}
@@ -465,7 +402,6 @@
                             </div>
                         </div>
                         {# ######################### #}
-
                         {# Content of slider interval #}
                         <div class="container__content" id="layer4_section3_column2_content">
                             <div class="container__sliderrange" id="slider1_range"></div>
@@ -478,17 +414,14 @@
                     {# ##### #}
                 </div>
                 {# ###################################### #}
-
             </div>
             {# ############ #}
-
         </div>
         {# ###### #}
-
     </div>
     {# ################### #}
 </div>
-
+{# ############################### #}
 </body>
 
 <script>
@@ -522,7 +455,7 @@
 
     let info = null;
 
-    if ((window.location.href).toString().substring((window.location.href).toString().length-8, (window.location.href).toString().length) == "testlist") {
+    if ((window.location.href).toString().substring((window.location.href).toString().length - 8, (window.location.href).toString().length) == "testlist") {
         let fetchInterval = 1000;
         fetchAlgorithmsTime();
         interval = setInterval(fetchStatus, fetchInterval)
@@ -561,13 +494,11 @@
                     let arpuad = info["arpu@d"]
 
                     google.charts.load('current', {packages: ['corechart', 'line']});
-                    {#google.charts.setOnLoadCallback(drawActUsersAndPurchChart);#}
                     google.setOnLoadCallback(function () {
                         drawActUsersAndPurchChart(dataUsersPurch);
                         drawCTRandARAD(ctr, arad)
                         drawARPUAD(arpuad)
                     });
-                    {#console.log("oke")#}
                     constructAlgorithmTable(algorihtms);
                     slider();
 
@@ -616,10 +547,7 @@
             dataGraph.push([new Date(key), parseInt(value["purchases"]), parseInt(value['users'])])
         }
 
-        {#console.log(dataGraph)#}
         data.addRows(dataGraph);
-        {#console.log(data)#}
-
         var options = {
             pointSize: 3,
             chartArea: {
@@ -642,32 +570,26 @@
         data.addColumn('date', 'X');
 
         {# Eerst de kollomen toevoegen #}
-         let dates = []
-         let count = 0
-         for (const [key, value] of Object.entries(ctr)){
+        let dates = []
+        let count = 0
+        for (const [key, value] of Object.entries(ctr)) {
             data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["algorithm_id"])
 
             if (count == 0) {
                 for (const [key2, value2] of Object.entries(value["values"])) {
                     dates.push([new Date(key2)])
-                    {#data_.push([])#}
                 }
                 count += 1
             }
 
         }
-        for (const [key, value] of Object.entries(arad)){
+        for (const [key, value] of Object.entries(arad)) {
             data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["algorithm_id"])
         }
-
-        {#console.log(dates)#}
-
-        {#console.log(ctr)#}
 
         count = 0
         for (const [key, value] of Object.entries(ctr)) {
             for (const [key2, value2] of Object.entries(value["values"])) {
-                {#console.log(value2)#}
                 dates[count].push(value2)
                 count += 1
             }
@@ -675,19 +597,13 @@
         }
         for (const [key, value] of Object.entries(arad)) {
             for (const [key2, value2] of Object.entries(value["values"])) {
-                {#console.log(value2)#}
                 dates[count].push(value2)
                 count += 1
             }
             count = 0
         }
 
-        {#console.log(dates)#}
-
-        {#console.log(dataGraph)#}
         data.addRows(dates);
-        {#console.log(data)#}
-
         var options = {
             pointSize: 3,
             chartArea: {
@@ -712,42 +628,28 @@
 
 
         {# Eerst de kollomen toevoegen #}
-         let dates = []
-         {#let data_ = []#}
-         let count = 0
-         for (const [key, value] of Object.entries(dataarpuad)){
+        let dates = []
+        let count = 0
+        for (const [key, value] of Object.entries(dataarpuad)) {
             data.addColumn('number', value["type"] + ": " + value["name"] + " — " + value["algorithm_id"])
 
             if (count == 0) {
                 for (const [key2, value2] of Object.entries(value["values"])) {
                     dates.push([new Date(key2)])
-                    {#data_.push([])#}
                 }
                 count += 1
             }
 
         }
-
-        {#console.log(dates)#}
-
-        {#console.log(ctr)#}
-
         count = 0
         for (const [key, value] of Object.entries(dataarpuad)) {
             for (const [key2, value2] of Object.entries(value["values"])) {
-                {#console.log(value2)#}
                 dates[count].push(value2)
                 count += 1
             }
             count = 0
         }
-
-        {#console.log(dates)#}
-
-        {#console.log(dataGraph)#}
         data.addRows(dates);
-        {#console.log(data)#}
-
         var options = {
             pointSize: 3,
             chartArea: {
@@ -774,8 +676,8 @@
             let params = value["params"]
 
 
-            html_ += "<td class=\"container__tablerowcontent\" data-label=\"Number\">"+ value["algorithm_id"] +"</td>"
-            html_ += "<td class=\"container__tablerowcontent\" data-label=\"Name\">"+ value["name"] +"</td>"
+            html_ += "<td class=\"container__tablerowcontent\" data-label=\"Number\">" + value["algorithm_id"] + "</td>"
+            html_ += "<td class=\"container__tablerowcontent\" data-label=\"Name\">" + value["name"] + "</td>"
 
             if (params.hasOwnProperty("retraininterval")) {
                 html_ += "<td class=\"container__tablerowcontent\" data-label=\"Retrain interval\">" + params["retraininterval"] + "</td>"
@@ -818,7 +720,7 @@
             html_ += "</tr>"
 
         }
-      
+
         document.getElementById("layer4_section2_column1_table_body").innerHTML = html_
 
     }
@@ -829,10 +731,10 @@
             html_ += "<div class=\"container__slidetablehead\">"
             html_ += "    <h2>" + value["name"] + "</h2>"
             html_ += "    <p>Algorithm number: " + key.toString() + "</p>"
-            html_ +=      "<div class='container__slidetablehead_info'>"
+            html_ += "<div class='container__slidetablehead_info'>"
             html_ += "          <p class='container__slidetable_infocolumn'> Item </p>"
             html_ += "          <p class='container__slidetable_infocolumn'> Count </p>"
-            html_ +=      "</div>"
+            html_ += "</div>"
             html_ += "</div>"
 
             html_ += "<div class=\"container__slidetablecontent\">"
@@ -920,15 +822,14 @@
                 for (const row of algorithms) {
 
                     html_ += "<tr class='container__tablerow'>"
-                        html_ += "<td class='container__tableheadcontent' data-label=\"Algorithms\">" + row[0].toString() + "</td>"
+                    html_ += "<td class='container__tableheadcontent' data-label=\"Algorithms\">" + row[0].toString() + "</td>"
 
 
-                        if  (row[1].toString() == "0.0") {
-                            html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\"> Not calculated yet </td>"
-                        }
-                        else {
-                            html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\">" + row[1].toString() + " seconds </td>"
-                        }
+                    if (row[1].toString() == "0.0") {
+                        html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\"> Not calculated yet </td>"
+                    } else {
+                        html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\">" + row[1].toString() + " seconds </td>"
+                    }
 
                     html_ += "</tr>"
 
@@ -982,18 +883,18 @@
         window.location.href = "/itemsection?item_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();
     }
 
-    $(function() {
-       $('#column3_button').click(function(e) {
-           e.preventDefault();
-           visualizePage();
-       });
+    $(function () {
+        $('#column3_button').click(function (e) {
+            e.preventDefault();
+            visualizePage();
+        });
 
     });
 
     function visualizePage() {
-       document.getElementById("estimationpage").style.display = "none";
-       document.getElementById("visualizationspage").style.display = "flex";
-       document.getElementById("body_page").style.height = "1770px"
+        document.getElementById("estimationpage").style.display = "none";
+        document.getElementById("visualizationspage").style.display = "flex";
+        document.getElementById("body_page").style.height = "1770px"
 
         let dataUsersPurch = info["graphPurchAndUsers"]
         let algorihtms = info["algorithms"]
@@ -1002,7 +903,6 @@
         let arpuad = info["arpu@d"]
 
         google.charts.load('current', {packages: ['corechart', 'line']});
-        {#google.charts.setOnLoadCallback(drawActUsersAndPurchChart);#}
         google.setOnLoadCallback(function () {
             drawActUsersAndPurchChart(dataUsersPurch);
             drawCTRandARAD(ctr, arad)

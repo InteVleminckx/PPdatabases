@@ -11,28 +11,28 @@
 </head>
 <body>
 {#Navbar section#}
-    <nav class="navbar" id="navbar">
-        <div class="navbar_container">
-            <div class="navbar_toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-            <ul class="navbar_menu">
-                <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
-                <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
-            </ul>
+<nav class="navbar" id="navbar">
+    <div class="navbar_container">
+        <div class="navbar_toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
         </div>
-    </nav>
+        <ul class="navbar_menu">
+            <li class="navbar_items"><a class="navbar_links" id="home-page" href="home">Home</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="datasets-page" href="datasets">Datasets</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="services-page" href="services">A/B-test</a></li>
+            <li class="navbar_items"><a class="navbar_links" id="testlist-page" href="testlist">Testlist</a></li>
+        </ul>
+    </div>
+</nav>
+
+{# Body of the userpage #}
 <div class="container__body">
     {# Userpage #}
     <div class="container__page" id="userpage">
-
         {# Layer 1 #}
         <div class="container__layer" id="layer1">
-
             {# Column dataset name #}
             <div class="container__column" id="layer1_column1">
                 <div class="container__content" id="layer1_column1_content">
@@ -40,7 +40,6 @@
                 </div>
             </div>
             {# ################### #}
-
             {# Column custumer id #}
             <div class="container__column" id="layer1_column2">
                 <div class="container__content" id="layer1_column2_content">
@@ -48,97 +47,67 @@
                 </div>
             </div>
             {# ################## #}
-
         </div>
         {# ####### #}
-
         {# Layer 2 #}
         <div class="container__layer" id="layer2">
-
             {# Column purchases user and graph #}
             <div class="container__column" id="layer2_section1">
-
                 {# Column purchases user#}
                 <div class="container__column" id="layer2_section1_column1">
-
                     {# Head of the purchases user #}
                     <div class="container__head" id="layer2_section1_column1_head">
                         <h2>Purchases of the user</h2>
                     </div>
                     {# ########################## #}
-
                     {# Content of the purchases user #}
                     <div class="container__content" id="layer2_section1_column1_content">
-
                         {# Table of the user his purchases #}
-                        <div class="container__item_table" id="section1_table">
-
-
-
-                        </div>
+                        <div class="container__item_table" id="section1_table"></div>
                         {# ############################### #}
-
                         {# image viewer #}
-                        <div class="container__image" id="section1_image">
-                        </div>
+                        <div class="container__image" id="section1_image"></div>
                         {# ############ #}
-
-
                     </div>
                     {# ############################# #}
-
                 </div>
                 {# #################### #}
-
                 {# Column graph recommendations #}
                 <div class="container__column" id="layer2_section1_column2">
-
                     {# Head of the graph recommendations  #}
                     <div class="container__head" id="layer2_section1_column2_head">
                         <h2>Number of purchases per recommendations</h2>
                     </div>
                     {# ################################## #}
-
                     {# Content of de purchases user #}
-                    <div class="container__content" id="layer2_section1_column2_content">
-
-                    </div>
+                    <div class="container__content" id="layer2_section1_column2_content"></div>
                     {# ############################ #}
-
                 </div>
                 {# ############################ #}
-
             </div>
             {# ############################### #}
-
             {# Column algorithms and interval #}
             <div class="container__column" id="layer2_section2">
-
                 {# Column algorithms #}
-                <div class="container__column" id="layer2_section2_column1">
-
-                </div>
+                <div class="container__column" id="layer2_section2_column1"></div>
                 {# ################# #}
-
                 {# Column intervalchooser #}
                 <div class="container__column" id="layer2_section2_column2">
                     <div class="arrowLeft" onclick="update(-1)"></div>
-                        <div class="counter">
-                            <section id="counterInterval"></section>
-                        </div>
+                    <div class="counter">
+                        <section id="counterInterval"></section>
+                    </div>
                     <div class="arrowRight" onclick="update(1)"></div>
                 </div>
                 {# ###################### #}
-
             </div>
             {# ############################## #}
-
         </div>
         {# #########}
-
     </div>
     {# ######## #}
 </div>
+{# #################### #}
 </body>
 
 <script>
@@ -177,32 +146,32 @@
 
             })
     }
+
     window.addEventListener('load', function () {
         let fetchInterval = 1000;
         interval = setInterval(fetchStatus, fetchInterval)
     })
 
-    function update(number){
+    function update(number) {
         document.getElementById("section1_image").innerHTML = ""
         value = value + number;
-        if (value < 0){
+        if (value < 0) {
             value = 0;
-        }
-        else if (value > maxValue - 1){
+        } else if (value > maxValue - 1) {
             value = maxValue - 1;
         }
 
         generateHistory(value);
 
-        google.charts.load('current', {'packages':['corechart','bar']});
+        google.charts.load('current', {'packages': ['corechart', 'bar']});
         google.setOnLoadCallback(function () {
             makeGraph(value);
         });
-        document.getElementById("counterInterval").innerHTML = (value+1).toString() + " / " + (dates.length).toString()
+        document.getElementById("counterInterval").innerHTML = (value + 1).toString() + " / " + (dates.length).toString()
         generateAlgoritmes(value);
     }
 
-    function generateAlgoritmes(value_){
+    function generateAlgoritmes(value_) {
         var algos = document.getElementById("layer2_section2_column1")
         var counter = 0;
         var html_ = ""
@@ -210,31 +179,29 @@
         let ticks_ = [0];
         let calcBools = false;
 
-        for (const reco of recommendations[dates[value_]]){
-
-            {#console.log(reco["name"], reco["date"], reco["recommendations"], reco["color"]);#}
+        for (const reco of recommendations[dates[value_]]) {
             html_ += "<div class=\"st_wrap_table\" data-table_id=\" + counter.toString() + \">";
-            html_ +=     "<header class=\"topk_table_header\">";
-            html_ +=         "<h2>Algorithm: " + reco["name"] + "</h2>";
-            html_ +=         "<div class=\"topk_row\">";
-            html_ +=             "<div class=\"topk_column_header\"> Algorithm number: " + reco["algorithm_id"] + " </div>";
-            html_ +=         "</div>";
-            html_ +=     "</header>";
-            html_ +=     "<div class=\"topk_table\" style=\"background-color: " + reco["color"] + "\">";
+            html_ += "<header class=\"topk_table_header\">";
+            html_ += "<h2>Algorithm: " + reco["name"] + "</h2>";
+            html_ += "<div class=\"topk_row\">";
+            html_ += "<div class=\"topk_column_header\"> Algorithm number: " + reco["algorithm_id"] + " </div>";
+            html_ += "</div>";
+            html_ += "</header>";
+            html_ += "<div class=\"topk_table\" style=\"background-color: " + reco["color"] + "\">";
 
             let count = 0;
             console.log(reco)
-            for (const item of reco["recommendations"]){
+            for (const item of reco["recommendations"]) {
 
-                if (count == 0){
-                    html_ +=     "<div class=\"topk_table_rows\">";
+                if (count == 0) {
+                    html_ += "<div class=\"topk_table_rows\">";
                 }
-                html_ +=     "<div class=\"topk_column_item\" onclick='redirectToItemPage(\"" + item[0] + "\")'  >" + item[1] + " </div>";
+                html_ += "<div class=\"topk_column_item\" onclick='redirectToItemPage(\"" + item[0] + "\")'  >" + item[1] + " </div>";
                 count += 1
 
                 if (count == 3) {
                     count = 0
-                    html_ +=     "</div>";
+                    html_ += "</div>";
                 }
             }
             html_ += "</div>"
@@ -247,24 +214,23 @@
 
     }
 
-    function generateHistory(value_){
+    function generateHistory(value_) {
         var history = document.getElementById("section1_table")
         var html_ = ""
 
-        for (const item of history_[dates[value_]]){
+        for (const item of history_[dates[value_]]) {
 
             console.log(item)
-            html_ += "<div class=\"container__item_row\" id=\""+ item["name"] +"\">"
+            html_ += "<div class=\"container__item_row\" id=\"" + item["name"] + "\">"
 
             html_ += "<div class='container__item_column1' onclick='generateImage(\"" + item["url"] + "\")'>" +
-                        "<img src=\"" + item["url"] + "\"alt=\"Image\" style='height: 100%; width: 100%; object-fit: contain'> " +
-                     "</div>"
+                "<img src=\"" + item["url"] + "\"alt=\"Image\" style='height: 100%; width: 100%; object-fit: contain'> " +
+                "</div>"
 
-            html_ +=    "<div class=\"container__item_column2\" onclick='redirectToItemPage(\"" + item["item_id"] + "\")' >"  + item["name"] + " </div>"
-            if (item["purchased"]){
+            html_ += "<div class=\"container__item_column2\" onclick='redirectToItemPage(\"" + item["item_id"] + "\")' >" + item["name"] + " </div>"
+            if (item["purchased"]) {
                 html_ += "<div class=\"container__item_column3\" style=\"color: #91ee05\">&#9745</div>";
-            }
-            else {
+            } else {
                 html_ += "<div class=\"container__item_column3\" style=\"color: #b90000\">&#9746</div>";
             }
             html_ += "</div>";
@@ -272,22 +238,21 @@
         history.innerHTML = html_
     }
 
-    function generateImage(itemURL){
+    function generateImage(itemURL) {
 
         innerImg = document.getElementById("section1_image")
-        if (itemURL == ""){
+        if (itemURL == "") {
             innerImg.innerHTML = "No image"
-        }
-        else {
+        } else {
             html_ = "<img src=";
             html_ += itemURL;
             html_ += " alt=\"Image\" style='height: 100%; width: 100%; object-fit: contain'>";
-            innerImg.innerHTML =  html_;
+            innerImg.innerHTML = html_;
         }
 
     }
 
-    function makeGraph(value_, ticks_){
+    function makeGraph(value_, ticks_) {
         document.getElementById("layer2_section1_column2_content").innerHTML = ""
         var data_ = [['Algorithm', 'Bought', {role: 'style'}]]
         for (const row of graph[dates[value_]]) {
@@ -298,18 +263,18 @@
         var dataitems = new google.visualization.arrayToDataTable(data_);
 
         var options = {
-          {#chartArea: {#}
-          {#    width: '85%'#}
-          {# },#}
-          legend: { position: 'none' },
-          hAxis: {
-              title: 'Algorithms'
+            {#chartArea: {#}
+            {#    width: '85%'#}
+            {# },#}
+            legend: {position: 'none'},
+            hAxis: {
+                title: 'Algorithms'
             },
-          vAxis: {
-            title: 'Items bought',
-            ticks: top_kList
-          },
-          bar: { groupWidth: "100%" }
+            vAxis: {
+                title: 'Items bought',
+                ticks: top_kList
+            },
+            bar: {groupWidth: "100%"}
         };
 
         var chart = new google.visualization.ColumnChart(document.getElementById('layer2_section1_column2_content'));

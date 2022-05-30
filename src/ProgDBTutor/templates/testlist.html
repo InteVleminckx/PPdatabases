@@ -15,23 +15,23 @@
 </head>
 <style>
     * {
-    margin: 0;
-    padding: 0;
-    font-family: 'Kumbh Sans', sans-serif;
-    scroll-behavior: smooth;
-}
+        margin: 0;
+        padding: 0;
+        font-family: 'Kumbh Sans', sans-serif;
+        scroll-behavior: smooth;
+    }
 
-.tableborder {
-    border: 1px solid lightgray;
-    padding: 50px;
-    height: 500px;
-    overflow-y: auto;
-}
+    .tableborder {
+        border: 1px solid lightgray;
+        padding: 50px;
+        height: 500px;
+        overflow-y: auto;
+    }
 
-tr {
-    height: 60px;
-    vertical-align: middle;
-}
+    tr {
+        height: 60px;
+        vertical-align: middle;
+    }
 </style>
 <body>
 
@@ -54,12 +54,12 @@ tr {
 <h1 style="margin-top: 30px; margin-bottom: 25px;text-align: center;">A/B-tests</h1>
 
 <div class="_pagecontainer">
-<div class="_container flex-direction">
-    <div class="table-responsive" id="table1" style="margin-top: 50px;">
+    <div class="_container flex-direction">
+        <div class="table-responsive" id="table1" style="margin-top: 50px;">
 
-        <div class="tableborder">
-            <table class="table table-hover">
-                <thead>
+            <div class="tableborder">
+                <table class="table table-hover">
+                    <thead>
                     <tr style="text-align: center">
                         <th>ID</th>
                         <th>Dataset ID</th>
@@ -69,35 +69,41 @@ tr {
                         <th>Stepsize</th>
                         <th>Top-k</th>
                         <th>Algorithms</th>
-                        <th><div style="color: red;">Remove</div></th>
+                        <th>
+                            <div style="color: red;">Remove</div>
+                        </th>
                     </tr>
-                </thead>
-                <tbody style="overflow-y: auto;">
-                {% for item in testList %}
-                    <tr style="text-align: center" id="{{ item['abtest_id'] }}" onclick="showAlgorithms({{ item['algorithms'] }})">
-                        <td style="text-decoration: underline;color: #0000EE;cursor: pointer;" onclick="goToTestList({{ item['abtest_id'] }}, {{ item['dataset_id'] }});">{{ item['abtest_id'] }}</td>
-                        <td>{{ item['dataset_id'] }}</td>
-                        <td>{{ item['dataset_name'] }}</td>
-                        <td>{{ item['startingpoint'] }}</td>
-                        <td>{{ item['endpoint'] }}</td>
-                        <td>{{ item['stepsize'] }}</td>
-                        <td>{{ item['topk'] }}</td>
-                        <td>{{ item['algorithms']|length }}</td>
-                        <td>
-                            <div style="color:red; cursor: pointer;" onclick="removeABTest({{ item['abtest_id'] }})">&times;</div>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody style="overflow-y: auto;">
+                    {% for item in testList %}
+                        <tr style="text-align: center" id="{{ item['abtest_id'] }}"
+                            onclick="showAlgorithms({{ item['algorithms'] }})">
+                            <td style="text-decoration: underline;color: #0000EE;cursor: pointer;"
+                                onclick="goToTestList({{ item['abtest_id'] }}, {{ item['dataset_id'] }});">{{ item['abtest_id'] }}</td>
+                            <td>{{ item['dataset_id'] }}</td>
+                            <td>{{ item['dataset_name'] }}</td>
+                            <td>{{ item['startingpoint'] }}</td>
+                            <td>{{ item['endpoint'] }}</td>
+                            <td>{{ item['stepsize'] }}</td>
+                            <td>{{ item['topk'] }}</td>
+                            <td>{{ item['algorithms']|length }}</td>
+                            <td>
+                                <div style="color:red; cursor: pointer;"
+                                     onclick="removeABTest({{ item['abtest_id'] }})">&times;
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <div class="table-responsive" id="table2" style="margin-top: 50px;">
+        <div class="table-responsive" id="table2" style="margin-top: 50px;">
 
-        <div class="tableborder">
-            <table class="table table-hover" style="font-size: 12px;">
-                <thead>
+            <div class="tableborder">
+                <table class="table table-hover" style="font-size: 12px;">
+                    <thead>
                     <tr style="text-align: center">
                         <th>Algorithm Name</th>
                         <th>K</th>
@@ -105,124 +111,78 @@ tr {
                         <th>Normalize</th>
                         <th>Retraininterval</th>
                     </tr>
-                </thead>
-                <tbody style="overflow-y: auto;" id="algo_table_body">
-
-{#                <tr style="text-align: center">#}
-{#                    <td>15</td>#}
-{#                    <td>10</td>#}
-{#                    <td>name</td>#}
-{#                    <td>a</td>#}
-{#                    <td>b</td>#}
-{#                </tr>#}
-
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody style="overflow-y: auto;" id="algo_table_body">
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-</div>
-
-
-
-<!-- Dataset Section-->
-
-{#<div class="dataset" id="dataset">#}
-{##}
-{#    <div class="_container">#}
-{##}
-{#        <div class="dataset_title" >A/B-tests</div>#}
-{#        <div class="dataset__btn">#}
-{#            <button>Remove A/B-test</button>#}
-{#        </div>#}
-{#        <table class="scroll-table" id="scrolltable">#}
-{#            <thead>#}
-{#                <tr>#}
-{#                    <td>A/B-test id</td>#}
-{#                    <td>A/B-test name</td>#}
-{#                </tr>#}
-{#            </thead>#}
-{#            <tbody>#}
-{#                {% for item in testList %}#}
-{#                    <tr>#}
-{#                    onclick="window.location.href='{{ url_for('testlist', rowData=key) }}';"#}
-{#                        <td>A/B-test</td>#}
-{#                        <td>{{ item }}</td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-{#            </tbody>#}
-{#        </table>#}
-{#    </div>#}
-{##}
-{##}
-{##}
-{#</div>#}
 
 <script>
 
-function removeABTest(abtest_id) {
-    // Remove from the HTML
-    var row = document.getElementById(abtest_id.toString());
-    row.remove();
+    function removeABTest(abtest_id) {
+        // Remove from the HTML
+        var row = document.getElementById(abtest_id.toString());
+        row.remove();
 
-    $.ajax({
-        type: 'POST',
-        url: '/abTestRemove',
-        data: JSON.stringify({'abtest_id': abtest_id}),
-        contentType: 'application/json; charset=utf-8',
-        cache: false,
-        processData: false,
-        success: function(data) {
+        $.ajax({
+            type: 'POST',
+            url: '/abTestRemove',
+            data: JSON.stringify({'abtest_id': abtest_id}),
+            contentType: 'application/json; charset=utf-8',
+            cache: false,
+            processData: false,
+            success: function (data) {
 
-        },
-    });
+            },
+        });
 
-}
-
-function goToTestList(abtest_id, dataset_id) {
-    let url = window.location.href
-    let url_string = url.substring(0, url.lastIndexOf("/"))
-    window.location.href = url_string + "/visualizations" + "?abtest_id=" + abtest_id.toString() + "&dataset_id=" + dataset_id.toString() + "&page=testlist" // de redirect naar andere pagina in javascript
-    console.log(window.location.href)
-}
-
-function showAlgorithms(algorithm_values) {
-
-    var attrElem = document.getElementById("algo_table_body");
-    var _html = "";
-
-    for ([key, val] of Object.entries(algorithm_values)) {
-
-        let windowsize = "/";
-        let retraininterval = "/";
-        let K = "/";
-        let normalize = "/";
-        if (val[0] === "popularity") {
-            windowsize = val[1]['windowsize'];
-            retraininterval = val[1]['retraininterval'];
-        }
-        else if (val[0] === "recency") {
-            retraininterval = val[1]['retraininterval'];
-        }
-        else {
-            windowsize = val[1]['window'];
-            retraininterval = val[1]['retraininterval'];
-            K = val[1]['k'];
-            normalize = val[1]['normalize'];
-        }
-
-        _html += "<tr style=\"text-align: center\" id=\"" + key + "\">";
-        _html += "<td>" + val[0] + "</td>";
-        _html += "<td>" + K + "</td>";
-        _html += "<td>" + windowsize + "</td>";
-        _html += "<td>" + normalize + "</td>";
-        _html += "<td>" + retraininterval + "</td>";
-        _html += "</tr>";
     }
 
-    attrElem.innerHTML = _html;
+    function goToTestList(abtest_id, dataset_id) {
+        let url = window.location.href
+        let url_string = url.substring(0, url.lastIndexOf("/"))
+        window.location.href = url_string + "/visualizations" + "?abtest_id=" + abtest_id.toString() + "&dataset_id=" + dataset_id.toString() + "&page=testlist" // de redirect naar andere pagina in javascript
+        console.log(window.location.href)
+    }
 
-}
+    function showAlgorithms(algorithm_values) {
+
+        var attrElem = document.getElementById("algo_table_body");
+        var _html = "";
+
+        for ([key, val] of Object.entries(algorithm_values)) {
+
+            let windowsize = "/";
+            let retraininterval = "/";
+            let K = "/";
+            let normalize = "/";
+            if (val[0] === "popularity") {
+                windowsize = val[1]['windowsize'];
+                retraininterval = val[1]['retraininterval'];
+            } else if (val[0] === "recency") {
+                retraininterval = val[1]['retraininterval'];
+            } else {
+                windowsize = val[1]['window'];
+                retraininterval = val[1]['retraininterval'];
+                K = val[1]['k'];
+                normalize = val[1]['normalize'];
+            }
+
+            _html += "<tr style=\"text-align: center\" id=\"" + key + "\">";
+            _html += "<td>" + val[0] + "</td>";
+            _html += "<td>" + K + "</td>";
+            _html += "<td>" + windowsize + "</td>";
+            _html += "<td>" + normalize + "</td>";
+            _html += "<td>" + retraininterval + "</td>";
+            _html += "</tr>";
+        }
+
+        attrElem.innerHTML = _html;
+
+    }
 
     const menu = document.getElementById("mobile-menu");
     const menuLinks = document.querySelector(".navbar_menu")
