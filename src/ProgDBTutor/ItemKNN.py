@@ -6,9 +6,10 @@ from datetime import datetime
 from datetime import timedelta
 import time as tm
 from typing import List
-
+from rq import get_current_job
 from itemKNN.src.algorithm.iknn import ItemKNNAlgorithm, ItemKNNIterativeAlgorithm
-
+from Metrics import amountRecommendationDays
+from copy import copy
 
 class ItemKNN:
 
@@ -37,11 +38,13 @@ class ItemKNN:
         self.simulationTime = None
 
         self.currentModel = None
+        self.estimated = False
 
-    def iknn(self):
+    def iknn(self, algorithm_id):
         """
         Function will calculate when to retrain/recommend and call the appropriate functions
         """
+        begin_time = datetime.now()
 
         # delta's in timestamp days
         deltaStepsize = timedelta(days=self.stepSize)
@@ -86,6 +89,15 @@ class ItemKNN:
             if self.currentDate == nextRecommend:
                 self.recommend(startDateDataset, self.currentDate)
                 nextRecommend += deltaStepsize
+                if not self.estimated:
+                    self.estimated = True
+                    recomDays = amountRecommendationDays(copy(self.start), copy(self.end), deltaStepsize)
+                    job = get_current_job(dbconnect)
+                    time_difference_ms = datetime.now() - begin_time
+                    time_difference = time_difference_ms.total_seconds() * recomDays
+                    print(time_difference)
+                    job.meta[algorithm_id] = time_difference
+                    job.save()
 
             # repeat for each day and not for each stepSize
             self.currentDate += simulationStep

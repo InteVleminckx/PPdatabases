@@ -141,6 +141,9 @@ def services():
 
             dataDict = request.get_json()
 
+            # Make dictionary to store results from abtest_job
+            algo_times = dict()
+
             form_data = dataDict['form_data']
             algo_id = dataDict['algo_id']
             algo_list = dataDict['algo_list']
@@ -180,6 +183,7 @@ def services():
                                                     algo_list[j][3])
 
                         del algo_dict[str(i)]
+                        algo_times[current_id] = 0
                         current_id += 1
 
             # Remove algorithms from list and dicts
@@ -192,7 +196,10 @@ def services():
             # abtest.getABtestResults(maxABtestID, dataset_id)
             # abtest.getAB_Pop_Active(maxABtestID, dataset_id)
 
-            abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id, job_timeout=3600)
+            abtest_job = abTestQueue.enqueue(abtest.startAB, args=(ABTestID, dataset_id), job_timeout=3600, meta=algo_times)
+            session["algo_times"] = abtest_job.id
+
+            # abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id, job_timeout=3600)
             # jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
             # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
             jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)

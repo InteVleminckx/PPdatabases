@@ -47,13 +47,13 @@ def startAB(abtest_id, dataset_id):
             retraininterval = int(algorithm.params["retraininterval"])
             windowsize = int(algorithm.params["windowsize"])
             popAlgo = popularity.Popularity(dataset_id, abtest_id, algorithm_id, startpoint, endpoint, stepsize, topk, windowsize, retraininterval)
-            popAlgo.popularity()
+            popAlgo.popularity(algorithm_id)
 
         # Recency Algorithm
         elif algorithm.name == 'recency':
             retraininterval = int(algorithm.params["retraininterval"])
             recAlgo = recency.Recency(dataset_id, abtest_id, algorithm_id, startpoint, endpoint, topk, stepsize, retraininterval)
-            recAlgo.recency()
+            recAlgo.recency(algorithm_id)
 
         # ItemKNN Algorithm
         elif algorithm.name == 'itemknn':
@@ -63,8 +63,7 @@ def startAB(abtest_id, dataset_id):
             normalize = bool(algorithm.params['normalize'])
             itemAlgo = itemknn.ItemKNN(dataset_id, abtest_id, algorithm_id, startpoint, endpoint, topk, stepsize,
                                        normalize, k, windowsize, retraininterval)
-            itemAlgo.iknn()
-
+            itemAlgo.iknn(algorithm_id)
 
 def getCTR(abtest_id, dataset_id):
     """
@@ -97,7 +96,6 @@ def getCTR(abtest_id, dataset_id):
         print("var clicks" + str(i) + " = '{}' ".format(jsn.dumps(clicks)))
 
     sys.stdout.close()
-
 
 # def getAB_Pop_Active(abtest_id, dataset_id):
 #     """
