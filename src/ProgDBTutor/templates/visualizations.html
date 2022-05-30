@@ -40,7 +40,7 @@
 <div class="container__body">
 
     {# Visualizations page with estimating time #}
-    <div class="container__page" id="estimationpage">
+    <div class="container__page" id="estimationpage" style="display: flex">
 
         {# Layer1_es #}
         <div class="container__layer" id="layer1_es">
@@ -97,7 +97,7 @@
                 <div class="container_content" id="layer3_es_column1_content">
 
                     {# Button redirect to visualization section #}
-                        <button class="container__button" id="column3_button">View AB-test</button>
+                        <button class="container__button" id="column3_button" style="visibility: hidden" >View AB-test</button>
                     {# ######################################## #}
 
                 </div>
@@ -907,21 +907,21 @@
                 let algorithms = times["times"]
 
                 let table = document.getElementById("layer2_es_column1_body")
-
+                let html_ = ""
                 for (const row of algorithms) {
 
                     html_ += "<tr class='container__tablerow'>"
                         html_ += "<td class='container__tableheadcontent' data-label=\"Algorithms\">" + row[0].toString() + "</td>"
-                        html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\">" + row[1].toString() + "</td>"
+                        html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\">" + row[1].toString() + " seconds </td>"
                     html_ += "</tr>"
 
                 }
 
                 table.innerHTML = html_
-
+                console.log(times["finished"])
                 if (times["finished"]) {
-                    document.getElementById("layer3_es_column3_button").style.display = "block"
-                    clearInterval()
+                    clearInterval(timesInterval)
+                    document.getElementById("column3_button").style.visibility = "visible"
                 }
 
             })
@@ -965,14 +965,28 @@
         window.location.href = "/itemsection?item_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();
     }
 
+    $(function() {
+       $('#column3_button').click(function(e) {
+           e.preventDefault();
+
+           document.getElementById("estimationpage").style.display = "none";
+           document.getElementById("visualizationspage").style.display = "flex";
+
+       });
+
+    });
+
     window.addEventListener('load', function () {
         let fetchInterval = 1000;
+        fetchAlgorithmsTime();
         interval = setInterval(fetchStatus, fetchInterval)
-
+        timesInterval = setInterval(fetchAlgorithmsTime, fetchInterval)
     })
 
     const menu = document.getElementById("mobile-menu");
+
     const menuLinks = document.querySelector(".navbar_menu")
+
     // Display Mobile Menu
     const mobileMenu = () => {
         menu.classList.toggle('is-active');

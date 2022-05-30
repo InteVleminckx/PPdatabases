@@ -519,13 +519,13 @@ def visualizationsTimesRequest():
 
     if "algo_times" in session:
         job = session["algo_times"]
-        fetchJob = abTestQueue.fetch_job(job.id)
+        fetchJob = abTestQueue.fetch_job(job)
         fetchJob.refresh()
         algorithmsTime = {"times": [], "finished": False}
         abtest_id = fetchJob.meta["abtest_id"]
         for key, value in fetchJob.meta["times"].items():
             algoname = getAlgorithm(abtest_id, key)
-            algorithmsTime["times"].append([algoname, value])
+            algorithmsTime["times"].append([str(algoname.name), str(round(float(value), 6))])
 
         if str(fetchJob.get_status()) == "finished":
             algorithmsTime["finished"] = True

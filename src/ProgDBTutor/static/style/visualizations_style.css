@@ -10,7 +10,7 @@
 #layer1_es,
 #layer2_es,
 #layer3_es{
-    margin-left: 50px;
+    margin-left: 0px;
     width: 613px;
 }
 
@@ -499,6 +499,11 @@
         margin-bottom: 10px;
     }
 
+    #layer1_es,
+    #layer2_es,
+    #layer3_es{
+        margin-left: 50px;
+    }
 
 
 
