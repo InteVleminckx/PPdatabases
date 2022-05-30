@@ -437,7 +437,6 @@ def visualizations():
         listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID)
 
         session["abVisualistation"] = [jobABvisualisations.id, recos.id, totPurch.id, totRev.id, listUsers.id]
-
     return render_template('visualizations.html', app_data=app_data)
 
 @app.route("/visualizations/request", methods=["GET", "POST"])

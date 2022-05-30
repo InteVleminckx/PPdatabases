@@ -182,7 +182,7 @@ function removeABTest(abtest_id) {
 function goToTestList(abtest_id, dataset_id) {
     let url = window.location.href
     let url_string = url.substring(0, url.lastIndexOf("/"))
-    window.location.href = url_string + "/visualizations" + "?abtest_id=" + abtest_id.toString() + "&dataset_id=" + dataset_id.toString()// de redirect naar andere pagina in javascript
+    window.location.href = url_string + "/visualizations" + "?abtest_id=" + abtest_id.toString() + "&dataset_id=" + dataset_id.toString() + "&page=testlist" // de redirect naar andere pagina in javascript
     console.log(window.location.href)
 }
 
