@@ -1,6 +1,8 @@
 
-const menu = document.querySelector("#mobile-menu");
+const menu = document.getElementById("mobile-menu");
 const menuLinks = document.querySelector(".navbar_menu")
+
+console.log("script")
 
 
 // Display Mobile Menu
@@ -87,11 +89,6 @@ const hideMobileMenu = () => {
     }
 
 }
-
-// window.addEventListener("scroll", (event) =>{
-//     let scroll = this.scrollY;
-//     console.log(scroll)
-// })
 
 window.addEventListener("scroll", highlightMenu);
 window.addEventListener("click", highlightMenu);
