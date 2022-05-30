@@ -94,12 +94,15 @@ def addalgorithm():
         algo_dict = dataDict['algo_dict']
 
         algo = form_data['algoSelection']
-        changed = True # False when not all algorithm parameters have been filled in.
+        changed = True # False when algorithm should not be added.
         if algo == "popularity":
             windowsize = form_data['input_windowsize_p']
             retraininterval = form_data['input_retraininterval_p']
             if windowsize == "" or retraininterval == "":
                 flash('Algorithm parameters not fully filled in.', category='error')
+                changed = False
+            elif int(windowsize) <= 0 or int(retraininterval) <= 0:
+                flash('Bad algorithm parameter(s). Make sure they are positive integers.', category='error')
                 changed = False
             else:
                 algo_list.append([algo_id, "popularity", "windowsize", windowsize])
@@ -110,6 +113,9 @@ def addalgorithm():
             retraininterval = form_data['input_retraininterval_r']
             if retraininterval == "":
                 flash('Algorithm parameters not fully filled in.', category='error')
+                changed = False
+            elif int(retraininterval) <= 0:
+                flash('Bad algorithm parameter(s). Make sure they are positive integers.', category='error')
                 changed = False
             else:
                 algo_list.append([algo_id, "recency", "retraininterval", retraininterval])
@@ -122,6 +128,9 @@ def addalgorithm():
             retraininterval = form_data['input_retraininterval_i']
             if k == "" or window == "" or normalize == "" or retraininterval == "":
                 flash('Algorithm parameters not fully filled in.', category='error')
+                changed = False
+            elif int(k) <= 0 or int(window) <= 0 or int(retraininterval) <= 0 or int(normalize) < 0:
+                flash('Bad algorithm parameter(s). Make sure they are positive integers (the normalize parameter is allowed to be 0).', category='error')
                 changed = False
             else:
                 algo_list.append([algo_id, "itemknn", "k", k])
