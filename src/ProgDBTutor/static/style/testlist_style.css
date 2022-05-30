@@ -9,8 +9,7 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 90%;
-}
+    width: 75%;}
 
 .flex-direction {
     flex-direction: row;
