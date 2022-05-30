@@ -154,7 +154,6 @@
 .container__namepicker h4 {
     color: #30799B;
 }
-
 /****************1350 MEDIA SECTION******************/
 @media screen and (max-width: 1350px) {
     /**********************************/
@@ -208,13 +207,16 @@
     }
 
     #form2_layer2 {
-        height: 1760px;
+        height: 1836px;
     }
     #form2_layer3 {
         margin-left: 50px;
     }
 
-
+    #form2_layer2 .container__column {
+        width: 613px;
+        margin-left: 50px;
+    }
 
     /**********************************/
     /*       column container         */
@@ -234,9 +236,9 @@
     #form2_layer1 .container__column,
     #form1_layer1 .container__column,
     #form1_layer4 .container__column,
-    #form2_layer2_column1,
-    #form2_layer2_column2,
-    #form2_layer2_column3{
+    #form2_layer2_column1 .container__column,
+    #form2_layer2_column2 .container__column,
+    #form2_layer2_column3 .container__column{
         width: 613px;
         margin-left: 50px;
     }
