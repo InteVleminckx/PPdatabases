@@ -201,6 +201,7 @@ def services():
                                                     algo_list[j][3])
 
                         del algo_dict[str(i)]
+                        algo_times['times'][current_id] = 0
                         current_id += 1
 
             # Remove algorithms from list and dicts

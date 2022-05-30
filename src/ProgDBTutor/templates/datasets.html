@@ -226,14 +226,15 @@ function showFlashMessages() {
 
 
 function goToABTestPage() {
+    event.preventDefault();
     var ds = document.getElementById("datasetSelection");
     ds = ds.value;
-    console.log(ds);
 
     let url__ = window.location.href
     let url__string = url__.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
-    {#window.location.href = url__string +"/services?dataset_id=" + ds.toString()#}
-    window.location.replace(url__string +"/services?dataset_id=" + ds.toString());
+    console.log("/services?selected_ds_id=" + ds.toString());
+    window.location.href = "/services?selected_ds_id=" + ds.toString()
+    {#window.location.replace(url__string +"/services?dataset_id=" + ds.toString());#}
     {#var link = document.getElementById('link__abtest');#}
     {#link.href += '?selected_ds_id=' + ds;#}
     {#window.location.href = window.location.href + "?selected_ds_id=" + ds#}
