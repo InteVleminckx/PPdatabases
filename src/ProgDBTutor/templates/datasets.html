@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='style/sharedStyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/flash.css') }}">
 
-    <script src="{{ url_for('static',filename='style/utils.js') }}"></script>
 
     <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
     <script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
@@ -44,36 +43,20 @@
     </div>
 </nav>
 {# ############# #}
-  
+
 {# Flash messages #}
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            {% if category == 'error' %}
-            <div class="flash_alert flash_alert-danger flash_fade" role="alert">
-                <span class="closebutton" onclick="this.parentElement.remove();">&times;</span>
-                {{ message }}
-            </div>
-            {% else %}
-            <div class="flash_alert flash_alert-success flash_fade" role="alert">
-                <span class="closebutton" onclick="this.parentElement.remove();">&times;</span>
-                {{ message }}
-            </div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-{% endwith %}
+<div id="flash_div" style="width: 100%; position: fixed; z-index: 999;"></div>
 {# ############## #}
-  
+
 {# Body dataset page #}
 <div class="container__body" id="body_id">
 
     {# dataset page #}
     <div class="container__page" id="datasetpage">
 
-        {######################################################################################################################}
-        {#                                                    FORM1                                                           #}
-        {######################################################################################################################}
+{######################################################################################################################}
+{#                                                    FORM1                                                           #}
+{######################################################################################################################}
 
         {# container voor Form 1 #}
         <div class="container__section" id="section1" style="display: block">
@@ -231,9 +214,9 @@
         </div>
         {# ##################### #}
 
-        {######################################################################################################################}
-        {#                                                    FORM2                                                           #}
-        {######################################################################################################################}
+{######################################################################################################################}
+{#                                                    FORM2                                                           #}
+{######################################################################################################################}
 
         {# container voor Form2 #}
         <div class="container__section" id="section2" style="display: none">
@@ -372,52 +355,17 @@
         </div>
         {# #################### #}
 
-        {######################################################################################################################}
+{######################################################################################################################}
 
     </div>
     {# ############ #}
 </div>
 {# ################# #}
 
-<script src="https://code.jquery.com/jquery-3.2.1.js">
-</script>
-
 <script>
 
-window.onload = sendData();//showFlashMessages();
-
-function goToABTestPage() {
-    event.preventDefault();
-    var ds = document.getElementById("datasetSelection");
-    ds = ds.value;
-
-    let url__ = window.location.href
-    let url__string = url__.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
-    console.log("/services?selected_ds_id=" + ds.toString());
-    window.location.href = "/services?selected_ds_id=" + ds.toString()
-    {#window.location.replace(url__string +"/services?dataset_id=" + ds.toString());#}
-    {#var link = document.getElementById('link__abtest');#}
-    {#link.href += '?selected_ds_id=' + ds;#}
-    {#window.location.href = window.location.href + "?selected_ds_id=" + ds#}
-
-}
-
-$(function() {
-    $('#articles_file, #customers_file').change(function() {
-        var form_data = new FormData($('#form2')[0]);
-        console.log(form_data);
-        $.ajax({
-            type: 'POST',
-            url: '/fileupload',
-            data: form_data,
-            contentType: false,
-            cache: false,
-            processData: false,
-            success: function(data) {
-                console.log("Successfully loaded file arguments!");
-                console.log(data['articles_attr']);
-                console.log(data['customers_attr']);
-                generateAttrHtml(data);
+    window.onload = sendData();
+    showFlashMessages();
 
     function showFlashMessages() {
         $('#flash_div').load('{{ url_for('get_flashes') }}')
@@ -435,6 +383,7 @@ $(function() {
     $(function () {
         $('#articles_file, #customers_file').change(function () {
             var form_data = new FormData($('#form2')[0]);
+
             $.ajax({
                 type: 'POST',
                 url: '/fileupload',
@@ -463,6 +412,7 @@ $(function() {
                 _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute + "\">" + attribute + "</label></div>";
                 _html += "<div class=\"col-75\" style=\"width: 40%\">";
                 _html += "<select class=\"\" id=\"" + art_select_id + "\" name=\"" + art_select_id + "\">";
+
                 for (var _type of attr_types) {
                     _html += "<option value=\"" + _type + "\">" + _type + "</option>\n";
                 }
@@ -561,6 +511,7 @@ $(function() {
             return response.text();
         }).then(function (text) {
             var statistics = JSON.parse(text)
+
             document.getElementById("nr_of_customers").innerHTML = statistics[0].users
             document.getElementById("nr_of_items").innerHTML = statistics[0].articles
             document.getElementById("nr_of_interactions").innerHTML = statistics[0].interactions
@@ -627,7 +578,6 @@ $(function() {
             section2.style.display = "none";
             document.getElementById("datasetpage").style.height = "710px";
             document.getElementById("body_id").style.height = "810px";
-
             if (window.innerWidth < 1350) {
                 document.getElementById("datasetpage").style.height = "1770px";
                 document.getElementById("body_id").style.height = "1870px";
@@ -662,11 +612,6 @@ $(function() {
 
     menu.addEventListener('click', mobileMenu);
 
-$(document).ready(function() {
-    setTimeout(function () {
-        $('.flash_alert').fadeOut('slow').remove();
-    }, 5000); // <-- time in milliseconds
-});
 
 </script>
 
