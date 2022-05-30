@@ -321,11 +321,9 @@
             var form_data = $('#form1').serializeArray();
 
             data_dict = {'form_data': {}, 'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict};
-            console.log(form_data);
             for (var el of form_data) {
                 data_dict['form_data'][el['name']] = el['value'];
             }
-            {#console.log(data_dict);#}
 
             $.ajax({
                 type: 'POST',
@@ -338,9 +336,6 @@
                     algo_id = data['algo_id'];
                     algo_list = data['algo_list'];
                     algo_dict = data['algo_dict'];
-                    {#console.log(algo_id);#}
-                    {#console.log(algo_list);#}
-                    {#console.log(algo_dict);#}
                     if (data['changed']) {
                         generateAttrHtml(data);
                     } else {
@@ -358,7 +353,6 @@
         var _html = "";
         var algo_num = data['algo_id'] - 1;
         var lastAlgoAdded = data['algo_dict'][algo_num.toString()]; // Object.keys(data).length.toString()
-        {#console.log(lastAlgoAdded);#}
 
         _html += "<tr class=\"container__tablerow\" id=\"" + algo_num + "\">";
         _html += "<td class=\"container__tablerowcontent\" >" + algo_num + "</td>";
@@ -399,7 +393,6 @@
                 for (var el of form_data) { // de form elementen aan de data_dict toevoegen.
                     data_dict['form_data'][el['name']] = el['value'];
                 }
-                console.log(data_dict)
 
                 $.ajax({
                     type: 'POST',
@@ -409,7 +402,6 @@
                     cache: false,
                     processData: false,
                     success: function (data) {
-                        {#console.log(data);#}
 
                         window.location.href = "{{ url_for('visualizations') }}"; // de redirect naar andere pagina in javascript
 
@@ -422,7 +414,6 @@
     // Function that will remove an algorithm from the temporary algorithm table, list and dict
     function removeAlgorithm(algo_id) {
         // Remove from the HTML
-        {#console.log(e.target.parentElement.id);#}
         var row = document.getElementById(algo_id.toString());
         row.remove();
 

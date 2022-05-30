@@ -836,7 +836,6 @@
                 }
 
                 table.innerHTML = html_
-                console.log(times["finished"])
                 if (times["finished"]) {
                     clearInterval(timesInterval)
                     document.getElementById("column3_button").style.visibility = "visible"
@@ -860,7 +859,6 @@
             cache: false,
             processData: false,
             success: function (data) {
-                console.log(data);
                 requestInterval = setInterval(fetchRequest, 1000)
                 requestEntered = false;
             },
@@ -869,7 +867,6 @@
     }
 
     function redirectToUserPage(id) {
-        console.log(id)
         let url__ = window.location.href
         let url__string = url__.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
         window.location.href = "/usersection?customer_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();
@@ -877,7 +874,6 @@
     }
 
     function redirectToItemPage(id) {
-        console.log(id)
         let url__ = window.location.href
         let url__string = url__.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
         window.location.href = "/itemsection?item_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();

@@ -54,9 +54,9 @@
     {# dataset page #}
     <div class="container__page" id="datasetpage">
 
-{######################################################################################################################}
-{#                                                    FORM1                                                           #}
-{######################################################################################################################}
+        {######################################################################################################################}
+        {#                                                    FORM1                                                           #}
+        {######################################################################################################################}
 
         {# container voor Form 1 #}
         <div class="container__section" id="section1" style="display: block">
@@ -214,9 +214,9 @@
         </div>
         {# ##################### #}
 
-{######################################################################################################################}
-{#                                                    FORM2                                                           #}
-{######################################################################################################################}
+        {######################################################################################################################}
+        {#                                                    FORM2                                                           #}
+        {######################################################################################################################}
 
         {# container voor Form2 #}
         <div class="container__section" id="section2" style="display: none">
@@ -355,7 +355,7 @@
         </div>
         {# #################### #}
 
-{######################################################################################################################}
+        {######################################################################################################################}
 
     </div>
     {# ############ #}
@@ -383,7 +383,6 @@
     $(function () {
         $('#articles_file, #customers_file').change(function () {
             var form_data = new FormData($('#form2')[0]);
-            console.log(form_data);
             $.ajax({
                 type: 'POST',
                 url: '/fileupload',
@@ -392,9 +391,6 @@
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    console.log("Successfully loaded file arguments!");
-                    console.log(data['articles_attr']);
-                    console.log(data['customers_attr']);
                     generateAttrHtml(data);
 
                 },
@@ -415,7 +411,6 @@
                 _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute + "\">" + attribute + "</label></div>";
                 _html += "<div class=\"col-75\" style=\"width: 40%\">";
                 _html += "<select class=\"\" id=\"" + art_select_id + "\" name=\"" + art_select_id + "\">";
-                console.log(attr_types);
                 for (var _type of attr_types) {
                     _html += "<option value=\"" + _type + "\">" + _type + "</option>\n";
                 }
@@ -446,7 +441,6 @@
                 _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute2 + "\">" + attribute2 + "</label></div>";
                 _html += "<div class=\"col-75\" style=\"width: 40%\">";
                 _html += "<select class=\"\" id=\"" + cust_select_id + "\" name=\"" + cust_select_id + "\">";
-                console.log(attr_types);
                 for (var __type of attr_types) {
                     _html += "<option value=\"" + __type + "\">" + __type + "</option>\n";
                 }
@@ -514,9 +508,7 @@
         fetch(`/datasets/${id}`).then(function (response) {
             return response.text();
         }).then(function (text) {
-            console.log(text)
             var statistics = JSON.parse(text)
-            console.log()
             document.getElementById("nr_of_customers").innerHTML = statistics[0].users
             document.getElementById("nr_of_items").innerHTML = statistics[0].articles
             document.getElementById("nr_of_interactions").innerHTML = statistics[0].interactions
@@ -555,7 +547,6 @@
     }
 
     function drawGraph(data, name, title_) {
-        console.log(data)
         var dataitems = new google.visualization.arrayToDataTable(data);
 
         var options = {
@@ -584,7 +575,6 @@
             section2.style.display = "none";
             document.getElementById("datasetpage").style.height = "710px";
             document.getElementById("body_id").style.height = "810px";
-            console.log(window.innerWidth)
 
             if (window.innerWidth < 1350) {
                 document.getElementById("datasetpage").style.height = "1770px";

@@ -190,7 +190,6 @@
             html_ += "<div class=\"topk_table\" style=\"background-color: " + reco["color"] + "\">";
 
             let count = 0;
-            console.log(reco)
             for (const item of reco["recommendations"]) {
 
                 if (count == 0) {
@@ -220,7 +219,6 @@
 
         for (const item of history_[dates[value_]]) {
 
-            console.log(item)
             html_ += "<div class=\"container__item_row\" id=\"" + item["name"] + "\">"
 
             html_ += "<div class='container__item_column1' onclick='generateImage(\"" + item["url"] + "\")'>" +
@@ -259,7 +257,6 @@
             data_.push([row["name"], row["count"], row["color"]]);
 
         }
-        console.log(data_)
         var dataitems = new google.visualization.arrayToDataTable(data_);
 
         var options = {
@@ -282,7 +279,6 @@
     }
 
     function redirectToItemPage(id) {
-        console.log(id)
         let url__ = window.location.href
         let url__string = url__.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
         window.location.href = "/itemsection?item_id=" + id.toString() + "&abtest_id=" + abtest.toString() + "&dataset_id=" + dataset.toString();
