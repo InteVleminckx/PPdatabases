@@ -1,9 +1,9 @@
-import datetime
+# import datetime
 import json
 
 from flask import request, flash
 from werkzeug.utils import secure_filename
-import pandas as pd
+# import pandas as pd
 import os
 from user_data_acces import *
 
@@ -11,8 +11,6 @@ from user_data_acces import *
 Deze python file bevat alle functionaliteit die nodig is voor het behandelen van events/berekingen voor
 de datasets page
 """
-
-
 def handelRequests(app, session, request, taskQueue, type_list):
     """
     handle the possible requests for the datasets
@@ -39,14 +37,12 @@ def addDatasetHere(app, session, tq, type_list):
     Function to add a dataset to the database, this will call the appropriate import functions
     """
     if session['username'] == 'admin':  # checken of de user de admin is
-
         dataset_id = importDataset(tq)
-        id1 = importArticles(app, dataset_id, tq, type_list, session)
-        id2 = importCustomers(app, dataset_id, tq, type_list, session)
+        importArticles(app, dataset_id, tq, type_list)
+        importCustomers(app, dataset_id, tq, type_list)
         id3 = importPurchases(app, dataset_id, tq)
         tq.enqueue(createDatasetIdIndex, job_timeout=600)
-        return {'id': dataset_id, id1: False, id2: False, id3: False}
-
+        return {'id': dataset_id, id3: False}
     else:
         flash("You need admin privileges to upload a dataset", category='error')
 
@@ -84,29 +80,15 @@ def importDataset(tq):
     """
     import a dataset by generating a new ID
     """
-
     datasetname = request.form['dataset_name']
     datasetId = int(getMaxDatasetID()) + 1
     tq.enqueue(addDataset, datasetId, datasetname)
     return datasetId
 
-
-# def getCSVHeader(app, csv_filename):
-#     """
-#     Get the header for a certain csv file
-#     """
-#     df = request.files[csv_filename]
-#     uploaded_file = secure_filename(df.filename)
-#     filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
-#     df.save(filename)
-#     header = pd.read_csv(filename, header=0, nrows=0).columns.tolist()
-#     return header
-
 def importArticles(app, dataset_id, tq, type_list, session):
     """
     import the articles from the csv file into the database
     """
-
     af_filename = ""
     try:
         af_filename = session['articlesFile']
@@ -116,8 +98,7 @@ def importArticles(app, dataset_id, tq, type_list, session):
         af_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
         af.save(af_filename)
     # Add articles to database
-    job = tq.enqueue(addArticles, af_filename, dataset_id, type_list, job_timeout=1200)
-    return job.id
+    tq.enqueue(addArticles, af_filename, dataset_id, type_list, job_timeout=1200)
 
 
 def importCustomers(app, dataset_id, tq, type_list, session):
@@ -134,8 +115,7 @@ def importCustomers(app, dataset_id, tq, type_list, session):
         cf_filename = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file)
         cf.save(cf_filename)
     # Add customers to database
-    job = tq.enqueue(addCustomers, cf_filename, dataset_id, type_list, job_timeout=1200)
-    return job.id
+    tq.enqueue(addCustomers, cf_filename, dataset_id, type_list, job_timeout=1200)
 
 
 def importPurchases(app, dataset_id, tq):
@@ -227,38 +207,15 @@ def getActiveUsers(cursor, dataset_id):
     prevMonth = ""
     curCount = 0
     curPurch = 0
-    # for row in rows:
-    #     date = str(row[1])[0:7]
-    #     if curMonth == "":
-    #         curMonth = date
-    #
-    #     if curMonth == date:
-    #         curCount += int(row[0])
-    #         curPurch += int(row[2])
-    #         prevMonth = curMonth
-    #
-    #     elif curMonth != date:
-    #         users.append({"date": prevMonth, "count": curCount})
-    #         purchases.append({"date": prevMonth, "count": curPurch})
-    #         curMonth = date
-    #         curCount = 0
-    #         curPurch = 0
+
     for row in rows:
         date = str(row[1])[0:10]
-        # if curMonth == "":
-        #     curMonth = date
-
-        # if curMonth == date:
         curCount = int(row[0])
         curPurch = int(row[2])
-            # prevMonth = curMonth
 
-        # elif curMonth != date:
         users.append({"date": date, "count": curCount})
         purchases.append({"date": date, "count": curPurch})
-            # curMonth = date
-            # curCount = 0
-            # curPurch = 0
+
 
     return users, purchases
 
@@ -293,29 +250,5 @@ def getPriceDistribution(cursor, dataset_id):
 
 
 
-    # return list()
-    # cursor.execute('SELECT min(price) as min, max(price) as max, (max(price) - min(price))/10 as interval FROM Interaction WHERE dataset_id = %s', (str(dataset_id)))
-    # row = cursor.fetchone()
-    #
-    # if not row:
-    #     return None
-    #
-    # min, max, interval = row
-    #
-    # distributions = list()
-    #
-    # for i in range(1,11):
-    #     begin = min + interval*(i-1)
-    #     end = min + interval*i
-    #     if i == 1:
-    #         cursor.execute('SELECT count(*), (%s,%s) AS range FROM Interaction WHERE price >= %s AND price <= %s', (str(begin),str(end),str(begin),str(end)))
-    #     else:
-    #         cursor.execute('SELECT count(*), (%s,%s) AS range FROM Interaction WHERE price > %s AND price <= %s', (str(begin),str(end),str(begin),str(end)))
-    #
-    #     row = cursor.fetchone()
-    #     if row:
-    #         distributions.append({'range':row[1], 'count':row[0]})
-    #
-    #
-    # return distributions
+
 

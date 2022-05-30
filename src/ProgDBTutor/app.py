@@ -1,34 +1,30 @@
 # TUTORIAL Len Feremans, Sandy Moens and Joey De Pauw
 # see tutor https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
-import json
-import time
+#import json
+#import time
 
 from flask import Flask, request, session, jsonify, flash, redirect, url_for
 from flask.templating import render_template
-from flask_login import login_user, login_required, logout_user, current_user, UserMixin
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import scoped_session, sessionmaker
+#from flask_login import login_user, login_required, logout_user, current_user, UserMixin
+#from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy.orm import scoped_session, sessionmaker
 import redis
 from rq import Queue
 
-# from config import config_data
-# from db_connection import DBConnection
-from user_data_acces import *  # , UserDataAcces
-# from user_data_acces import UserDataAcces
+#from user_data_acces import *  # , UserDataAcces
 
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
+#from werkzeug.utils import secure_filename
 
-import pandas as pd
-import csv
-import os
+#import pandas as pd
+#import csv
+#import os
 import a_b_tests as abtest
-from datetime import datetime, timedelta
+#from datetime import datetime, timedelta
 
-from config import config_data
-from db_connection import DBConnection
+#from config import config_data
+#from db_connection import DBConnection
 
-# from user_data_acces import UserDataAcces
 
 """
 Imports voor pages
@@ -68,9 +64,7 @@ def main():
     Main function for home page.
     :return:
     """
-
     l = session.get('loggedin', False)
-
     if l:
         return render_template('home.html', app_data=app_data, isLoggedin=session['loggedin'])
     else:
@@ -92,9 +86,9 @@ def addalgorithm():
         algo_id = dataDict['algo_id']
         algo_list = dataDict['algo_list']
         algo_dict = dataDict['algo_dict']
-
         algo = form_data['algoSelection']
         changed = True # False when algorithm should not be added.
+
         if algo == "popularity":
             windowsize = form_data['input_windowsize_p']
             retraininterval = form_data['input_retraininterval_p']
@@ -149,23 +143,18 @@ def get_flashes():
     Returns the template that contains html code for the flash messages.
     :return:
     """
-
     return render_template('_flashes.html')
 
 @app.route("/services", methods=['GET', 'POST'])
 def services():
-
     """
     Main function that renders the A/B-test page. Submitted A/B-tests are handled here too.
     :return:
     """
-
     if 'loggedin' in session:
-
         if request.method == 'POST':
 
             dataDict = request.get_json()
-
             form_data = dataDict['form_data']
             algo_id = dataDict['algo_id']
             algo_list = dataDict['algo_list']
@@ -188,6 +177,7 @@ def services():
             # Make dictionary to store results from abtest_job
             algo_times = {'abtest_id': ABTestID, 'times': {}}
 
+            # Determine dataset number
             dataset_id = ""
             for char in dataset:
                 if char.isdigit():
@@ -198,14 +188,11 @@ def services():
                 for i in range(1, algo_id + 1):
                     if str(i) in algo_dict:
                         # Add entry for ABtest table
-                        # addAB_Test(abtest_id, i, start, end, stepsize, topk)
                         abTestQueue.enqueue(addAB_Test, ABTestID, current_id, start, end, stepsize, topk, creator, dataset_id)
 
                         # Add entries for Algorithm table
                         for j in range(len(algo_list)):
                             if algo_list[j][0] == i:
-                                # addAlgorithm(abtest_id, i, algo_list[j][1], algo_list[j][2],
-                                # algo_list[j][3])
                                 abTestQueue.enqueue(addAlgorithm, ABTestID, current_id, algo_list[j][1], algo_list[j][2],
                                                     algo_list[j][3])
 
@@ -219,29 +206,17 @@ def services():
             connection.commit()
 
             # Call function to start a/b tests
-            # abtest.startAB(maxABtestID, dataset_id)
-            # abtest.getABtestResults(maxABtestID, dataset_id)
-            # abtest.getAB_Pop_Active(maxABtestID, dataset_id)
-
             abtest_job = abTestQueue.enqueue(abtest.startAB, args=(ABTestID, dataset_id), job_timeout=3600, meta=algo_times)
             session["algo_times"] = abtest_job.id
 
-            # abTestQueue.enqueue(abtest.startAB, ABTestID, dataset_id, job_timeout=3600)
-            # jobABRes = abTestQueue.enqueue(abtest.getABtestResults, ABTestID, dataset_id)
-            # jobPopAct = abTestQueue.enqueue(abtest.getAB_Pop_Active, ABTestID, dataset_id)
             jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
-
             recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, topk, ABTestID)
             totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, "", "", dataset_id, topk, ABTestID)
             totRev = abTestQueue.enqueue(getTotaleRevenue, "", "", dataset_id, ABTestID)
             listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID)
 
             session["abVisualistation"] = [jobABvisualisations.id, recos.id, totPurch.id, totRev.id, listUsers.id]
-
-            # return redirect(url_for('visualizations')) #TODO if not work turn on
-
             data_dict = {'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}
-
             return data_dict
 
         elif request.method == 'GET':
@@ -262,36 +237,25 @@ def services():
 
 @app.route("/datasets/<ds_id>", methods=['GET', 'POST'])
 def getData(ds_id):
-
     """
     Gets all the information for the dataset with given dataset id.
     :return: (list(dict)) [{'users': numberOfUser, 'articles': numberOfArticles, 'interactions': numberOfInteractions, 'distributions': getPriceDistribution(cursor, dataset_id),
                     'activeUsers': activeUsers, 'interactionPerMonth' : interactionsPermonth}]
     """
-
     if request.method == 'GET':
         print("/datasets/<ds_id>")
         return getDatasetInformation(ds_id)
 
 @app.route("/datasets", methods=['GET', 'POST'])
 def datasets():
-
-
     """
     Main function that renders the dataset page. Used to setup the type list for the uploaded files.
     :return:
     """
-
-    print(request.args)
-    dlte = request.args.get('delete_btn')
-
-
     if 'loggedin' in session:
         type_list = {}
-        # print("enter")
 
         if request.method == 'POST':
-            # print(request.form)
             type_list = {'articles_types': [], 'customers_types': [], 'articles_name_column': '',
                          'customers_name_column': ''}
             type_item = 0
@@ -336,68 +300,60 @@ def datasets():
 
 @app.route("/datasets/update/<ds_id>")
 def datasetUpdate(ds_id):
-
-
     """
-
-    :return:
+    This function returns done if the dataset with the given id is in the dataset
+    :return: string
     """
-
-    print(type(ds_id))
-
-    if ds_id == "-1":
+    if ds_id == "-1":   #if no id is selected
         return 'no refresh'
     if 'jobsDataset' in session:
         finished = True
         dsIdinQueue = False
-        if len(session['jobsDataset']) == 0:
+        if len(session['jobsDataset']) == 0:    # if the queue is empty
             return 'no refresh'
         for i in range(len(session['jobsDataset'])):
-            if ds_id == str(session['jobsDataset'][i]['id']):
+            if ds_id == str(session['jobsDataset'][i]['id']):   #If the given id is present between the recent processes
                 dsIdinQueue = True
-            for key, value in session['jobsDataset'][i].items():
+            for key, value in session['jobsDataset'][i].items():    #Loop over the job id's
                 if key == 'id' or value == True:
                     continue
                 j = datasetQueue.fetch_job(key)
                 if j is not None:
-                    if str(j.get_status()) == "finished":
+                    if str(j.get_status()) == "finished":   #if the job has been finisched
                         l = session['jobsDataset'][i]
                         l[key] = True
                         session['jobsDataset'][i] = l
-                else:
+                else:   #if the job result is not in the queue anymore, its finished
                     l = session['jobsDataset'][i]
                     l[key] = True
                     session['jobsDataset'][i] = l
 
-            print(session['jobsDataset'])
-
-            for key, value in session['jobsDataset'][i].items():
-                if not value:
+            for key, value in session['jobsDataset'][i].items():    #checking if reading in a dataset is finished
+                if key != 'id' and value == False:
                     finished = False
 
+            #if dataset with given id is completly read in
             if finished and str(session['jobsDataset'][i]['id']) == ds_id:
                 l = session['jobsDataset']
                 l.remove(session['jobsDataset'][i])
                 session['jobsDataset'] = l
                 return 'done'
-            elif finished:
+            elif finished:  #if reading in a dataset has finisched but its not selected, delete from list
                 l = session['jobsDataset']
                 l.remove(session['jobsDataset'][i])
                 session['jobsDataset'] = l
 
-        if not dsIdinQueue:
+        if not dsIdinQueue: #If the dataset with the given id is not in the list, so it already finished
             return 'done'
 
     return 'notDone'
 
 @app.route("/fileupload", methods=['GET', 'POST'])
 def fileupload():
-
     """
     Returns the headers of each of the uploaded files.
     :return: (dict)
     """
-
     if request.method == 'POST':
         headerDict = {}
         if request.files.get('articles_file').filename != '':
@@ -416,15 +372,11 @@ def fileupload():
 
 @app.route("/visualizations")
 def visualizations():
-
     """
     Main function that renders the vizualisations page.
     :return:
     """
-
-    # print(request.args)
     if len(request.args) > 0:
-
         ABTestID = request.args["abtest_id"]
         dataset_id = request.args["dataset_id"]
         abtest = getAB_Test(ABTestID)
@@ -442,12 +394,6 @@ def visualizations():
 
 @app.route("/visualizations/request", methods=["GET", "POST"])
 def visualizationsRequest():
-
-    """
-
-    :return:
-    """
-
     if request.method == "POST":
         data = request.get_json()
         dataset_id = data["dataset_id"]
@@ -468,18 +414,11 @@ def visualizationsRequest():
 
 @app.route("/visualizations/updateRequest")
 def visualizationsUpdateRequest():
-
-    """
-
-    :return:
-    """
-
     if "abVisualistationRequest" in session:
         job = session["abVisualistationRequest"]
         job_ = abTestQueue.fetch_job(job[-1])
         if job_ is not None:
             if str(job_.get_status()) == "finished":
-                # visualization = abTestQueue.fetch_job(job[0]).result
                 topkReco = abTestQueue.fetch_job(job[0]).result
                 topkPurchases = abTestQueue.fetch_job(job[1]).result
                 totRev = abTestQueue.fetch_job(job[2]).result
@@ -492,12 +431,10 @@ def visualizationsUpdateRequest():
 
 @app.route("/visualizations/update")
 def visualizationsUpdate():
-
     """
-
+    Route used to update the visualization page
     :return:
     """
-
     if "abVisualistation" in session:
         job = session["abVisualistation"]
         job_ = abTestQueue.fetch_job(job[-1])
@@ -516,7 +453,10 @@ def visualizationsUpdate():
 
 @app.route("/visualizations/exextimes")
 def visualizationsTimesRequest():
-
+    """
+    Route used to compute the estimation times of the algorithms of an A/B-test
+    :return:
+    """
     if "algo_times" in session:
         job = session["algo_times"]
         fetchJob = abTestQueue.fetch_job(job)
@@ -538,22 +478,22 @@ def visualizationsTimesRequest():
 
 @app.route("/testlist")
 def testlist():
-
     """
     Main function that renders the testlist page.
     :return:
     """
-
     creator = session['username']
     testList = []
     cursor = connection.get_cursor()
     cursor.execute("SELECT distinct(a.abtest_id), a.dataset_id, d.dataset_name, a.start_point, a.end_point, "
                    "a.stepsize, a.topk FROM ABTest a, Dataset d WHERE a.creator = %s AND "
                    "a.dataset_id = d.dataset_id", (creator,))
+
     for row in cursor:
         d = {'abtest_id': row[0], 'dataset_id': row[1], 'dataset_name': row[2], 'startingpoint': str(row[3])[:10],
              'endpoint': str(row[4])[:10], 'stepsize': row[5], 'topk': row[6], 'algorithms': None}
         testList.append(d)
+
     for i in range(len(testList)):
         algos = {}
 
@@ -572,12 +512,10 @@ def testlist():
 
 @app.route("/abTestRemove", methods=['GET', 'POST'])
 def abTestRemove():
-
     """
     Removes an A/B-test (from the database).
     :return:
     """
-
     data = request.get_json()
     abTest_id = data['abtest_id']
     cursor = connection.get_cursor()
@@ -590,12 +528,10 @@ def abTestRemove():
 
 @app.route("/usersection/update")
 def usersectionUpdate():
-
     """
-
+    Route used to update the contents of the user page
     :return:
     """
-
     if "userpage" in session:
         userpage = session["userpage"]
         job = abTestQueue.fetch_job(userpage)
@@ -609,12 +545,10 @@ def usersectionUpdate():
 
 @app.route("/usersection")
 def usersection():
-
     """
     Main function that renders the user page.
     :return:
     """
-
     dataset_id = request.args.get("dataset_id")
     customer_id = request.args.get("customer_id")
     abtest_id = request.args.get("abtest_id")
@@ -627,12 +561,10 @@ def usersection():
 
 @app.route("/itemsection_graph", methods=['POST', 'GET'])
 def itemsection_graph():
-
     """
-
+    Route that is used to compute all the values needed for the graphs on the item page
     :return:
     """
-
     if request.method == 'POST':
         dataset_id = request.form.get('dataset_id', None)
         abtest_id = request.form.get("abtest_id", None)
@@ -721,6 +653,7 @@ def itemsection_graph():
                 data.append(temp_data)
                 startPoint += stepsize
 
+            # Needed for the series used in the options of a graph
             begin_counter = 2
             end_counter = 1
             for i in range(len(algorithm_ids) - 1):
@@ -739,12 +672,10 @@ def itemsection_graph():
 # ----------------- Item section page -----------------#
 @app.route("/itemsection", methods=['POST', 'GET'])
 def itemsection():
-
     """
     Main function that renders the item page.
     :return:
     """
-
     abtest_id = request.args.get("abtest_id")
     dataset_id = request.args.get("dataset_id")
     item_id = request.args.get("item_id")
@@ -770,12 +701,10 @@ def itemsection():
 
 @app.route("/register", methods=['GET', 'POST'])
 def add_user():
-
     """
     Registers a user on the website and adds him to the database.
     :return: Redirect to datasets page if successful, stays on login page if unsuccessful.
     """
-
     user_firstname = request.form.get('firstname')
     user_lastname = request.form.get('lastname')
     user_username = request.form.get('username')
@@ -785,7 +714,6 @@ def add_user():
     cursor = connection.get_cursor()
     cursor.execute("SELECT username FROM datascientist WHERE username = %s", (user_username,))
     row = cursor.fetchone()
-    # user = DataScientist.query.filter_by(username=user_username).first
 
     # some basic checks (if they trigger, they 'flash' a message on the page (see the login.html doc))
     if row is not None:  # check to see if user with the email already exists in the database
@@ -806,12 +734,10 @@ def add_user():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login_user():
-
     """
     Logs a user in on the website.
     :return: Redirect to datasets page if successful, stays on login page if unsuccessful.
     """
-
     if request.method == 'POST':
 
         user_username = request.form.get('username')
@@ -842,23 +768,17 @@ def login_user():
 
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
-
     """
     Logs the user out on the website.
     :return:
     """
-
-    # logout_user()
     session.pop('loggedin', None)
     session.pop('username', None)
     session.pop('abVisualistation', None)
     session.pop('userpage', None)
-    # session.pop('_flashes', None)
-    # session['_flashes'].clear()
     return redirect(url_for('login_user'))
 
 
 # RUN DEV SERVER
 if __name__ == "__main__":
-    # os.system("kill `ps -A | grep rq | grep -v grep | awk '{ print $1 }'`")
     app.run(HOST, debug=False)

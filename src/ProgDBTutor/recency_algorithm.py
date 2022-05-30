@@ -1,11 +1,11 @@
-from config import config_data
-from db_connection import DBConnection
+#from config import config_data
+#from db_connection import DBConnection
 from user_data_acces import *
 
 from datetime import datetime
 from datetime import timedelta
 from rq import get_current_job
-import time as tm
+#import time as tm
 from Metrics import amountRecommendationDays
 from copy import copy
 
@@ -24,7 +24,6 @@ class Recency:
         self.simulationTime = None
         self.currentDate = self.start
         self.currentModel = None
-
         self.datasetID = dataset_id
         self.ABTestID = abtest_id
         self.algorithmID = algorithm_id
@@ -53,6 +52,7 @@ class Recency:
             if self.currentDate == nextRecommend:
                 self.recommend()
                 nextRecommend += self.stepSize
+                # Compute the time to process one stepsize ==> use that for estimation
                 if not self.estimated:
                     self.estimated = True
                     recomDays = amountRecommendationDays(copy(self.start), copy(self.end), copy(self.stepSize))
@@ -71,7 +71,6 @@ class Recency:
         Retrain the algorithm: Do this for all active users together
         :return: /
         """
-
         # train window is from the beginning of the dataset until now
         trainWindow = (str(self.start)[0:10], str(self.currentDate)[0:10])
         self.currentModel = getRecencyItem(self.datasetID, *trainWindow, self.top_k)
@@ -88,27 +87,3 @@ class Recency:
         if self.currentModel is not None:
             for item_id in self.currentModel:
                 addRecommendation(self.ABTestID, self.algorithmID, self.datasetID, -1, item_id[0], *recommendWindow)
-
-
-# TESTCODE (DEBUG ONLY)
-#
-# # start: 1 juli 2020
-# startDate = "2020-07-01 00:00:01"
-#
-# # end: 14 juli 2020
-# endDate = "2020-07-14 23:59:59"
-#
-# # topK
-# k = 5
-#
-# # stepSize: 1 week (geeft meest recente dingen binnen die week)
-# step = 1
-#
-# # retrain interval (retrain every 7 days)
-# retrain = 7
-#
-# recency = Recency(connection, startDate, endDate, k, step, retrain)
-# recency.recommend()
-#
-# # 1 week later (1 retrain interval so retrain)
-# recency.reTrain()

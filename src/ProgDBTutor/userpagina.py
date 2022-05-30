@@ -60,7 +60,6 @@ def getUserInformation(abtest_id, dataset_id, user_id):
             recommendations[date] = list()
             purchases[date] = list()
             dates.append(date)
-            # print("enter")
             for algorithm_id in ids_algoritmes:
                 if date in historyUser:
                     for item in itemsPerStep:
@@ -123,14 +122,6 @@ def getUserInformation(abtest_id, dataset_id, user_id):
         topk_.append(i)
     jsTopk = json.dumps(topk_)
 
-    # print(jsReco)
-    # print(jsHistory)
-    # print(startAB)
-    # print(endAB)
-    # print(jsPur)
-    # print(jsTopk)
-    # print(jsDates)
-
     return jsReco, jsHistory, startAB + " — " + endAB, jsPur, jsTopk, jsDates
 
 
@@ -151,7 +142,6 @@ def getAlgoritmes(abtest_id):
 
     for row in rows:
         algoritmes[row[0]] = row[1]
-        # algoritmes.append({"name": row[1], "algorithm_id": row[0]})
 
     return algoritmes
 

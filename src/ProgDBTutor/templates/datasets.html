@@ -1,22 +1,24 @@
 <html>
+
 <head>
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 
-	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static',filename='style/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/datasets_style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/sharedStyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/flash.css') }}">
 
     <script src="{{ url_for('static',filename='style/utils.js') }}"></script>
 
-	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
-	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
+    <script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 </head>
+
 <style>
     html, body {
         background-color: #E3E9F0;
@@ -25,6 +27,7 @@
 
 <body>
 
+{# Navigatie bar #}
 <nav class="navbar" id="navbar">
     <div class="navbar_container">
         <div class="navbar_toggle" id="mobile-menu">
@@ -40,9 +43,9 @@
         </ul>
     </div>
 </nav>
-
-{#<div id="flash_div" style="width: 100%; position: fixed; z-index: 999;"></div>#}
-
+{# ############# #}
+  
+{# Flash messages #}
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}
@@ -60,179 +63,321 @@
         {% endfor %}
     {% endif %}
 {% endwith %}
+{# ############## #}
+  
+{# Body dataset page #}
+<div class="container__body" id="body_id">
 
-<div class="container__body" id="body_id" >
+    {# dataset page #}
     <div class="container__page" id="datasetpage">
 
-{######################################################################################################################}
-{#                                                    FORM1                                                           #}
-{######################################################################################################################}
+        {######################################################################################################################}
+        {#                                                    FORM1                                                           #}
+        {######################################################################################################################}
 
+        {# container voor Form 1 #}
         <div class="container__section" id="section1" style="display: block">
+            {# form 1 #}
             <form method="GET" action="" name="form1" id="form1">
+                {# layer1 #}
                 <div class="container__layer" id="form1_layer1">
+                    {# column1 #}
                     <div class="container__column" id="form1_layer1_column1">
-                        <select class="container__select" name="datasetSelection" id="datasetSelection" onchange="sendData();">
+                        {# Shows the names of all datasets #}
+                        <select class="container__select" name="datasetSelection" id="datasetSelection"
+                                onchange="sendData();">
                             {% for id, name in names %}
                                 <option value="{{ id }}">Dataset: {{ name }}</option>
                             {% endfor %}
                         </select>
+                        {# ############################### #}
                     </div>
+                    {# ####### #}
+                    {# column2 #}
                     <div class="container__column" id="form1_layer1_column2">
-                        <button class="container__button" role="button" id="add_btn" name="add_btn" onclick="toggleDatasetView()">
+                        {# Is the button for redirecting to te add dataset page #}
+                        <button class="container__button" role="button" id="add_btn" name="add_btn"
+                                onclick="toggleDatasetView()">
                             Add dataset
                         </button>
+                        {# #################################################### #}
                     </div>
+                    {# ####### #}
                 </div>
+                {# ###### #}
+                {# layer2 #}
                 <div class="container__layer" id="form1_layer2">
+                    {# column1 #}
                     <div class="container__column" id="form1_layer2_column1">
+                        {# Header of the column #}
                         <div class="container__head" id="form1_layer2_column1_head">
                             <h2>Number of customers</h2>
                         </div>
+                        {# #################### #}
+                        {# Content of the column #}
                         <div class="container__content" id="form1_layer2_column1_content">
                             <p id="nr_of_customers">0</p>
                         </div>
+                        {# ##################### #}
                     </div>
+                    {# ####### #}
+                    {# column2 #}
                     <div class="container__column" id="form1_layer2_column2">
+                        {# Header of the column #}
                         <div class="container__head" id="form1_layer2_column2_head">
                             <h2>Number of items</h2>
                         </div>
+                        {# #################### #}
+                        {# Content of the column #}
                         <div class="container__content" id="form1_layer2_column2_content">
                             <p id="nr_of_items">0</p>
                         </div>
+                        {# ##################### #}
                     </div>
+                    {# ####### #}
+                    {# column3 #}
                     <div class="container__column" id="form1_layer2_column3">
+                        {# Header of the column #}
                         <div class="container__head" id="form1_layer2_column3_head">
                             <h2>Number of interactions</h2>
                         </div>
+                        {# #################### #}
+                        {# Content of the column #}
                         <div class="container__content" id="form1_layer2_column3_content">
                             <p id="nr_of_interactions">0</p>
                         </div>
+                        {# ##################### #}
                     </div>
+                    {# ####### #}
                 </div>
+                {# ###### #}
+                {# layer3 #}
                 <div class="container__layer" id="form1_layer3">
+                    {# column1 #}
                     <div class="container__column" id="form1_layer3_column1">
+                        {# Column of the column #}
                         <div class="container__head" id="form1_layer3_column1_head">
                             <h2>Active users</h2>
                         </div>
+                        {# #################### #}
+                        {# Content of the column #}
                         <div class="container__content" id="form1_layer3_column1_content">
+                            {# Shows the graph of the active users #}
                             <div class="container__graph" id="graph_active"></div>
+                            {# ################################### #}
                         </div>
+                        {# ##################### #}
                     </div>
+                    {# ####### #}
+                    {# column2 #}
                     <div class="container__column" id="form1_layer3_column2">
+                        {# Header of the column #}
                         <div class="container__head" id="form1_layer3_column2_head">
                             <h2>Price distributions</h2>
                         </div>
+                        {# #################### #}
+                        {# Content of the column #}
                         <div class="container__content" id="form1_layer3_column2_content">
+                            {# Shows the graph of the price distributions #}
                             <div class="container__graph" id="graph_distribution"></div>
+                            {# ########################################## #}
                         </div>
+                        {# ##################### #}
                     </div>
-
+                    {# ####### #}
+                    {# column3 #}
                     <div class="container__column" id="form1_layer3_column3">
+                        {# Header of the column #}
                         <div class="container__head" id="form1_layer2_column3_head">
                             <h2>Timestamp distributions</h2>
                         </div>
+                        {# #################### #}
+                        {# Content of the column #}
                         <div class="container__content" id="form1_layer2_column3_content">
+                            {# Shows the graph of the distributions from timestamps #}
                             <div class="container__graph" id="graph_timestamps"></div>
+                            {# #################################################### #}
                         </div>
+                        {# ##################### #}
                     </div>
-
+                    {# ####### #}
                 </div>
+                {# ###### #}
+                {# layer4 #}
                 <div class="container__layer" id="form1_layer4">
+                    {# column1 #}
                     <div class="container__column" id="form1_layer4_column1">
-                        <button class="container__button" id="abtestpagelink" name="abtestpagelink" role="button" onclick="goToABTestPage();">
+                        {# Is the button for redirecting to the abtest page #}
+                        <button class="container__button" id="abtestpagelink" name="abtestpagelink" role="button"
+                                onclick="goToABTestPage();">
                             Go to A/B-test page with this dataset
                         </button>
+                        {# ################################################ #}
                     </div>
+                    {# ####### #}
+                    {# column2 #}
                     <div class="container__column" id="form1_layer4_column2">
+                        {# Is the button for deleting a dataset #}
                         <button class="container__button" id="delete_btn" name="delete_btn" role="button">
                             Delete dataset
                         </button>
+                        {# #################################### #}
                     </div>
+                    {# ####### #}
                 </div>
+                {# ###### #}
             </form>
+            {# ###### #}
         </div>
+        {# ##################### #}
 
-    {######################################################################################################################}
-    {#                                                    FORM2                                                           #}
-    {######################################################################################################################}
+        {######################################################################################################################}
+        {#                                                    FORM2                                                           #}
+        {######################################################################################################################}
 
+        {# container voor Form2 #}
         <div class="container__section" id="section2" style="display: none">
+            {# Form2 #}
             <form method="POST" action="" name="form2" id="form2" enctype="multipart/form-data">
+                {# layer1 #}
                 <div class="container__layer" id="form2_layer1">
+                    {# column1 #}
                     <div class="container__column" id="form2_layer1_column1">
-                        <input class="container__input" type="text" id="dataset_name" name="dataset_name" placeholder="Enter dataset name" required>
+                        {# Is the input field voor entering a dataset name #}
+                        <input class="container__input" type="text" id="dataset_name" name="dataset_name"
+                               placeholder="Enter dataset name" required>
+                        {# ############################################### #}
                     </div>
+                    {# ####### #}
                 </div>
+                {# ###### #}
+                {# layer2 #}
                 <div class="container__layer" id="form2_layer2">
+                    {# column1 #}
                     <div class="container__column" id="form2_layer2_column1">
+                        {# Header of the column #}
                         <div class="container__head" id="form2_layer2_column1_head">
                             <h2>Articles file</h2>
                         </div>
+                        {# #################### #}
+                        {# Content of the column #}
                         <div class="container__content" id="form2_layer2_column1_content">
-                            <div class="container__button" id="articles_button" onclick="getFile('articles_file')">Choose file</div>
-                            <div style="height: 0px; width: 0px; overflow: hidden;">
-                                <input class="container__input" type="file" id="articles_file" name="articles_file" value="" accept=".csv" required onchange="sub(this, 'articles_button');">
+                            {# Container for adding an articles file #}
+                            <div class="container__button" id="articles_button" onclick="getFile('articles_file')">
+                                Choose file
                             </div>
+                            <div style="height: 0px; width: 0px; overflow: hidden;">
+                                <input class="container__input" type="file" id="articles_file" name="articles_file"
+                                       value="" accept=".csv" required onchange="sub(this, 'articles_button');">
+                            </div>
+                            {# ##################################### #}
+                            {# Field for the type checkers #}
                             <div class="container__typechecker" id="articles_typechecker">
                                 <section id="articles_typepicker"></section>
                             </div>
+                            {# ########################### #}
+                            {# Field for the name selection for the articles #}
                             <div class="container__namepicker" id="articles_namepicker">
                                 <h4>Column that should serve as name:</h4>
                                 <section id="articles_picker"></section>
                             </div>
+                            {# ############################################# #}
                         </div>
+                        {# ##################### #}
                     </div>
+                    {# ####### #}
+                    {# column2 #}
                     <div class="container__column" id="form2_layer2_column2">
+                        {# Header of the column #}
                         <div class="container__head" id="form2_layer2_column2_head">
                             <h2>Purchases file</h2>
                         </div>
+                        {# #################### #}
+                        {# Content of column #}
                         <div class="container__content" id="form2_layer2_column2_content">
-                            <div class="container__button" id="purchases_button" onclick="getFile('purchases_file')">Choose file</div>
-                            <div style="height: 0px; width: 0px; overflow: hidden;">
-                                <input type="file" class="container__input" id="purchases_file" name="purchases_file" value="" accept=".csv" required onchange="sub(this, 'purchases_button')">
+                            {# Container for adding a customer file #}
+                            <div class="container__button" id="purchases_button" onclick="getFile('purchases_file')">
+                                Choose file
                             </div>
+                            <div style="height: 0px; width: 0px; overflow: hidden;">
+                                <input type="file" class="container__input" id="purchases_file" name="purchases_file"
+                                       value="" accept=".csv" required onchange="sub(this, 'purchases_button')">
+                            </div>
+                            {# #################################### #}
                         </div>
+                        {# ################# #}
                     </div>
+                    {# ####### #}
+                    {# column3 #}
                     <div class="container__column" id="form2_layer2_column3">
+                        {# Header of the column #}
                         <div class="container__head" id="form2_layer2_column3_head">
                             <h2>Customers file</h2>
                         </div>
+                        {# #################### #}
+                        {# Content of the column #}
                         <div class="container__content" id="form2_layer2_column3_content">
-                            <div class="container__button" id="customers_button" onclick="getFile('customers_file')">Choose file</div>
-                            <div style="height: 0px; width: 0px; overflow: hidden;">
-                                <input type="file" class="container__inputfile" id="customers_file" name="customers_file" value="" accept=".csv" required onchange="sub(this, 'customers_button')">
+                            {# Container for adding a purchases file #}
+                            <div class="container__button" id="customers_button" onclick="getFile('customers_file')">
+                                Choose file
                             </div>
+                            <div style="height: 0px; width: 0px; overflow: hidden;">
+                                <input type="file" class="container__inputfile" id="customers_file"
+                                       name="customers_file" value="" accept=".csv" required
+                                       onchange="sub(this, 'customers_button')">
+                            </div>
+                            {# ##################################### #}
+                            {# Field for the type checkers #}
                             <div class="container__typechecker" id="customers_typechecker">
                                 <section id="customers_typepicker"></section>
                             </div>
+                            {# ########################### #}
+                            {# Field for the name selection for the customers#}
                             <div class="container__namepicker" id="customers_namepicker">
                                 <h4>Column that should serve as name:</h4>
                                 <section id="customers_picker"></section>
                             </div>
+                            {# ############################################# #}
                         </div>
-
+                        {# ##################### #}
                     </div>
+                    {# ####### #}
                 </div>
+                {# ###### #}
+                {# layer3 #}
                 <div class="container__layer" id="form2_layer3">
+                    {# column1 #}
                     <div class="container__column" id="form2_layer3_column1">
+                        {# Button voor het toevoegen van een dataset #}
                         <button class="container__button" id="adddataset_button" type="submit" role="button">
                             Add dataset
                         </button>
+                        {# ######################################### #}
                     </div>
+                    {# ####### #}
+                    {# column2 #}
                     <div class="container__column" id="form2_layer3_column2">
-                        <button class="container__button" id="cancel_button" type="submit" role="button" onclick="toggleDatasetView()">
+                        {# Button voor het anuleren van het toevoegen van een dataset #}
+                        <button class="container__button" id="cancel_button" type="submit" role="button"
+                                onclick="toggleDatasetView()">
                             Cancel
                         </button>
+                        {# ########################################################### #}
                     </div>
+                    {# ####### #}
                 </div>
+                {# ###### #}
             </form>
+            {# ##### #}
         </div>
+        {# #################### #}
 
-{######################################################################################################################}
+        {######################################################################################################################}
 
     </div>
+    {# ############ #}
 </div>
+{# ################# #}
 
 <script src="https://code.jquery.com/jquery-3.2.1.js">
 </script>
@@ -240,12 +385,6 @@
 <script>
 
 window.onload = sendData();//showFlashMessages();
-
-{#function showFlashMessages() {#}
-{#    $('#flash_div').load('{{ url_for('get_flashes') }}')#}
-{##}
-
-
 
 function goToABTestPage() {
     event.preventDefault();
@@ -280,219 +419,238 @@ $(function() {
                 console.log(data['customers_attr']);
                 generateAttrHtml(data);
 
-            },
+    function showFlashMessages() {
+        $('#flash_div').load('{{ url_for('get_flashes') }}')
+    }
+
+    function goToABTestPage() {
+        event.preventDefault();
+        var ds = document.getElementById("datasetSelection");
+        ds = ds.value;
+        let url__ = window.location.href
+        let url__string = url__.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
+        window.location.href = "/services?selected_ds_id=" + ds.toString()
+    }
+
+    $(function () {
+        $('#articles_file, #customers_file').change(function () {
+            var form_data = new FormData($('#form2')[0]);
+            $.ajax({
+                type: 'POST',
+                url: '/fileupload',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    generateAttrHtml(data);
+
+                },
+            });
         });
     });
-});
 
-var attr_types = JSON.parse({{ attr_types | tojson | safe }});
+    var attr_types = JSON.parse({{ attr_types | tojson | safe }});
 
-function generateAttrHtml(data) {
-    if (data['changed'] === 'articles_attr') {
-        var attrElem = document.getElementById("articles_typepicker");
-        var _html = "";
-        var articles_attr_list = data['articles_attr'];
-        var art_select_id = 0;
-        for (var attribute of articles_attr_list) {
-            _html += "<div class=\"container__typechecker_row\">";
-            _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute + "\">" + attribute + "</label></div>";
-            _html += "<div class=\"col-75\" style=\"width: 40%\">";
-            _html += "<select class=\"\" id=\"" + art_select_id + "\" name=\"" + art_select_id + "\">";
-            console.log(attr_types);
-            for (var _type of attr_types) {
-                _html += "<option value=\"" + _type + "\">" + _type + "</option>\n";
+    function generateAttrHtml(data) {
+        if (data['changed'] === 'articles_attr') {
+            var attrElem = document.getElementById("articles_typepicker");
+            var _html = "";
+            var articles_attr_list = data['articles_attr'];
+            var art_select_id = 0;
+            for (var attribute of articles_attr_list) {
+                _html += "<div class=\"container__typechecker_row\">";
+                _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute + "\">" + attribute + "</label></div>";
+                _html += "<div class=\"col-75\" style=\"width: 40%\">";
+                _html += "<select class=\"\" id=\"" + art_select_id + "\" name=\"" + art_select_id + "\">";
+                for (var _type of attr_types) {
+                    _html += "<option value=\"" + _type + "\">" + _type + "</option>\n";
+                }
+                _html += "</select>";
+                _html += "</div>";
+                _html += "</div>";
+                art_select_id++;
+            }
+
+            attrElem.innerHTML = _html;
+
+            var attrNameElem = document.getElementById("articles_picker");
+            _html = "";
+            _html += "<select class=\"\" id=\"articles_name_column\" name=\"articles_name_column\">";
+            for (var attribute1 of articles_attr_list) {
+                _html += "<option value=\"" + attribute1 + "\">" + attribute1 + "</option>";
             }
             _html += "</select>";
-            _html += "</div>";
-            _html += "</div>";
-            art_select_id++;
-        }
+            attrNameElem.innerHTML = _html;
+        } else {
+            attrElem = document.getElementById("customers_typepicker");
+            _html = "";
+            articles_attr_list = data['customers_attr'];
+            var cust_select_id = -1;
 
-        attrElem.innerHTML = _html;
+            for (var attribute2 of articles_attr_list) {
+                _html += "<div class=\"container__typechecker_row\">";
+                _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute2 + "\">" + attribute2 + "</label></div>";
+                _html += "<div class=\"col-75\" style=\"width: 40%\">";
+                _html += "<select class=\"\" id=\"" + cust_select_id + "\" name=\"" + cust_select_id + "\">";
+                for (var __type of attr_types) {
+                    _html += "<option value=\"" + __type + "\">" + __type + "</option>\n";
+                }
+                _html += "</select>";
+                _html += "</div>";
+                _html += "</div>";
+                cust_select_id--;
+            }
 
-        var attrNameElem = document.getElementById("articles_picker");
-        _html = "";
-        _html += "<select class=\"\" id=\"articles_name_column\" name=\"articles_name_column\">";
-        for (var attribute1 of articles_attr_list) {
-            _html += "<option value=\"" + attribute1 + "\">" + attribute1 + "</option>";
-        }
-        _html += "</select>";
-        attrNameElem.innerHTML = _html;
-    }
-    else {
-        attrElem = document.getElementById("customers_typepicker");
-        _html = "";
-        articles_attr_list = data['customers_attr'];
-        var cust_select_id = -1;
+            attrElem.innerHTML = _html;
 
-        for (var attribute2 of articles_attr_list) {
-            _html += "<div class=\"container__typechecker_row\">";
-            _html += "<div class=\"col-25\" style=\"width: 60%; text-align: left;font-size: 10px;\"><label for=\"" + attribute2 + "\">" + attribute2 + "</label></div>";
-            _html += "<div class=\"col-75\" style=\"width: 40%\">";
-            _html += "<select class=\"\" id=\"" + cust_select_id + "\" name=\"" + cust_select_id + "\">";
-            console.log(attr_types);
-            for (var __type of attr_types) {
-                _html += "<option value=\"" + __type + "\">" + __type + "</option>\n";
+            attrNameElem = document.getElementById("customers_picker");
+            _html = "";
+            _html += "<select class=\"\" id=\"customers_name_column\" name=\"customers_name_column\">";
+            for (var attribute3 of articles_attr_list) {
+                _html += "<option value=\"" + attribute3 + "\">" + attribute3 + "</option>";
             }
             _html += "</select>";
-            _html += "</div>";
-            _html += "</div>";
-            cust_select_id--;
+            attrNameElem.innerHTML = _html;
         }
+    }
 
-        attrElem.innerHTML = _html;
+    function getFile(elem) {
+        document.getElementById(elem).click();
+    }
 
-        attrNameElem = document.getElementById("customers_picker");
-        _html = "";
-        _html += "<select class=\"\" id=\"customers_name_column\" name=\"customers_name_column\">";
-        for (var attribute3 of articles_attr_list) {
-            _html += "<option value=\"" + attribute3 + "\">" + attribute3 + "</option>";
+    function sub(obj, button) {
+        var file = obj.value;
+        var filename = file.split("\\");
+        document.getElementById(button).innerHTML = filename[filename.length - 1];
+        event.preventDefault();
+    }
+
+    var interval = null;
+
+    function fetchStatusHere() {
+        let id = document.getElementById("datasetSelection");
+        if (id.options.length) {
+            id = document.getElementById("datasetSelection").value;
+        } else {
+            id = -1;
         }
-        _html += "</select>";
-        attrNameElem.innerHTML = _html;
-    }
-}
-
-function getFile(elem) {
-    document.getElementById(elem).click();
-}
-
-function sub(obj, button) {
-    var file = obj.value;
-    var filename = file.split("\\");
-    document.getElementById(button).innerHTML = filename[filename.length - 1];
-    event.preventDefault();
-}
-
-var interval = null;
-function fetchStatusHere() {
-    let id = document.getElementById("datasetSelection");
-    if(id.options.length){
-        id = document.getElementById("datasetSelection").value;
-    }else{
-        id = -1;
-    }
-    fetch(`/datasets/update/${id}`)
-        .then(function (response) {
+        fetch(`/datasets/update/${id}`)
+            .then(function (response) {
                 return response.text();
             })
-        .then(function (text){
-            if (text === 'done'){
-                sendData()
-                clearInterval(interval)
-            }else if (text === 'no refresh'){
-                clearInterval(interval)
+            .then(function (text) {
+                if (text === 'done') {
+                    sendData()
+                    clearInterval(interval)
+                } else if (text === 'no refresh') {
+                    clearInterval(interval)
+                }
+            })
+    }
+
+    window.addEventListener('load', function () {
+        let fetchInterval = 5000;
+        interval = setInterval(fetchStatusHere, fetchInterval)
+    })
+
+    function sendData() {
+        let id = document.getElementById("datasetSelection").value;
+
+        fetch(`/datasets/${id}`).then(function (response) {
+            return response.text();
+        }).then(function (text) {
+            var statistics = JSON.parse(text)
+            document.getElementById("nr_of_customers").innerHTML = statistics[0].users
+            document.getElementById("nr_of_items").innerHTML = statistics[0].articles
+            document.getElementById("nr_of_interactions").innerHTML = statistics[0].interactions
+
+            var dataDist = [["price range", "number of items"]]
+            for (i = 0; i < statistics[0].distributions.length; i++) {
+                var begin = statistics[0].distributions[i].begin
+                var end = statistics[0].distributions[i].end
+                var priceCount = statistics[0].distributions[i].count
+                dataDist.push([begin.toString() + "-" + end.toString(), priceCount])
             }
-        })
-}
 
-window.addEventListener('load', function () {
-    let fetchInterval = 5000;
-    interval = setInterval(fetchStatusHere, fetchInterval)
-})
+            var dataUsers = [["date", "number of active users"]]
+            for (i = 0; i < statistics[0].activeUsers.length; i++) {
+                var dateS = statistics[0].activeUsers[i].date
+                var userCount = statistics[0].activeUsers[i].count
 
-function sendData() {
-    let id = document.getElementById("datasetSelection").value;
+                dataUsers.push([dateS, userCount])
+            }
 
-    fetch(`/datasets/${id}`).then(function(response) {
-        return response.text();
-    }).then(function(text) {
-        console.log(text)
-        var statistics = JSON.parse(text)
-        console.log()
-        document.getElementById("nr_of_customers").innerHTML = statistics[0].users
-        document.getElementById("nr_of_items").innerHTML = statistics[0].articles
-        document.getElementById("nr_of_interactions").innerHTML = statistics[0].interactions
+            var dataInteractions = [["date", "number of interactions"]]
+            for (i = 0; i < statistics[0].interactionPerMonth.length; i++) {
+                var dateS = statistics[0].interactionPerMonth[i].date
+                var interactionCount = statistics[0].interactionPerMonth[i].count
 
-        var dataDist = [["price range", "number of items"]]
-        for (i=0; i < statistics[0].distributions.length; i++){
-            var begin = statistics[0].distributions[i].begin
-            var end = statistics[0].distributions[i].end
-            var priceCount = statistics[0].distributions[i].count
-            dataDist.push([begin.toString() + "-" + end.toString(), priceCount])
-        }
+                dataInteractions.push([dateS, interactionCount])
+            }
 
-        var dataUsers = [["date", "number of active users"]]
-        for (i=0; i < statistics[0].activeUsers.length; i++){
-            var dateS = statistics[0].activeUsers[i].date
-            var userCount = statistics[0].activeUsers[i].count
-
-            dataUsers.push([dateS, userCount])
-        }
-
-        var dataInteractions = [["date", "number of interactions"]]
-        for (i=0; i < statistics[0].interactionPerMonth.length; i++){
-            var dateS = statistics[0].interactionPerMonth[i].date
-            var interactionCount = statistics[0].interactionPerMonth[i].count
-
-            dataInteractions.push([dateS, interactionCount])
-        }
-
-        google.charts.load('current', {'packages':['bar']});
-        google.setOnLoadCallback(function () {
-            drawGraph(dataUsers, "graph_active", "Number of active users")
-            drawGraph(dataDist, "graph_distribution", "Price distribution")
-            drawGraph(dataInteractions, "graph_timestamps", "Number of interactions")
+            google.charts.load('current', {'packages': ['bar']});
+            google.setOnLoadCallback(function () {
+                drawGraph(dataUsers, "graph_active", "Number of active users")
+                drawGraph(dataDist, "graph_distribution", "Price distribution")
+                drawGraph(dataInteractions, "graph_timestamps", "Number of interactions")
+            });
         });
-    });
-}
+    }
 
-function drawGraph(data, name, title_){
-        console.log(data)
+    function drawGraph(data, name, title_) {
         var dataitems = new google.visualization.arrayToDataTable(data);
 
         var options = {
-          chartArea: {
-              width: '94%'
-          },
-          legend: { position: 'none' },
-          axes: {
-            x: {
-              0: { side: 'top'} // Top x-axis.
-            }
-          },
-          bar: { groupWidth: "100%" }
+            chartArea: {
+                width: '94%'
+            },
+            legend: {position: 'none'},
+            axes: {
+                x: {
+                    0: {side: 'top'} // Top x-axis.
+                }
+            },
+            bar: {groupWidth: "100%"}
         };
 
         var chart = new google.charts.Bar(document.getElementById(name));
         // Convert the Classic options to Material options.
         chart.draw(dataitems, google.charts.Bar.convertOptions(options));
-}
-
-function toggleDatasetView() {
-    var section1 = document.getElementById("section1");
-    var section2 = document.getElementById("section2");
-    if (section1.style.display === "none") {
-        section1.style.display = "block";
-        section2.style.display = "none";
-        document.getElementById("datasetpage").style.height = "710px";
-        document.getElementById("body_id").style.height = "810px";
-        console.log(window.innerWidth)
-
-        if (window.innerWidth < 1350) {
-            document.getElementById("datasetpage").style.height = "1770px";
-            document.getElementById("body_id").style.height = "1870px";
-        }
-
     }
-    else {
-        section1.style.display = "none";
-        section2.style.display = "block";
-        document.getElementById("datasetpage").style.height = "800px";
-        document.getElementById("body_id").style.height = "900px";
 
-        if (window.innerWidth < 1350) {
-            document.getElementById("datasetpage").style.height = "2100px";
-            document.getElementById("body_id").style.height = "2200px";
+    function toggleDatasetView() {
+        var section1 = document.getElementById("section1");
+        var section2 = document.getElementById("section2");
+        if (section1.style.display === "none") {
+            section1.style.display = "block";
+            section2.style.display = "none";
+            document.getElementById("datasetpage").style.height = "710px";
+            document.getElementById("body_id").style.height = "810px";
+
+            if (window.innerWidth < 1350) {
+                document.getElementById("datasetpage").style.height = "1770px";
+                document.getElementById("body_id").style.height = "1870px";
+            }
+
+        } else {
+            section1.style.display = "none";
+            section2.style.display = "block";
+            document.getElementById("datasetpage").style.height = "800px";
+            document.getElementById("body_id").style.height = "900px";
+
+            if (window.innerWidth < 1350) {
+                document.getElementById("datasetpage").style.height = "2100px";
+                document.getElementById("body_id").style.height = "2200px";
+            }
+
         }
-
+        event.preventDefault();
     }
-    event.preventDefault();
-}
 
-$('button.container__button#add_btn').click(function(e) {
-    e.preventDefault();
-});
+    $('button.container__button#add_btn').click(function (e) {
+        e.preventDefault();
+    });
 
     const menu = document.getElementById("mobile-menu");
     const menuLinks = document.querySelector(".navbar_menu")

@@ -1,17 +1,15 @@
 <html>
 <head>
-<!--	<title>{{app_data['app_name']}}</title>-->
+    <!--	<title>{{app_data['app_name']}}</title>-->
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 
-	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='style/flash.css') }}">
 
-	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
-	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
-    <script src="{{ url_for('static',filename='style/utils.js') }}"></script>
-
-	<link rel="stylesheet" href="../static/style/login_style.css">
+    <script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
+    <script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
+    <link rel="stylesheet" href="../static/style/login_style.css">
 
 </head>
 <body>
@@ -34,44 +32,43 @@
     {% endif %}
 {% endwith %}
 
-    <div class="login_page">
-        <div class="form">
-            <form class="register_form" id="register_form" action="/register" method="post">
-                <input type="text" name="firstname" autofocus placeholder="Firstname" required />
-                <input type="text" name="lastname" autofocus placeholder="Lastname" required />
-                <input type="text" name="username" autofocus placeholder="Username" required />
-                <input type="email" name="email" placeholder="Email" required/>
-                <input type="password"  name="password" placeholder="Password" required/>
-                <button> Create </button>
-                <p class="message">Already registered? <a href="#login_form">Login</a></p>
-                <button class="cancel__btn"> <a href="home"> Cancel </a> </button>
-            </form>
+<div class="login_page">
+    <div class="form">
+        <form class="register_form" id="register_form" action="/register" method="post">
+            <input type="text" name="firstname" autofocus placeholder="Firstname" required/>
+            <input type="text" name="lastname" autofocus placeholder="Lastname" required/>
+            <input type="text" name="username" autofocus placeholder="Username" required/>
+            <input type="email" name="email" placeholder="Email" required/>
+            <input type="password" name="password" placeholder="Password" required/>
+            <button> Create</button>
+            <p class="message">Already registered? <a href="#login_form">Login</a></p>
+            <button class="cancel__btn"><a href="home"> Cancel </a></button>
+        </form>
 
-            <form class="login_form" id="login_form" action="/login" method="post">
-                <input type="text" name="username" autofocus placeholder="Username" required/>
-                <input type="password" name="password" placeholder="Password" required/>
-                <button> Login </button>
-                <p class="message">Not registered? <a href="#register_form">Register</a></p>
-                <button class="cancel__btn"> <a href="home"> Cancel </a> </button>
-            </form>
-
-        </div>
+        <form class="login_form" id="login_form" action="/login" method="post">
+            <input type="text" name="username" autofocus placeholder="Username" required/>
+            <input type="password" name="password" placeholder="Password" required/>
+            <button> Login</button>
+            <p class="message">Not registered? <a href="#register_form">Register</a></p>
+            <button class="cancel__btn"><a href="home"> Cancel </a></button>
+        </form>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.js">
-    </script>
-    <script>
-        $('.message a').click(function(){
-        $('form').animate({height:"toggle", opacity: "toggle"}, "slow");
-        });
+<script src="https://code.jquery.com/jquery-3.2.1.js">
+</script>
+<script>
+    $('.message a').click(function () {
+        $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+    });
 
-        $(document).ready(function() {
+      $(document).ready(function() {
             setTimeout(function () {
         $('.flash_alert').fadeOut('slow').remove();
         }, 5000); // <-- time in milliseconds
-        });
+      });
 
-    </script>
+</script>
 
 </body>
 </html>
