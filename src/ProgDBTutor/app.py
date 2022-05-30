@@ -157,9 +157,6 @@ def services():
 
             dataDict = request.get_json()
 
-            # Make dictionary to store results from abtest_job
-            algo_times = dict()
-    
             form_data = dataDict['form_data']
             algo_id = dataDict['algo_id']
             algo_list = dataDict['algo_list']
@@ -178,6 +175,9 @@ def services():
                 dataset = form_data['datasetSelection']
 
             ABTestID = getMaxABTestID() + 1
+
+            # Make dictionary to store results from abtest_job
+            algo_times = {'abtest_id': ABTestID, 'times': {}}
 
             dataset_id = ""
             for char in dataset:
@@ -201,7 +201,6 @@ def services():
                                                     algo_list[j][3])
 
                         del algo_dict[str(i)]
-                        algo_times[current_id] = 0
                         current_id += 1
 
             # Remove algorithms from list and dicts
@@ -511,6 +510,25 @@ def visualizationsUpdate():
 
     return {}
 
+@app.route("/visualizations/exextimes")
+def visualizationsTimesRequest():
+
+    if "algo_times" in session:
+        job = session["algo_times"]
+        fetchJob = abTestQueue.fetch_job(job.id)
+        fetchJob.refresh()
+        algorithmsTime = {"times": [], "finished": False}
+        abtest_id = fetchJob.meta["abtest_id"]
+        for key, value in fetchJob.meta["times"].items():
+            algoname = getAlgorithm(abtest_id, key)
+            algorithmsTime["times"].append([algoname, value])
+
+        if str(fetchJob.get_status()) == "finished":
+            algorithmsTime["finished"] = True
+
+        return algorithmsTime
+
+    return {}
 
 # ----------------- A/B-test list -----------------#
 

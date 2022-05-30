@@ -71,12 +71,15 @@ class Popularity:
                     job = get_current_job(dbconnect)
                     time_difference_ms = datetime.now() - begin_time
                     time_difference = time_difference_ms.total_seconds() * recomDays
-                    print(time_difference)
-                    job.meta[algorithm_id] = time_difference
+                    job.meta['times'][algorithm_id] = time_difference
+                    print(job.meta)
                     job.save()
 
             # repeat for each day and not for each stepSize
             self.currentDate += simulationStep
+
+        job = get_current_job(dbconnect)
+        job.meta['times'][algorithm_id] = "Done"
 
     def retrain(self):
         """
