@@ -18,15 +18,15 @@
     {% if messages %}
         {% for category, message in messages %}
             {% if category == 'error' %}
-                <div class="flash_alert flash_alert-danger fade" role="alert">
-                    <span class="closebutton" onclick="this.parentElement.remove();">&times;</span>
-                    {{ message }}
-                </div>
+            <div class="flash_alert flash_alert-danger flash_fade" role="alert">
+                <span class="closebutton" onclick="this.parentElement.remove();">&times;</span>
+                {{ message }}
+            </div>
             {% else %}
-                <div class="flash_alert flash_alert-success fade" role="alert">
-                    <span class="closebutton" onclick="this.parentElement.remove();">&times;</span>
-                    {{ message }}
-                </div>
+            <div class="flash_alert flash_alert-success flash_fade" role="alert">
+                <span class="closebutton" onclick="this.parentElement.remove();">&times;</span>
+                {{ message }}
+            </div>
             {% endif %}
         {% endfor %}
     {% endif %}
@@ -52,7 +52,6 @@
             <p class="message">Not registered? <a href="#register_form">Register</a></p>
             <button class="cancel__btn"><a href="home"> Cancel </a></button>
         </form>
-
     </div>
 </div>
 
@@ -63,11 +62,11 @@
         $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
     });
 
-    $(document).ready(function () {
-        setTimeout(function () {
-            $('.alert').fadeOut('slow');
-        }, 1000); // <-- time in milliseconds
-    });
+      $(document).ready(function() {
+            setTimeout(function () {
+        $('.flash_alert').fadeOut('slow').remove();
+        }, 5000); // <-- time in milliseconds
+      });
 
 </script>
 
