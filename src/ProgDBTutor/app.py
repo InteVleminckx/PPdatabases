@@ -156,7 +156,6 @@ def services():
         if request.method == 'POST':
 
             dataDict = request.get_json()
-
             form_data = dataDict['form_data']
             algo_id = dataDict['algo_id']
             algo_list = dataDict['algo_list']
@@ -170,10 +169,12 @@ def services():
             end = form_data['input_endpoint']
             stepsize = form_data['input_stepsize']
             topk = form_data['input_topk']
-            dataset = form_data['datasetSelection']
+            dataset = 0
+            if 'datasetSelection' in form_data:
+                dataset = form_data['datasetSelection']
+
             ABTestID = getMaxABTestID() + 1
-            if not dataset:
-                return redirect(url_for('visualizations'))
+
             dataset_id = ""
             for char in dataset:
                 if char.isdigit():
@@ -331,7 +332,6 @@ def datasetUpdate(ds_id):
 
     :return:
     """
-
 
     print(type(ds_id))
 
