@@ -828,6 +828,7 @@ def login_user():
             if check_password_hash(password, user_password) or (user_username == 'admin' and password == user_password):
                 session['loggedin'] = True
                 session['username'] = user
+                flash('Account successfully logged in!', category='success')
                 return redirect(url_for('datasets'))
             else:
                 flash('Incorrect password, try again.', category='error')
