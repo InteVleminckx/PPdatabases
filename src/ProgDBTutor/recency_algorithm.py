@@ -24,7 +24,6 @@ class Recency:
         self.simulationTime = None
         self.currentDate = self.start
         self.currentModel = None
-
         self.datasetID = dataset_id
         self.ABTestID = abtest_id
         self.algorithmID = algorithm_id
@@ -53,6 +52,7 @@ class Recency:
             if self.currentDate == nextRecommend:
                 self.recommend()
                 nextRecommend += self.stepSize
+                # Compute the time to process one stepsize ==> use that for estimation
                 if not self.estimated:
                     self.estimated = True
                     recomDays = amountRecommendationDays(copy(self.start), copy(self.end), copy(self.stepSize))
@@ -71,7 +71,6 @@ class Recency:
         Retrain the algorithm: Do this for all active users together
         :return: /
         """
-
         # train window is from the beginning of the dataset until now
         trainWindow = (str(self.start)[0:10], str(self.currentDate)[0:10])
         self.currentModel = getRecencyItem(self.datasetID, *trainWindow, self.top_k)

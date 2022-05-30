@@ -1,9 +1,9 @@
-import datetime
+# import datetime
 import json
 
 from flask import request, flash
 from werkzeug.utils import secure_filename
-import pandas as pd
+# import pandas as pd
 import os
 from user_data_acces import *
 
@@ -11,8 +11,6 @@ from user_data_acces import *
 Deze python file bevat alle functionaliteit die nodig is voor het behandelen van events/berekingen voor
 de datasets page
 """
-
-
 def handelRequests(app, session, request, taskQueue, type_list):
     """
     handle the possible requests for the datasets
@@ -39,7 +37,6 @@ def addDatasetHere(app, session, tq, type_list):
     Function to add a dataset to the database, this will call the appropriate import functions
     """
     if session['username'] == 'admin':  # checken of de user de admin is
-
         dataset_id = importDataset(tq)
         importArticles(app, dataset_id, tq, type_list)
         importCustomers(app, dataset_id, tq, type_list)
@@ -83,7 +80,6 @@ def importDataset(tq):
     """
     import a dataset by generating a new ID
     """
-
     datasetname = request.form['dataset_name']
     datasetId = int(getMaxDatasetID()) + 1
     tq.enqueue(addDataset, datasetId, datasetname)
@@ -93,7 +89,6 @@ def importArticles(app, dataset_id, tq, type_list, session):
     """
     import the articles from the csv file into the database
     """
-
     af_filename = ""
     try:
         af_filename = session['articlesFile']

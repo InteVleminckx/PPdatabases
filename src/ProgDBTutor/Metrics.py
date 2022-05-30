@@ -1,9 +1,9 @@
-from config import config_data
-from db_connection import DBConnection
-from user_data_acces import *
+# from config import config_data
+# from db_connection import DBConnection
+# from user_data_acces import *
 
 from datetime import datetime
-from datetime import timedelta
+# from datetime import timedelta
 
 from user_data_acces import *
 
@@ -17,7 +17,6 @@ def getNrOfPurchases(startDate, endDate):
     :return: number of purchases made from {startDate} to {endDate}
     """
     cursor = connection.get_cursor()
-
     cursor.execute("SELECT count(*) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;", (startDate, endDate))
 
     if cursor is None:
@@ -32,7 +31,6 @@ def getNrOfActiveUsers(startDate, endDate):
     :return: number of active users made from {startDate} to {endDate}
     """
     cursor = connection.get_cursor()
-
     cursor.execute("SELECT count(DISTINCT customer_id) FROM Interaction WHERE t_dat BETWEEN %s AND %s ;",
                    (startDate, endDate))
 
@@ -332,7 +330,6 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, s
 
             # Make a Dict for the interactions {key=customer_id, value=list( list(items) , list(prizes) )}
             for id, item, price in interactions:
-
                 if id not in dirInteraction:
                     dirInteraction[id] = [[item], [price]]
                 else:
@@ -342,7 +339,6 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, s
             # Save the recommendations in a Dict but Loop over all models first
             for recom in recommendations:
                 for id, item in recom:
-
                     if id not in dirRecommendations:
                         dirRecommendations[id] = [item]
                     else:
@@ -376,7 +372,7 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, s
 
     return ar, arpu
 
-
+"""Function that returns the amount of recommendation days based the start and end date and the stepsize"""
 def amountRecommendationDays(startPoint, endPoint, stepsize):
     amount = 0
     while startPoint <= endPoint:

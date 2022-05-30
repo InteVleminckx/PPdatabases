@@ -1,13 +1,12 @@
 # import datetime
-import json
-
-from flask import request, flash
-from werkzeug.utils import secure_filename
-import pandas as pd
-import os
-from user_data_acces import *
+# import json
+# from flask import request, flash
+# from werkzeug.utils import secure_filename
+# import pandas as pd
+# import os
+# from user_data_acces import *
 from Metrics import *
-import sys
+# import sys
 
 def getInfoVisualisationPage(abtest_id, dataset_id):
     """
@@ -54,6 +53,8 @@ def getPurchasesAndActiveUsersOverTime(start, end):
     info = {}
     totalusers = 0
     totalPurch = 0
+
+    # Add every row to the info-dict
     for row in rows:
         info[str(row[2])[0:10]] = {"purchases": str(row[1]), "users": str(row[0])}
         totalusers += int(row[0])
@@ -72,7 +73,6 @@ def getAlgorithms(abtest_id, dataset_id, startpoint, endpoint, stepsize):
         return False
 
     algorithms = {}
-
     ctr = {}
     ard = {}
     argRevPr = {}
@@ -109,7 +109,6 @@ def getTopkMostRecommendItemsPerAlgo(start, end, dataset_id, topk, abtest_id):
 
     topkReco = {}
     cursor = dbconnect.get_cursor()
-
     cursor.execute("select name from Names where dataset_id = %s and table_name = %s;", (str(dataset_id), 'articles'))
     name = cursor.fetchone()[0]
     names = []
@@ -140,6 +139,7 @@ def getTopkMostRecommendItemsPerAlgo(start, end, dataset_id, topk, abtest_id):
 
             # Loop over all the days
             while startPoint <= endPoint:
+                # Determine active users for this day
                 nrActiveUsers = getNumberOfActiveUsers(dataset_id, startPoint)
                 for i in range(len(rows)):
                     cursor.execute(
@@ -152,9 +152,11 @@ def getTopkMostRecommendItemsPerAlgo(start, end, dataset_id, topk, abtest_id):
                         counter_rows[i] += amount[1] * nrActiveUsers
                 startPoint += stepsize
 
+            # Add the item recommendations to the recommendation list
             for j in range(len(rows)):
                 recommendations.append({"item": str(rows[j][0]), "count": str(counter_rows[j]), "name": names[j]})
 
+        # For itemknn we only need to get the recommendations from the cursor and don't do anything special
         elif algorithm.name == 'itemknn':
             for j in range(len(rows)):
                 recommendations.append({"item": str(rows[j][0]), "count": str(rows[j][1]), "name": names[j]})
@@ -173,18 +175,19 @@ def getTopkMostPurchasedItems(start, end, dataset_id, topk, abtest_id):
         start, end = str(abtest.start_point)[0:10], str(abtest.end_point)[0:10]
 
     cursor = dbconnect.get_cursor()
-
     cursor.execute("select name from Names where dataset_id = %s and table_name = %s;", (str(dataset_id), 'articles'))
     name = cursor.fetchone()[0]
     names = []
 
     cursor.execute(
         "SELECT item_id, COUNT(item_id) FROM Interaction WHERE dataset_id = %s AND t_dat BETWEEN %s AND %s "
-        "GROUP BY item_id ORDER BY COUNT(item_id) DESC LIMIT %s;", (str(dataset_id), start, end, str(topk)))
+        "GROUP BY item_id ORDER BY COUNT(item_id) DESC LIMIT %s;", (str(dataset_id), start, end, str(topk))
+    )
 
     purchases = []
     rows = cursor.fetchall()
 
+    # For all the rows, determine the "name" attribute
     for row in rows:
         cursor.execute(
             "select a1.val from Articles a1 where a1.attribute = %s and a1.dataset_id = %s and a1.item_number in "
@@ -216,13 +219,12 @@ def getTotaleRevenue(start, end, dataset_id, abtest_id):
         start, end = str(abtest.start_point)[0:10], str(abtest.end_point)[0:10]
 
     cursor = dbconnect.get_cursor()
-
     cursor.execute(
         "select sum(price) from interaction where dataset_id = %s and t_dat between %s and %s",
-        (str(dataset_id), str(start), str(end)))
+        (str(dataset_id), str(start), str(end))
+    )
 
     price = cursor.fetchone()[0]
-
     return str(round(float(price), 2))
 
 
@@ -235,16 +237,17 @@ def getListOfActiveUsers(start, end, dataset_id, abtest_id):
         start, end = str(abtest.start_point)[0:10], str(abtest.end_point)[0:10]
 
     cursor = dbconnect.get_cursor()
-
     cursor.execute(
         "select distinct customer_id from interaction where dataset_id = %s and t_dat between %s and %s",
-        (str(dataset_id), str(start), str(end)))
+        (str(dataset_id), str(start), str(end))
+    )
 
     users = cursor.fetchall()
     userCount = getNumberUniqueActiveUsers(users)
-
     userInformation_ = []
     userInformation = {}
+
+    # For all users, add the the right entries to the dict
     for user in users:
         userInformation[str(user[0])] = {"totalePurchases": 0, "purchasesOverTime": 0, "CTR": 0}
 
@@ -253,15 +256,19 @@ def getListOfActiveUsers(start, end, dataset_id, abtest_id):
     userInformation = getUsersPurchasesOverTime(start, end, dataset_id, cursor, userInformation)
     userInformation = getUsersCTR(start, end, dataset_id, userInformation, cursor, abtest_id)
 
+    # Sort items on customer_id
     sort0 = dict(sorted(userInformation.items(), key=lambda item: int(item[0]), reverse=False))
     userInformation_.append([key for key in sort0])
 
+    # Sort items on total purchases
     sort1 = dict(sorted(userInformation.items(), key=lambda item: item[1]["totalePurchases"], reverse=True))
     userInformation_.append([key for key in sort1])
 
+    # Sort items on purchases over time period
     sort2 = dict(sorted(userInformation.items(), key=lambda item: item[1]["purchasesOverTime"], reverse=True))
     userInformation_.append([key for key in sort2])
 
+    # Sort items on CTR
     sort3 = dict(sorted(userInformation.items(), key=lambda item: item[1]["CTR"], reverse=True))
     userInformation_.append([key for key in sort3])
 
@@ -272,14 +279,12 @@ def getUsersTotalPurchases(dataset_id, start, end, userInformation, cursor):
     """
     Get the total purchases made by this user
     """
-
     cursor.execute(
         "select count(i1.customer_id), i1.customer_id from interaction i1 where i1.dataset_id = %s and i1.customer_id "
         "in( select i2.customer_id from interaction i2 where i2.dataset_id = %s and i2.t_dat between %s and %s) group by customer_id;",
         (str(dataset_id), str(dataset_id), str(start), str(end)))
 
     purchases = cursor.fetchall()
-
     for purch in purchases:
         userInformation[str(purch[1])]["totalePurchases"] = int(purch[0])
 
@@ -296,7 +301,6 @@ def getUsersPurchasesOverTime(start, end, dataset_id, cursor, userInformation):
         (str(dataset_id), str(start), str(end), str(dataset_id), str(start), str(end)))
 
     purchases = cursor.fetchall()
-
     for purch in purchases:
         userInformation[str(purch[1])]["purchasesOverTime"] = int(purch[0])
 
@@ -312,11 +316,11 @@ def getUsersCTR(start, end, dataset_id, userinformation, cursor, abtest_id):
     end = datetime.strptime(end, "%Y-%m-%d")
     recommendationsCount = 0
 
+    # Loop over all dates
     while curDate <= end:
 
         # For each stepsize, we have a new recommendation so we also have a new CTR
         recommendationsCount += 1
-
         date = str(curDate)[0:10]
 
         # each stepsize, the current date is equal to the endpoint of a recommendation, so we can just request it
@@ -339,7 +343,6 @@ def getUsersCTR(start, end, dataset_id, userinformation, cursor, abtest_id):
 
         # Make a Dict in which we save all interactions with customer_id as the key
         for id, item in interactions:
-
             if id not in dirInteraction:
                 dirInteraction[str(id)] = [item]
             else:
@@ -347,7 +350,6 @@ def getUsersCTR(start, end, dataset_id, userinformation, cursor, abtest_id):
 
         # We group the recommendations too
         for id, item in recommendations:
-
             if id not in dirRecommendations:
                 dirRecommendations[str(id)] = [item]
             else:
@@ -375,5 +377,4 @@ def getUsersCTR(start, end, dataset_id, userinformation, cursor, abtest_id):
     for id, values in userinformation.items():
         values["CTR"] = round(values["CTR"] / recommendationsCount, 2)
 
-    # print(userinformation)
     return userinformation

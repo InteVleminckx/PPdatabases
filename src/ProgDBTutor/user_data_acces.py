@@ -2,17 +2,15 @@ import time
 
 import pandas as pd
 import numpy
-from psycopg2.extensions import register_adapter, AsIs
+from psycopg2.extensions import register_adapter #, AsIs
 import psycopg2.extras
 from config import config_data
 from db_connection import DBConnection
-from datetime import datetime, timedelta
+from datetime import timedelta #, datetime
 
 """
 This class is to hold an datascientist out of the database
 """
-
-
 class DataScientist:
     def __init__(self, firstname, lastname, username, email, password):
         self.firstname = firstname
@@ -207,7 +205,6 @@ def addUser(user_obj):
                        (user_obj.username, user_obj.email, user_obj.firstname, user_obj.lastname))
         cursor.execute('INSERT INTO Authentication(username, password) VALUES(%s,%s)',
                        (user_obj.username, user_obj.password))
-
         dbconnect.commit()
         return user_obj
     except:
@@ -336,7 +333,6 @@ def addCustomers(file_name, dataset_id, types_list):
     cursor = dbconnect.get_cursor()
     start = time.process_time()
     print('start reading customers')
-    # cursor.execute("DROP INDEX IF EXISTS customer_id_idx;")
     dbconnect.commit()
     data_customers = pd.read_csv(file_name)
     psycopg2.extensions.register_adapter(numpy.int64, psycopg2._psycopg.AsIs)
@@ -388,9 +384,7 @@ def getCustomer(customer_id, dataset_id):
                    (str(customerNumber), str(dataset_id)))
 
     attr = {}
-    notEmpty = False
     for row in cursor:
-        notEmpty = True
         attr[row[2]] = row[3]
 
     return Customer(dataset_id, customer_id, attr)
@@ -455,7 +449,7 @@ def getInteraction(customer_id, item_id, time_date, dataset_id):
     if not row:
         return None
 
-    return Interaction(row[0], row[1], row[2], row[3], row[4], row[5])
+    return Interaction(row[0], row[1], row[2], row[3], row[4])
 
 
 """
@@ -522,7 +516,6 @@ def addAB_Test(abtest_id, algorithm_id, start_point, end_point, stepsize, topk, 
         cursor.execute(
             'INSERT INTO ABTest(abtest_id, algorithm_id, start_point, end_point, stepsize, topk, creator, dataset_id) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)',
             (str(abtest_id), str(algorithm_id), start_point, end_point, str(stepsize), topk, creator, str(dataset_id)))
-
         dbconnect.commit()
     except:
         dbconnect.rollback()
@@ -561,7 +554,6 @@ def addAlgorithm(abtest_id, algorithm_id, name, param_name, value):
         cursor.execute(
             'INSERT INTO Algorithm(abtest_id, algorithm_id, name, param_name, value) VALUES(%s,%s,%s,%s,%s)',
             (str(abtest_id), str(algorithm_id), name, param_name, str(value)))
-
         dbconnect.commit()
     except:
         dbconnect.rollback()
@@ -617,7 +609,6 @@ def addRecommendation(abtest_id, algorithm_id, dataset_id, customer_id, item_num
         cursor.execute(
             'INSERT INTO Recommendation(abtest_id, algorithm_id, dataset_id, customer_id, item_number, start_point, end_point) VALUES(%s,%s,%s,%s,%s,%s,%s)',
             (str(abtest_id), str(algorithm_id), dataset_id, customer_id, item_number, start_point, end_point))
-
         dbconnect.commit()
     except:
         dbconnect.rollback()
@@ -652,6 +643,7 @@ def getItemPurchases(dataset_id, item_id, date):
     cursor.execute("SELECT count(item_id) \
                     FROM Interaction \
                     WHERE dataset_id = %s AND item_id = %s AND t_dat = %s;", (str(dataset_id), str(item_id), date))
+
     amount = cursor.fetchone()
     if amount:
         amount = amount[0]
@@ -670,6 +662,7 @@ def getRecencyItem(dataset_id, interval_start, interval_end, top_k):
                    FROM Interaction \
                    WHERE t_dat BETWEEN %s AND %s AND dataset_id = %s \
                    ORDER BY t_dat DESC LIMIT %s;", (interval_start, interval_end, dataset_id, top_k))
+
     recommendations = cursor.fetchall()
     if len(recommendations) == 0:
         return None
@@ -685,7 +678,6 @@ def addDataset(dataset_id, dataset_name):
     try:
         cursor.execute('INSERT INTO Dataset(dataset_id, dataset_name) VALUES(%s,%s)',
                        (str(dataset_id), str(dataset_name)))
-
         dbconnect.commit()
     except:
         dbconnect.rollback()
@@ -704,7 +696,6 @@ def getCustomerAndItemIDs(start, end, dataset_id):
     rows = cursor.fetchall()
     results = []
     for row in rows:
-        # row is expected to be a Tuple here
         results.append(row)
     return results
 
