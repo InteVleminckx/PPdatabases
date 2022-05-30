@@ -115,6 +115,12 @@
 
     .navbar_items:nth-last-child(1) {
         margin-right: 0;
+    }
+    #button_login {
+        margin-left: 25px;
+    }
+
+    #button_logout {
         margin-left: 25px;
     }
 
