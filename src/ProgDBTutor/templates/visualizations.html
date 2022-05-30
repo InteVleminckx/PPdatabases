@@ -921,7 +921,15 @@
 
                     html_ += "<tr class='container__tablerow'>"
                         html_ += "<td class='container__tableheadcontent' data-label=\"Algorithms\">" + row[0].toString() + "</td>"
-                        html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\">" + row[1].toString() + " seconds </td>"
+
+
+                        if  (row[1].toString() == "0.0") {
+                            html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\"> Not calculated yet </td>"
+                        }
+                        else {
+                            html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\">" + row[1].toString() + " seconds </td>"
+                        }
+
                     html_ += "</tr>"
 
                 }
