@@ -78,9 +78,6 @@ class Popularity:
             # repeat for each day and not for each stepSize
             self.currentDate += simulationStep
 
-        job = get_current_job(dbconnect)
-        job.meta['times'][algorithm_id] = "Done"
-
     def retrain(self):
         """
         Retrain the algorithm: Do this for all active users together
