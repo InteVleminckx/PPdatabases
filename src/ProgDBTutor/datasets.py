@@ -25,8 +25,7 @@ def handelRequests(app, session, request, taskQueue, type_list):
 
         # Delete the dataset here
         if dlte is not None:
-            job = taskQueue.enqueue(removeDataset, session['username'], int(rqst), job_timeout=600)
-            return {'id': 'delete', job.id: False, 'deleted_id': int(rqst)}
+            taskQueue.enqueue(removeDataset, session['username'], int(rqst), job_timeout=600)
 
     # Add dataset form
     elif request.method == 'POST':

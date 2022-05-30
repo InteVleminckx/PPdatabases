@@ -256,6 +256,9 @@ def getData(ds_id):
         print("/datasets/<ds_id>")
         return getDatasetInformation(ds_id)
 
+
+
+
 @app.route("/datasets", methods=['GET', 'POST'])
 def datasets():
 
@@ -337,9 +340,7 @@ def datasetUpdate(ds_id):
         if len(session['jobsDataset']) == 0:
             return 'no refresh'
         for i in range(len(session['jobsDataset'])):
-            if ds_id == str(session['jobsDataset'][i]['id']) or \
-                    (session['jobsDataset'][i]['id'] == 'delete' and str(session['jobsDataset'][i]['deleted_id']) ==
-                     ds_id):
+            if ds_id == str(session['jobsDataset'][i]['id']):
                 dsIdinQueue = True
             for key, value in session['jobsDataset'][i].items():
                 if key == 'id' or value == True:
@@ -361,9 +362,7 @@ def datasetUpdate(ds_id):
                 if not value:
                     finished = False
 
-            if finished and (str(session['jobsDataset'][i]['id']) == ds_id or
-                             (session['jobsDataset'][i]['id'] =='delete' and
-                              str(session['jobsDataset'][i]['deleted_id']) == ds_id)):
+            if finished and str(session['jobsDataset'][i]['id']) == ds_id:
                 l = session['jobsDataset']
                 l.remove(session['jobsDataset'][i])
                 session['jobsDataset'] = l
