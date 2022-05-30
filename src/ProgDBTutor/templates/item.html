@@ -29,7 +29,7 @@
         </ul>
     </div>
 </nav>
-<div class="container__body">
+<div class="container__body" id="body_page">
     <form method="POST" action="" name="form1" id="form1">
 
         {# Item page #}
@@ -167,6 +167,11 @@
 
                     </div>
                     {# ##################### #}
+                    <div class="container__button" id="layer2_buttongraph">
+                        <button id="graph_rotater" name="graph_rotater" role="button" >
+                            Rotate
+                        </button>
+                    </div>
 
                 </div>
                 {# ############# #}
@@ -181,6 +186,7 @@
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart', 'bar']});
 
+    let rotation = false;
    $(function() {
        $('#submit_graph').click(function() {
            var form_data = new FormData($('#form1')[0]);
@@ -202,7 +208,51 @@
        });
    });
 
+  $(function() {
+       $('#graph_rotater').click(function() {
+           rotation = !rotation;
+
+           let layer = document.getElementById("layer2")
+           let graph = document.getElementById("layer2_column1");
+           let head = document.getElementById("layer2_column1_head");
+           let content = document.getElementById("layer2_column1_content");
+           let body = document.getElementById("body_page");
+           let page = document.getElementById("itempage");
+
+            if (rotation) {
+                layer.style.transform = "rotate(90deg)";
+                layer.style.height = "1000px"
+                graph.style.width = "1000px";
+                head.style.width = "1000px";
+                content.style.width = "1000px";
+                body.style.height = "2470px";
+                page.style.height = "2370px";
+            }
+
+            else {
+                layer.style.transform = "rotate(0deg)";
+
+                layer.style.justifyContent = "center"
+                layer.style.alignContent = "center"
+                layer.style.marginLeft = "50px"
+                layer.style.marginTop = "20px"
+
+                graph.style.width = "613px";
+                head.style.width = "613px";
+                content.style.width = "613px";
+                layer.style.height = "613px";
+                page.style.height = "1983px";
+                body.style.height = "2083x";
+            }
+        });
+
+   });
+
     $('button#submit_graph').click(function (e){
+        e.preventDefault();
+    })
+
+    $('button#graph_rotater').click(function (e){
         e.preventDefault();
     })
 
@@ -289,6 +339,9 @@
             chart.draw(dataitems, google.charts.Bar.convertOptions(options));
         }
     }
+
+
+
 </script>
 </body>
 </html>
