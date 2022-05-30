@@ -4,9 +4,10 @@ from user_data_acces import *
 
 from datetime import datetime
 from datetime import timedelta
-
+from rq import get_current_job
 import time as tm
-
+from Metrics import amountRecommendationDays
+from copy import copy
 
 class Recency:
 
@@ -27,11 +28,13 @@ class Recency:
         self.datasetID = dataset_id
         self.ABTestID = abtest_id
         self.algorithmID = algorithm_id
+        self.estimated = False
 
-    def recency(self):
+    def recency(self, algorithm_id):
         """
         Function will calculate when to retrain/recommend and call the appropriate functions
         """
+        begin_time = datetime.now()
 
         # obtain all variables required to run the algorithm
         nextRetrain = self.currentDate
@@ -50,6 +53,15 @@ class Recency:
             if self.currentDate == nextRecommend:
                 self.recommend()
                 nextRecommend += self.stepSize
+                if not self.estimated:
+                    self.estimated = True
+                    recomDays = amountRecommendationDays(copy(self.start), copy(self.end), copy(self.stepSize))
+                    job = get_current_job(dbconnect)
+                    time_difference_ms = datetime.now() - begin_time
+                    time_difference = time_difference_ms.total_seconds() * recomDays
+                    print(time_difference)
+                    job.meta[algorithm_id] = time_difference
+                    job.save()
 
             # repeat for each day and not for each stepSize
             self.currentDate += simulationStep

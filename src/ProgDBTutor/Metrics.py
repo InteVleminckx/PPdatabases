@@ -376,3 +376,10 @@ def getAR_and_ARPU(days, startDate, endDate, abtestID, algorithmID, datasetID, s
 
     return ar, arpu
 
+
+def amountRecommendationDays(startPoint, endPoint, stepsize):
+    amount = 0
+    while startPoint <= endPoint:
+        amount += 1
+        startPoint += stepsize
+    return amount

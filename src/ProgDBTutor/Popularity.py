@@ -15,7 +15,9 @@ import time as tm
 from config import config_data
 from db_connection import DBConnection
 from user_data_acces import *
-
+from rq import get_current_job
+from Metrics import amountRecommendationDays
+from copy import copy
 
 class Popularity:
 
@@ -38,11 +40,13 @@ class Popularity:
         self.algorithm_id = algorithm_id
         self.simulationTime = None
         self.currentModel = None
+        self.estimated = False
 
-    def popularity(self):
+    def popularity(self, algorithm_id):
         """
         Function will calculate when to retrain/recommend and call the appropriate functions
         """
+        begin_time = datetime.now()
 
         # obtain all variables required to run the algorithm
         nextRetrain = self.currentDate  # next retrain interval
@@ -61,6 +65,15 @@ class Popularity:
             if self.currentDate == nextRecommend:
                 self.recommend()
                 nextRecommend += self.stepsize
+                if not self.estimated:
+                    self.estimated = True
+                    recomDays = amountRecommendationDays(copy(self.startPoint), copy(self.endPoint), copy(self.stepsize))
+                    job = get_current_job(dbconnect)
+                    time_difference_ms = datetime.now() - begin_time
+                    time_difference = time_difference_ms.total_seconds() * recomDays
+                    print(time_difference)
+                    job.meta[algorithm_id] = time_difference
+                    job.save()
 
             # repeat for each day and not for each stepSize
             self.currentDate += simulationStep
