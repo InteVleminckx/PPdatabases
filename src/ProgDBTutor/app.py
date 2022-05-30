@@ -389,11 +389,12 @@ def fileupload():
     if request.method == 'POST':
         headerDict = {}
         if request.files.get('articles_file').filename != '':
-            headerList = getCSVHeader(app, 'articles_file')
+            headerList = getCSVHeader(app, 'articles_file', session)
             headerDict['articles_attr'] = headerList
             headerDict['changed'] = 'articles_attr'
+
         if request.files.get('customers_file').filename != '':
-            headerList = getCSVHeader(app, 'customers_file')
+            headerList = getCSVHeader(app, 'customers_file', session)
             headerDict['customers_attr'] = headerList
             headerDict['changed'] = 'customers_attr'
         return headerDict
