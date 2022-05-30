@@ -102,9 +102,6 @@ class ItemKNN:
             # repeat for each day and not for each stepSize
             self.currentDate += simulationStep
 
-        job = get_current_job(dbconnect)
-        job.meta['times'][algorithm_id] = "Done"
-
     def retrain(self, unique_item_ids):
         """
         Retrain the algorithm: Do this for each active user
