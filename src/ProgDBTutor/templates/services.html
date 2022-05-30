@@ -361,9 +361,39 @@
             var selectIndex = document.getElementById("datasetSelection");
             var stepsize = document.getElementById("input_stepsize");
             var topk = document.getElementById("input_topk");
+
+            var algoSelect = document.getElementById("algoSelection");
+
             if (selectIndex.selectedIndex < 0 || stepsize.value <= 0 || topk.value <= 0) {
                 alert("No dataset selected or bad general arguments. General parameters need to be positive integers.")
             }
+            else if (Object.keys(algo_dict).length < 1) {
+                alert("Not enough algorithms added to run A/B-test.");
+            }
+
+            else if (algoSelect.value === "popularity") {
+                var retrain_int = document.getElementById("input_retraininterval_p");
+                var windowsize = document.getElementById("input_windowsize_p");
+                if (retrain_int.value === "" || retrain_int.value <= 0 || windowsize.value === "" || windowsize.value <= 0) {
+                    alert("Bad algorithm parameters. Make sure they are positive integers.");
+                }
+            }
+            else if (algoSelect.value === "recency") {
+                var retrain_int = document.getElementById("input_retraininterval_r");
+                if (retrain_int.value === "" || retrain_int.value <= 0) {
+                    alert("Bad algorithm parameter(s). Make sure they are positive integers.");
+                }
+            }
+            else if (algoSelect.value === "itemknn") {
+                var retrain_int = document.getElementById("input_retraininterval_i");
+                var windowsize = document.getElementById("input_windowsize_i");
+                var normalize = document.getElementById("input_normalize");
+                var k = document.getElementById("input_k");
+                if (retrain_int.value === "" || retrain_int.value <= 0 || windowsize.value === "" || windowsize.value <= 0 || normalize.value === "" || normalize.value < 0 || k.value === "" || k.value <= 0) {
+                    alert("Bad algorithm parameters. Make sure they are positive integers (the normalize parameter is allowed to be 0).");
+                }
+            }
+
             else {
                 var form_data = $('#form1').serializeArray();
                 data_dict = {'form_data': {}, 'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}; // alle data die we willen versturen
