@@ -84,7 +84,7 @@
 }
 
 /*Veranderd navbar hier naar een knop*/
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 1350px) {
 
     .navbar {
         width: 100%;
@@ -113,6 +113,11 @@
         margin-right: 0;
     }
 
+    .navbar_items:nth-last-child(1) {
+        margin-right: 0;
+        margin-left: 25px;
+    }
+
     .btn-1 {
         padding: 0;
         margin-left: 25px;
@@ -127,7 +132,7 @@
         opacity: 1;
         transition: all 0.5s ease;
         z-index: 99;
-        height: 80vh;
+        height: 30vh;
         font-size: 1.4rem;
         left: 0;
     }
@@ -136,6 +141,10 @@
         position: absolute;
         right: 1rem;
         top: 1.25rem;
+    }
+
+    .navbar_links {
+        width: 275px;
     }
 
     .navbar_toggle .bar {
@@ -150,7 +159,9 @@
 
     .navbar_items {
         border: none;
+        width: 300px;
     }
+
 
     #mobile-menu {
         position: absolute;

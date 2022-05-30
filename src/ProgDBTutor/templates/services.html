@@ -16,7 +16,7 @@
 </head>
 
 <body>
-
+{#<script src="../static/style/app1.js"></script>#}
 <nav class="navbar" id="navbar">
     <div class="navbar_container">
         <div class="navbar_toggle" id="mobile-menu">
@@ -32,6 +32,7 @@
         </ul>
     </div>
 </nav>
+
 <div id="flash_div" style="width: 100%; position: fixed; z-index: 999;"></div>
 
 <div class="container__body">
@@ -234,9 +235,6 @@
     </form>
 </div>
 
-
-
-
 <script src="../static/jquery-3.2.1.js">
 </script>
 <script>
@@ -420,6 +418,17 @@
             delete algo_dict[algo_id];
         }
     }
+
+
+    const menu = document.getElementById("mobile-menu");
+    const menuLinks = document.querySelector(".navbar_menu")
+    // Display Mobile Menu
+    const mobileMenu = () => {
+        menu.classList.toggle('is-active');
+        menuLinks.classList.toggle('active');
+    }
+
+    menu.addEventListener('click', mobileMenu);
 
 </script>
 

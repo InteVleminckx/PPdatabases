@@ -867,6 +867,16 @@
         interval = setInterval(fetchStatus, fetchInterval)
     })
 
+    const menu = document.getElementById("mobile-menu");
+    const menuLinks = document.querySelector(".navbar_menu")
+    // Display Mobile Menu
+    const mobileMenu = () => {
+        menu.classList.toggle('is-active');
+        menuLinks.classList.toggle('active');
+    }
+
+    menu.addEventListener('click', mobileMenu);
+
 </script>
 
 </html>
