@@ -38,8 +38,80 @@
 {# ############## #}
 
 <div class="container__body">
-    {# Visualizations page #}
-    <div class="container__page" id="visualizationspage">
+
+    {# Visualizations page with estimating time #}
+    <div class="container__page" id="estimationpage">
+
+        {# Layer1_es #}
+        <div class="container__layer" id="layer1_es">
+            {# estimation time head column #}
+            <div class="container__column" id="layer1_es_column1">
+                {# content column #}
+                <div class="container__content" id="layer1_es_column1_content">
+                    <h2>Progression execution algorithms AB-test</h2>
+                </div>
+                {# ############## #}
+            </div>
+            {# ########################### #}
+        </div>
+        {# ######### #}
+
+        {# Layer2_es #}
+        <div class="container__layer" id="layer2_es">
+            {# estimation time table #}
+            <div class="container__column" id="layer2_es_column1">
+                {# content table #}
+                <div class="container__content" id="layer2_es_column1_content">
+                    {# Table estimations #}
+                    <table class="container__table" id="layer2_es_column1_table">
+                        <thead class="container__tablehead" id="layer2_es_column1_table_head">
+                        <tr class="container__tablerow" id="layer2_es_column1_table_head_row1">
+                            {# Table headers #}
+                            <th class="container__tableheadcontent" id="layer2_es_column1_head_row1_column1">
+                                Algorithms
+                            </th>
+                            <th class="container__tableheadcontent" id=layer2_es_column1_head_row1_column2">
+                                Estimation time
+                            </th>
+                            {# ############# #}
+                        </tr>
+                        </thead>
+                        <tbody class="container__tablebody" id="layer2_es_column1_body">
+                        {# Table content will be filled with javascript #}
+                        </tbody>
+                    </table>
+                    {# ################# #}
+                </div>
+                {# ############# #}
+            </div>
+            {# ##################### #}
+
+        </div>
+        {# ######### #}
+
+        {# Layer3_es #}
+        <div class="container__layer" id="layer3_es">
+            {# Redirect part to visualistation page #}
+            <div class="container__column" id="layer3_es_column1">
+                {# content button #}
+                <div class="container_content" id="layer3_es_column1_content">
+
+                    {# Button redirect to visualization section #}
+                        <button class="container__button" id="column3_button">View AB-test</button>
+                    {# ######################################## #}
+
+                </div>
+                {# ############## #}
+            </div>
+            {# #################################### #}
+        </div>
+        {# ######### #}
+    </div>
+    {# ######################################## #}
+
+
+    {# Visualizations page  when ABtest is done#}
+    <div class="container__page" id="visualizationspage" style="display: none" >
         {# Layer1 #}
         <div class="container__layer" id="layer1">
 
@@ -434,6 +506,7 @@
     var requestInterval = null;
     let entered = false;
     let requestEntered = false;
+    let timesInterval = null;
 
     var topkPurchases = null
     var topkRecommendations = null
@@ -824,6 +897,36 @@
 
     }
 
+    function fetchAlgorithmsTime() {
+        fetch(`visualizations/exextimes`)
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (times) {
+                times = JSON.parse(times)
+                let algorithms = times["times"]
+
+                let table = document.getElementById("layer2_es_column1_body")
+
+                for (const row of algorithms) {
+
+                    html_ += "<tr class='container__tablerow'>"
+                        html_ += "<td class='container__tableheadcontent' data-label=\"Algorithms\">" + row[0].toString() + "</td>"
+                        html_ += "<td class='container__tableheadcontent' data-label=\"Estimation time\">" + row[1].toString() + "</td>"
+                    html_ += "</tr>"
+
+                }
+
+                table.innerHTML = html_
+
+                if (times["finished"]) {
+                    document.getElementById("layer3_es_column3_button").style.display = "block"
+                    clearInterval()
+                }
+
+            })
+    }
+
     function renewInterval() {
 
         let start = (new Date($("#slider1_range").slider("values", 0) * 1000)).toISOString().slice(0, 10);
@@ -865,6 +968,7 @@
     window.addEventListener('load', function () {
         let fetchInterval = 1000;
         interval = setInterval(fetchStatus, fetchInterval)
+
     })
 
     const menu = document.getElementById("mobile-menu");

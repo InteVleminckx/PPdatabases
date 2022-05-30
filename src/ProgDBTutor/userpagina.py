@@ -60,7 +60,7 @@ def getUserInformation(abtest_id, dataset_id, user_id):
             recommendations[date] = list()
             purchases[date] = list()
             dates.append(date)
-            print("enter")
+            # print("enter")
             for algorithm_id in ids_algoritmes:
                 if date in historyUser:
                     for item in itemsPerStep:
@@ -97,7 +97,7 @@ def getUserInformation(abtest_id, dataset_id, user_id):
                         for item in itemsPerStep:
                             if str(reco[0]) == str(item[0]):
                                 count += 1
-                                print("oke")
+                                # print("oke")
                     purchases[date].append({"name": name, "count": count, "color": colors[colorCount % len(colors)]})
 
                 else:
@@ -123,13 +123,13 @@ def getUserInformation(abtest_id, dataset_id, user_id):
         topk_.append(i)
     jsTopk = json.dumps(topk_)
 
-    print(jsReco)
-    print(jsHistory)
-    print(startAB)
-    print(endAB)
-    print(jsPur)
-    print(jsTopk)
-    print(jsDates)
+    # print(jsReco)
+    # print(jsHistory)
+    # print(startAB)
+    # print(endAB)
+    # print(jsPur)
+    # print(jsTopk)
+    # print(jsDates)
 
     return jsReco, jsHistory, startAB + " — " + endAB, jsPur, jsTopk, jsDates
 
@@ -194,6 +194,8 @@ def getPurchases(user_id, dataset_id, start, end):
     name = cursor.fetchone()[0]
     if name is None:
         return None
+
+    print(name)
 
     items = {}
     rows = list(set(rows))

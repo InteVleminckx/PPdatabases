@@ -1,4 +1,65 @@
 /**********************************/
+/*       Estimation section       */
+/**********************************/
+
+#estimationpage {
+    width: 713px;
+    height: 713px;
+}
+
+#layer1_es,
+#layer2_es,
+#layer3_es{
+    margin-left: 50px;
+    width: 613px;
+}
+
+#layer1_es {
+    margin-top: 50px;
+    margin-bottom: 0;
+}
+
+#layer2_es {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#layer3_es {
+    margin-top: 0px;
+    margin-bottom: 50px;
+}
+
+
+#layer1_es_column1,
+#layer3_es_column1 {
+    height: 40px;
+}
+
+#layer1_es_column1_content h2{
+    color: var(--theme-bg-color);
+}
+
+#layer2_es_column1_table,
+#layer2_es_column1,
+#layer2_es_column1_content{
+    height: 493px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#layer3_es_column1_content button {
+    background-color: transparent;
+    color: var(--theme-bg-color);
+    font-size: 22px;
+    width: 200px;
+}
+
+/**********************************/
+/*                                */
+/**********************************/
+
+
+/**********************************/
 /*       algemene container       */
 /**********************************/
 .container__page {

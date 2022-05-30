@@ -263,9 +263,6 @@ def getData(ds_id):
         print("/datasets/<ds_id>")
         return getDatasetInformation(ds_id)
 
-
-
-
 @app.route("/datasets", methods=['GET', 'POST'])
 def datasets():
 
@@ -327,7 +324,6 @@ def datasets():
 
     return redirect(url_for('login_user'))
 
-
 @app.route("/datasets/update/<ds_id>")
 def datasetUpdate(ds_id):
 
@@ -383,7 +379,6 @@ def datasetUpdate(ds_id):
             return 'done'
 
     return 'notDone'
-
 
 @app.route("/fileupload", methods=['GET', 'POST'])
 def fileupload():
