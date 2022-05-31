@@ -187,72 +187,68 @@
 /* About Section */
 .main {
     background-color: white;
-    padding: 10rem 0;
+    padding: 6rem 0;
 
-    /*.services{*/
-    /*background-color: #131313;*/
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
-    /*min-height: 100vh;*/
 }
 
 .main h1 {
     color: #000000;
-
-    /*background-color: #ff8177;*/
-    /*background-image: linear-gradient(to right, #ff0844 0%, #e15226 100%);*/
-    /*background-size: 100%;*/
-    /*-webkit-background-clip: text;*/
-    /*!*-moz-background-clip: text;*!*/
-    /*-webkit-text-fill-color: transparent;*/
-    /*!*-moz-text-fill-color: transparent;*!*/
-    /*!*margin-bottom: 5rem;*!*/
     font-size: 3.5rem;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /*min-height: 100vh;*/
 }
 
 
 .main__container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    height: 90%;
+    /*height: 90%;*/
     z-index: 1;
-    width: 100%;
-    max-width: 1300px;
+    /*width: 100%;*/
     padding: 0 50px;
-
-    margin-left: 230px;
 }
 
 .main__content {
     color: #fff;
     width: 100%;
+    padding: 50px;
 }
 
 .main__content h2 {
-    font-size: 20px;
+    font-size: 25px;
     color: #000000;
-    line-height: 150%;
-    margin-left: 60px;
-    margin-right: 60px;
+    /*line-height: 150%;*/
+    /*margin-left: 60px;*/
+    /*margin-right: 60px;*/
 
 }
 
-.main__content p {
-    margin-top: 1rem;
-    font-size: 2rem;
-    font-weight: 700;
+.main__image--container {
+    text-align: center;
+    font-size: 100px;
 }
+
+.main__image--container img {
+    width: 75%;
+}
+
+.main__image--card {
+    /*margin: -150px;*/
+    padding: 35px;
+    height: 500px;
+    width: 700px;
+    border-radius: 4px;
+    color: #af148f;
+    background-image: linear-gradient(to right, #00dbde 0%, #fc00ff 100%);
+    /*margin-left: 100px;*/
+}
+
+
 
 .main__btn {
     font-size: 1.8rem;
@@ -301,90 +297,80 @@
     width: 100%;
 }
 
-.main__image--container {
-    text-align: center;
-    font-size: 100px;
+@media screen and (max-width: 1350px) {
+    .main__container {
+        /*width: 100%;*/
+        /*margin: 0 auto;*/
+        /*height: 90%;*/
+    }
 
-    /*margin-left: 100px;*/
+    .main__image--container {
+        /*display: flex;*/
+        /*justify-content: center;*/
+    }
 
-}
+    /*.main__image--container img {*/
+    /*    width: 60%;*/
+    /*}*/
 
-.main__image--container img {
-    width: 80%;
-}
+    .main__image--card {
+        height: 400px;
+        width: 560px;
+    }
 
-.main__image--card {
-    margin: -150px;
-    height: 500px;
-    width: 700px;
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: #af148f;
-    background-image: linear-gradient(to right, #00dbde 0%, #fc00ff 100%);
-    margin-left: 100px;
+    .main__content {
+        text-align: center;
+    }
+
+    .main__content h2 {
+        font-size: 20px;
+    }
 
 }
 
 @media screen and (max-width: 1100px) {
     .main__container {
-        display: grid;
-        grid-template-columns: 1fr;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        margin: 0 auto;
-        height: 90%;
+        /*width: 100%;*/
+        /*margin: 0 auto;*/
+        /*height: 90%;*/
     }
 
     .main__image--container {
-        display: flex;
-        justify-content: center;
+        /*display: flex;*/
+        /*justify-content: center;*/
     }
 
-    .main__image--container img {
-        width: 60%;
-    }
+    /*.main__image--container img {*/
+    /*    width: 60%;*/
+    /*}*/
 
     .main__image--card {
-        height: 425px;
-        width: 425px;
-        display: flex;
-
+        height: 300px;
+        width: 420px;
     }
 
     .main__content {
         text-align: center;
-        margin-bottom: 4rem;
     }
 
     .main__content h2 {
-        font-size: 15px;
+        font-size: 14px;
     }
 
-    .main__content p {
-        margin-top: 1rem;
-        font-size: 1.5rem;
-    }
 }
 
 @media screen and (max-width: 480px) {
     .main__image--card {
         height: 250px;
-        width: 250px;
+        width: 350px;
     }
 
-    .main__image--container img {
-        width: 40%;
-    }
+    /*.main__image--container img {*/
+    /*    width: 40%;*/
+    /*}*/
 
     .main__content h2 {
-        font-size: 10px;
-    }
-
-    .main__content p {
-        margin-top: 2rem;
+        font-size: 8px;
     }
 
     .main__btn {
