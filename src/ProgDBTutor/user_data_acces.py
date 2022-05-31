@@ -761,7 +761,7 @@ def createDatasetIdIndex():
 """
 This function returns a list with integers that represent how often an item was recommended by an algorithm
 """
-def getItemRecommendations(retrainDay, item_id, abtest_id, dataset_id):
+def getItemRecommendations(recommendDay, item_id, abtest_id, dataset_id):
     global dbconnect
     cursor = dbconnect.get_cursor()
     algorithmsList = []
@@ -769,14 +769,14 @@ def getItemRecommendations(retrainDay, item_id, abtest_id, dataset_id):
     for id in algorithmIDs:
         cursor.execute(
             'SELECT count(*) FROM Recommendation WHERE abtest_id = %s AND algorithm_id = %s AND dataset_id = %s AND item_number = %s AND end_point = %s',
-            (str(abtest_id), str(id), str(dataset_id), str(item_id), retrainDay))
+            (str(abtest_id), str(id), str(dataset_id), str(item_id), recommendDay))
         amount = cursor.fetchone()[0]
 
         # For popularity and recency we need to multiply the amount of recommendations with the amount of active users
         # because we only save 1 record in the database
         algorithm = getAlgorithm(abtest_id, id)
         if algorithm.name == 'popularity' or algorithm.name == 'recency':
-            amountActiveUsers = getNumberOfActiveUsers(dataset_id, retrainDay)
+            amountActiveUsers = getNumberOfActiveUsers(dataset_id, recommendDay)
             amount = amount * amountActiveUsers
         algorithmsList.append(amount)
 
@@ -786,15 +786,17 @@ def getItemRecommendations(retrainDay, item_id, abtest_id, dataset_id):
 """
 This function does a quick check to verify whether the recommendations are well executed
 """
-def getRecommendationCorrectness(retrainDay, item_id, abtest_id, dataset_id):
+def getRecommendationCorrectness(recommendDay, item_id, abtest_id, dataset_id):
     global dbconnect
     cursor = dbconnect.get_cursor()
     algorithmsList = []
     algorithmIDs = getAlgorithmIds(abtest_id, dataset_id)
+    abtest = getAB_Test(abtest_id)
+    stepsize = int(abtest.stepsize)
+
     for algorithm_id in algorithmIDs:
         algorithm = getAlgorithm(abtest_id, algorithm_id)
-        timeBetween = int(algorithm.params['retraininterval'])
-        nextRetrainDay = retrainDay + timedelta(days=timeBetween)
+        nextRecommendDay = recommendDay + timedelta(days=stepsize)
 
         # Popularity and recency ==> count how many interactions there were on that day
         if algorithm.name == 'popularity' or algorithm.name == 'recency':
@@ -802,8 +804,8 @@ def getRecommendationCorrectness(retrainDay, item_id, abtest_id, dataset_id):
                 "SELECT COUNT(*) FROM Interaction i WHERE i.item_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s "
                 "AND i.item_id IN (SELECT r.item_number FROM Recommendation r WHERE r.abtest_id = %s AND r.algorithm_id = %s AND "
                 "r.dataset_id = %s AND r.item_number = %s AND r.end_point = %s);",
-                (str(item_id), str(dataset_id), retrainDay, nextRetrainDay, str(abtest_id), str(algorithm_id),
-                 str(dataset_id), str(item_id), retrainDay))
+                (str(item_id), str(dataset_id), recommendDay, nextRecommendDay, str(abtest_id), str(algorithm_id),
+                 str(dataset_id), str(item_id), recommendDay))
 
         # ItemKNN ==> look at user specific recommendations and purchases
         elif algorithm.name == 'itemknn':
@@ -811,8 +813,8 @@ def getRecommendationCorrectness(retrainDay, item_id, abtest_id, dataset_id):
                 "SELECT COUNT(*) FROM Interaction i WHERE i.item_id = %s AND i.dataset_id = %s AND i.t_dat BETWEEN %s AND %s "
                 "AND i.item_id IN (SELECT r.item_number FROM Recommendation r WHERE r.abtest_id = %s AND r.algorithm_id = %s AND "
                 "r.dataset_id = %s AND r.item_number = %s AND r.end_point = %s AND r.customer_id = i.customer_id);",
-                (str(item_id), str(dataset_id), retrainDay, nextRetrainDay, str(abtest_id), str(algorithm_id),
-                 str(dataset_id), str(item_id), retrainDay))
+                (str(item_id), str(dataset_id), recommendDay, nextRecommendDay, str(abtest_id), str(algorithm_id),
+                 str(dataset_id), str(item_id), recommendDay))
 
         amount = cursor.fetchone()[0]
         algorithmsList.append(amount)
