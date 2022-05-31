@@ -193,8 +193,15 @@ def services():
                         # Add entries for Algorithm table
                         for j in range(len(algo_list)):
                             if algo_list[j][0] == i:
-                                abTestQueue.enqueue(addAlgorithm, ABTestID, current_id, algo_list[j][1], algo_list[j][2],
+
+                                if j < len(algo_list) - 1:
+                                    abTestQueue.enqueue(addAlgorithm, ABTestID, current_id, algo_list[j][1], algo_list[j][2],
                                                     algo_list[j][3])
+
+                                elif j == len(algo_list) - 1:
+                                    job = abTestQueue.enqueue(addAlgorithm, ABTestID, current_id, algo_list[j][1], algo_list[j][2],
+                                            algo_list[j][3])
+                                    session["last_algorithm"] = job.id
 
                         del algo_dict[str(i)]
                         algo_times['times'][current_id] = 0
@@ -463,6 +470,15 @@ def visualizationsTimesRequest():
         fetchJob.refresh()
         algorithmsTime = {"times": [], "finished": False}
         abtest_id = fetchJob.meta["abtest_id"]
+        algoJob = session["last_algorithm"]
+        algoJob = abTestQueue.fetch_job(algoJob)
+
+        # Wait long enough until entire A/B-test (A/B-test and algorithms) is added to the database
+        if algoJob:
+            while str(algoJob.get_status()) != "finished":
+                algoJob.refresh()
+                continue
+
         for key, value in fetchJob.meta["times"].items():
             algoname = getAlgorithm(abtest_id, key)
             algorithmsTime["times"].append([str(algoname.name), str(round(float(value), 6))])
@@ -776,6 +792,7 @@ def logout():
     session.pop('username', None)
     session.pop('abVisualistation', None)
     session.pop('userpage', None)
+    session.pop('last_algorithm', None)
     return redirect(url_for('login_user'))
 
 

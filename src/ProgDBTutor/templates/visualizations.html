@@ -883,6 +883,18 @@
         $('#column3_button').click(function (e) {
             e.preventDefault();
             visualizePage();
+                    let dataUsersPurch = info["graphPurchAndUsers"]
+            let algorihtms = info["algorithms"]
+            let ctr = info["ctr"]
+            let arad = info["ar@d"]
+            let arpuad = info["arpu@d"]
+            google.charts.load('current', {packages: ['corechart', 'line']});
+
+            google.setOnLoadCallback(function () {
+                drawActUsersAndPurchChart(dataUsersPurch);
+                drawCTRandARAD(ctr, arad)
+                drawARPUAD(arpuad)
+            }) ;
         });
 
     });
@@ -892,18 +904,7 @@
         document.getElementById("visualizationspage").style.display = "flex";
         document.getElementById("body_page").style.height = "1770px"
 
-        {#let dataUsersPurch = info["graphPurchAndUsers"]#}
-        {#let algorihtms = info["algorithms"]#}
-        {#let ctr = info["ctr"]#}
-        {#let arad = info["ar@d"]#}
-        {#let arpuad = info["arpu@d"]#}
-        {##}
-        {#google.charts.load('current', {packages: ['corechart', 'line']});#}
-        {#google.setOnLoadCallback(function () {#}
-        {#    drawActUsersAndPurchChart(dataUsersPurch);#}
-        {#    drawCTRandARAD(ctr, arad)#}
-        {#    drawARPUAD(arpuad)#}
-        {# }) ;#}
+
 
     }
 
