@@ -216,11 +216,11 @@ def services():
             abtest_job = abTestQueue.enqueue(abtest.startAB, args=(ABTestID, dataset_id), job_timeout=3600, meta=algo_times)
             session["algo_times"] = abtest_job.id
 
-            jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
+            jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=3600)
             recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, topk, ABTestID)
             totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, "", "", dataset_id, topk, ABTestID)
             totRev = abTestQueue.enqueue(getTotaleRevenue, "", "", dataset_id, ABTestID)
-            listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID)
+            listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID, job_timeout=3600)
 
             session["abVisualistation"] = [jobABvisualisations.id, recos.id, totPurch.id, totRev.id, listUsers.id]
             data_dict = {'algo_id': algo_id, 'algo_list': algo_list, 'algo_dict': algo_dict}
@@ -389,12 +389,12 @@ def visualizations():
         abtest = getAB_Test(ABTestID)
         topk = abtest.topk
 
-        jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=600)
+        jobABvisualisations = abTestQueue.enqueue(getInfoVisualisationPage, ABTestID, dataset_id, job_timeout=3600)
 
         recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, "", "", dataset_id, topk, ABTestID)
         totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, "", "", dataset_id, topk, ABTestID)
         totRev = abTestQueue.enqueue(getTotaleRevenue, "", "", dataset_id, ABTestID)
-        listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID)
+        listUsers = abTestQueue.enqueue(getListOfActiveUsers, "", "", dataset_id, ABTestID, job_timeout=3600)
 
         session["abVisualistation"] = [jobABvisualisations.id, recos.id, totPurch.id, totRev.id, listUsers.id]
     return render_template('visualizations.html', app_data=app_data)
@@ -413,7 +413,7 @@ def visualizationsRequest():
         recos = abTestQueue.enqueue(getTopkMostRecommendItemsPerAlgo, start, end, dataset_id, topk, ABTestID)
         totPurch = abTestQueue.enqueue(getTopkMostPurchasedItems, start, end, dataset_id, topk, ABTestID)
         totRev = abTestQueue.enqueue(getTotaleRevenue, start, end, dataset_id, ABTestID)
-        listUsers = abTestQueue.enqueue(getListOfActiveUsers, start, end, dataset_id, ABTestID)
+        listUsers = abTestQueue.enqueue(getListOfActiveUsers, start, end, dataset_id, ABTestID, job_timeout=3600)
 
         session["abVisualistationRequest"] = [recos.id, totPurch.id, totRev.id, listUsers.id]
 
