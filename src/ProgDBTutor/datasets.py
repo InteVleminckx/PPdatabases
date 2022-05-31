@@ -38,8 +38,8 @@ def addDatasetHere(app, session, tq, type_list):
     """
     if session['username'] == 'admin':  # checken of de user de admin is
         dataset_id = importDataset(tq)
-        importArticles(app, dataset_id, tq, type_list)
-        importCustomers(app, dataset_id, tq, type_list)
+        importArticles(app, dataset_id, tq, type_list, session)
+        importCustomers(app, dataset_id, tq, type_list, session)
         id3 = importPurchases(app, dataset_id, tq)
         tq.enqueue(createDatasetIdIndex, job_timeout=600)
         return {'id': dataset_id, id3: False}
