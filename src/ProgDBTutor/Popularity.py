@@ -9,11 +9,6 @@ LIMIT 2;
 # from app import user_data_access
 
 from datetime import datetime, timedelta
-# from app import user_data_access
-#import time as tm
-
-#from config import config_data
-#from db_connection import DBConnection
 from user_data_acces import *
 from rq import get_current_job
 from Metrics import amountRecommendationDays

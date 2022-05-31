@@ -4,7 +4,6 @@ from user_data_acces import *
 
 from datetime import datetime
 from datetime import timedelta
-# import time as tm
 from typing import List
 from rq import get_current_job
 from itemKNN.src.algorithm.iknn import ItemKNNAlgorithm, ItemKNNIterativeAlgorithm

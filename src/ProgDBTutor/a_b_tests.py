@@ -2,9 +2,6 @@ import datetime
 import json as jsn
 import sys
 from user_data_acces import *
-from config import config_data
-from db_connection import DBConnection
-from user_data_acces import *
 import Popularity as popularity
 import recency_algorithm as recency
 import ItemKNN as itemknn
