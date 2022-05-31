@@ -1,29 +1,12 @@
 # TUTORIAL Len Feremans, Sandy Moens and Joey De Pauw
 # see tutor https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
-#import json
-#import time
 
 from flask import Flask, request, session, jsonify, flash, redirect, url_for
 from flask.templating import render_template
-#from flask_login import login_user, login_required, logout_user, current_user, UserMixin
-#from flask_sqlalchemy import SQLAlchemy
-#from sqlalchemy.orm import scoped_session, sessionmaker
-import redis
-from rq import Queue
-
-#from user_data_acces import *  # , UserDataAcces
-
 from werkzeug.security import generate_password_hash, check_password_hash
-#from werkzeug.utils import secure_filename
-
-#import pandas as pd
-#import csv
-#import os
+from rq import Queue
 import a_b_tests as abtest
-#from datetime import datetime, timedelta
-
-#from config import config_data
-#from db_connection import DBConnection
+import redis
 
 
 """

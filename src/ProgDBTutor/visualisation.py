@@ -1,12 +1,5 @@
-# import datetime
-# import json
-# from flask import request, flash
-# from werkzeug.utils import secure_filename
-# import pandas as pd
-# import os
-# from user_data_acces import *
+
 from Metrics import *
-# import sys
 
 def getInfoVisualisationPage(abtest_id, dataset_id):
     """

@@ -1,11 +1,8 @@
-#from config import config_data
-#from db_connection import DBConnection
 from user_data_acces import *
 
 from datetime import datetime
 from datetime import timedelta
 from rq import get_current_job
-#import time as tm
 from Metrics import amountRecommendationDays
 from copy import copy
 
